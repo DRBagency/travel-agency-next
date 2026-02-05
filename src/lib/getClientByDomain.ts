@@ -1,24 +1,34 @@
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 
+const OWNER_VERCEL_DOMAIN = "travel-agency-next-ten.vercel.app";
+
 export async function getClientByDomain() {
-  const headersList = await headers(); // 🔑 AQUÍ ESTÁ EL FIX
+  const headersList = await headers();
   const host = headersList.get("host");
 
-  if (!host) return null;
+  if (!host) {
+    throw new Error("Dominio no autorizado");
+  }
 
-  const domain = host.split(":")[0]; // elimina puerto en local
+  const normalized = host
+    .replace(/^https?:\/\//i, "")
+    .split(":")[0]
+    .toLowerCase();
+
+  if (normalized.endsWith(".vercel.app") && normalized !== OWNER_VERCEL_DOMAIN) {
+    throw new Error("Dominio no autorizado");
+  }
 
   const { data: client, error } = await supabaseAdmin
     .from("clientes")
     .select("*")
-    .eq("domain", domain)
+    .eq("domain", normalized)
     .eq("activo", true)
     .single();
 
-  if (error) {
-    console.error("❌ Cliente no encontrado:", error.message);
-    return null;
+  if (error || !client) {
+    throw new Error("Dominio no autorizado");
   }
 
   return client;
