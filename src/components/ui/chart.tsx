@@ -89,21 +89,7 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
-type ChartTooltipContentProps = Omit<
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip>,
-  "payload" | "active"
-> &
-  React.ComponentProps<"div"> & {
-    payload?: any;
-    active?: boolean;
-    hideLabel?: boolean;
-    hideIndicator?: boolean;
-    indicator?: "line" | "dot" | "dashed";
-    nameKey?: string;
-    labelKey?: string;
-  };
-
-const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContentProps>(
+const ChartTooltipContent = React.forwardRef<HTMLDivElement, any>(
   (
     {
       active,
@@ -119,7 +105,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
       color,
       nameKey,
       labelKey,
-    },
+    }: any,
     ref,
   ) => {
     const { config } = useChart();
