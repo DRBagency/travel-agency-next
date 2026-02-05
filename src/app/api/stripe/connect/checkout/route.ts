@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 
     const { data: cliente, error: clienteError } = await supabaseAdmin
       .from("clientes")
-      .select("stripe_charges_enabled")
+      .select("stripe_account_id, stripe_charges_enabled")
       .eq("id", body.cliente_id)
       .single();
 
@@ -38,7 +38,9 @@ export async function POST(req: Request) {
       );
     }
 
-    if (cliente.stripe_charges_enabled === false) {
+    const hasConnectAccount = Boolean(cliente.stripe_account_id);
+
+    if (hasConnectAccount && cliente.stripe_charges_enabled === false) {
       return NextResponse.json(
         { error: "Esta agencia aún no tiene Stripe activo" },
         { status: 400 }
@@ -47,7 +49,7 @@ export async function POST(req: Request) {
 
     const unitAmount = Math.round(total * 100); // céntimos
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionParams = {
       mode: "payment",
       payment_method_types: ["card"],
       line_items: [
@@ -76,7 +78,13 @@ export async function POST(req: Request) {
         fecha_salida: body.fecha_salida,
         fecha_regreso: body.fecha_regreso,
       },
-    });
+    } as Stripe.Checkout.SessionCreateParams;
+
+    const session = hasConnectAccount
+      ? await stripe.checkout.sessions.create(sessionParams, {
+          stripeAccount: cliente.stripe_account_id,
+        })
+      : await stripe.checkout.sessions.create(sessionParams);
 
     return NextResponse.json({ url: session.url });
   } catch (error: any) {
