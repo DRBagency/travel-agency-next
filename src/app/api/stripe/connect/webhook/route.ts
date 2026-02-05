@@ -5,6 +5,8 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import { sendReservationEmails } from "@/lib/emails/send-reservation-emails";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 
+export const runtime = "nodejs";
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
 });
