@@ -10,7 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function POST(req: Request) {
-  console.log("WEBHOOK HIT");
+  console.log("STRIPE WEBHOOK RECEIVED");
   try {
     await requireValidApiDomain();
   } catch {
