@@ -1,9 +1,16 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
+import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function GET() {
+  try {
+    await requireValidApiDomain();
+  } catch {
+    return NextResponse.json({}, { status: 403 });
+  }
+
   try {
     const account = await stripe.accounts.create({
       type: "express",

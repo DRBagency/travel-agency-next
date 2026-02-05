@@ -1,10 +1,17 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-server";
+import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
+  try {
+    await requireValidApiDomain();
+  } catch {
+    return NextResponse.json({}, { status: 403 });
+  }
+
   try {
     const body = await req.json();
 

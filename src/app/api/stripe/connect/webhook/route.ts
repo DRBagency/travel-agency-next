@@ -3,12 +3,19 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { sendReservationEmails } from "@/lib/emails/send-reservation-emails";
+import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
 });
 
 export async function POST(req: Request) {
+  try {
+    await requireValidApiDomain();
+  } catch {
+    return new NextResponse("Unauthorized", { status: 403 });
+  }
+
   const body = await req.text();
   const signature = (await headers()).get("stripe-signature");
 

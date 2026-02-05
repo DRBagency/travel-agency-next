@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
+import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  try {
+    await requireValidApiDomain();
+  } catch {
+    return new NextResponse("Unauthorized", { status: 403 });
+  }
+
   const { id } = await params;
 
   const body = await req.json();

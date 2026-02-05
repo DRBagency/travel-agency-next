@@ -1,13 +1,8 @@
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
+import { OWNER_VERCEL_DOMAIN, normalizeHost } from "@/lib/getClientByDomain";
 
-export const OWNER_VERCEL_DOMAIN = "travel-agency-next-ten.vercel.app";
-
-export function normalizeHost(host: string) {
-  return host.replace(/^https?:\/\//i, "").split(":")[0].toLowerCase();
-}
-
-export async function getClientByDomain() {
+export async function requireValidApiDomain() {
   const headersList = await headers();
   const host = headersList.get("host");
 
@@ -21,16 +16,18 @@ export async function getClientByDomain() {
     throw new Error("Dominio no autorizado");
   }
 
-  const { data: client, error } = await supabaseAdmin
+  if (normalized === OWNER_VERCEL_DOMAIN) {
+    return;
+  }
+
+  const { data: client } = await supabaseAdmin
     .from("clientes")
-    .select("*")
+    .select("id")
     .eq("domain", normalized)
     .eq("activo", true)
     .single();
 
-  if (error || !client) {
+  if (!client) {
     throw new Error("Dominio no autorizado");
   }
-
-  return client;
 }

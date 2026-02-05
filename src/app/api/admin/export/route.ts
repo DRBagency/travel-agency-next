@@ -2,8 +2,15 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { getClientByDomain } from "@/lib/getClientByDomain";
 import { headers, cookies } from "next/headers";
+import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 
 export async function GET(req: Request) {
+  try {
+    await requireValidApiDomain();
+  } catch {
+    return new NextResponse("Unauthorized", { status: 403 });
+  }
+
   const url = new URL(req.url);
   const cookieStore = await cookies();
   const session = cookieStore.get("admin_session");
