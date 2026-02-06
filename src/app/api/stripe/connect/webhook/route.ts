@@ -42,6 +42,22 @@ export async function POST(req: Request) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
+    if (session.mode === "subscription") {
+      const m = session.metadata;
+
+      if (!m?.cliente_id) {
+        console.error("❌ No cliente_id in subscription metadata");
+        return new NextResponse("No metadata", { status: 400 });
+      }
+
+      await supabaseAdmin
+        .from("clientes")
+        .update({ stripe_subscription_id: session.subscription })
+        .eq("id", m.cliente_id);
+
+      return NextResponse.json({ received: true });
+    }
+
     const m = session.metadata;
 
     if (!m) {
