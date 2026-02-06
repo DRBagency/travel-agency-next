@@ -18,7 +18,11 @@ export default async function AdminStripePage() {
 
   if (client.stripe_account_id) {
     const account = await stripe.accounts.retrieve(client.stripe_account_id);
-    stripeStatus = account.charges_enabled ? "active" : "pending";
+    if (account.charges_enabled === true) {
+      stripeStatus = "active";
+    } else {
+      stripeStatus = "pending";
+    }
   }
 
   const statusLabel =
