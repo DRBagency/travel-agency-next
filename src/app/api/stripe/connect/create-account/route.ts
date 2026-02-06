@@ -2,10 +2,11 @@ import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import { supabaseAdmin } from "@/lib/supabase-server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export async function GET() {
+export async function POST() {
   try {
     await requireValidApiDomain();
   } catch {
@@ -23,32 +24,38 @@ export async function GET() {
 
     const client = await requireAdminClient();
 
-    if (client.stripe_account_id) {
-      return NextResponse.json({
-        stripe_account_id: client.stripe_account_id,
+    let stripeAccountId = client.stripe_account_id;
+
+    if (!stripeAccountId) {
+      const account = await stripe.accounts.create({
+        type: "express",
+        country: "ES",
+        business_type: "company",
+        capabilities: {
+          card_payments: { requested: true },
+          transfers: { requested: true },
+        },
       });
+      stripeAccountId = account.id;
     }
 
-    const account = await stripe.accounts.create({
-      type: "express",
-      country: "ES",
-      business_type: "company",
-      capabilities: {
-        card_payments: { requested: true },
-        transfers: { requested: true },
-      },
-    });
-
     const accountLink = await stripe.accountLinks.create({
-      account: account.id,
+      account: stripeAccountId,
       refresh_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/stripe`,
       return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/stripe`,
       type: "account_onboarding",
     });
 
+    if (!client.stripe_account_id) {
+      await supabaseAdmin
+        .from("clientes")
+        .update({ stripe_account_id: stripeAccountId })
+        .eq("id", client.id);
+    }
+
     return NextResponse.json({
       url: accountLink.url,
-      stripe_account_id: account.id,
+      stripe_account_id: stripeAccountId,
     });
   } catch (error: any) {
     console.error("Stripe create account error:", error?.message || error);

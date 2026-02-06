@@ -1,46 +1,6 @@
-import { headers, cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { supabaseAdmin } from "@/lib/supabase-server";
 import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
-
-async function connectStripe() {
-  "use server";
-
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
-
-  const client = await requireAdminClient();
-
-  if (!client.stripe_account_id) {
-    const host = (await headers()).get("host");
-    const rawBase =
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      process.env.VERCEL_URL ||
-      (host ? `http://${host}` : "");
-
-    if (!rawBase) {
-      throw new Error("Base URL no configurada");
-    }
-
-    const createUrl = rawBase.startsWith("http")
-      ? `${rawBase}/api/stripe/connect/create-account`
-      : `https://${rawBase}/api/stripe/connect/create-account`;
-    const res = await fetch(createUrl, { method: "GET" });
-    const data = await res.json();
-
-    if (!res.ok || !data?.stripe_account_id) {
-      throw new Error("No se pudo crear la cuenta de Stripe");
-    }
-
-    await supabaseAdmin
-      .from("clientes")
-      .update({ stripe_account_id: data.stripe_account_id })
-      .eq("id", client.id);
-  }
-
-  redirect("/api/stripe/connect/onboarding");
-}
+import ConnectStripeButton from "./ConnectStripeButton";
 
 export default async function AdminStripePage() {
   const client = await requireAdminClient();
@@ -97,19 +57,9 @@ export default async function AdminStripePage() {
           </div>
 
           {showConnect && (
-            <form action={connectStripe} className="flex justify-end">
-              <button
-                type="submit"
-                className={
-                  client.primary_color
-                    ? "px-5 py-3 rounded-xl text-white font-semibold"
-                    : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold"
-                }
-                style={brandStyle}
-              >
-                Conectar Stripe
-              </button>
-            </form>
+            <div className="flex justify-end">
+              <ConnectStripeButton primaryColor={client.primary_color} />
+            </div>
           )}
         </section>
       </div>
