@@ -1,6 +1,9 @@
 import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import ConnectStripeButton from "./ConnectStripeButton";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export default async function AdminStripePage() {
   const client = await requireAdminClient();
@@ -9,20 +12,29 @@ export default async function AdminStripePage() {
     ? { backgroundColor: client.primary_color }
     : undefined;
 
-  const showConnect =
-    !client.stripe_account_id || !client.stripe_charges_enabled;
+  let stripeStatus: "none" | "pending" | "active" = "none";
 
-  const statusLabel = !client.stripe_account_id
-    ? "Stripe no conectado"
-    : client.stripe_charges_enabled
-      ? "Stripe activo y listo para cobrar"
-      : "Stripe pendiente de verificación";
+  if (client.stripe_account_id) {
+    const account = await stripe.accounts.retrieve(client.stripe_account_id);
+    stripeStatus = account.charges_enabled ? "active" : "pending";
+  }
 
-  const statusStyle = !client.stripe_account_id
-    ? "border-red-500/30 text-red-300 bg-red-500/10"
-    : client.stripe_charges_enabled
-      ? "border-emerald-500/30 text-emerald-300 bg-emerald-500/10"
-      : "border-amber-500/30 text-amber-300 bg-amber-500/10";
+  const statusLabel =
+    stripeStatus === "none"
+      ? "No conectado"
+      : stripeStatus === "pending"
+        ? "En proceso"
+        : "Conectado";
+
+  const statusStyle =
+    stripeStatus === "none"
+      ? "border-red-500/30 text-red-300 bg-red-500/10"
+      : stripeStatus === "pending"
+        ? "border-amber-500/30 text-amber-300 bg-amber-500/10"
+        : "border-emerald-500/30 text-emerald-300 bg-emerald-500/10";
+
+  const buttonLabel =
+    stripeStatus === "none" ? "Conectar Stripe" : "Completar verificación";
 
   return (
     <AdminShell clientName={client.nombre} primaryColor={client.primary_color}>
@@ -56,9 +68,13 @@ export default async function AdminStripePage() {
             </div>
           </div>
 
-          {showConnect && (
+          {stripeStatus !== "active" && (
             <div className="flex justify-end">
-              <ConnectStripeButton primaryColor={client.primary_color} />
+              <ConnectStripeButton
+                primaryColor={client.primary_color}
+                label={buttonLabel}
+                disabled={stripeStatus === "active"}
+              />
             </div>
           )}
         </section>

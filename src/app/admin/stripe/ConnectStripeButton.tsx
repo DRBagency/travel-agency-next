@@ -4,13 +4,19 @@ import { useState } from "react";
 
 interface ConnectStripeButtonProps {
   primaryColor?: string | null;
+  label: string;
+  disabled?: boolean;
 }
 
-export default function ConnectStripeButton({ primaryColor }: ConnectStripeButtonProps) {
+export default function ConnectStripeButton({
+  primaryColor,
+  label,
+  disabled,
+}: ConnectStripeButtonProps) {
   const [loading, setLoading] = useState(false);
 
   const handleConnect = async () => {
-    if (loading) return;
+    if (loading || disabled) return;
     setLoading(true);
 
     try {
@@ -35,7 +41,7 @@ export default function ConnectStripeButton({ primaryColor }: ConnectStripeButto
     <button
       type="button"
       onClick={handleConnect}
-      disabled={loading}
+      disabled={loading || disabled}
       className={
         primaryColor
           ? "px-5 py-3 rounded-xl text-white font-semibold disabled:opacity-60"
@@ -43,7 +49,7 @@ export default function ConnectStripeButton({ primaryColor }: ConnectStripeButto
       }
       style={primaryColor ? { backgroundColor: primaryColor } : undefined}
     >
-      {loading ? "Conectando..." : "Conectar Stripe"}
+      {loading ? "Conectando..." : label}
     </button>
   );
 }
