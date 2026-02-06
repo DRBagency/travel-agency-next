@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
+import { getClientByDomain } from "@/lib/getClientByDomain";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -25,13 +26,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const { data: cliente, error: clienteError } = await supabaseAdmin
-      .from("clientes")
-      .select("stripe_account_id, stripe_charges_enabled")
-      .eq("id", body.cliente_id)
-      .single();
-
-    if (clienteError || !cliente) {
+    const cliente = await getClientByDomain();
+    if (!cliente) {
       return NextResponse.json(
         { error: "Cliente no encontrado" },
         { status: 404 }
@@ -80,11 +76,13 @@ export async function POST(req: Request) {
       },
     } as Stripe.Checkout.SessionCreateParams;
 
-    const session = hasConnectAccount
-      ? await stripe.checkout.sessions.create(sessionParams, {
+    const stripeClient = hasConnectAccount
+      ? new Stripe(process.env.STRIPE_SECRET_KEY!, {
           stripeAccount: cliente.stripe_account_id,
         })
-      : await stripe.checkout.sessions.create(sessionParams);
+      : stripe;
+
+    const session = await stripeClient.checkout.sessions.create(sessionParams);
 
     return NextResponse.json({ url: session.url });
   } catch (error: any) {
