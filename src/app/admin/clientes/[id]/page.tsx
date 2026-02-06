@@ -8,15 +8,26 @@ async function updateCliente(formData: FormData) {
 
   const id = formData.get("id") as string;
 
-  const payload = {
+  const payload: Record<string, any> = {
     nombre: (formData.get("nombre") as string) || null,
     domain: (formData.get("domain") as string) || null,
     primary_color: (formData.get("primary_color") as string) || null,
     hero_title: (formData.get("hero_title") as string) || null,
     hero_subtitle: (formData.get("hero_subtitle") as string) || null,
     hero_cta_text: (formData.get("hero_cta_text") as string) || null,
+    plan: (formData.get("plan") as string) || null,
     activo: formData.get("activo") === "on",
   };
+
+  const plan = (formData.get("plan") as string) || "";
+  const commissionByPlan: Record<string, number> = {
+    start: 0.05,
+    grow: 0.03,
+    pro: 0.01,
+  };
+  if (plan && plan in commissionByPlan) {
+    payload.commission_rate = commissionByPlan[plan];
+  }
 
   await supabaseAdmin.from("clientes").update(payload).eq("id", id);
 
@@ -131,6 +142,18 @@ export default async function ClientePage({ params }: ClientePageProps) {
             defaultValue={cliente.hero_cta_text ?? ""}
             className="w-full border rounded px-3 py-2 bg-white text-black placeholder-gray-400"
           />
+        </div>
+        <div>
+          <label className="block text-sm mb-1">Plan</label>
+          <select
+            name="plan"
+            defaultValue={cliente.plan ?? "start"}
+            className="w-full border rounded px-3 py-2 bg-white text-black"
+          >
+            <option value="start">Start</option>
+            <option value="grow">Grow</option>
+            <option value="pro">Pro</option>
+          </select>
         </div>
         <div className="flex items-center gap-2">
           <input
