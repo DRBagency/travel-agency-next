@@ -39,7 +39,15 @@ export async function GET() {
       },
     });
 
+    const accountLink = await stripe.accountLinks.create({
+      account: account.id,
+      refresh_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/stripe`,
+      return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/stripe`,
+      type: "account_onboarding",
+    });
+
     return NextResponse.json({
+      url: accountLink.url,
       stripe_account_id: account.id,
     });
   } catch (error: any) {
