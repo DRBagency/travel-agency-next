@@ -42,6 +42,14 @@ export default async function AdminStripePage() {
   const buttonLabel =
     stripeStatus === "none" ? "Conectar Stripe" : "Completar verificación";
 
+  const planKey = (client.plan || "start").toString().toLowerCase();
+  const planMeta: Record<string, { label: string; price: string; fee: string }> = {
+    start: { label: "Start", price: "29 € / mes", fee: "5 %" },
+    grow: { label: "Grow", price: "59 € / mes", fee: "3 %" },
+    pro: { label: "Pro", price: "99 € / mes", fee: "1 %" },
+  };
+  const planInfo = planMeta[planKey] || planMeta.start;
+
   return (
     <AdminShell clientName={client.nombre} primaryColor={client.primary_color}>
       <div className="space-y-8">
@@ -85,16 +93,59 @@ export default async function AdminStripePage() {
           )}
         </section>
 
+        <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+          <div>
+            <h2 className="text-xl font-semibold">Suscripción al software</h2>
+            <p className="text-sm text-white/60">
+              Tu plan y condiciones actuales de facturación.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+              <div className="text-sm text-white/60 mb-1">Plan actual</div>
+              <div className="text-lg font-semibold text-white">
+                {planInfo.label}
+              </div>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+              <div className="text-sm text-white/60 mb-1">Precio mensual</div>
+              <div className="text-lg font-semibold text-white">
+                {planInfo.price}
+              </div>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+              <div className="text-sm text-white/60 mb-1">Comisión por reserva</div>
+              <div className="text-lg font-semibold text-white">
+                {planInfo.fee}
+              </div>
+            </div>
+          </div>
+
+          <form method="post" action="/api/stripe/billing/create-subscription" className="flex justify-end">
+            <button
+              type="submit"
+              className={
+                client.primary_color
+                  ? "px-5 py-3 rounded-xl text-white font-semibold"
+                  : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold"
+              }
+              style={brandStyle}
+            >
+              Activar suscripción
+            </button>
+          </form>
+        </section>
+
         <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
           <h2 className="text-xl font-semibold">Comisión de la plataforma</h2>
           <p className="text-sm text-white/70">
-            Aplicamos una comisión fija del <strong>5&nbsp;%</strong> por cada
-            reserva cobrada.
+            La comisión y la suscripción dependen del plan contratado:
           </p>
           <ul className="text-sm text-white/60 list-disc pl-5 space-y-1">
-            <li>Se descuenta automáticamente del pago.</li>
-            <li>No hay costes fijos mensuales.</li>
-            <li>El resto del importe va directamente a tu Stripe.</li>
+            <li>Start → 29 € + 5 %</li>
+            <li>Grow → 59 € + 3 %</li>
+            <li>Pro → 99 € + 1 %</li>
           </ul>
         </section>
       </div>
