@@ -3,6 +3,8 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 import ConnectStripeButton from "./ConnectStripeButton";
 import Stripe from "stripe";
 
+type StripeStatus = "none" | "pending" | "active";
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export default async function AdminStripePage() {
@@ -12,7 +14,7 @@ export default async function AdminStripePage() {
     ? { backgroundColor: client.primary_color }
     : undefined;
 
-  let stripeStatus: "none" | "pending" | "active" = "none";
+  let stripeStatus: StripeStatus = "none";
 
   if (client.stripe_account_id) {
     const account = await stripe.accounts.retrieve(client.stripe_account_id);
