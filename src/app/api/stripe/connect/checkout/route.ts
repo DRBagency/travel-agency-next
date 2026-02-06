@@ -77,7 +77,9 @@ export async function POST(req: Request) {
     } as Stripe.Checkout.SessionCreateParams;
 
     if (hasConnectAccount && cliente.stripe_charges_enabled === true) {
-      const applicationFeeAmount = Math.round(unitAmount * 0.05);
+      const applicationFeeAmount = Math.round(
+        total * Number(cliente.commission_rate || 0)
+      );
       sessionParams.payment_intent_data = {
         application_fee_amount: applicationFeeAmount,
         transfer_data: {
