@@ -84,6 +84,19 @@ export default async function AdminStripePage() {
             </div>
           )}
         </section>
+
+        <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
+          <h2 className="text-xl font-semibold">Comisión de la plataforma</h2>
+          <p className="text-sm text-white/70">
+            Aplicamos una comisión fija del <strong>5&nbsp;%</strong> por cada
+            reserva cobrada.
+          </p>
+          <ul className="text-sm text-white/60 list-disc pl-5 space-y-1">
+            <li>Se descuenta automáticamente del pago.</li>
+            <li>No hay costes fijos mensuales.</li>
+            <li>El resto del importe va directamente a tu Stripe.</li>
+          </ul>
+        </section>
       </div>
     </AdminShell>
   );
