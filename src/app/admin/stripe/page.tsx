@@ -1,6 +1,7 @@
 import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import ConnectStripeButton from "./ConnectStripeButton";
+import SubscriptionButton from "./SubscriptionButton";
 import Stripe from "stripe";
 
 type StripeStatus = "none" | "pending" | "active";
@@ -122,19 +123,9 @@ export default async function AdminStripePage() {
             </div>
           </div>
 
-          <form method="post" action="/api/stripe/billing/create-subscription" className="flex justify-end">
-            <button
-              type="submit"
-              className={
-                client.primary_color
-                  ? "px-5 py-3 rounded-xl text-white font-semibold"
-                  : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold"
-              }
-              style={brandStyle}
-            >
-              Activar suscripción
-            </button>
-          </form>
+          <div className="flex justify-end">
+            <SubscriptionButton primaryColor={client.primary_color} />
+          </div>
         </section>
 
         <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">

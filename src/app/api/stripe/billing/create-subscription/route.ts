@@ -41,5 +41,5 @@ export async function POST() {
     },
   });
 
-  return NextResponse.redirect(session.url!);
+  return NextResponse.json({ url: session.url });
 }
