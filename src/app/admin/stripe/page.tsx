@@ -74,12 +74,12 @@ export default async function AdminStripePage() {
             </div>
           </div>
 
-          {stripeStatus !== "active" && (
+          {stripeStatus === "pending" && (
             <div className="flex justify-end">
               <ConnectStripeButton
                 primaryColor={client.primary_color}
                 label={buttonLabel}
-                disabled={stripeStatus === "active"}
+                disabled={stripeStatus !== "pending"}
               />
             </div>
           )}
