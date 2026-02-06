@@ -76,13 +76,17 @@ export async function POST(req: Request) {
       },
     } as Stripe.Checkout.SessionCreateParams;
 
-    const stripeClient = hasConnectAccount
-      ? new Stripe(process.env.STRIPE_SECRET_KEY!, {
-          stripeAccount: cliente.stripe_account_id,
-        })
-      : stripe;
+    if (hasConnectAccount && cliente.stripe_charges_enabled === true) {
+      const applicationFeeAmount = Math.round(unitAmount * 0.05);
+      sessionParams.payment_intent_data = {
+        application_fee_amount: applicationFeeAmount,
+        transfer_data: {
+          destination: cliente.stripe_account_id!,
+        },
+      };
+    }
 
-    const session = await stripeClient.checkout.sessions.create(sessionParams);
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     return NextResponse.json({ url: session.url });
   } catch (error: any) {
