@@ -14,7 +14,7 @@ export default async function OwnerLayout({ children }: OwnerLayoutProps) {
   const allowedEmail = (process.env.OWNER_EMAIL || "").toLowerCase();
 
   if (!owner || !allowedEmail || ownerEmail !== allowedEmail) {
-    redirect("/admin/clientes/login");
+    redirect("/owner/login");
   }
 
   const navItems = [
@@ -39,7 +39,7 @@ export default async function OwnerLayout({ children }: OwnerLayoutProps) {
           <div className="flex items-center gap-4">
             <span className="text-sm text-white/60">Acceso restringido</span>
             <a
-              href="/admin/clientes/logout"
+              href="/owner/logout"
               className="rounded-lg border border-white/10 px-3 py-1.5 text-sm text-white/70 hover:text-white hover:border-white/30 transition"
             >
               Cerrar sesión

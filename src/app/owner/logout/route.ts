@@ -11,5 +11,12 @@ export async function GET(req: Request) {
     maxAge: 0,
   });
 
+  cookieStore.set("owner_email", "", {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+
   return NextResponse.redirect(new URL("/owner/login", req.url));
 }
