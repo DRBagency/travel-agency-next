@@ -14,146 +14,145 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function POST(req: Request) {
   console.log("STRIPE WEBHOOK RECEIVED");
   try {
-    await requireValidApiDomain();
-  } catch {
-    return new NextResponse("Unauthorized", { status: 403 });
-  }
+    const body = await req.text();
+    const signature = (await headers()).get("stripe-signature");
 
-  const body = await req.text();
-  const signature = (await headers()).get("stripe-signature");
+    if (!signature) {
+      console.error("❌ Missing signature");
+      return new Response("ok", { status: 200 });
+    }
 
-  if (!signature) {
-    return new NextResponse("Missing signature", { status: 400 });
-  }
+    let event: Stripe.Event;
 
-  let event: Stripe.Event;
+    try {
+      event = stripe.webhooks.constructEvent(
+        body,
+        signature,
+        process.env.STRIPE_WEBHOOK_SECRET!
+      );
+    } catch (err: any) {
+      console.error("❌ Webhook signature error:", err.message);
+      return new Response("ok", { status: 200 });
+    }
 
-  try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
-  } catch (err: any) {
-    console.error("❌ Webhook signature error:", err.message);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
-  }
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
+      if (session.mode === "subscription") {
+        const m = session.metadata;
 
-    if (session.mode === "subscription") {
+        if (!m?.cliente_id) {
+          console.error("❌ No cliente_id in subscription metadata");
+          return new Response("ok", { status: 200 });
+        }
+
+        await supabaseAdmin
+          .from("clientes")
+          .update({ stripe_subscription_id: session.subscription })
+          .eq("id", m.cliente_id);
+
+        return new Response("ok", { status: 200 });
+      }
+
       const m = session.metadata;
 
-      if (!m?.cliente_id) {
-        console.error("❌ No cliente_id in subscription metadata");
-        return new NextResponse("No metadata", { status: 400 });
+      if (!m) {
+        console.error("❌ No metadata in session");
+        return new Response("ok", { status: 200 });
       }
+
+      const { data: reserva, error } = await supabaseAdmin
+        .from("reservas")
+        .insert({
+          cliente_id: m.cliente_id,
+          destino: m.destino_nombre,
+          nombre: m.nombre,
+          email: m.email,
+          telefono: m.telefono || null,
+          fecha_salida: m.fecha_salida,
+          fecha_regreso: m.fecha_regreso,
+          personas: Number(m.personas),
+          precio: Number(m.total),
+          estado_pago: "pagado",
+          stripe_session_id: session.id,
+        })
+        .select("*")
+        .single();
+
+      if (error) {
+        console.error("❌ Supabase insert error:", error);
+        return new Response("ok", { status: 200 });
+      }
+
+      console.log("✅ Reserva guardada en Supabase:", session.id);
+
+      const { data: client } = await supabaseAdmin
+        .from("clientes")
+        .select("nombre, logo_url, primary_color, contact_email, contact_phone")
+        .eq("id", m.cliente_id)
+        .single();
+
+      const { data: templates } = await supabaseAdmin
+        .from("email_templates")
+        .select("tipo, subject, html_body, cta_text, cta_url, activo")
+        .eq("cliente_id", m.cliente_id)
+        .eq("activo", true)
+        .in("tipo", ["reserva_cliente", "reserva_agencia"]);
+
+      const templatesByType = (templates || []).reduce(
+        (acc: Record<string, any>, row: any) => {
+          acc[row.tipo] = row;
+          return acc;
+        },
+        {}
+      );
+
+      if (reserva && client) {
+        const baseUrl =
+          process.env.NEXT_PUBLIC_BASE_URL ||
+          process.env.VERCEL_URL ||
+          "";
+        const adminUrl = baseUrl
+          ? `https://${baseUrl.replace(/^https?:\/\//, "")}/admin/reserva/${reserva.id}`
+          : null;
+
+        await sendReservationEmails(
+          {
+            customerName: reserva.nombre,
+            email: reserva.email,
+            destination: reserva.destino,
+            total: reserva.precio,
+            persons: reserva.personas,
+            departureDate: reserva.fecha_salida,
+            returnDate: reserva.fecha_regreso,
+            adminUrl,
+          },
+          {
+            clientName: client.nombre,
+            logoUrl: client.logo_url,
+            primaryColor: client.primary_color,
+            contactEmail: client.contact_email,
+            contactPhone: client.contact_phone,
+          },
+          {
+            reserva_cliente: templatesByType.reserva_cliente ?? null,
+            reserva_agencia: templatesByType.reserva_agencia ?? null,
+          }
+        );
+      }
+    }
+
+    if (event.type === "account.updated") {
+      const account = event.data.object as Stripe.Account;
 
       await supabaseAdmin
         .from("clientes")
-        .update({ stripe_subscription_id: session.subscription })
-        .eq("id", m.cliente_id);
-
-      return NextResponse.json({ received: true });
+        .update({ stripe_charges_enabled: account.charges_enabled })
+        .eq("stripe_account_id", account.id);
     }
-
-    const m = session.metadata;
-
-    if (!m) {
-      console.error("❌ No metadata in session");
-      return new NextResponse("No metadata", { status: 400 });
-    }
-
-    const { data: reserva, error } = await supabaseAdmin
-      .from("reservas")
-      .insert({
-      cliente_id: m.cliente_id,
-      destino: m.destino_nombre,
-      nombre: m.nombre,
-      email: m.email,
-      telefono: m.telefono || null,
-      fecha_salida: m.fecha_salida,
-      fecha_regreso: m.fecha_regreso,
-      personas: Number(m.personas),
-      precio: Number(m.total),
-      estado_pago: "pagado",
-      stripe_session_id: session.id,
-      })
-      .select("*")
-      .single();
-
-    if (error) {
-      console.error("❌ Supabase insert error:", error);
-      return new NextResponse("Database error", { status: 500 });
-    }
-
-    console.log("✅ Reserva guardada en Supabase:", session.id);
-
-    const { data: client } = await supabaseAdmin
-      .from("clientes")
-      .select("nombre, logo_url, primary_color, contact_email, contact_phone")
-      .eq("id", m.cliente_id)
-      .single();
-
-    const { data: templates } = await supabaseAdmin
-      .from("email_templates")
-      .select("tipo, subject, html_body, cta_text, cta_url, activo")
-      .eq("cliente_id", m.cliente_id)
-      .eq("activo", true)
-      .in("tipo", ["reserva_cliente", "reserva_agencia"]);
-
-    const templatesByType = (templates || []).reduce(
-      (acc: Record<string, any>, row: any) => {
-        acc[row.tipo] = row;
-        return acc;
-      },
-      {}
-    );
-
-    if (reserva && client) {
-      const baseUrl =
-        process.env.NEXT_PUBLIC_BASE_URL ||
-        process.env.VERCEL_URL ||
-        "";
-      const adminUrl = baseUrl
-        ? `https://${baseUrl.replace(/^https?:\/\//, "")}/admin/reserva/${reserva.id}`
-        : null;
-
-      await sendReservationEmails(
-        {
-          customerName: reserva.nombre,
-          email: reserva.email,
-          destination: reserva.destino,
-          total: reserva.precio,
-          persons: reserva.personas,
-          departureDate: reserva.fecha_salida,
-          returnDate: reserva.fecha_regreso,
-          adminUrl,
-        },
-        {
-          clientName: client.nombre,
-          logoUrl: client.logo_url,
-          primaryColor: client.primary_color,
-          contactEmail: client.contact_email,
-          contactPhone: client.contact_phone,
-        },
-        {
-          reserva_cliente: templatesByType.reserva_cliente ?? null,
-          reserva_agencia: templatesByType.reserva_agencia ?? null,
-        }
-      );
-    }
+  } catch (error: any) {
+    console.error("❌ Webhook handler error:", error?.message || error);
   }
 
-  if (event.type === "account.updated") {
-    const account = event.data.object as Stripe.Account;
-
-    await supabaseAdmin
-      .from("clientes")
-      .update({ stripe_charges_enabled: account.charges_enabled })
-      .eq("stripe_account_id", account.id);
-  }
-
-  return NextResponse.json({ received: true });
+  return new Response("ok", { status: 200 });
 }
