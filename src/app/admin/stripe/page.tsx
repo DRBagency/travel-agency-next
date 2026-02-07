@@ -2,6 +2,7 @@ import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import ConnectStripeButton from "./ConnectStripeButton";
 import SubscriptionButton from "./SubscriptionButton";
+import ChangePlanForm from "./ChangePlanForm";
 
 type StripeStatus = "none" | "pending" | "active";
 
@@ -134,6 +135,22 @@ export default async function AdminStripePage() {
             )}
           </div>
         </section>
+
+        {client.stripe_subscription_id && (
+          <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+            <div>
+              <h2 className="text-xl font-semibold">Cambiar plan</h2>
+              <p className="text-sm text-white/60">
+                Actualiza tu plan y la comisión aplicada.
+              </p>
+            </div>
+
+            <ChangePlanForm
+              primaryColor={client.primary_color}
+              currentPlan={planKey}
+            />
+          </section>
+        )}
 
         <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
           <h2 className="text-xl font-semibold">Comisión de la plataforma</h2>
