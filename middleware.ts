@@ -3,6 +3,9 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  if (pathname === "/api/stripe/connect/webhook") {
+    return NextResponse.next();
+  }
   const host = req.headers.get("host") || "";
   const normalizedHost = host
     .replace(/^https?:\/\//i, "")
