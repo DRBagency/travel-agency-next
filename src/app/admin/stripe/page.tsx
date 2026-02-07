@@ -2,11 +2,8 @@ import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import ConnectStripeButton from "./ConnectStripeButton";
 import SubscriptionButton from "./SubscriptionButton";
-import Stripe from "stripe";
 
 type StripeStatus = "none" | "pending" | "active";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export default async function AdminStripePage() {
   const client = await requireAdminClient();
@@ -18,8 +15,7 @@ export default async function AdminStripePage() {
   let stripeStatus: StripeStatus = "none";
 
   if (client.stripe_account_id) {
-    const account = await stripe.accounts.retrieve(client.stripe_account_id);
-    if (account.charges_enabled === true) {
+    if (client.stripe_charges_enabled === true) {
       stripeStatus = "active";
     } else {
       stripeStatus = "pending";
