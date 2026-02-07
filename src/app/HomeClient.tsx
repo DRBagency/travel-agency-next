@@ -92,6 +92,7 @@ export default function HomeClient({
         clienteId={client.id}
         primaryColor={client.primary_color}
         paymentsEnabled={client.stripe_charges_enabled === true}
+        subscriptionActive={Boolean(client.stripe_subscription_id)}
         onClose={() => setSelectedDestination(null)}
       />
     </>

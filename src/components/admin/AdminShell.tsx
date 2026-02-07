@@ -13,6 +13,8 @@ import {
 interface AdminShellProps {
   clientName: string;
   primaryColor?: string | null;
+  subscriptionActive?: boolean;
+  allowWhenInactive?: boolean;
   children: ReactNode;
 }
 
@@ -28,7 +30,13 @@ const navItems = [
   { label: "Legales", href: "/admin/legales", icon: FileText },
 ];
 
-const AdminShell = ({ clientName, primaryColor, children }: AdminShellProps) => {
+const AdminShell = ({
+  clientName,
+  primaryColor,
+  subscriptionActive = true,
+  allowWhenInactive = false,
+  children,
+}: AdminShellProps) => {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/80 backdrop-blur">
@@ -74,7 +82,31 @@ const AdminShell = ({ clientName, primaryColor, children }: AdminShellProps) => 
         </aside>
 
         <main className="rounded-2xl border border-white/10 bg-white/5 p-6">
-          {children}
+          {subscriptionActive || allowWhenInactive ? (
+            children
+          ) : (
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-6">
+                <h2 className="text-xl font-semibold">Tu suscripción no está activa</h2>
+                <p className="text-sm text-white/70 mt-2">
+                  Activa la suscripción para acceder a todas las funciones del panel.
+                </p>
+              </div>
+              <div className="flex justify-end">
+                <a
+                  href="/admin/stripe"
+                  className={
+                    primaryColor
+                      ? "px-5 py-3 rounded-xl text-white font-semibold"
+                      : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold"
+                  }
+                  style={primaryColor ? { backgroundColor: primaryColor } : undefined}
+                >
+                  Activar suscripción
+                </a>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

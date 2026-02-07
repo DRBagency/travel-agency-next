@@ -26,6 +26,7 @@ interface BookingModalProps {
   clienteId: string;
   primaryColor?: string | null;
   paymentsEnabled?: boolean;
+  subscriptionActive?: boolean;
   onClose: () => void;
 }
 
@@ -40,6 +41,7 @@ const BookingModal = ({
   clienteId,
   primaryColor,
   paymentsEnabled,
+  subscriptionActive,
   onClose,
 }: BookingModalProps) => {
   const [step, setStep] = useState(1);
@@ -108,6 +110,7 @@ const BookingModal = ({
   };
 
   const handlePay = async () => {
+    if (!subscriptionActive) return;
     if (!paymentsEnabled) return;
     if (!canProceed()) return;
 
@@ -435,13 +438,19 @@ const BookingModal = ({
               </button>
             ) : (
               <div className="flex flex-col items-end gap-2">
-                {!paymentsEnabled && (
+                {!subscriptionActive && (
+                  <span className="text-sm text-amber-200">
+                    Tu suscripción no está activa.
+                  </span>
+                )}
+                {subscriptionActive && !paymentsEnabled && (
                   <span className="text-sm text-amber-200">
                     Esta agencia aún no puede aceptar pagos.
                   </span>
                 )}
                 <button
                   onClick={() => {
+                    if (!subscriptionActive) return;
                     if (!paymentsEnabled) return;
                     if (!canProceed()) {
                       setShowErrors(true);
@@ -450,7 +459,7 @@ const BookingModal = ({
                     setShowErrors(false);
                     handlePay();
                   }}
-                  disabled={!paymentsEnabled}
+                  disabled={!subscriptionActive || !paymentsEnabled}
                   className={
                     primaryColor
                       ? "px-6 py-3 rounded-2xl flex items-center gap-2 text-white font-semibold shadow-[0_12px_30px_rgba(0,0,0,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:opacity-60 disabled:cursor-not-allowed"

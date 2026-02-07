@@ -66,6 +66,7 @@ export default async function ReservaPage({
     <AdminShell
       clientName={client?.nombre ?? "Panel"}
       primaryColor={client?.primary_color ?? null}
+      subscriptionActive={Boolean(client?.stripe_subscription_id)}
     >
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">

@@ -34,6 +34,13 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!cliente.stripe_subscription_id) {
+      return NextResponse.json(
+        { error: "Suscripción inactiva" },
+        { status: 403 }
+      );
+    }
+
     const hasConnectAccount = Boolean(cliente.stripe_account_id);
 
     if (hasConnectAccount && cliente.stripe_charges_enabled === false) {

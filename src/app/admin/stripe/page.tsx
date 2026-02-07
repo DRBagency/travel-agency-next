@@ -48,7 +48,12 @@ export default async function AdminStripePage() {
   const planInfo = planMeta[planKey] || planMeta.start;
 
   return (
-    <AdminShell clientName={client.nombre} primaryColor={client.primary_color}>
+    <AdminShell
+      clientName={client.nombre}
+      primaryColor={client.primary_color}
+      subscriptionActive={Boolean(client.stripe_subscription_id)}
+      allowWhenInactive
+    >
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Stripe / Pagos</h1>

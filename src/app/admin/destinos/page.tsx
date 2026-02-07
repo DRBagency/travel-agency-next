@@ -83,7 +83,11 @@ export default async function AdminDestinosPage({
     : undefined;
 
   return (
-    <AdminShell clientName={client.nombre} primaryColor={client.primary_color}>
+    <AdminShell
+      clientName={client.nombre}
+      primaryColor={client.primary_color}
+      subscriptionActive={Boolean(client.stripe_subscription_id)}
+    >
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Destinos</h1>
