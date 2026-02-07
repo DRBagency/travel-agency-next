@@ -47,7 +47,7 @@ async function handleOwnerLogin(formData: FormData) {
     secure: process.env.NODE_ENV === "production",
   });
 
-  redirect("/admin/clientes");
+  redirect("/owner/clientes");
 }
 
 interface OwnerLoginPageProps {
