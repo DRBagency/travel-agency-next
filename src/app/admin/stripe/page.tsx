@@ -120,7 +120,13 @@ export default async function AdminStripePage() {
           </div>
 
           <div className="flex justify-end">
-            <SubscriptionButton primaryColor={client.primary_color} />
+            {client.stripe_subscription_id ? (
+              <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-300">
+                Suscripción activa
+              </span>
+            ) : (
+              <SubscriptionButton primaryColor={client.primary_color} />
+            )}
           </div>
         </section>
 
