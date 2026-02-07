@@ -39,6 +39,13 @@ async function handleOwnerLogin(formData: FormData) {
     maxAge: 60 * 60 * 24,
     secure: process.env.NODE_ENV === "production",
   });
+  cookieStore.set("owner_email", email.toLowerCase(), {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24,
+    secure: process.env.NODE_ENV === "production",
+  });
 
   redirect("/admin/clientes");
 }
