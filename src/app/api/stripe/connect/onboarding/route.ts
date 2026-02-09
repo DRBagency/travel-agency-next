@@ -3,7 +3,9 @@ import { NextResponse } from "next/server";
 import { getClientByDomain } from "@/lib/getClientByDomain";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2026-01-28.clover",
+});
 
 export async function GET() {
   try {
