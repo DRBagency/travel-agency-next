@@ -240,7 +240,7 @@ export async function POST(req: NextRequest) {
 
       // Fecha de fin (current_period_end o canceled_at)
       const endTimestamp =
-        subscription.current_period_end || subscription.canceled_at;
+        (subscription as any).current_period_end || (subscription as any).canceled_at;
       const endDate = endTimestamp
         ? new Date(endTimestamp * 1000).toLocaleDateString("es-ES", {
             year: "numeric",
