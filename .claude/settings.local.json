@@ -9,7 +9,8 @@
       "Bash(ls:*)",
       "Bash(supabase db push:*)",
       "Bash(npm install:*)",
-      "Bash(npx supabase:*)"
+      "Bash(npx supabase:*)",
+      "Bash(git push:*)"
     ]
   }
 }
