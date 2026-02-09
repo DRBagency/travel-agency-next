@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Stripe__list_products",
+      "mcp__claude_ai_Stripe__search_stripe_resources",
+      "mcp__claude_ai_Supabase__list_tables"
+    ]
+  }
+}
