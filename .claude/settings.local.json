@@ -5,7 +5,11 @@
       "mcp__claude_ai_Stripe__search_stripe_resources",
       "mcp__claude_ai_Supabase__list_tables",
       "Bash(git commit:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(ls:*)",
+      "Bash(supabase db push:*)",
+      "Bash(npm install:*)",
+      "Bash(npx supabase:*)"
     ]
   }
 }
