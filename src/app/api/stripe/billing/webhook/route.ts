@@ -1,7 +1,8 @@
-import { NextRequest } from "next/server";
 import Stripe from "stripe";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { sendBillingEmail } from "@/lib/emails/send-billing-email";
+
+export const runtime = 'nodejs';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
@@ -41,7 +42,7 @@ async function getClienteByStripeCustomerId(
 // MAIN WEBHOOK HANDLER
 // ============================================================================
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const sig = req.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_BILLING_WEBHOOK_SECRET;
 
