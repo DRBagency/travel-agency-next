@@ -104,6 +104,9 @@ export async function sendBillingEmail({
     // ========================================
     // 3. Preparar tokens dinámicos
     // ========================================
+    const adminUrl =
+      data.adminUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/admin`;
+
     const tokens: Record<string, string | number | null | undefined> = {
       clientName: data.clientName,
       planName: data.planName,
@@ -119,7 +122,7 @@ export async function sendBillingEmail({
       cancelDate: data.cancelDate,
       cancellationDate: data.cancellationDate,
       endDate: data.endDate,
-      adminUrl: data.adminUrl,
+      adminUrl,
       supportEmail: data.supportEmail || platformSettings.billing_email_from,
     };
 

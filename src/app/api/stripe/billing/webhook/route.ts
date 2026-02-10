@@ -22,6 +22,12 @@ function getPlanNameFromPriceId(priceId: string): string | null {
   return priceMap[priceId] || null;
 }
 
+const COMMISSION_BY_PLAN: Record<string, string> = {
+  Start: "5%",
+  Grow: "3%",
+  Pro: "1%",
+};
+
 // ============================================================================
 // HELPER: OBTENER CLIENTE DESDE SUPABASE
 // ============================================================================
@@ -187,8 +193,11 @@ export async function POST(req: Request) {
       // Obtener nuevo precio
       const newUnitAmount = subscription.items.data[0]?.price.unit_amount;
       const newPrice = newUnitAmount
-        ? `$${(newUnitAmount / 100).toFixed(2)}`
+        ? `${(newUnitAmount / 100).toFixed(2)} €`
         : undefined;
+
+      // Obtener nueva tarifa/comisión
+      const newCommission = COMMISSION_BY_PLAN[newPlanName] || undefined;
 
       // URL del admin panel
       const adminUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/admin`;
@@ -203,6 +212,8 @@ export async function POST(req: Request) {
           oldPlanName,
           newPlanName,
           newPrice,
+          newCommission,
+          billingPeriod: "mensual",
           changeDate: new Date().toLocaleDateString("es-ES", {
             year: "numeric",
             month: "long",

@@ -118,7 +118,7 @@ export default async function AdminStripePage() {
               </div>
             </div>
             <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
-              <div className="text-sm text-white/60 mb-1">Comisión por reserva</div>
+              <div className="text-sm text-white/60 mb-1">Tarifa por reserva</div>
               <div className="text-lg font-semibold text-white">
                 {planInfo.fee}
               </div>
@@ -141,7 +141,7 @@ export default async function AdminStripePage() {
             <div>
               <h2 className="text-xl font-semibold">Cambiar plan</h2>
               <p className="text-sm text-white/60">
-                Actualiza tu plan y la comisión aplicada.
+                Actualiza tu plan y la tarifa aplicada.
               </p>
             </div>
 
@@ -153,9 +153,9 @@ export default async function AdminStripePage() {
         )}
 
         <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
-          <h2 className="text-xl font-semibold">Comisión de la plataforma</h2>
+          <h2 className="text-xl font-semibold">Tarifa de la plataforma</h2>
           <p className="text-sm text-white/70">
-            La comisión y la suscripción dependen del plan contratado:
+            La tarifa y la suscripción dependen del plan contratado:
           </p>
           <ul className="text-sm text-white/60 list-disc pl-5 space-y-1">
             <li>Start → 29 € + 5 %</li>
