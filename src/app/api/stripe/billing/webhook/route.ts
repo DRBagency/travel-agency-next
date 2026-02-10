@@ -88,6 +88,18 @@ export async function POST(req: Request) {
         return new Response("OK", { status: 200 });
       }
 
+      // Guardar stripe_subscription_id en la DB
+      const { error: updateError } = await supabaseAdmin
+        .from("clientes")
+        .update({ stripe_subscription_id: subscription.id })
+        .eq("id", cliente.id);
+
+      if (updateError) {
+        console.error(`❌ [Billing Webhook] Failed to save stripe_subscription_id:`, updateError);
+      } else {
+        console.log(`✅ [Billing Webhook] Saved stripe_subscription_id: ${subscription.id} for cliente: ${cliente.id}`);
+      }
+
       // Obtener precio y plan
       const priceId = subscription.items.data[0]?.price.id;
       const unitAmount = subscription.items.data[0]?.price.unit_amount;
