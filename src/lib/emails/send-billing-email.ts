@@ -126,6 +126,9 @@ export async function sendBillingEmail({
       supportEmail: data.supportEmail || platformSettings.billing_email_from,
     };
 
+    console.log(`📧 [Billing Email] Tokens for ${tipo}:`, JSON.stringify(tokens, null, 2));
+    console.log(`📧 [Billing Email] Template body preview:`, template.html_body?.substring(0, 200));
+
     // ========================================
     // 4. Renderizar email con branding de plataforma
     // ========================================
