@@ -53,7 +53,13 @@ export async function POST() {
 
     if (updateError) {
       console.error(`❌ [Create Subscription] Failed to save stripe_customer_id:`, updateError);
+      return NextResponse.json(
+        { error: "Failed to save customer ID" },
+        { status: 500 }
+      );
     }
+
+    console.log(`✅ [Create Subscription] Saved stripe_customer_id: ${customerId} for cliente: ${client.id}`);
   } else {
     console.log(`ℹ️ [Create Subscription] Reusing existing Stripe customer: ${customerId}`);
   }
