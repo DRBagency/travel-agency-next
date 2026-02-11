@@ -48,11 +48,12 @@ export async function getMonetizationData() {
 
     reservasPorCliente?.forEach((reserva) => {
       const clienteId = reserva.cliente_id;
-      const comision = (reserva.precio || 0) * (reserva.clientes?.commission_rate || 0);
+      const cliente = reserva.clientes as unknown as { nombre: string; commission_rate: number } | null;
+      const comision = (reserva.precio || 0) * (cliente?.commission_rate || 0);
 
       if (!comisionesPorCliente[clienteId]) {
         comisionesPorCliente[clienteId] = {
-          nombre: reserva.clientes?.nombre || "Sin nombre",
+          nombre: cliente?.nombre || "Sin nombre",
           total: 0,
           count: 0,
         };
