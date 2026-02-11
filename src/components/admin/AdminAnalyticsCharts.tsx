@@ -69,7 +69,7 @@ export function DestinosChart({ data }: { data: { destino: string; value: number
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={(entry) => `${entry.destino} (${entry.value})`}
+              label={(entry: any) => `${entry.destino} (${entry.value})`}
               outerRadius={100}
               fill="#8884d8"
               dataKey="value"
