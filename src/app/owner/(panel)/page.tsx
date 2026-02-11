@@ -1,10 +1,13 @@
 import { getDashboardMetrics } from "@/lib/owner/get-dashboard-metrics";
+import { getChartData } from "@/lib/owner/get-chart-data";
+import { MRRChart, ClientesChart } from "@/components/owner/OwnerCharts";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function OwnerDashboardPage() {
   const metrics = await getDashboardMetrics();
+  const chartData = await getChartData();
 
   return (
     <div>
@@ -58,6 +61,12 @@ export default async function OwnerDashboardPage() {
           </p>
           <p className="text-xs text-white/40 mt-1">Generadas por reservas</p>
         </div>
+      </div>
+
+      {/* Gráficas */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <MRRChart data={chartData.mrrPorMes} />
+        <ClientesChart data={chartData.clientesPorMes} />
       </div>
 
       {/* Últimos clientes */}
