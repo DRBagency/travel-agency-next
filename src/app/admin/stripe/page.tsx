@@ -2,6 +2,7 @@ import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import ConnectStripeButton from "./ConnectStripeButton";
 import SubscriptionButton from "./SubscriptionButton";
+import CancelSubscriptionButton from "./CancelSubscriptionButton";
 import ChangePlanForm from "./ChangePlanForm";
 
 type StripeStatus = "none" | "pending" | "active";
@@ -125,11 +126,14 @@ export default async function AdminStripePage() {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex items-center justify-end gap-3">
             {client.stripe_subscription_id ? (
-              <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-300">
-                Suscripción activa
-              </span>
+              <>
+                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-300">
+                  Suscripción activa
+                </span>
+                <CancelSubscriptionButton />
+              </>
             ) : (
               <SubscriptionButton primaryColor={client.primary_color} />
             )}

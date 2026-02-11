@@ -258,6 +258,18 @@ export async function POST(req: Request) {
         return new Response("OK", { status: 200 });
       }
 
+      // Limpiar stripe_subscription_id en la DB
+      const { error: clearError } = await supabaseAdmin
+        .from("clientes")
+        .update({ stripe_subscription_id: null })
+        .eq("id", cliente.id);
+
+      if (clearError) {
+        console.error(`❌ [Billing Webhook] Failed to clear stripe_subscription_id:`, clearError);
+      } else {
+        console.log(`✅ [Billing Webhook] Cleared stripe_subscription_id for cliente: ${cliente.id}`);
+      }
+
       // Obtener plan cancelado
       const priceId = subscription.items.data[0]?.price.id;
       const planName = priceId
