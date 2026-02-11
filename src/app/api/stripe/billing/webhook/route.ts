@@ -261,13 +261,13 @@ export async function POST(req: Request) {
       // Limpiar stripe_subscription_id en la DB
       const { error: clearError } = await supabaseAdmin
         .from("clientes")
-        .update({ stripe_subscription_id: null })
+        .update({ stripe_subscription_id: null, subscription_cancel_at: null })
         .eq("id", cliente.id);
 
       if (clearError) {
-        console.error(`❌ [Billing Webhook] Failed to clear stripe_subscription_id:`, clearError);
+        console.error(`❌ [Billing Webhook] Failed to clear subscription fields:`, clearError);
       } else {
-        console.log(`✅ [Billing Webhook] Cleared stripe_subscription_id for cliente: ${cliente.id}`);
+        console.log(`✅ [Billing Webhook] Cleared stripe_subscription_id and subscription_cancel_at for cliente: ${cliente.id}`);
       }
 
       // Obtener plan cancelado

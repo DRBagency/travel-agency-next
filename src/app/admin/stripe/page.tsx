@@ -3,6 +3,7 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 import ConnectStripeButton from "./ConnectStripeButton";
 import SubscriptionButton from "./SubscriptionButton";
 import CancelSubscriptionButton from "./CancelSubscriptionButton";
+import ReactivateSubscriptionButton from "./ReactivateSubscriptionButton";
 import ChangePlanForm from "./ChangePlanForm";
 
 type StripeStatus = "none" | "pending" | "active";
@@ -48,6 +49,18 @@ export default async function AdminStripePage() {
     pro: { label: "Pro", price: "99 € / mes", fee: "1 %" },
   };
   const planInfo = planMeta[planKey] || planMeta.start;
+
+  const isCanceling =
+    client.subscription_cancel_at &&
+    new Date(client.subscription_cancel_at) > new Date();
+
+  const cancelAtFormatted = isCanceling
+    ? new Date(client.subscription_cancel_at).toLocaleDateString("es-ES", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : null;
 
   return (
     <AdminShell
@@ -126,21 +139,40 @@ export default async function AdminStripePage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3">
-            {client.stripe_subscription_id ? (
-              <>
-                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-300">
-                  Suscripción activa
+          {client.stripe_subscription_id && isCanceling ? (
+            <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-sm font-semibold text-amber-300">
+                  Cancelación programada
                 </span>
-                <CancelSubscriptionButton />
-              </>
-            ) : (
-              <SubscriptionButton primaryColor={client.primary_color} />
-            )}
-          </div>
+              </div>
+              <p className="text-sm text-white/70">
+                Tu suscripción se cancelará el{" "}
+                <strong className="text-white">{cancelAtFormatted}</strong>.
+                Hasta entonces, mantendrás acceso completo a todas las
+                funcionalidades.
+              </p>
+              <div className="flex justify-end">
+                <ReactivateSubscriptionButton />
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-end gap-3">
+              {client.stripe_subscription_id ? (
+                <>
+                  <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-300">
+                    Suscripción activa
+                  </span>
+                  <CancelSubscriptionButton />
+                </>
+              ) : (
+                <SubscriptionButton primaryColor={client.primary_color} />
+              )}
+            </div>
+          )}
         </section>
 
-        {client.stripe_subscription_id && (
+        {client.stripe_subscription_id && !isCanceling && (
           <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
             <div>
               <h2 className="text-xl font-semibold">Cambiar plan</h2>

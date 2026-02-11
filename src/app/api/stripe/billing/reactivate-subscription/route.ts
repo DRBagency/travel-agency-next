@@ -31,37 +31,30 @@ export async function POST() {
   }
 
   try {
-    const canceledSubscription = await stripe.subscriptions.update(
-      client.stripe_subscription_id,
-      { cancel_at_period_end: true }
-    );
+    await stripe.subscriptions.update(client.stripe_subscription_id, {
+      cancel_at_period_end: false,
+    });
 
-    // Guardar fecha de cancelación
-    if (canceledSubscription.cancel_at) {
-      const { error: updateError } = await supabaseAdmin
-        .from("clientes")
-        .update({
-          subscription_cancel_at: new Date(
-            canceledSubscription.cancel_at * 1000
-          ).toISOString(),
-        })
-        .eq("id", client.id);
+    // Limpiar fecha de cancelación
+    const { error: updateError } = await supabaseAdmin
+      .from("clientes")
+      .update({ subscription_cancel_at: null })
+      .eq("id", client.id);
 
-      if (updateError) {
-        console.error(
-          "❌ [Cancel Subscription] Failed to save subscription_cancel_at:",
-          updateError
-        );
-      }
+    if (updateError) {
+      console.error(
+        "❌ [Reactivate Subscription] Failed to clear subscription_cancel_at:",
+        updateError
+      );
     }
 
     console.log(
-      `✅ [Cancel Subscription] Subscription marked for cancellation: ${client.stripe_subscription_id} for cliente: ${client.id}`
+      `✅ [Reactivate Subscription] Subscription reactivated: ${client.stripe_subscription_id} for cliente: ${client.id}`
     );
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("❌ [Cancel Subscription] Error:", error.message);
+    console.error("❌ [Reactivate Subscription] Error:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
