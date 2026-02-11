@@ -29,6 +29,7 @@ const navItems = [
   { label: "Reservas", href: "/admin/reservas", icon: ClipboardList },
   { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
   { label: "Calendario", href: "/admin/calendario", icon: Calendar },
+  { label: "Documentos", href: "/admin/documentos", icon: FileText },
   { label: "Stripe / Pagos", href: "/admin/stripe", icon: CreditCard },
   { label: "Emails", href: "/admin/emails", icon: FileText },
   { label: "Legales", href: "/admin/legales", icon: FileText },
