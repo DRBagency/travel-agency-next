@@ -9,6 +9,7 @@ import {
   ClipboardList,
   CreditCard,
   BarChart3,
+  Calendar,
 } from "lucide-react";
 
 interface AdminShellProps {
@@ -27,6 +28,7 @@ const navItems = [
   { label: "Destinos", href: "/admin/destinos", icon: Map },
   { label: "Reservas", href: "/admin/reservas", icon: ClipboardList },
   { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+  { label: "Calendario", href: "/admin/calendario", icon: Calendar },
   { label: "Stripe / Pagos", href: "/admin/stripe", icon: CreditCard },
   { label: "Emails", href: "/admin/emails", icon: FileText },
   { label: "Legales", href: "/admin/legales", icon: FileText },
