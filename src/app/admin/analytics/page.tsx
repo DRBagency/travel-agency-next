@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import getClientByDomain from "@/lib/getClientByDomain";
+import { getClientByDomain } from "@/lib/getClientByDomain";
 import { subMonths, format, startOfMonth, endOfMonth } from "date-fns";
 import {
   ReservasChart,
