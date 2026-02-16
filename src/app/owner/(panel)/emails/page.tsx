@@ -109,7 +109,7 @@ export default async function OwnerEmailsPage() {
               type="text"
               defaultValue={settings?.billing_logo_url ?? ""}
               placeholder="https://example.com/logo.png"
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white placeholder:text-white/30"
+              className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
             />
             <p className="text-xs text-white/50 mt-1">
               Logo que aparecerá en el header de los emails de billing
@@ -125,7 +125,7 @@ export default async function OwnerEmailsPage() {
               type="text"
               defaultValue={settings?.billing_email_from ?? ""}
               placeholder='DRB Agency <billing@drb.agency>'
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white placeholder:text-white/30"
+              className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
             />
             <p className="text-xs text-white/50 mt-1">
               Formato: &quot;Nombre &lt;email@dominio.com&gt;&quot; o solo
@@ -141,7 +141,7 @@ export default async function OwnerEmailsPage() {
               name="billing_footer_text"
               defaultValue={settings?.billing_footer_text ?? ""}
               placeholder="© 2026 DRB Agency. Todos los derechos reservados."
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white placeholder:text-white/30 min-h-[80px]"
+              className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30 min-h-[80px]"
             />
             <p className="text-xs text-white/50 mt-1">
               Texto que aparecerá en el footer de todos los emails
@@ -210,7 +210,7 @@ export default async function OwnerEmailsPage() {
             return (
               <details
                 key={templateType.tipo}
-                className="group rounded-xl border border-white/10 bg-slate-900/60 overflow-hidden"
+                className="group rounded-xl border border-white/10 bg-white/10/60 overflow-hidden"
               >
                 <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition">
                   <div>
@@ -278,7 +278,7 @@ export default async function OwnerEmailsPage() {
                       type="text"
                       defaultValue={template?.subject ?? ""}
                       placeholder="Ej: 🎉 ¡Bienvenido a {{planName}}!"
-                      className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white placeholder:text-white/30"
+                      className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
                     />
                   </div>
 
@@ -290,7 +290,7 @@ export default async function OwnerEmailsPage() {
                       name="html_body"
                       defaultValue={template?.html_body ?? ""}
                       placeholder="<h1>Hola {{clientName}}</h1><p>Contenido del email...</p>"
-                      className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white placeholder:text-white/30 min-h-[300px] font-mono text-sm"
+                      className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30 min-h-[300px] font-mono text-sm"
                     />
                     <p className="text-xs text-white/50 mt-1">
                       Escribe HTML y usa tokens como {`{{clientName}}`},{" "}
@@ -308,7 +308,7 @@ export default async function OwnerEmailsPage() {
                         type="text"
                         defaultValue={template?.cta_text ?? ""}
                         placeholder="Ej: Ir a mi panel"
-                        className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white placeholder:text-white/30"
+                        className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
                       />
                     </div>
                     <div>
@@ -320,7 +320,7 @@ export default async function OwnerEmailsPage() {
                         type="text"
                         defaultValue={template?.cta_url ?? ""}
                         placeholder="Ej: {{adminUrl}} o https://..."
-                        className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white placeholder:text-white/30"
+                        className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
                       />
                     </div>
                   </div>

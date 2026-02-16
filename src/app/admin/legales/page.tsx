@@ -121,7 +121,7 @@ export default async function AdminLegalesPage({
                 </label>
                 <input
                   name="titulo"
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: Política de privacidad"
                 />
               </div>
@@ -131,7 +131,7 @@ export default async function AdminLegalesPage({
                 </label>
                 <input
                   name="slug"
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="privacidad"
                 />
               </div>
@@ -143,7 +143,7 @@ export default async function AdminLegalesPage({
               </label>
               <textarea
                 name="contenido"
-                className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[160px]"
+                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[160px]"
                 placeholder="<h2>...</h2><p>...</p>"
               />
             </div>
@@ -194,7 +194,7 @@ export default async function AdminLegalesPage({
                   <input
                     name="titulo"
                     defaultValue={item.titulo ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   />
                 </div>
                 <div>
@@ -204,7 +204,7 @@ export default async function AdminLegalesPage({
                   <input
                     name="slug"
                     defaultValue={item.slug ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   />
                 </div>
               </div>
@@ -216,7 +216,7 @@ export default async function AdminLegalesPage({
                 <textarea
                   name="contenido"
                   defaultValue={item.contenido ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[160px]"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[160px]"
                 />
               </div>
 

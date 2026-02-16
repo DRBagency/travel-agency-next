@@ -114,7 +114,7 @@ export default async function AdminOpinionsPage({
                 </label>
                 <input
                   name="nombre"
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: Ana Martínez"
                 />
               </div>
@@ -124,7 +124,7 @@ export default async function AdminOpinionsPage({
                 </label>
                 <input
                   name="ubicacion"
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: Madrid"
                 />
               </div>
@@ -136,7 +136,7 @@ export default async function AdminOpinionsPage({
               </label>
               <textarea
                 name="comentario"
-                className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[110px]"
+                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
                 placeholder="Cuéntanos la experiencia del cliente"
               />
             </div>
@@ -152,7 +152,7 @@ export default async function AdminOpinionsPage({
                   min={1}
                   max={5}
                   defaultValue={5}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                 />
               </div>
               <label className="flex items-center gap-2 text-sm text-white/70">
@@ -202,7 +202,7 @@ export default async function AdminOpinionsPage({
                   <input
                     name="nombre"
                     defaultValue={opinion.nombre ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   />
                 </div>
                 <div>
@@ -212,7 +212,7 @@ export default async function AdminOpinionsPage({
                   <input
                     name="ubicacion"
                     defaultValue={opinion.ubicacion ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   />
                 </div>
               </div>
@@ -224,7 +224,7 @@ export default async function AdminOpinionsPage({
                 <textarea
                   name="comentario"
                   defaultValue={opinion.comentario ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[110px]"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
                 />
               </div>
 
@@ -239,7 +239,7 @@ export default async function AdminOpinionsPage({
                     min={1}
                     max={5}
                     defaultValue={opinion.rating ?? 5}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   />
                 </div>
                 <label className="flex items-center gap-2 text-sm text-white/70">

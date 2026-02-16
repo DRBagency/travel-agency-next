@@ -60,14 +60,19 @@ export default async function OwnerLoginPage({
   const { error } = await searchParams;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8">
-        <h1 className="font-display text-3xl font-bold mb-2">
-          Acceso owner
-        </h1>
-        <p className="text-white/60 mb-6">
-          Inicia sesión para gestionar clientes.
-        </p>
+    <div className="-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white flex items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-3xl border border-white/15 bg-white/10 backdrop-blur-md p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-drb-turquoise-400 to-drb-lime-500" />
+          <div>
+            <h1 className="font-display text-2xl font-bold">
+              Acceso Owner
+            </h1>
+            <p className="text-white/60 text-sm">
+              Inicia sesión para gestionar clientes.
+            </p>
+          </div>
+        </div>
 
         {error && (
           <div className="mb-4 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
@@ -85,7 +90,7 @@ export default async function OwnerLoginPage({
             <input
               name="email"
               type="email"
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+              className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-white placeholder:text-white/40"
               placeholder="owner@agencia.com"
               required
             />
@@ -97,7 +102,7 @@ export default async function OwnerLoginPage({
             <input
               name="password"
               type="password"
-              className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+              className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-white placeholder:text-white/40"
               placeholder="••••••••"
               required
             />
@@ -105,7 +110,7 @@ export default async function OwnerLoginPage({
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-white text-slate-950 font-semibold py-3"
+            className="w-full rounded-xl bg-gradient-to-r from-drb-turquoise-500 to-drb-lime-500 text-white font-semibold py-3 hover:opacity-90 transition-opacity"
           >
             Entrar
           </button>

@@ -92,7 +92,7 @@ export default async function AdminStripePage() {
             </span>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+          <div className="rounded-xl border border-white/10 bg-white/10/60 p-4">
             <div className="text-sm text-white/60 mb-1">Stripe Account ID</div>
             <div className="text-sm break-all text-white/80">
               {client.stripe_account_id ?? "—"}
@@ -119,19 +119,19 @@ export default async function AdminStripePage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+            <div className="rounded-xl border border-white/10 bg-white/10/60 p-4">
               <div className="text-sm text-white/60 mb-1">Plan actual</div>
               <div className="text-lg font-semibold text-white">
                 {planInfo.label}
               </div>
             </div>
-            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+            <div className="rounded-xl border border-white/10 bg-white/10/60 p-4">
               <div className="text-sm text-white/60 mb-1">Precio mensual</div>
               <div className="text-lg font-semibold text-white">
                 {planInfo.price}
               </div>
             </div>
-            <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+            <div className="rounded-xl border border-white/10 bg-white/10/60 p-4">
               <div className="text-sm text-white/60 mb-1">Tarifa por reserva</div>
               <div className="text-lg font-semibold text-white">
                 {planInfo.fee}

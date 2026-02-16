@@ -79,7 +79,7 @@ export default async function AdminContentPage({
                 <input
                   name="hero_title"
                   defaultValue={client.hero_title ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: Viaja a tu ritmo con una agencia premium"
                 />
               </div>
@@ -91,7 +91,7 @@ export default async function AdminContentPage({
                 <textarea
                   name="hero_subtitle"
                   defaultValue={client.hero_subtitle ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[100px]"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[100px]"
                   placeholder="Describe el valor principal de la agencia"
                 />
               </div>
@@ -104,7 +104,7 @@ export default async function AdminContentPage({
                   <input
                     name="hero_cta_text"
                     defaultValue={client.hero_cta_text ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                     placeholder="Ej: Reservar ahora"
                   />
                 </div>
@@ -115,7 +115,7 @@ export default async function AdminContentPage({
                   <input
                     name="hero_cta_link"
                     defaultValue={client.hero_cta_link ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                     placeholder="https://"
                   />
                 </div>
@@ -128,7 +128,7 @@ export default async function AdminContentPage({
                 <input
                   name="hero_image_url"
                   defaultValue={client.hero_image_url ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="https://..."
                 />
               </div>
@@ -151,7 +151,7 @@ export default async function AdminContentPage({
                 <input
                   name="stats_years"
                   defaultValue={client.stats_years ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: 15+"
                 />
               </div>
@@ -162,7 +162,7 @@ export default async function AdminContentPage({
                 <input
                   name="stats_travelers"
                   defaultValue={client.stats_travelers ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: 10K+"
                 />
               </div>
@@ -173,7 +173,7 @@ export default async function AdminContentPage({
                 <input
                   name="stats_destinations"
                   defaultValue={client.stats_destinations ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: 50+"
                 />
               </div>
@@ -184,7 +184,7 @@ export default async function AdminContentPage({
                 <input
                   name="stats_rating"
                   defaultValue={client.stats_rating ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: 4.9★"
                 />
               </div>

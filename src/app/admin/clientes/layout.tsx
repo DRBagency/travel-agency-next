@@ -6,8 +6,8 @@ interface OwnerLayoutProps {
 
 export default function OwnerLayout({ children }: OwnerLayoutProps) {
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <header className="border-b border-white/10 bg-slate-950/80 backdrop-blur">
+    <div className="min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white">
+      <header className="border-b border-white/10 bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
           <div className="text-sm text-white/70">Panel owner</div>
           <a

@@ -114,7 +114,7 @@ export default async function AdminDestinosPage({
                 </label>
                 <input
                   name="nombre"
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: Islas Canarias"
                 />
               </div>
@@ -126,7 +126,7 @@ export default async function AdminDestinosPage({
                   name="precio"
                   type="number"
                   min={0}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: 799"
                 />
               </div>
@@ -138,7 +138,7 @@ export default async function AdminDestinosPage({
               </label>
               <textarea
                 name="descripcion"
-                className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[110px]"
+                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
                 placeholder="Descripción breve y atractiva del destino"
               />
             </div>
@@ -149,7 +149,7 @@ export default async function AdminDestinosPage({
               </label>
               <input
                 name="imagen_url"
-                className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                 placeholder="https://..."
               />
             </div>
@@ -200,7 +200,7 @@ export default async function AdminDestinosPage({
                   <input
                     name="nombre"
                     defaultValue={destino.nombre ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   />
                 </div>
                 <div>
@@ -212,7 +212,7 @@ export default async function AdminDestinosPage({
                     type="number"
                     min={0}
                     defaultValue={destino.precio ?? 0}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   />
                 </div>
               </div>
@@ -224,7 +224,7 @@ export default async function AdminDestinosPage({
                 <textarea
                   name="descripcion"
                   defaultValue={destino.descripcion ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[110px]"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
                 />
               </div>
 
@@ -235,7 +235,7 @@ export default async function AdminDestinosPage({
                 <input
                   name="imagen_url"
                   defaultValue={destino.imagen_url ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                 />
               </div>
 

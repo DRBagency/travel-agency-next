@@ -125,7 +125,7 @@ export default async function AdminEmailsPage({
                 <input
                   name="subject"
                   defaultValue={template?.subject ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: ✅ Reserva confirmada"
                 />
               </div>
@@ -137,7 +137,7 @@ export default async function AdminEmailsPage({
                 <textarea
                   name="html_body"
                   defaultValue={template?.html_body ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[200px]"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[200px]"
                   placeholder="<h1>...</h1><p>...</p>"
                 />
               </div>
@@ -150,7 +150,7 @@ export default async function AdminEmailsPage({
                   <input
                     name="cta_text"
                     defaultValue={template?.cta_text ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                     placeholder="Ej: Ver detalles"
                   />
                 </div>
@@ -161,7 +161,7 @@ export default async function AdminEmailsPage({
                   <input
                     name="cta_url"
                     defaultValue={template?.cta_url ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                     placeholder="https://"
                   />
                 </div>

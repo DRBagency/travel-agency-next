@@ -76,7 +76,7 @@ export default async function AdminAboutContactPage({
                 <input
                   name="about_title"
                   defaultValue={client.about_title ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="Ej: Tu agencia de viajes de confianza"
                 />
               </div>
@@ -88,7 +88,7 @@ export default async function AdminAboutContactPage({
                 <textarea
                   name="about_text_1"
                   defaultValue={client.about_text_1 ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[110px]"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
                   placeholder="Describe la experiencia y propuesta de valor"
                 />
               </div>
@@ -100,7 +100,7 @@ export default async function AdminAboutContactPage({
                 <textarea
                   name="about_text_2"
                   defaultValue={client.about_text_2 ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[110px]"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
                   placeholder="Añade confianza, proceso, equipo o garantías"
                 />
               </div>
@@ -123,7 +123,7 @@ export default async function AdminAboutContactPage({
                 <input
                   name="contact_email"
                   defaultValue={client.contact_email ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="contacto@agencia.com"
                 />
               </div>
@@ -134,7 +134,7 @@ export default async function AdminAboutContactPage({
                 <input
                   name="contact_phone"
                   defaultValue={client.contact_phone ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
                   placeholder="+34 900 000 000"
                 />
               </div>
@@ -147,7 +147,7 @@ export default async function AdminAboutContactPage({
               <textarea
                 name="contact_address"
                 defaultValue={client.contact_address ?? ""}
-                className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-white min-h-[110px]"
+                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
                 placeholder="Calle, ciudad, país"
               />
             </div>

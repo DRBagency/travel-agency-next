@@ -40,7 +40,7 @@ export default function ChangePlanForm({
       <select
         value={plan}
         onChange={(e) => setPlan(e.target.value)}
-        className="border border-white/10 rounded-xl bg-slate-900 text-white px-3 py-2"
+        className="border border-white/10 rounded-xl bg-white/10 text-white px-3 py-2"
       >
         <option value="start">Start</option>
         <option value="grow">Grow</option>

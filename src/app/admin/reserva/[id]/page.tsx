@@ -128,7 +128,7 @@ export default async function ReservaPage({
               <select
                 name="estado"
                 defaultValue={reserva.estado_pago ?? "pendiente"}
-                className="border rounded-xl px-2 py-1 bg-slate-900 text-white border-white/10"
+                className="border rounded-xl px-2 py-1 bg-white/10 text-white border-white/10"
               >
                 <option value="pagado">Pagado</option>
                 <option value="pendiente">Pendiente</option>

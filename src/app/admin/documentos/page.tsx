@@ -1,17 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { getClientByDomain } from "@/lib/getClientByDomain";
+import { supabaseAdmin } from "@/lib/supabase-server";
+import { requireAdminClient } from "@/lib/requireAdminClient";
+import AdminShell from "@/components/admin/AdminShell";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 async function getDocuments(clienteId: string) {
-  const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
   const { data } = await supabaseAdmin
     .from("documents")
     .select("*")
@@ -22,28 +16,22 @@ async function getDocuments(clienteId: string) {
 }
 
 export default async function AdminDocumentosPage() {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("admin_session");
-
-  if (!sessionCookie) {
-    redirect("/admin/login");
-  }
-
-  const cliente = await getClientByDomain();
-  if (!cliente) {
-    return <div>Cliente no encontrado</div>;
-  }
-
-  const documents = await getDocuments(cliente.id);
+  const client = await requireAdminClient();
+  const documents = await getDocuments(client.id);
 
   const documentTypes = [
-    { id: "presupuesto", name: "Presupuesto", icon: "💰", color: "bg-blue-500" },
-    { id: "contrato", name: "Contrato", icon: "📄", color: "bg-green-500" },
-    { id: "factura", name: "Factura", icon: "🧾", color: "bg-purple-500" },
+    { id: "presupuesto", name: "Presupuesto", icon: "💰", color: "bg-drb-turquoise-500" },
+    { id: "contrato", name: "Contrato", icon: "📄", color: "bg-drb-lime-600" },
+    { id: "factura", name: "Factura", icon: "🧾", color: "bg-drb-turquoise-600" },
   ];
 
   return (
-    <div className="p-8">
+    <AdminShell
+      clientName={client.nombre}
+      primaryColor={client.primary_color}
+      subscriptionActive={Boolean(client.stripe_subscription_id)}
+    >
+      <div>
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Documentos</h1>
@@ -152,6 +140,7 @@ export default async function AdminDocumentosPage() {
           </table>
         </div>
       </div>
-    </div>
+      </div>
+    </AdminShell>
   );
 }

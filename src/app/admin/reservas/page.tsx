@@ -132,13 +132,13 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             name="q"
             defaultValue={q}
             placeholder="Buscar nombre o email"
-            className="border border-white/10 bg-slate-900 text-white px-3 py-2 rounded-xl"
+            className="border border-white/10 bg-white/10 text-white px-3 py-2 rounded-xl"
           />
 
           <select
             name="estado"
             defaultValue={estado}
-            className="border border-white/10 px-3 py-2 rounded-xl bg-slate-900 text-white"
+            className="border border-white/10 px-3 py-2 rounded-xl bg-white/10 text-white"
           >
             <option value="todos">Todos</option>
             <option value="pagado">Pagado</option>
@@ -151,14 +151,14 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             type="date"
             name="from"
             defaultValue={from}
-            className="border border-white/10 px-3 py-2 rounded-xl bg-slate-900 text-white"
+            className="border border-white/10 px-3 py-2 rounded-xl bg-white/10 text-white"
           />
 
           <input
             type="date"
             name="to"
             defaultValue={to}
-            className="border border-white/10 px-3 py-2 rounded-xl bg-slate-900 text-white"
+            className="border border-white/10 px-3 py-2 rounded-xl bg-white/10 text-white"
           />
 
           <button
@@ -234,7 +234,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                           <select
                             name="estado"
                             defaultValue={r.estado_pago}
-                            className="border rounded-xl px-2 py-1 bg-slate-900 text-white border-white/10"
+                            className="border rounded-xl px-2 py-1 bg-white/10 text-white border-white/10"
                           >
                             <option value="pagado">Pagado</option>
                             <option value="pendiente">Pendiente</option>

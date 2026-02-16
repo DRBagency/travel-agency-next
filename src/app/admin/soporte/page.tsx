@@ -1,17 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { getClientByDomain } from "@/lib/getClientByDomain";
+import { supabaseAdmin } from "@/lib/supabase-server";
+import { requireAdminClient } from "@/lib/requireAdminClient";
+import AdminShell from "@/components/admin/AdminShell";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 async function getTickets(clienteId: string) {
-  const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
   const { data } = await supabaseAdmin
     .from("support_tickets")
     .select("*")
@@ -22,22 +16,16 @@ async function getTickets(clienteId: string) {
 }
 
 export default async function AdminSoportePage() {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("admin_session");
-
-  if (!sessionCookie) {
-    redirect("/admin/login");
-  }
-
-  const cliente = await getClientByDomain();
-  if (!cliente) {
-    return <div>Cliente no encontrado</div>;
-  }
-
-  const tickets = await getTickets(cliente.id);
+  const client = await requireAdminClient();
+  const tickets = await getTickets(client.id);
 
   return (
-    <div className="p-8">
+    <AdminShell
+      clientName={client.nombre}
+      primaryColor={client.primary_color}
+      subscriptionActive={Boolean(client.stripe_subscription_id)}
+    >
+    <div>
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Soporte</h1>
@@ -45,7 +33,7 @@ export default async function AdminSoportePage() {
         </div>
         <Link
           href="/admin/soporte/nuevo"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-4 py-2 bg-drb-turquoise-500 text-white rounded-xl hover:bg-drb-turquoise-600 transition-colors"
         >
           Nuevo Ticket
         </Link>
@@ -153,5 +141,6 @@ export default async function AdminSoportePage() {
         </div>
       </div>
     </div>
+    </AdminShell>
   );
 }
