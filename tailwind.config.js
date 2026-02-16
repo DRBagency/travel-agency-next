@@ -1,8 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/app/**/*.{js,ts,jsx,tsx}",
-    "./src/components/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -25,6 +26,71 @@ module.exports = {
         secondary: "hsl(var(--secondary))",
         "secondary-foreground": "hsl(var(--secondary-foreground))",
         gold: "hsl(var(--gold))",
+        drb: {
+          turquoise: {
+            50: '#E6F9FA',
+            100: '#CCF3F5',
+            200: '#99E7EB',
+            300: '#66DBE1',
+            400: '#33CFD7',
+            500: '#1CABB0',
+            600: '#178991',
+            700: '#126771',
+            800: '#0C4551',
+            900: '#072331',
+            950: '#041820',
+          },
+          lime: {
+            50: '#FAFEF0',
+            100: '#F5FDE1',
+            200: '#EBFBC3',
+            300: '#E1F9A5',
+            400: '#D7F787',
+            500: '#D4F24D',
+            600: '#B8D63E',
+            700: '#9CBA2F',
+            800: '#809E20',
+            900: '#648211',
+          },
+          magenta: {
+            500: '#E91E63',
+            600: '#D81B60',
+            700: '#C2185B',
+          },
+        },
+      },
+      backgroundImage: {
+        'gradient-premium': 'linear-gradient(135deg, #1CABB0 0%, #D4F24D 100%)',
+        'gradient-dark': 'linear-gradient(135deg, #072331 0%, #0C4551 100%)',
+        'gradient-turquoise': 'linear-gradient(135deg, #0C4551 0%, #1CABB0 100%)',
+      },
+      boxShadow: {
+        'premium': '0 10px 40px rgba(28, 171, 176, 0.15)',
+        'premium-lg': '0 20px 60px rgba(28, 171, 176, 0.25)',
+        'glow': '0 0 30px rgba(212, 242, 77, 0.4)',
+        'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+      },
+      backdropBlur: {
+        'xs': '2px',
+      },
+      animation: {
+        'slide-in-right': 'slideInRight 0.3s ease-out',
+        'slide-out-right': 'slideOutRight 0.3s ease-in',
+        'fade-in': 'fadeIn 0.2s ease-out',
+      },
+      keyframes: {
+        slideInRight: {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        slideOutRight: {
+          '0%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'translateX(100%)', opacity: '0' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
       },
     },
   },
