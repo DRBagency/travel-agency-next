@@ -18,9 +18,8 @@ interface AdminShellProps {
 
 const navItems = [
   { label: "Dashboard", href: "/admin", emoji: "\u{1F3E0}" },
-  { label: "Contenido", href: "/admin/contenido", emoji: "\u{270F}\u{FE0F}" },
+  { label: "Mi Web", href: "/admin/mi-web", emoji: "\u{1F310}" },
   { label: "Opiniones", href: "/admin/opiniones", emoji: "\u{2B50}" },
-  { label: "Nosotros + Contacto", href: "/admin/nosotros-contacto", emoji: "\u{1F465}" },
   { label: "Destinos", href: "/admin/destinos", emoji: "\u{1F30D}" },
   { label: "Reservas", href: "/admin/reservas", emoji: "\u{1F4CB}" },
   { label: "Analytics", href: "/admin/analytics", emoji: "\u{1F4CA}" },
