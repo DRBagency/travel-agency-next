@@ -1,61 +1,159 @@
-"use client"
+import { supabaseAdmin } from "@/lib/supabase-server";
+import AdminShell from "@/components/admin/AdminShell";
+import { requireAdminClient } from "@/lib/requireAdminClient";
+import DashboardCard from "@/components/ui/DashboardCard";
 
-import { useState } from 'react';
-import { Globe, Calendar, Star, Mail, FileText, CreditCard, BarChart3, Settings } from 'lucide-react';
-import DashboardCard from '@/components/ui/DashboardCard';
-import SidePanel from '@/components/ui/SidePanel';
+export const dynamic = "force-dynamic";
 
-export default function AdminDashboard() {
-  const [activePanel, setActivePanel] = useState<string | null>(null);
+export default async function AdminPage() {
+  const client = await requireAdminClient();
 
-  const dashboardSections = [
-    { id: 'contenido', icon: '🌐', title: 'Contenido Web', Component: Globe },
-    { id: 'destinos', icon: '✈️', title: 'Destinos', Component: Globe },
-    { id: 'reservas', icon: '📅', title: 'Reservas', Component: Calendar },
-    { id: 'opiniones', icon: '⭐', title: 'Opiniones', Component: Star },
-    { id: 'emails', icon: '✉️', title: 'Emails', Component: Mail },
-    { id: 'legales', icon: '📄', title: 'Páginas Legales', Component: FileText },
-    { id: 'stripe', icon: '💳', title: 'Stripe', Component: CreditCard },
-    { id: 'analytics', icon: '📊', title: 'Analytics', Component: BarChart3 },
-  ];
+  /* Métricas de reservas */
+  const { data: reservas } = await supabaseAdmin
+    .from("reservas")
+    .select("precio, estado_pago, created_at")
+    .eq("cliente_id", client.id)
+    .order("created_at", { ascending: false });
+
+  const reservasSafe = reservas ?? [];
+  const pagadas = reservasSafe.filter((r) => r.estado_pago === "pagado");
+  const totalFacturado = pagadas.reduce((sum, r) => sum + Number(r.precio), 0);
+  const numeroReservas = pagadas.length;
+  const ticketMedio = numeroReservas > 0 ? Math.round(totalFacturado / numeroReservas) : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-turquoise p-8">
-      {/* Header */}
-      <div className="max-w-7xl mx-auto mb-12">
-        <h1 className="text-4xl font-bold text-white mb-2">
-          Panel de Control
-        </h1>
-        <p className="text-white/60">
-          Gestiona tu agencia de viajes
-        </p>
-      </div>
+    <AdminShell
+      clientName={client.nombre}
+      primaryColor={client.primary_color}
+      subscriptionActive={Boolean(client.stripe_subscription_id)}
+    >
+      <div className="space-y-8">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold mb-1">
+            Panel de Control
+          </h1>
+          <p className="text-white/60">
+            {client.nombre} · {client.domain}
+          </p>
+        </div>
 
-      {/* Grid de Cards */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {dashboardSections.map((section) => (
-          <DashboardCard
-            key={section.id}
-            icon={section.icon}
-            title={section.title}
-            onClick={() => setActivePanel(section.id)}
-          />
-        ))}
-      </div>
-
-      {/* Side Panels */}
-      {dashboardSections.map((section) => (
-        <SidePanel
-          key={section.id}
-          isOpen={activePanel === section.id}
-          onClose={() => setActivePanel(null)}
-          title={section.title}
-        >
-          <div className="text-white/80">
-            Contenido de {section.title}...
+        {/* Métricas premium */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="rounded-2xl p-5 bg-gradient-to-br from-drb-turquoise-800/50 to-drb-turquoise-900/50 border border-drb-turquoise-500/20 backdrop-blur-sm">
+            <p className="text-sm text-white/60 mb-1">Total facturado</p>
+            <p className="text-2xl font-bold text-white">{totalFacturado} €</p>
           </div>
-        </SidePanel>
-      ))}
-    </div>
+          <div className="rounded-2xl p-5 bg-gradient-to-br from-drb-lime-900/30 to-drb-turquoise-900/50 border border-drb-lime-500/20 backdrop-blur-sm">
+            <p className="text-sm text-white/60 mb-1">Reservas pagadas</p>
+            <p className="text-2xl font-bold text-drb-lime-400">{numeroReservas}</p>
+          </div>
+          <div className="rounded-2xl p-5 bg-white/5 border border-white/10 backdrop-blur-sm">
+            <p className="text-sm text-white/60 mb-1">Ticket medio</p>
+            <p className="text-2xl font-bold text-white">{ticketMedio} €</p>
+          </div>
+        </div>
+
+        {/* Grid de Cards de navegación premium */}
+        <div>
+          <h2 className="text-xl font-semibold text-white mb-6">Gestiona tu agencia</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <DashboardCard
+              icon="🌐"
+              title="Contenido Web"
+              subtitle="Hero, stats, textos"
+              href="/admin/contenido"
+            />
+            <DashboardCard
+              icon="✈️"
+              title="Destinos"
+              subtitle="Crear y editar"
+              href="/admin/destinos"
+            />
+            <DashboardCard
+              icon="📅"
+              title="Reservas"
+              subtitle="Ver y filtrar"
+              href="/admin/reservas"
+            />
+            <DashboardCard
+              icon="⭐"
+              title="Opiniones"
+              subtitle="Moderar reviews"
+              href="/admin/opiniones"
+            />
+            <DashboardCard
+              icon="✉️"
+              title="Emails"
+              subtitle="Templates automáticos"
+              href="/admin/emails"
+            />
+            <DashboardCard
+              icon="📄"
+              title="Páginas Legales"
+              subtitle="Privacidad, términos"
+              href="/admin/legales"
+            />
+            <DashboardCard
+              icon="💳"
+              title="Stripe / Pagos"
+              subtitle="Suscripción y cobros"
+              href="/admin/stripe"
+            />
+            <DashboardCard
+              icon="📊"
+              title="Analytics"
+              subtitle="Métricas y gráficas"
+              href="/admin/analytics"
+              glowColor="lime"
+            />
+          </div>
+        </div>
+
+        {/* Últimas reservas */}
+        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Últimas reservas</h2>
+            <a
+              href="/admin/reservas"
+              className="text-sm text-drb-turquoise-400 hover:text-drb-turquoise-300 transition-colors"
+            >
+              Ver todas →
+            </a>
+          </div>
+          {reservasSafe.length === 0 ? (
+            <p className="text-white/50">No hay reservas todavía.</p>
+          ) : (
+            <div className="space-y-3">
+              {reservasSafe.slice(0, 5).map((r: any) => (
+                <div
+                  key={r.id || r.created_at}
+                  className="flex items-center justify-between rounded-xl border border-white/10 bg-drb-turquoise-950/30 px-4 py-3"
+                >
+                  <div>
+                    <div className="font-semibold text-white">{r.nombre || "Reserva"}</div>
+                    <div className="text-sm text-white/50">
+                      {r.destino || "—"} · {new Date(r.created_at).toLocaleDateString("es-ES")}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-semibold text-white">{r.precio} €</span>
+                    <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${
+                      r.estado_pago === "pagado"
+                        ? "bg-drb-lime-500/20 text-drb-lime-400 border-drb-lime-500/30"
+                        : r.estado_pago === "pendiente"
+                          ? "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
+                          : "bg-white/10 text-white/60 border-white/20"
+                    }`}>
+                      {r.estado_pago}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </AdminShell>
   );
 }

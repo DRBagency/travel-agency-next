@@ -1,65 +1,187 @@
-"use client"
+import { getDashboardMetrics } from "@/lib/owner/get-dashboard-metrics";
+import { getChartData } from "@/lib/owner/get-chart-data";
+import { MRRChart, ClientesChart } from "@/components/owner/OwnerCharts";
+import DashboardCard from "@/components/ui/DashboardCard";
+import Link from "next/link";
 
-import { useState } from 'react';
-import { Globe, Calendar, CreditCard, Users, Zap, Infinity } from 'lucide-react';
-import DashboardCard from '@/components/ui/DashboardCard';
-import SidePanel from '@/components/ui/SidePanel';
+export const dynamic = "force-dynamic";
 
-export default function OwnerDashboard() {
-  const [activePanel, setActivePanel] = useState<string | null>(null);
-
-  const dashboardSections = [
-    { id: 'web', icon: '🌐', title: 'Web', Component: Globe },
-    { id: 'reservas', icon: '📅', title: 'Reservas', Component: Calendar },
-    { id: 'pagos', icon: '💳', title: 'Pagos', Component: CreditCard },
-    { id: 'clientes', icon: '👥', title: 'Clientes', Component: Users },
-    { id: 'automatizacion', icon: '⚡', title: 'Automatización', Component: Zap },
-    { id: 'allinone', icon: '∞', title: 'All-in-one', Component: Infinity, gradient: true },
-  ];
+export default async function OwnerDashboardPage() {
+  const metrics = await getDashboardMetrics();
+  const chartData = await getChartData();
 
   return (
-    <div className="min-h-screen bg-gradient-turquoise p-8">
-      {/* Header */}
-      <div className="max-w-7xl mx-auto mb-12">
+    <div>
+      {/* Header premium */}
+      <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <div className="flex gap-2">
             <div className="w-3 h-3 rounded-full bg-red-500" />
             <div className="w-3 h-3 rounded-full bg-yellow-500" />
             <div className="w-3 h-3 rounded-full bg-green-500" />
           </div>
-          <h1 className="text-white/60 text-lg">DRB Agency — Panel</h1>
+          <span className="text-white/40 text-sm">DRB Agency — Panel Owner</span>
+        </div>
+        <h1 className="text-3xl font-bold mb-1">Dashboard</h1>
+        <p className="text-white/60">Vista general de tu plataforma SaaS</p>
+      </div>
+
+      {/* Métricas principales con estilo premium */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="rounded-2xl p-6 bg-gradient-to-br from-drb-turquoise-800/50 to-drb-turquoise-900/50 border border-drb-turquoise-500/20 backdrop-blur-sm">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-white/60 text-sm">Total de agencias</p>
+            <span className="text-2xl">🏢</span>
+          </div>
+          <p className="text-3xl font-bold text-white">{metrics.totalClientes}</p>
+          <p className="text-xs text-drb-turquoise-300/60 mt-1">
+            {metrics.clientesConSuscripcion} con suscripción activa
+          </p>
+        </div>
+
+        <div className="rounded-2xl p-6 bg-gradient-to-br from-drb-lime-900/30 to-drb-turquoise-900/50 border border-drb-lime-500/20 backdrop-blur-sm">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-white/60 text-sm">MRR</p>
+            <span className="text-2xl">💰</span>
+          </div>
+          <p className="text-3xl font-bold text-drb-lime-400">{metrics.mrr} €</p>
+          <p className="text-xs text-white/40 mt-1">Ingresos mensuales recurrentes</p>
+        </div>
+
+        <div className="rounded-2xl p-6 bg-white/5 border border-white/10 backdrop-blur-sm">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-white/60 text-sm">Reservas este mes</p>
+            <span className="text-2xl">📅</span>
+          </div>
+          <p className="text-3xl font-bold text-white">{metrics.reservasMes}</p>
+          <p className="text-xs text-white/40 mt-1">Reservas procesadas</p>
+        </div>
+
+        <div className="rounded-2xl p-6 bg-white/5 border border-white/10 backdrop-blur-sm">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-white/60 text-sm">Comisiones este mes</p>
+            <span className="text-2xl">💵</span>
+          </div>
+          <p className="text-3xl font-bold text-white">{metrics.comisionesMes.toFixed(2)} €</p>
+          <p className="text-xs text-white/40 mt-1">Generadas por reservas</p>
         </div>
       </div>
 
-      {/* Grid de Cards */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {dashboardSections.map((section) => (
-          <DashboardCard
-            key={section.id}
-            icon={section.icon}
-            title={section.title}
-            gradient={section.gradient}
-            onClick={() => setActivePanel(section.id)}
-          />
-        ))}
+      {/* Gráficas */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+        <MRRChart data={chartData.mrrPorMes} />
+        <ClientesChart data={chartData.clientesPorMes} />
       </div>
 
-      {/* Side Panels dinámicos */}
-      {dashboardSections.map((section) => (
-        <SidePanel
-          key={section.id}
-          isOpen={activePanel === section.id}
-          onClose={() => setActivePanel(null)}
-          title={section.title}
-        >
-          <div className="space-y-6">
-            <p className="text-white/80">
-              Contenido de {section.title} aquí...
-            </p>
-            {/* Aquí irá el contenido específico de cada sección */}
+      {/* Grid de Cards de navegación premium */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold text-white mb-6">Acceso rápido</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <DashboardCard
+            icon="👥"
+            title="Clientes"
+            subtitle="Gestionar agencias"
+            href="/owner/clientes"
+          />
+          <DashboardCard
+            icon="✉️"
+            title="Emails"
+            subtitle="Templates de billing"
+            href="/owner/emails"
+          />
+          <DashboardCard
+            icon="📊"
+            title="Monetización"
+            subtitle="MRR y comisiones"
+            href="/owner/monetizacion"
+            glowColor="lime"
+          />
+          <DashboardCard
+            icon="💳"
+            title="Stripe"
+            subtitle="Configuración de pagos"
+            href="/owner/stripe"
+          />
+          <DashboardCard
+            icon="⚡"
+            title="Automatización"
+            subtitle="Flujos automáticos"
+            href="/owner/automatizaciones"
+          />
+          <DashboardCard
+            icon="🎧"
+            title="Soporte"
+            subtitle="Tickets de agencias"
+            href="/owner/soporte"
+            gradient
+          />
+        </div>
+      </div>
+
+      {/* Últimos clientes */}
+      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
+        <div className="p-6 border-b border-white/10">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-white">
+              Últimas agencias registradas
+            </h2>
+            <Link
+              href="/owner/clientes"
+              className="text-sm text-drb-turquoise-400 hover:text-drb-turquoise-300 transition-colors"
+            >
+              Ver todas →
+            </Link>
           </div>
-        </SidePanel>
-      ))}
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-white/10">
+                <th className="text-left p-4 text-sm font-medium text-white/60">Nombre</th>
+                <th className="text-left p-4 text-sm font-medium text-white/60">Dominio</th>
+                <th className="text-left p-4 text-sm font-medium text-white/60">Plan</th>
+                <th className="text-left p-4 text-sm font-medium text-white/60">Estado</th>
+                <th className="text-left p-4 text-sm font-medium text-white/60">Registrado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {metrics.ultimosClientes.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="p-8 text-center text-white/40">
+                    No hay clientes registrados
+                  </td>
+                </tr>
+              ) : (
+                metrics.ultimosClientes.map((cliente: any) => (
+                  <tr key={cliente.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <td className="p-4 text-white">{cliente.nombre}</td>
+                    <td className="p-4 text-white/60 text-sm">{cliente.domain || "—"}</td>
+                    <td className="p-4">
+                      <span className="px-2 py-1 rounded-full text-xs bg-drb-turquoise-500/20 text-drb-turquoise-300 border border-drb-turquoise-500/30">
+                        {cliente.plan || "Sin plan"}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      {cliente.stripe_subscription_id ? (
+                        <span className="px-2 py-1 rounded-full text-xs bg-drb-lime-500/20 text-drb-lime-400 border border-drb-lime-500/30">
+                          Activo
+                        </span>
+                      ) : (
+                        <span className="px-2 py-1 rounded-full text-xs bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
+                          Pendiente
+                        </span>
+                      )}
+                    </td>
+                    <td className="p-4 text-white/60 text-sm">
+                      {new Date(cliente.created_at).toLocaleDateString("es-ES")}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

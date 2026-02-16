@@ -45,16 +45,16 @@ const AdminShell = ({
   children,
 }: AdminShellProps) => {
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/80 backdrop-blur">
+    <div className="min-h-screen bg-gradient-to-br from-drb-turquoise-950 to-drb-turquoise-900 text-white">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-drb-turquoise-950/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
           <div className="flex items-center gap-3">
             <div
               className="h-9 w-9 rounded-xl"
               style={{
                 background: primaryColor
-                  ? `linear-gradient(135deg, ${primaryColor}, color-mix(in srgb, ${primaryColor} 65%, #22d3ee))`
-                  : "linear-gradient(135deg, #0ea5e9, #22d3ee)",
+                  ? `linear-gradient(135deg, ${primaryColor}, color-mix(in srgb, ${primaryColor} 65%, #1CABB0))`
+                  : "linear-gradient(135deg, #1CABB0, #D4F24D)",
               }}
             />
             <div>
@@ -66,7 +66,7 @@ const AdminShell = ({
             <span className="text-sm text-white/60">Área de gestión</span>
             <a
               href="/admin/logout"
-              className="rounded-lg border border-white/10 px-3 py-1.5 text-sm text-white/70 hover:text-white hover:border-white/30 transition"
+              className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-white/70 hover:text-white hover:border-drb-turquoise-400/50 transition-all"
             >
               Cerrar sesión
             </a>
@@ -75,12 +75,12 @@ const AdminShell = ({
       </header>
 
       <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 md:grid-cols-[240px_1fr]">
-        <aside className="space-y-2 rounded-2xl border border-white/10 bg-white/5 p-4">
+        <aside className="space-y-1 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-4">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/70 transition-all hover:bg-drb-turquoise-500/15 hover:text-white"
             >
               <item.icon className="h-4 w-4" />
               {item.label}
@@ -88,7 +88,7 @@ const AdminShell = ({
           ))}
         </aside>
 
-        <main className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <main className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6">
           {subscriptionActive || allowWhenInactive ? (
             children
           ) : (
@@ -102,12 +102,7 @@ const AdminShell = ({
               <div className="flex justify-end">
                 <a
                   href="/admin/stripe"
-                  className={
-                    primaryColor
-                      ? "px-5 py-3 rounded-xl text-white font-semibold"
-                      : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold"
-                  }
-                  style={primaryColor ? { backgroundColor: primaryColor } : undefined}
+                  className="px-5 py-3 rounded-full bg-drb-magenta-500 hover:bg-drb-magenta-600 text-white font-semibold transition-all hover:scale-105"
                 >
                   Activar suscripción
                 </a>
