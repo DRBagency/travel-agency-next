@@ -26,7 +26,7 @@ interface AdminShellProps {
 }
 
 const navItems = [
-  { label: "Resumen", href: "/admin", icon: LayoutGrid },
+  { label: "Dashboard", href: "/admin", icon: LayoutGrid },
   { label: "Contenido", href: "/admin/contenido", icon: PenSquare },
   { label: "Opiniones", href: "/admin/opiniones", icon: ClipboardList },
   { label: "Nosotros + Contacto", href: "/admin/nosotros-contacto", icon: PenSquare },
