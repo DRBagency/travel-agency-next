@@ -22,6 +22,18 @@
 6. **[DEVELOPMENT_WORKFLOW.md](./DEVELOPMENT_WORKFLOW.md)**
    Flujo de desarrollo, comandos, troubleshooting
 
+7. **[BUSINESS_VISION.md](./BUSINESS_VISION.md)**
+   Visión de negocio, mercados objetivo, roadmap ejecutivo
+
+8. **[CLIENT_ONBOARDING.md](./CLIENT_ONBOARDING.md)**
+   Proceso completo de onboarding paso a paso
+
+9. **[SALES_PLAYBOOK.md](./SALES_PLAYBOOK.md)**
+   Scripts de venta, objeciones, pricing strategy
+
+10. **[PARTNERSHIP_STRATEGY.md](./PARTNERSHIP_STRATEGY.md)**
+    Canales indirectos, programa de afiliados, partners
+
 ## 🎯 Cómo Usar Esta Documentación
 
 **Para Claude Code:**
