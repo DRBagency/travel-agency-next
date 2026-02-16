@@ -1,147 +1,113 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import esLocale from "@fullcalendar/core/locales/es";
+import { useState } from "react";
+import { Calendar, ExternalLink } from "lucide-react";
 
-export default function CalendarioContent() {
-  const [events, setEvents] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    start: "",
-    end: "",
-    description: "",
-  });
+interface CalendarioContentProps {
+  googleCalendarUrl?: string | null;
+}
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+export default function CalendarioContent({ googleCalendarUrl }: CalendarioContentProps) {
+  const [url, setUrl] = useState(googleCalendarUrl || "");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
-  const fetchEvents = async () => {
-    const res = await fetch("/api/admin/calendar/events");
-    const data = await res.json();
-    setEvents(data.events || []);
-  };
-
-  const handleDateClick = (info: { dateStr: string }) => {
-    setNewEvent({
-      ...newEvent,
-      start: info.dateStr,
-      end: info.dateStr,
-    });
-    setShowModal(true);
-  };
-
-  const handleEventClick = (info: { event: { id: string; title: string } }) => {
-    if (confirm(`¿Eliminar evento "${info.event.title}"?`)) {
-      deleteEvent(info.event.id);
+  const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
+    setSaved(false);
+    try {
+      const res = await fetch("/api/admin/calendar/google-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url.trim() }),
+      });
+      if (res.ok) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000);
+      }
+    } catch {
+      alert("Error al guardar la URL");
+    } finally {
+      setSaving(false);
     }
   };
 
-  const createEvent = async () => {
-    const res = await fetch("/api/admin/calendar/events", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newEvent),
-    });
-
-    if (res.ok) {
-      setShowModal(false);
-      fetchEvents();
-      setNewEvent({ title: "", start: "", end: "", description: "" });
-    }
-  };
-
-  const deleteEvent = async (eventId: string) => {
-    await fetch(`/api/admin/calendar/events?id=${eventId}`, {
-      method: "DELETE",
-    });
-    fetchEvents();
-  };
+  const embedUrl = url.trim();
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-2">Calendario</h1>
-      <p className="text-white/60 mb-8">Gestiona tus citas y eventos</p>
-
-      <div className="bg-white rounded-2xl p-6">
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          locale={esLocale}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
-          }}
-          events={events}
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
-          editable={true}
-          selectable={true}
-          height="auto"
-        />
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold mb-2">Calendario</h1>
+        <p className="text-white/60">Conecta tu Google Calendar para gestionar citas y eventos.</p>
       </div>
 
-      {/* Modal para crear evento */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-drb-turquoise-800 rounded-2xl border border-white/15 p-6 w-full max-w-md">
-            <h3 className="text-xl font-bold mb-4 text-white">Nuevo Evento</h3>
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Título"
-                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400"
-                value={newEvent.title}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, title: e.target.value })
-                }
-              />
-              <input
-                type="datetime-local"
-                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-white/95 text-gray-900"
-                value={newEvent.start}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, start: e.target.value })
-                }
-              />
-              <input
-                type="datetime-local"
-                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-white/95 text-gray-900"
-                value={newEvent.end}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, end: e.target.value })
-                }
-              />
-              <textarea
-                placeholder="Descripción"
-                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400"
-                value={newEvent.description}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, description: e.target.value })
-                }
-              />
-            </div>
-            <div className="flex gap-2 mt-4">
-              <button
-                onClick={createEvent}
-                className="px-4 py-2 bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold rounded-xl transition-colors"
-              >
-                Crear
-              </button>
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-white hover:bg-white/90 text-drb-turquoise-800 font-semibold rounded-xl transition-colors"
-              >
-                Cancelar
-              </button>
-            </div>
+      {/* Configuración */}
+      <div className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <Calendar className="w-5 h-5 text-drb-lime-400" />
+          <h2 className="text-xl font-semibold">Google Calendar</h2>
+        </div>
+
+        <div className="space-y-3">
+          <label className="block text-sm text-white/70">
+            URL de embed de Google Calendar
+          </label>
+          <div className="flex gap-3">
+            <input
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://calendar.google.com/calendar/embed?src=..."
+              className="flex-1 border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400 px-4 py-2.5 rounded-xl"
+            />
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-5 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold disabled:opacity-60 transition-colors whitespace-nowrap"
+            >
+              {saving ? "Guardando..." : saved ? "Guardado" : "Guardar"}
+            </button>
           </div>
+        </div>
+
+        {!embedUrl && (
+          <div className="rounded-xl border border-white/15 bg-white/5 p-5 space-y-3">
+            <h3 className="font-semibold text-white/90">Como obtener la URL de embed:</h3>
+            <ol className="text-sm text-white/70 space-y-2 list-decimal pl-5">
+              <li>
+                Abre{" "}
+                <a
+                  href="https://calendar.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-drb-lime-400 hover:text-drb-lime-300 underline inline-flex items-center gap-1"
+                >
+                  Google Calendar <ExternalLink className="w-3 h-3" />
+                </a>
+              </li>
+              <li>Ve a <strong className="text-white/90">Configuracion</strong> (icono engranaje)</li>
+              <li>En el panel izquierdo, selecciona el calendario que quieres integrar</li>
+              <li>Baja hasta la seccion <strong className="text-white/90">&quot;Integrar calendario&quot;</strong></li>
+              <li>Copia la <strong className="text-white/90">URL publica</strong> del campo &quot;URL publica de este calendario&quot; o el <strong className="text-white/90">codigo iframe</strong></li>
+              <li>Pega la URL aqui arriba y haz clic en &quot;Guardar&quot;</li>
+            </ol>
+            <p className="text-xs text-white/50 mt-2">
+              Nota: Asegurate de que el calendario sea publico o que el enlace sea accesible.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Calendar iframe */}
+      {embedUrl && (
+        <div className="rounded-2xl border border-white/20 bg-white/10 overflow-hidden">
+          <iframe
+            src={embedUrl}
+            className="w-full border-0"
+            style={{ height: "600px" }}
+            title="Google Calendar"
+          />
         </div>
       )}
     </div>

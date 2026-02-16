@@ -11,10 +11,6 @@ type StripeStatus = "none" | "pending" | "active";
 export default async function AdminStripePage() {
   const client = await requireAdminClient();
 
-  const brandStyle = client.primary_color
-    ? { backgroundColor: client.primary_color }
-    : undefined;
-
   let stripeStatus: StripeStatus = "none";
 
   if (client.stripe_account_id) {
@@ -77,7 +73,7 @@ export default async function AdminStripePage() {
           </p>
         </div>
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-6">
+        <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-semibold">Estado de Stripe</h2>
@@ -92,7 +88,7 @@ export default async function AdminStripePage() {
             </span>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="rounded-xl border border-white/20 bg-white/10 p-4">
             <div className="text-sm text-white/60 mb-1">Stripe Account ID</div>
             <div className="text-sm break-all text-white/80">
               {client.stripe_account_id ?? "—"}
@@ -102,7 +98,6 @@ export default async function AdminStripePage() {
           {stripeStatus === "pending" && (
             <div className="flex justify-end">
               <ConnectStripeButton
-                primaryColor={client.primary_color}
                 label={buttonLabel}
                 disabled={stripeStatus !== "pending"}
               />
@@ -110,7 +105,7 @@ export default async function AdminStripePage() {
           )}
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+        <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4">
           <div>
             <h2 className="text-xl font-semibold">Suscripción al software</h2>
             <p className="text-sm text-white/60">
@@ -119,19 +114,19 @@ export default async function AdminStripePage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="rounded-xl border border-white/20 bg-white/10 p-4">
               <div className="text-sm text-white/60 mb-1">Plan actual</div>
               <div className="text-lg font-semibold text-white">
                 {planInfo.label}
               </div>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="rounded-xl border border-white/20 bg-white/10 p-4">
               <div className="text-sm text-white/60 mb-1">Precio mensual</div>
               <div className="text-lg font-semibold text-white">
                 {planInfo.price}
               </div>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="rounded-xl border border-white/20 bg-white/10 p-4">
               <div className="text-sm text-white/60 mb-1">Tarifa por reserva</div>
               <div className="text-lg font-semibold text-white">
                 {planInfo.fee}
@@ -166,14 +161,14 @@ export default async function AdminStripePage() {
                   <CancelSubscriptionButton />
                 </>
               ) : (
-                <SubscriptionButton primaryColor={client.primary_color} />
+                <SubscriptionButton />
               )}
             </div>
           )}
         </section>
 
         {client.stripe_subscription_id && !isCanceling && (
-          <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+          <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4">
             <div>
               <h2 className="text-xl font-semibold">Cambiar plan</h2>
               <p className="text-sm text-white/60">
@@ -182,13 +177,12 @@ export default async function AdminStripePage() {
             </div>
 
             <ChangePlanForm
-              primaryColor={client.primary_color}
               currentPlan={planKey}
             />
           </section>
         )}
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
+        <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-3">
           <h2 className="text-xl font-semibold">Tarifa de la plataforma</h2>
           <p className="text-sm text-white/70">
             La tarifa y la suscripción dependen del plan contratado:

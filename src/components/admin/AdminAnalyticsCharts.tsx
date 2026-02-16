@@ -25,7 +25,7 @@ const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 
 export function ReservasChart({ data }: { data: { month: string; reservas: number }[] }) {
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-6">
+    <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
       <h3 className="text-lg font-semibold text-white mb-4">Reservas (últimos 6 meses)</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
@@ -42,7 +42,7 @@ export function ReservasChart({ data }: { data: { month: string; reservas: numbe
 
 export function IngresosChart({ data }: { data: { month: string; ingresos: number }[] }) {
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-6">
+    <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
       <h3 className="text-lg font-semibold text-white mb-4">Ingresos (últimos 6 meses)</h3>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
@@ -59,7 +59,7 @@ export function IngresosChart({ data }: { data: { month: string; ingresos: numbe
 
 export function DestinosChart({ data }: { data: { destino: string; value: number }[] }) {
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-6">
+    <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
       <h3 className="text-lg font-semibold text-white mb-4">Top 5 Destinos más vendidos</h3>
       <div className="flex items-center justify-center">
         <ResponsiveContainer width="100%" height={300}>
@@ -69,7 +69,17 @@ export function DestinosChart({ data }: { data: { destino: string; value: number
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={(entry: any) => `${entry.destino} (${entry.value})`}
+              label={({ destino, value, cx, cy, midAngle, outerRadius, index }: any) => {
+                const RADIAN = Math.PI / 180;
+                const radius = outerRadius + 25;
+                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                return (
+                  <text x={x} y={y} fill="#fff" textAnchor={x > cx ? "start" : "end"} dominantBaseline="central" fontSize={12}>
+                    {`${destino} (${value})`}
+                  </text>
+                );
+              }}
               outerRadius={100}
               fill="#8884d8"
               dataKey="value"

@@ -3,12 +3,10 @@
 import { useState } from "react";
 
 interface ChangePlanFormProps {
-  primaryColor?: string | null;
   currentPlan: string;
 }
 
 export default function ChangePlanForm({
-  primaryColor,
   currentPlan,
 }: ChangePlanFormProps) {
   const [plan, setPlan] = useState(currentPlan);
@@ -40,7 +38,7 @@ export default function ChangePlanForm({
       <select
         value={plan}
         onChange={(e) => setPlan(e.target.value)}
-        className="border border-white/10 rounded-xl bg-white/10 text-white px-3 py-2"
+        className="border border-white/30 rounded-xl bg-white/95 text-gray-900 px-3 py-2"
       >
         <option value="start">Start</option>
         <option value="grow">Grow</option>
@@ -49,12 +47,7 @@ export default function ChangePlanForm({
       <button
         type="submit"
         disabled={loading}
-        className={
-          primaryColor
-            ? "px-5 py-2 rounded-xl text-white font-semibold disabled:opacity-60"
-            : "px-5 py-2 rounded-xl bg-white text-slate-950 font-semibold disabled:opacity-60"
-        }
-        style={primaryColor ? { backgroundColor: primaryColor } : undefined}
+        className="px-5 py-2 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold disabled:opacity-60 transition-colors"
       >
         {loading ? "Actualizando..." : "Cambiar plan"}
       </button>

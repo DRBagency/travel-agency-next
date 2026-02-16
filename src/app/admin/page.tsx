@@ -2,6 +2,8 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DashboardCard from "@/components/ui/DashboardCard";
+import { ReservasChart, IngresosChart } from "@/components/admin/AdminAnalyticsCharts";
+import { subMonths, format, startOfMonth, endOfMonth } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
@@ -11,15 +13,45 @@ export default async function AdminPage() {
   /* Métricas de reservas */
   const { data: reservas } = await supabaseAdmin
     .from("reservas")
-    .select("precio, estado_pago, created_at")
+    .select("precio, estado_pago, created_at, destino, nombre")
     .eq("cliente_id", client.id)
     .order("created_at", { ascending: false });
+
+  /* Destinos activos */
+  const { count: destinosActivos } = await supabaseAdmin
+    .from("destinos")
+    .select("id", { count: "exact", head: true })
+    .eq("cliente_id", client.id)
+    .eq("activo", true);
 
   const reservasSafe = reservas ?? [];
   const pagadas = reservasSafe.filter((r) => r.estado_pago === "pagado");
   const totalFacturado = pagadas.reduce((sum, r) => sum + Number(r.precio), 0);
   const numeroReservas = pagadas.length;
   const ticketMedio = numeroReservas > 0 ? Math.round(totalFacturado / numeroReservas) : 0;
+
+  /* Chart data — últimos 6 meses */
+  const now = new Date();
+  const reservasChartData: { month: string; reservas: number }[] = [];
+  const ingresosChartData: { month: string; ingresos: number }[] = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const monthDate = subMonths(now, i);
+    const monthStart = startOfMonth(monthDate);
+    const monthEnd = endOfMonth(monthDate);
+    const label = format(monthDate, "MMM yy");
+
+    const monthReservas = pagadas.filter((r) => {
+      const d = new Date(r.created_at);
+      return d >= monthStart && d <= monthEnd;
+    });
+
+    reservasChartData.push({ month: label, reservas: monthReservas.length });
+    ingresosChartData.push({
+      month: label,
+      ingresos: monthReservas.reduce((sum, r) => sum + Number(r.precio), 0),
+    });
+  }
 
   return (
     <AdminShell
@@ -38,8 +70,8 @@ export default async function AdminPage() {
           </p>
         </div>
 
-        {/* Métricas premium */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* 4 Métricas */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="rounded-2xl p-5 bg-white/15 border border-white/20 backdrop-blur-sm">
             <p className="text-sm text-white/60 mb-1">Total facturado</p>
             <p className="text-2xl font-bold text-white">{totalFacturado} €</p>
@@ -52,9 +84,19 @@ export default async function AdminPage() {
             <p className="text-sm text-white/60 mb-1">Ticket medio</p>
             <p className="text-2xl font-bold text-white">{ticketMedio} €</p>
           </div>
+          <div className="rounded-2xl p-5 bg-white/15 border border-white/20 backdrop-blur-sm">
+            <p className="text-sm text-white/60 mb-1">Destinos activos</p>
+            <p className="text-2xl font-bold text-white">{destinosActivos ?? 0}</p>
+          </div>
         </div>
 
-        {/* Grid de Cards de navegación premium */}
+        {/* 2 Gráficas */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <ReservasChart data={reservasChartData} />
+          <IngresosChart data={ingresosChartData} />
+        </div>
+
+        {/* Grid de Cards de navegación */}
         <div>
           <h2 className="text-xl font-semibold text-white mb-6">Gestiona tu agencia</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">

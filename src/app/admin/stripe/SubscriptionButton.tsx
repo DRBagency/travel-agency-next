@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 
-interface SubscriptionButtonProps {
-  primaryColor?: string | null;
-}
-
-export default function SubscriptionButton({ primaryColor }: SubscriptionButtonProps) {
+export default function SubscriptionButton() {
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {
@@ -33,12 +29,7 @@ export default function SubscriptionButton({ primaryColor }: SubscriptionButtonP
       type="button"
       onClick={handleSubscribe}
       disabled={loading}
-      className={
-        primaryColor
-          ? "px-5 py-3 rounded-xl text-white font-semibold disabled:opacity-60"
-          : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold disabled:opacity-60"
-      }
-      style={primaryColor ? { backgroundColor: primaryColor } : undefined}
+      className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold disabled:opacity-60 transition-colors"
     >
       {loading ? "Redirigiendo..." : "Activar suscripción"}
     </button>

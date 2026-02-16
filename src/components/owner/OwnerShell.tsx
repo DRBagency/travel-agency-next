@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import {
   LayoutGrid,
   Users,
@@ -11,6 +11,8 @@ import {
   LifeBuoy,
   Menu,
   X,
+  Pin,
+  PinOff,
 } from "lucide-react";
 
 interface OwnerShellProps {
@@ -29,19 +31,65 @@ const navItems = [
 
 export default function OwnerShell({ children }: OwnerShellProps) {
   const [navOpen, setNavOpen] = useState(false);
+  const [pinned, setPinned] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("owner-sidebar-pinned");
+    if (stored === "true") setPinned(true);
+  }, []);
+
+  const togglePin = () => {
+    const next = !pinned;
+    setPinned(next);
+    localStorage.setItem("owner-sidebar-pinned", String(next));
+    if (next) setNavOpen(false);
+  };
 
   return (
     <div className="-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white">
+      {/* Pinned sidebar */}
+      {pinned && (
+        <nav className="fixed left-0 top-0 bottom-0 w-72 bg-drb-turquoise-800 border-r border-white/10 z-50 overflow-y-auto">
+          <div className="flex items-center justify-between p-5 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-drb-turquoise-400 to-drb-lime-500" />
+              <span className="font-semibold">DRB Agency</span>
+            </div>
+            <button
+              onClick={togglePin}
+              className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              title="Desfijar sidebar"
+            >
+              <PinOff className="w-4 h-4 text-white/70" />
+            </button>
+          </div>
+          <div className="p-3 space-y-0.5">
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-white/70 transition-all hover:bg-white/10 hover:text-white"
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </nav>
+      )}
+
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-drb-turquoise-800/80 backdrop-blur-md">
+      <header className={`sticky top-0 z-40 border-b border-white/10 bg-drb-turquoise-800/80 backdrop-blur-md ${pinned ? "ml-72" : ""}`}>
         <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setNavOpen(true)}
-              className="p-2 rounded-xl hover:bg-white/10 transition-colors"
-            >
-              <Menu className="w-5 h-5 text-white" />
-            </button>
+            {!pinned && (
+              <button
+                onClick={() => setNavOpen(true)}
+                className="p-2 rounded-xl hover:bg-white/10 transition-colors"
+              >
+                <Menu className="w-5 h-5 text-white" />
+              </button>
+            )}
             <div className="flex items-center gap-3">
               <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-drb-turquoise-400 to-drb-lime-500" />
               <div>
@@ -62,8 +110,8 @@ export default function OwnerShell({ children }: OwnerShellProps) {
         </div>
       </header>
 
-      {/* Slide-out nav drawer */}
-      {navOpen && (
+      {/* Slide-out nav drawer — only when not pinned */}
+      {!pinned && navOpen && (
         <>
           <div
             className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 animate-fade-in"
@@ -75,12 +123,21 @@ export default function OwnerShell({ children }: OwnerShellProps) {
                 <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-drb-turquoise-400 to-drb-lime-500" />
                 <span className="font-semibold">DRB Agency</span>
               </div>
-              <button
-                onClick={() => setNavOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
-              >
-                <X className="w-5 h-5 text-white/70" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={togglePin}
+                  className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                  title="Fijar sidebar"
+                >
+                  <Pin className="w-4 h-4 text-white/70" />
+                </button>
+                <button
+                  onClick={() => setNavOpen(false)}
+                  className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <X className="w-5 h-5 text-white/70" />
+                </button>
+              </div>
             </div>
             <div className="p-3 space-y-0.5">
               {navItems.map((item) => (
@@ -99,8 +156,8 @@ export default function OwnerShell({ children }: OwnerShellProps) {
         </>
       )}
 
-      {/* Main content - full width */}
-      <main className="w-full max-w-7xl mx-auto px-6 py-8">
+      {/* Main content */}
+      <main className={`w-full max-w-7xl mx-auto px-6 py-8 ${pinned ? "ml-72" : ""}`}>
         {children}
       </main>
     </div>

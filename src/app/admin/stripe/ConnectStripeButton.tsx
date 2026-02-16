@@ -3,13 +3,11 @@
 import { useState } from "react";
 
 interface ConnectStripeButtonProps {
-  primaryColor?: string | null;
   label: string;
   disabled?: boolean;
 }
 
 export default function ConnectStripeButton({
-  primaryColor,
   label,
   disabled,
 }: ConnectStripeButtonProps) {
@@ -42,12 +40,7 @@ export default function ConnectStripeButton({
       type="button"
       onClick={handleConnect}
       disabled={loading || disabled}
-      className={
-        primaryColor
-          ? "px-5 py-3 rounded-xl text-white font-semibold disabled:opacity-60"
-          : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold disabled:opacity-60"
-      }
-      style={primaryColor ? { backgroundColor: primaryColor } : undefined}
+      className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold disabled:opacity-60 transition-colors"
     >
       {loading ? "Conectando..." : label}
     </button>

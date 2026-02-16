@@ -41,18 +41,6 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
 
   const client = await requireAdminClient();
 
-  const brandStyle = client.primary_color
-    ? { backgroundColor: client.primary_color }
-    : undefined;
-
-  const badgeStyle = client.primary_color
-    ? {
-        borderColor: client.primary_color,
-        backgroundColor: `color-mix(in srgb, ${client.primary_color} 15%, transparent)`,
-        color: client.primary_color,
-      }
-    : undefined;
-
   let query = supabaseAdmin
     .from("reservas")
     .select("*")
@@ -203,8 +191,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                     <td className="p-3">
                       <a
                         href={`/admin/reserva/${r.id}`}
-                        className="underline font-semibold"
-                        style={badgeStyle}
+                        className="underline font-semibold text-drb-lime-400 hover:text-drb-lime-300"
                       >
                         {r.destino}
                       </a>
@@ -214,8 +201,17 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                     <td className="p-3">
                       <div className="flex items-center gap-3">
                         <span
-                          className="px-2.5 py-1 text-xs font-semibold rounded-full border"
-                          style={badgeStyle}
+                          className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${
+                            r.estado_pago === "pagado"
+                              ? "bg-drb-lime-500/20 text-drb-lime-400 border-drb-lime-500/30"
+                              : r.estado_pago === "pendiente"
+                                ? "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
+                                : r.estado_pago === "revisada"
+                                  ? "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                                  : r.estado_pago === "cancelada"
+                                    ? "bg-red-500/20 text-red-300 border-red-500/30"
+                                    : "bg-white/15 text-white/60 border-white/20"
+                          }`}
                         >
                           {r.estado_pago}
                         </span>
