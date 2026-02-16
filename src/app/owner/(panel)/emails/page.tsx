@@ -210,7 +210,7 @@ export default async function OwnerEmailsPage() {
             return (
               <details
                 key={templateType.tipo}
-                className="group rounded-xl border border-white/10 bg-white/10/60 overflow-hidden"
+                className="group rounded-xl border border-white/10 bg-white/5 overflow-hidden"
               >
                 <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition">
                   <div>
