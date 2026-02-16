@@ -4,6 +4,33 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import { getClientByDomain } from "@/lib/getClientByDomain";
 import { getCalendarClient } from "@/lib/google-calendar";
 
+// Google Calendar colorId mapping (1-11)
+// https://developers.google.com/calendar/api/v3/reference/colors
+const HEX_TO_GOOGLE_COLOR: Record<string, string> = {
+  "#D4F24D": "5",  // Banana (yellow-green) → Lima
+  "#1CABB0": "7",  // Peacock (teal) → Turquesa
+  "#3B82F6": "9",  // Blueberry → Azul
+  "#8B5CF6": "3",  // Grape → Violeta
+  "#EC4899": "4",  // Flamingo → Rosa
+  "#F97316": "6",  // Tangerine → Naranja
+  "#EF4444": "11", // Tomato → Rojo
+  "#22C55E": "10", // Basil (green) → Verde
+};
+
+const GOOGLE_COLOR_TO_HEX: Record<string, string> = {
+  "5": "#D4F24D",
+  "7": "#1CABB0",
+  "9": "#3B82F6",
+  "3": "#8B5CF6",
+  "4": "#EC4899",
+  "6": "#F97316",
+  "11": "#EF4444",
+  "10": "#22C55E",
+  "1": "#8B5CF6",  // Lavender → Violeta
+  "2": "#22C55E",  // Sage → Verde
+  "8": "#1CABB0",  // Graphite → Turquesa
+};
+
 async function getAuthenticatedClient() {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("admin_session");
@@ -43,13 +70,13 @@ export async function GET() {
         end: e.end?.dateTime || e.end?.date,
         allDay: !e.start?.dateTime,
         description: e.description || "",
+        color: e.colorId ? (GOOGLE_COLOR_TO_HEX[e.colorId] || "#D4F24D") : "#D4F24D",
         source: "google" as const,
       }));
 
       return NextResponse.json({ events, source: "google" });
     } catch (err) {
       console.error("Error fetching Google Calendar events:", err);
-      // Fallback to local if Google fails
     }
   }
 
@@ -68,6 +95,7 @@ export async function GET() {
       end: e.end_time,
       allDay: e.all_day,
       description: e.description || "",
+      color: "#D4F24D",
       source: "local" as const,
     })) || [];
 
@@ -80,22 +108,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
 
-  const { title, start, end, description, allDay } = await req.json();
+  const { title, start, end, description, allDay, color } = await req.json();
 
   // If connected to Google Calendar, create in Google
   if (cliente.google_calendar_connected && cliente.google_calendar_refresh_token) {
     try {
       const calendar = getCalendarClient(cliente.google_calendar_refresh_token);
 
-      // Ensure proper ISO format for datetime
       const startISO = allDay ? undefined : (start.length === 16 ? start + ":00" : start);
       const endISO = allDay ? undefined : ((end || start).length === 16 ? (end || start) + ":00" : (end || start));
+      const colorId = color ? HEX_TO_GOOGLE_COLOR[color] : undefined;
 
       const response = await calendar.events.insert({
         calendarId: "primary",
         requestBody: {
           summary: title,
           description: description || "",
+          colorId: colorId || undefined,
           start: allDay
             ? { date: start.split("T")[0] }
             : { dateTime: startISO, timeZone: "Europe/Madrid" },
@@ -113,6 +142,7 @@ export async function POST(req: NextRequest) {
           end: response.data.end?.dateTime || response.data.end?.date,
           allDay: !response.data.start?.dateTime,
           description: response.data.description || "",
+          color: response.data.colorId ? (GOOGLE_COLOR_TO_HEX[response.data.colorId] || color) : color,
           source: "google",
         },
       });
@@ -148,6 +178,7 @@ export async function POST(req: NextRequest) {
       end: data.end_time,
       allDay: data.all_day,
       description: data.description || "",
+      color: color || "#D4F24D",
       source: "local",
     },
   });
@@ -166,7 +197,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "ID requerido" }, { status: 400 });
   }
 
-  // If connected to Google Calendar, delete from Google
   if (cliente.google_calendar_connected && cliente.google_calendar_refresh_token) {
     try {
       const calendar = getCalendarClient(cliente.google_calendar_refresh_token);
@@ -181,7 +211,6 @@ export async function DELETE(req: NextRequest) {
     }
   }
 
-  // Fallback: local database
   await supabaseAdmin.from("calendar_events").delete().eq("id", eventId).eq("cliente_id", cliente.id);
   return NextResponse.json({ success: true });
 }

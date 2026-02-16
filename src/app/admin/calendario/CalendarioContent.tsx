@@ -330,6 +330,7 @@ export default function CalendarioContent({
             end: formAllDay ? (formEnd || formStart).split("T")[0] : formEnd || formStart,
             description: formDescription,
             allDay: formAllDay,
+            color: formColor,
           }),
         });
         if (!res.ok) throw new Error("Error updating");
@@ -343,6 +344,7 @@ export default function CalendarioContent({
             end: formAllDay ? (formEnd || formStart).split("T")[0] : formEnd || formStart,
             description: formDescription,
             allDay: formAllDay,
+            color: formColor,
           }),
         });
         if (!res.ok) throw new Error("Error creating");
