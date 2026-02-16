@@ -34,7 +34,7 @@ export default function DashboardCard({
       <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-4">
         <div className={`
           w-20 h-20 rounded-2xl flex items-center justify-center
-          ${gradient ? 'bg-white/20' : 'bg-drb-turquoise-500/20'}
+          ${gradient ? 'bg-white/20' : 'bg-drb-turquoise-500/25'}
           transition-all duration-300
           ${isHovered ? 'scale-110 rotate-3' : ''}
         `}>
@@ -67,8 +67,8 @@ export default function DashboardCard({
     relative overflow-hidden rounded-3xl p-8 cursor-pointer
     transition-all duration-300 ease-out
     ${gradient
-      ? 'bg-gradient-to-br from-drb-turquoise-600 to-drb-turquoise-800'
-      : 'bg-white/5 backdrop-blur-md border border-white/10'
+      ? 'bg-gradient-to-br from-drb-turquoise-500/40 to-drb-lime-500/20 border border-drb-lime-500/30'
+      : 'bg-gradient-to-br from-white/10 to-drb-turquoise-500/10 backdrop-blur-md border border-white/15'
     }
     ${isHovered ? 'scale-105 shadow-premium-lg' : 'shadow-premium'}
     ${glowColor === 'turquoise' && isHovered ? 'shadow-drb-turquoise-500/30' : ''}

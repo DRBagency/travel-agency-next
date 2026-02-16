@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import {
   LayoutGrid,
   PenSquare,
@@ -11,6 +11,8 @@ import {
   BarChart3,
   Calendar,
   LifeBuoy,
+  Menu,
+  X,
 } from "lucide-react";
 
 interface AdminShellProps {
@@ -44,29 +46,41 @@ const AdminShell = ({
   allowWhenInactive = false,
   children,
 }: AdminShellProps) => {
+  const [navOpen, setNavOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-drb-turquoise-950 to-drb-turquoise-900 text-white">
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-drb-turquoise-950/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div
-              className="h-9 w-9 rounded-xl"
-              style={{
-                background: primaryColor
-                  ? `linear-gradient(135deg, ${primaryColor}, color-mix(in srgb, ${primaryColor} 65%, #1CABB0))`
-                  : "linear-gradient(135deg, #1CABB0, #D4F24D)",
-              }}
-            />
-            <div>
-              <div className="text-sm text-white/60">Panel de</div>
-              <div className="font-display text-lg font-semibold">{clientName}</div>
+    <div className="-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white">
+      {/* Header */}
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-drb-turquoise-800/80 backdrop-blur-md">
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-4">
+            {/* Hamburger */}
+            <button
+              onClick={() => setNavOpen(true)}
+              className="p-2 rounded-xl hover:bg-white/10 transition-colors"
+            >
+              <Menu className="w-5 h-5 text-white" />
+            </button>
+            <div className="flex items-center gap-3">
+              <div
+                className="h-9 w-9 rounded-xl"
+                style={{
+                  background: primaryColor
+                    ? `linear-gradient(135deg, ${primaryColor}, color-mix(in srgb, ${primaryColor} 65%, #1CABB0))`
+                    : "linear-gradient(135deg, #1CABB0, #D4F24D)",
+                }}
+              />
+              <div>
+                <div className="text-xs text-white/50">Panel de</div>
+                <div className="font-display text-base font-semibold">{clientName}</div>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-white/60">Área de gestión</span>
+            <span className="text-sm text-white/50 hidden sm:block">Área de gestión</span>
             <a
               href="/admin/logout"
-              className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-white/70 hover:text-white hover:border-drb-turquoise-400/50 transition-all"
+              className="rounded-full border border-white/15 px-4 py-1.5 text-sm text-white/70 hover:text-white hover:border-white/30 transition-all"
             >
               Cerrar sesión
             </a>
@@ -74,43 +88,73 @@ const AdminShell = ({
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 md:grid-cols-[240px_1fr]">
-        <aside className="space-y-1 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-4">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/70 transition-all hover:bg-drb-turquoise-500/15 hover:text-white"
-            >
-              <item.icon className="h-4 w-4" />
-              {item.label}
-            </a>
-          ))}
-        </aside>
-
-        <main className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-6">
-          {subscriptionActive || allowWhenInactive ? (
-            children
-          ) : (
-            <div className="space-y-4">
-              <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-6">
-                <h2 className="text-xl font-semibold">Tu suscripción no está activa</h2>
-                <p className="text-sm text-white/70 mt-2">
-                  Activa la suscripción para acceder a todas las funciones del panel.
-                </p>
+      {/* Slide-out nav drawer */}
+      {navOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 animate-fade-in"
+            onClick={() => setNavOpen(false)}
+          />
+          <nav className="fixed left-0 top-0 bottom-0 w-72 bg-drb-turquoise-800 border-r border-white/10 z-50 animate-slide-in-left overflow-y-auto">
+            <div className="flex items-center justify-between p-5 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div
+                  className="h-8 w-8 rounded-lg"
+                  style={{
+                    background: primaryColor
+                      ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
+                      : "linear-gradient(135deg, #1CABB0, #D4F24D)",
+                  }}
+                />
+                <span className="font-semibold">{clientName}</span>
               </div>
-              <div className="flex justify-end">
-                <a
-                  href="/admin/stripe"
-                  className="px-5 py-3 rounded-full bg-drb-magenta-500 hover:bg-drb-magenta-600 text-white font-semibold transition-all hover:scale-105"
-                >
-                  Activar suscripción
-                </a>
-              </div>
+              <button
+                onClick={() => setNavOpen(false)}
+                className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <X className="w-5 h-5 text-white/70" />
+              </button>
             </div>
-          )}
-        </main>
-      </div>
+            <div className="p-3 space-y-0.5">
+              {navItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setNavOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-white/70 transition-all hover:bg-white/10 hover:text-white"
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </nav>
+        </>
+      )}
+
+      {/* Main content - full width */}
+      <main className="w-full max-w-7xl mx-auto px-6 py-8">
+        {subscriptionActive || allowWhenInactive ? (
+          children
+        ) : (
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-6">
+              <h2 className="text-xl font-semibold">Tu suscripción no está activa</h2>
+              <p className="text-sm text-white/70 mt-2">
+                Activa la suscripción para acceder a todas las funciones del panel.
+              </p>
+            </div>
+            <div className="flex justify-end">
+              <a
+                href="/admin/stripe"
+                className="px-5 py-3 rounded-full bg-drb-magenta-500 hover:bg-drb-magenta-600 text-white font-semibold transition-all hover:scale-105"
+              >
+                Activar suscripción
+              </a>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 };

@@ -28,42 +28,42 @@ export default async function OwnerDashboardPage() {
 
       {/* Métricas principales con estilo premium */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="rounded-2xl p-6 bg-gradient-to-br from-drb-turquoise-800/50 to-drb-turquoise-900/50 border border-drb-turquoise-500/20 backdrop-blur-sm">
+        <div className="rounded-2xl p-6 bg-white/10 border border-white/15 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-white/60 text-sm">Total de agencias</p>
             <span className="text-2xl">🏢</span>
           </div>
           <p className="text-3xl font-bold text-white">{metrics.totalClientes}</p>
-          <p className="text-xs text-drb-turquoise-300/60 mt-1">
+          <p className="text-xs text-white/50 mt-1">
             {metrics.clientesConSuscripcion} con suscripción activa
           </p>
         </div>
 
-        <div className="rounded-2xl p-6 bg-gradient-to-br from-drb-lime-900/30 to-drb-turquoise-900/50 border border-drb-lime-500/20 backdrop-blur-sm">
+        <div className="rounded-2xl p-6 bg-white/10 border border-drb-lime-500/25 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-white/60 text-sm">MRR</p>
             <span className="text-2xl">💰</span>
           </div>
           <p className="text-3xl font-bold text-drb-lime-400">{metrics.mrr} €</p>
-          <p className="text-xs text-white/40 mt-1">Ingresos mensuales recurrentes</p>
+          <p className="text-xs text-white/50 mt-1">Ingresos mensuales recurrentes</p>
         </div>
 
-        <div className="rounded-2xl p-6 bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div className="rounded-2xl p-6 bg-white/10 border border-white/15 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-white/60 text-sm">Reservas este mes</p>
             <span className="text-2xl">📅</span>
           </div>
           <p className="text-3xl font-bold text-white">{metrics.reservasMes}</p>
-          <p className="text-xs text-white/40 mt-1">Reservas procesadas</p>
+          <p className="text-xs text-white/50 mt-1">Reservas procesadas</p>
         </div>
 
-        <div className="rounded-2xl p-6 bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div className="rounded-2xl p-6 bg-white/10 border border-white/15 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-white/60 text-sm">Comisiones este mes</p>
             <span className="text-2xl">💵</span>
           </div>
           <p className="text-3xl font-bold text-white">{metrics.comisionesMes.toFixed(2)} €</p>
-          <p className="text-xs text-white/40 mt-1">Generadas por reservas</p>
+          <p className="text-xs text-white/50 mt-1">Generadas por reservas</p>
         </div>
       </div>
 
@@ -119,7 +119,7 @@ export default async function OwnerDashboardPage() {
       </div>
 
       {/* Últimos clientes */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
+      <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-sm">
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-white">
