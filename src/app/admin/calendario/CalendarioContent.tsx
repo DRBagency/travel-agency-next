@@ -1,12 +1,232 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Calendar, Link2, Link2Off, Plus, Trash2, Pencil, X } from "lucide-react";
+import {
+  Calendar,
+  Link2,
+  Link2Off,
+  Plus,
+  Trash2,
+  Pencil,
+  X,
+  Clock,
+  ChevronLeft,
+  ChevronRight,
+  CalendarDays,
+} from "lucide-react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
+// --- Event color options ---
+const EVENT_COLORS = [
+  { name: "Lima", bg: "#D4F24D", text: "#0a2a2c" },
+  { name: "Turquesa", bg: "#1CABB0", text: "#ffffff" },
+  { name: "Azul", bg: "#3B82F6", text: "#ffffff" },
+  { name: "Violeta", bg: "#8B5CF6", text: "#ffffff" },
+  { name: "Rosa", bg: "#EC4899", text: "#ffffff" },
+  { name: "Naranja", bg: "#F97316", text: "#ffffff" },
+  { name: "Rojo", bg: "#EF4444", text: "#ffffff" },
+  { name: "Verde", bg: "#22C55E", text: "#ffffff" },
+];
+
+// --- Custom date picker ---
+function CustomDatePicker({
+  value,
+  onChange,
+  label,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  label: string;
+}) {
+  const [showPicker, setShowPicker] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const dateObj = value ? new Date(value) : new Date();
+  const [viewYear, setViewYear] = useState(dateObj.getFullYear());
+  const [viewMonth, setViewMonth] = useState(dateObj.getMonth());
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setShowPicker(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const today = new Date();
+  const selectedDate = value ? value.split("T")[0] : "";
+
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+  ];
+  const dayNames = ["L", "M", "X", "J", "V", "S", "D"];
+
+  const prevMonth = () => {
+    if (viewMonth === 0) { setViewMonth(11); setViewYear(viewYear - 1); }
+    else setViewMonth(viewMonth - 1);
+  };
+  const nextMonth = () => {
+    if (viewMonth === 11) { setViewMonth(0); setViewYear(viewYear + 1); }
+    else setViewMonth(viewMonth + 1);
+  };
+
+  const selectDay = (day: number) => {
+    const m = String(viewMonth + 1).padStart(2, "0");
+    const d = String(day).padStart(2, "0");
+    const timePart = value?.includes("T") ? value.split("T")[1] : "09:00";
+    onChange(`${viewYear}-${m}-${d}T${timePart}`);
+    setShowPicker(false);
+  };
+
+  const displayDate = value
+    ? new Date(value).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })
+    : "Seleccionar fecha";
+
+  // Monday-start: shift firstDay (0=Sun -> 6, 1=Mon -> 0, etc.)
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+
+  return (
+    <div className="relative" ref={ref}>
+      <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-1.5">
+        {label}
+      </label>
+      <button
+        type="button"
+        onClick={() => setShowPicker(!showPicker)}
+        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.07] border border-white/[0.12] hover:border-white/25 text-white text-left transition-all"
+      >
+        <CalendarDays className="w-4 h-4 text-drb-lime-400 shrink-0" />
+        <span className="text-sm font-medium">{displayDate}</span>
+      </button>
+
+      {showPicker && (
+        <div className="absolute z-50 top-full mt-2 left-0 w-72 rounded-2xl bg-[#0d3234] border border-white/15 shadow-2xl shadow-black/40 p-4 animate-in fade-in slide-in-from-top-2">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-3">
+            <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors">
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="text-sm font-semibold text-white">
+              {monthNames[viewMonth]} {viewYear}
+            </span>
+            <button onClick={nextMonth} className="p-1.5 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors">
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Day names */}
+          <div className="grid grid-cols-7 mb-1">
+            {dayNames.map((d) => (
+              <div key={d} className="text-center text-[10px] font-semibold text-white/30 uppercase py-1">
+                {d}
+              </div>
+            ))}
+          </div>
+
+          {/* Days grid */}
+          <div className="grid grid-cols-7 gap-0.5">
+            {Array.from({ length: startOffset }).map((_, i) => (
+              <div key={`empty-${i}`} />
+            ))}
+            {Array.from({ length: daysInMonth }).map((_, i) => {
+              const day = i + 1;
+              const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+              const isSelected = dateStr === selectedDate;
+              const isToday =
+                day === today.getDate() &&
+                viewMonth === today.getMonth() &&
+                viewYear === today.getFullYear();
+
+              return (
+                <button
+                  key={day}
+                  onClick={() => selectDay(day)}
+                  className={`
+                    h-9 w-full rounded-lg text-sm font-medium transition-all
+                    ${isSelected
+                      ? "bg-drb-lime-500 text-drb-turquoise-900 font-bold shadow-lg shadow-drb-lime-500/20"
+                      : isToday
+                        ? "bg-white/10 text-drb-lime-400 ring-1 ring-drb-lime-400/30"
+                        : "text-white/70 hover:bg-white/10 hover:text-white"
+                    }
+                  `}
+                >
+                  {day}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- Custom time picker ---
+function CustomTimePicker({
+  value,
+  onChange,
+  label,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  label: string;
+}) {
+  const timePart = value?.includes("T") ? value.split("T")[1]?.slice(0, 5) : "09:00";
+  const [hours, minutes] = timePart.split(":").map(Number);
+
+  const setTime = (h: number, m: number) => {
+    const datePart = value?.split("T")[0] || new Date().toISOString().split("T")[0];
+    onChange(`${datePart}T${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+  };
+
+  const hourOptions = Array.from({ length: 24 }, (_, i) => i);
+  const minuteOptions = [0, 15, 30, 45];
+
+  return (
+    <div>
+      <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-1.5">
+        {label}
+      </label>
+      <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/[0.07] border border-white/[0.12]">
+        <Clock className="w-4 h-4 text-drb-lime-400 shrink-0" />
+        <select
+          value={hours}
+          onChange={(e) => setTime(Number(e.target.value), minutes)}
+          className="bg-transparent text-white text-sm font-medium appearance-none cursor-pointer outline-none pr-1"
+        >
+          {hourOptions.map((h) => (
+            <option key={h} value={h} className="bg-[#0d3234] text-white">
+              {String(h).padStart(2, "0")}
+            </option>
+          ))}
+        </select>
+        <span className="text-white/40 font-bold text-lg leading-none">:</span>
+        <select
+          value={minutes}
+          onChange={(e) => setTime(hours, Number(e.target.value))}
+          className="bg-transparent text-white text-sm font-medium appearance-none cursor-pointer outline-none"
+        >
+          {minuteOptions.map((m) => (
+            <option key={m} value={m} className="bg-[#0d3234] text-white">
+              {String(m).padStart(2, "0")}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+}
+
+// --- Types ---
 interface CalendarEvent {
   id: string;
   title: string;
@@ -14,6 +234,7 @@ interface CalendarEvent {
   end?: string;
   allDay?: boolean;
   description?: string;
+  color?: string;
   source?: "google" | "local";
 }
 
@@ -23,6 +244,7 @@ interface CalendarioContentProps {
   googleCalendarUrl?: string | null;
 }
 
+// --- Main component ---
 export default function CalendarioContent({
   googleCalendarConnected,
   googleCalendarEmail,
@@ -40,6 +262,7 @@ export default function CalendarioContent({
   const [formEnd, setFormEnd] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [formAllDay, setFormAllDay] = useState(false);
+  const [formColor, setFormColor] = useState(EVENT_COLORS[0].bg);
   const [formSaving, setFormSaving] = useState(false);
 
   // Embed URL fallback state
@@ -77,6 +300,7 @@ export default function CalendarioContent({
     setFormEnd(startStr || new Date().toISOString().slice(0, 16));
     setFormDescription("");
     setFormAllDay(false);
+    setFormColor(EVENT_COLORS[0].bg);
     setModalOpen(true);
   };
 
@@ -87,6 +311,7 @@ export default function CalendarioContent({
     setFormEnd(event.end?.slice(0, 16) || event.start?.slice(0, 16) || "");
     setFormDescription(event.description || "");
     setFormAllDay(event.allDay || false);
+    setFormColor(event.color || EVENT_COLORS[0].bg);
     setModalOpen(true);
   };
 
@@ -96,7 +321,6 @@ export default function CalendarioContent({
 
     try {
       if (editingEvent) {
-        // Update existing event
         const res = await fetch(`/api/admin/calendar/events/${editingEvent.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -110,7 +334,6 @@ export default function CalendarioContent({
         });
         if (!res.ok) throw new Error("Error updating");
       } else {
-        // Create new event
         const res = await fetch("/api/admin/calendar/events", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -189,7 +412,172 @@ export default function CalendarioContent({
     }
   };
 
-  // FullCalendar connected view
+  // --- Event modal ---
+  const renderModal = () => {
+    if (!modalOpen) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setModalOpen(false)}>
+        {/* Backdrop */}
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+
+        {/* Modal */}
+        <div
+          className="relative w-full max-w-lg rounded-3xl bg-gradient-to-b from-[#0f3a3d] to-[#0a2a2c] border border-white/[0.12] shadow-2xl shadow-black/50 overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header with color accent */}
+          <div className="relative px-7 pt-6 pb-4">
+            <div
+              className="absolute top-0 left-0 right-0 h-1"
+              style={{ backgroundColor: formColor }}
+            />
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-white">
+                  {editingEvent ? "Editar evento" : "Nuevo evento"}
+                </h3>
+                <p className="text-xs text-white/40 mt-0.5">
+                  {editingEvent ? "Modifica los detalles del evento" : "Crea un nuevo evento en tu calendario"}
+                </p>
+              </div>
+              <button
+                onClick={() => setModalOpen(false)}
+                className="p-2 rounded-xl hover:bg-white/10 text-white/40 hover:text-white transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Body */}
+          <div className="px-7 pb-6 space-y-5">
+            {/* Title */}
+            <div>
+              <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-1.5">
+                Titulo
+              </label>
+              <input
+                type="text"
+                value={formTitle}
+                onChange={(e) => setFormTitle(e.target.value)}
+                placeholder="Reunion con cliente, vuelo a Madrid..."
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl bg-white/[0.07] border border-white/[0.12] text-white placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-lime-400/50 focus:ring-1 focus:ring-drb-lime-400/20 transition-all"
+              />
+            </div>
+
+            {/* Color picker */}
+            <div>
+              <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-2">
+                Color
+              </label>
+              <div className="flex gap-2">
+                {EVENT_COLORS.map((c) => (
+                  <button
+                    key={c.bg}
+                    type="button"
+                    onClick={() => setFormColor(c.bg)}
+                    className={`w-8 h-8 rounded-full transition-all ${
+                      formColor === c.bg
+                        ? "ring-2 ring-white ring-offset-2 ring-offset-[#0f3a3d] scale-110"
+                        : "hover:scale-110 opacity-70 hover:opacity-100"
+                    }`}
+                    style={{ backgroundColor: c.bg }}
+                    title={c.name}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* All day toggle */}
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setFormAllDay(!formAllDay)}
+                className={`relative w-11 h-6 rounded-full transition-colors ${
+                  formAllDay ? "bg-drb-lime-500" : "bg-white/15"
+                }`}
+              >
+                <div
+                  className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
+                    formAllDay ? "translate-x-[22px]" : "translate-x-0.5"
+                  }`}
+                />
+              </button>
+              <span className="text-sm text-white/60">Todo el dia</span>
+            </div>
+
+            {/* Date & time */}
+            {formAllDay ? (
+              <div className="grid grid-cols-2 gap-4">
+                <CustomDatePicker value={formStart} onChange={setFormStart} label="Fecha inicio" />
+                <CustomDatePicker value={formEnd} onChange={setFormEnd} label="Fecha fin" />
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-4">
+                  <CustomDatePicker value={formStart} onChange={setFormStart} label="Fecha inicio" />
+                  <CustomTimePicker value={formStart} onChange={setFormStart} label="Hora inicio" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <CustomDatePicker value={formEnd} onChange={setFormEnd} label="Fecha fin" />
+                  <CustomTimePicker value={formEnd} onChange={setFormEnd} label="Hora fin" />
+                </div>
+              </div>
+            )}
+
+            {/* Description */}
+            <div>
+              <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-1.5">
+                Descripcion
+              </label>
+              <textarea
+                value={formDescription}
+                onChange={(e) => setFormDescription(e.target.value)}
+                placeholder="Notas adicionales sobre el evento..."
+                rows={3}
+                className="w-full px-4 py-3 rounded-xl bg-white/[0.07] border border-white/[0.12] text-white placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-lime-400/50 focus:ring-1 focus:ring-drb-lime-400/20 transition-all resize-none"
+              />
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-7 py-4 border-t border-white/[0.08] bg-white/[0.02] flex items-center justify-between">
+            {editingEvent ? (
+              <button
+                onClick={() => handleDeleteEvent(editingEvent.id)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 border border-red-500/20 hover:border-red-500/30 transition-all text-sm font-medium"
+              >
+                <Trash2 className="w-4 h-4" />
+                Eliminar
+              </button>
+            ) : (
+              <div />
+            )}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setModalOpen(false)}
+                className="px-5 py-2.5 rounded-xl text-white/50 hover:text-white hover:bg-white/10 transition-all text-sm font-medium"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSaveEvent}
+                disabled={formSaving || !formTitle.trim()}
+                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold text-sm disabled:opacity-40 transition-all shadow-lg shadow-drb-lime-500/20 hover:shadow-drb-lime-500/30"
+              >
+                {editingEvent ? <Pencil className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                {formSaving ? "Guardando..." : editingEvent ? "Actualizar" : "Crear evento"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // --- Connected view ---
   if (googleCalendarConnected) {
     return (
       <div className="space-y-6">
@@ -201,21 +589,21 @@ export default function CalendarioContent({
         </div>
 
         {/* Connection status */}
-        <div className="rounded-2xl border border-white/20 bg-white/10 p-6">
+        <div className="rounded-2xl border border-white/[0.12] bg-white/[0.06] p-5">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-white/80">
+              <div className="w-2 h-2 rounded-full bg-green-400 shadow-lg shadow-green-400/50" />
+              <span className="text-sm text-white/60">
                 Conectado como{" "}
                 <span className="font-semibold text-white">
                   {googleCalendarEmail}
                 </span>
               </span>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2.5">
               <button
                 onClick={() => openCreateModal()}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold text-sm transition-all shadow-lg shadow-drb-lime-500/20"
               >
                 <Plus className="w-4 h-4" />
                 Nuevo evento
@@ -223,20 +611,20 @@ export default function CalendarioContent({
               <button
                 onClick={handleDisconnect}
                 disabled={disconnecting}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-red-400/40 text-red-400 hover:bg-red-400/10 transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-white/40 hover:text-red-400 hover:border-red-400/30 hover:bg-red-400/5 transition-all text-sm disabled:opacity-50"
               >
                 <Link2Off className="w-4 h-4" />
-                {disconnecting ? "Desconectando..." : "Desconectar"}
+                {disconnecting ? "..." : "Desconectar"}
               </button>
             </div>
           </div>
         </div>
 
         {/* FullCalendar */}
-        <div className="rounded-2xl border border-white/20 bg-white/10 p-4 overflow-hidden">
+        <div className="rounded-2xl border border-white/[0.12] bg-white/[0.04] p-5 overflow-hidden">
           {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-drb-lime-400" />
+            <div className="flex items-center justify-center py-24">
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-drb-lime-400 border-t-transparent" />
             </div>
           ) : (
             <div className="fc-dark-theme">
@@ -254,7 +642,7 @@ export default function CalendarioContent({
                   today: "Hoy",
                   month: "Mes",
                   week: "Semana",
-                  day: "Día",
+                  day: "Dia",
                 }}
                 events={events.map((e) => ({
                   id: e.id,
@@ -262,6 +650,9 @@ export default function CalendarioContent({
                   start: e.start,
                   end: e.end,
                   allDay: e.allDay,
+                  backgroundColor: e.color || EVENT_COLORS[0].bg,
+                  borderColor: e.color || EVENT_COLORS[0].bg,
+                  textColor: EVENT_COLORS.find((c) => c.bg === e.color)?.text || EVENT_COLORS[0].text,
                   extendedProps: {
                     description: e.description,
                     source: e.source,
@@ -286,172 +677,104 @@ export default function CalendarioContent({
           )}
         </div>
 
-        {/* Event Modal */}
-        {modalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-            <div className="bg-drb-turquoise-900 border border-white/20 rounded-2xl p-6 w-full max-w-md space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold">
-                  {editingEvent ? "Editar evento" : "Nuevo evento"}
-                </h3>
-                <button
-                  onClick={() => setModalOpen(false)}
-                  className="text-white/50 hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm text-white/70 mb-1">Título</label>
-                  <input
-                    type="text"
-                    value={formTitle}
-                    onChange={(e) => setFormTitle(e.target.value)}
-                    placeholder="Reunión con cliente..."
-                    className="w-full border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400 px-4 py-2.5 rounded-xl"
-                  />
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="allDay"
-                    checked={formAllDay}
-                    onChange={(e) => setFormAllDay(e.target.checked)}
-                    className="rounded"
-                  />
-                  <label htmlFor="allDay" className="text-sm text-white/70">
-                    Todo el día
-                  </label>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm text-white/70 mb-1">Inicio</label>
-                    <input
-                      type={formAllDay ? "date" : "datetime-local"}
-                      value={formAllDay ? formStart.split("T")[0] : formStart}
-                      onChange={(e) => setFormStart(e.target.value)}
-                      className="w-full border border-white/30 bg-white/95 text-gray-900 px-4 py-2.5 rounded-xl"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-white/70 mb-1">Fin</label>
-                    <input
-                      type={formAllDay ? "date" : "datetime-local"}
-                      value={formAllDay ? formEnd.split("T")[0] : formEnd}
-                      onChange={(e) => setFormEnd(e.target.value)}
-                      className="w-full border border-white/30 bg-white/95 text-gray-900 px-4 py-2.5 rounded-xl"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm text-white/70 mb-1">Descripción</label>
-                  <textarea
-                    value={formDescription}
-                    onChange={(e) => setFormDescription(e.target.value)}
-                    placeholder="Detalles del evento..."
-                    rows={3}
-                    className="w-full border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400 px-4 py-2.5 rounded-xl resize-none"
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-between pt-2">
-                {editingEvent ? (
-                  <button
-                    onClick={() => handleDeleteEvent(editingEvent.id)}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-400 hover:bg-red-400/10 border border-red-400/30 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    Eliminar
-                  </button>
-                ) : (
-                  <div />
-                )}
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => setModalOpen(false)}
-                    className="px-4 py-2.5 rounded-xl border border-white/20 text-white/70 hover:text-white transition-colors"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleSaveEvent}
-                    disabled={formSaving || !formTitle.trim()}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold disabled:opacity-60 transition-colors"
-                  >
-                    {editingEvent ? (
-                      <Pencil className="w-4 h-4" />
-                    ) : (
-                      <Plus className="w-4 h-4" />
-                    )}
-                    {formSaving
-                      ? "Guardando..."
-                      : editingEvent
-                        ? "Actualizar"
-                        : "Crear"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {renderModal()}
 
         {/* FullCalendar dark theme styles */}
         <style>{`
           .fc-dark-theme .fc {
-            --fc-border-color: rgba(255,255,255,0.15);
-            --fc-button-bg-color: rgba(255,255,255,0.1);
-            --fc-button-border-color: rgba(255,255,255,0.2);
-            --fc-button-text-color: #fff;
-            --fc-button-hover-bg-color: rgba(255,255,255,0.2);
-            --fc-button-hover-border-color: rgba(255,255,255,0.3);
+            --fc-border-color: rgba(255,255,255,0.08);
+            --fc-button-bg-color: rgba(255,255,255,0.07);
+            --fc-button-border-color: rgba(255,255,255,0.12);
+            --fc-button-text-color: rgba(255,255,255,0.7);
+            --fc-button-hover-bg-color: rgba(255,255,255,0.12);
+            --fc-button-hover-border-color: rgba(255,255,255,0.2);
             --fc-button-active-bg-color: #D4F24D;
             --fc-button-active-border-color: #D4F24D;
-            --fc-today-bg-color: rgba(212,242,77,0.08);
+            --fc-today-bg-color: rgba(212,242,77,0.06);
             --fc-event-bg-color: #D4F24D;
             --fc-event-border-color: #D4F24D;
             --fc-event-text-color: #0a2a2c;
             --fc-page-bg-color: transparent;
-            --fc-neutral-bg-color: rgba(255,255,255,0.05);
-            --fc-list-event-hover-bg-color: rgba(255,255,255,0.1);
+            --fc-neutral-bg-color: rgba(255,255,255,0.03);
+            --fc-list-event-hover-bg-color: rgba(255,255,255,0.08);
             color: #fff;
+          }
+          .fc-dark-theme .fc .fc-button {
+            border-radius: 10px !important;
+            font-size: 0.8rem !important;
+            font-weight: 600 !important;
+            padding: 6px 14px !important;
+            transition: all 0.15s !important;
+          }
+          .fc-dark-theme .fc .fc-button-group {
+            gap: 2px;
           }
           .fc-dark-theme .fc .fc-button-active {
             color: #0a2a2c !important;
+            font-weight: 700 !important;
           }
-          .fc-dark-theme .fc .fc-col-header-cell-cushion,
-          .fc-dark-theme .fc .fc-daygrid-day-number,
+          .fc-dark-theme .fc .fc-col-header-cell-cushion {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 10px 0;
+          }
+          .fc-dark-theme .fc .fc-daygrid-day-number {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 10px;
+          }
+          .fc-dark-theme .fc .fc-daygrid-day:hover {
+            background: rgba(255,255,255,0.03);
+          }
           .fc-dark-theme .fc .fc-timegrid-slot-label {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.35);
+            font-size: 0.75rem;
           }
           .fc-dark-theme .fc .fc-toolbar-title {
             color: #fff;
-            font-size: 1.25rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
           }
           .fc-dark-theme .fc .fc-daygrid-event {
-            border-radius: 6px;
-            padding: 1px 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            border-radius: 8px !important;
+            padding: 2px 8px !important;
+            font-size: 0.78rem !important;
+            font-weight: 600 !important;
             cursor: pointer;
+            border: none !important;
+            margin: 1px 2px !important;
           }
           .fc-dark-theme .fc .fc-day-today {
-            background-color: rgba(212,242,77,0.08) !important;
+            background-color: rgba(212,242,77,0.06) !important;
+          }
+          .fc-dark-theme .fc .fc-day-today .fc-daygrid-day-number {
+            color: #D4F24D;
+            font-weight: 700;
           }
           .fc-dark-theme .fc td, .fc-dark-theme .fc th {
-            border-color: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.06) !important;
+          }
+          .fc-dark-theme .fc .fc-scrollgrid {
+            border-color: rgba(255,255,255,0.08) !important;
+          }
+          .fc-dark-theme .fc .fc-daygrid-day-frame {
+            min-height: 90px;
+          }
+          .fc-dark-theme .fc .fc-prev-button,
+          .fc-dark-theme .fc .fc-next-button {
+            padding: 6px 8px !important;
           }
         `}</style>
       </div>
     );
   }
 
-  // Not connected view
+  // --- Not connected view ---
   return (
     <div className="space-y-6">
       <div>
@@ -462,21 +785,21 @@ export default function CalendarioContent({
       </div>
 
       {/* Connect Google Calendar */}
-      <div className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4">
+      <div className="rounded-2xl border border-white/[0.12] bg-white/[0.06] p-6 space-y-4">
         <div className="flex items-center gap-3">
           <Calendar className="w-5 h-5 text-drb-lime-400" />
           <h2 className="text-xl font-semibold">Google Calendar</h2>
         </div>
 
-        <p className="text-white/70 text-sm">
+        <p className="text-white/60 text-sm leading-relaxed">
           Conecta tu cuenta de Google para crear, editar y eliminar eventos
-          directamente desde este panel. Los cambios se sincronizarán
-          automáticamente con tu Google Calendar.
+          directamente desde este panel. Los cambios se sincronizaran
+          automaticamente con tu Google Calendar.
         </p>
 
         <a
           href="/api/admin/calendar/oauth/start"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-all shadow-lg shadow-drb-lime-500/20 hover:shadow-drb-lime-500/30"
         >
           <Link2 className="w-5 h-5" />
           Conectar Google Calendar
@@ -484,16 +807,16 @@ export default function CalendarioContent({
       </div>
 
       {/* Embed URL fallback */}
-      <div className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4">
+      <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 space-y-4">
         <div className="flex items-center gap-3">
-          <Calendar className="w-5 h-5 text-white/50" />
-          <h2 className="text-lg font-semibold text-white/70">
+          <Calendar className="w-5 h-5 text-white/30" />
+          <h2 className="text-base font-semibold text-white/50">
             Alternativa: Calendario embebido (solo lectura)
           </h2>
         </div>
 
         <div className="space-y-3">
-          <label className="block text-sm text-white/70">
+          <label className="block text-xs font-medium text-white/40 uppercase tracking-wider">
             URL de embed de Google Calendar
           </label>
           <div className="flex gap-3">
@@ -502,14 +825,14 @@ export default function CalendarioContent({
               value={embedUrl}
               onChange={(e) => setEmbedUrl(e.target.value)}
               placeholder="https://calendar.google.com/calendar/embed?src=..."
-              className="flex-1 border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400 px-4 py-2.5 rounded-xl"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-white/[0.07] border border-white/[0.12] text-white placeholder:text-white/20 text-sm focus:outline-none focus:border-white/25 transition-all"
             />
             <button
               onClick={handleSaveEmbedUrl}
               disabled={savingUrl}
-              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold disabled:opacity-60 transition-colors whitespace-nowrap"
+              className="px-5 py-2.5 rounded-xl bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.12] text-white/60 hover:text-white font-medium text-sm disabled:opacity-60 transition-all whitespace-nowrap"
             >
-              {savingUrl ? "Guardando..." : savedUrl ? "Guardado" : "Guardar"}
+              {savingUrl ? "..." : savedUrl ? "Guardado" : "Guardar"}
             </button>
           </div>
         </div>
@@ -517,7 +840,7 @@ export default function CalendarioContent({
 
       {/* Calendar iframe */}
       {embedUrl.trim() && (
-        <div className="rounded-2xl border border-white/20 bg-white/10 overflow-hidden">
+        <div className="rounded-2xl border border-white/[0.12] bg-white/[0.04] overflow-hidden">
           <iframe
             src={embedUrl.trim()}
             className="w-full border-0"
