@@ -13,7 +13,11 @@ export default async function AdminCalendarioPage() {
       primaryColor={client.primary_color}
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
-      <CalendarioContent googleCalendarUrl={client.google_calendar_url} />
+      <CalendarioContent
+        googleCalendarConnected={Boolean(client.google_calendar_connected)}
+        googleCalendarEmail={client.google_calendar_email}
+        googleCalendarUrl={client.google_calendar_url}
+      />
     </AdminShell>
   );
 }
