@@ -61,7 +61,7 @@ export default async function OwnerLoginPage({
 
   return (
     <div className="-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white flex items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-3xl border border-white/15 bg-white/10 backdrop-blur-md p-8">
+      <div className="w-full max-w-md rounded-3xl border border-white/25 bg-white/15 backdrop-blur-md p-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-drb-turquoise-400 to-drb-lime-500" />
           <div>
@@ -90,7 +90,7 @@ export default async function OwnerLoginPage({
             <input
               name="email"
               type="email"
-              className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-white placeholder:text-white/40"
+              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2.5 text-gray-900 placeholder:text-gray-400"
               placeholder="owner@agencia.com"
               required
             />
@@ -102,7 +102,7 @@ export default async function OwnerLoginPage({
             <input
               name="password"
               type="password"
-              className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-white placeholder:text-white/40"
+              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2.5 text-gray-900 placeholder:text-gray-400"
               placeholder="••••••••"
               required
             />
@@ -110,7 +110,7 @@ export default async function OwnerLoginPage({
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-gradient-to-r from-drb-turquoise-500 to-drb-lime-500 text-white font-semibold py-3 hover:opacity-90 transition-opacity"
+            className="w-full rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold py-3 transition-colors"
           >
             Entrar
           </button>

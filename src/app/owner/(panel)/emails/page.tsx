@@ -90,7 +90,7 @@ export default async function OwnerEmailsPage() {
       {/* ====================================
           SECCIÓN 1: CONFIGURACIÓN GLOBAL
       ==================================== */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+      <div className="rounded-2xl border border-white/20 bg-white/10 p-6">
         <h2 className="text-xl font-semibold mb-4">
           Configuración Global de Billing
         </h2>
@@ -109,7 +109,7 @@ export default async function OwnerEmailsPage() {
               type="text"
               defaultValue={settings?.billing_logo_url ?? ""}
               placeholder="https://example.com/logo.png"
-              className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
+              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
             />
             <p className="text-xs text-white/50 mt-1">
               Logo que aparecerá en el header de los emails de billing
@@ -125,7 +125,7 @@ export default async function OwnerEmailsPage() {
               type="text"
               defaultValue={settings?.billing_email_from ?? ""}
               placeholder='DRB Agency <billing@drb.agency>'
-              className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
+              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
             />
             <p className="text-xs text-white/50 mt-1">
               Formato: &quot;Nombre &lt;email@dominio.com&gt;&quot; o solo
@@ -141,7 +141,7 @@ export default async function OwnerEmailsPage() {
               name="billing_footer_text"
               defaultValue={settings?.billing_footer_text ?? ""}
               placeholder="© 2026 DRB Agency. Todos los derechos reservados."
-              className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30 min-h-[80px]"
+              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[80px]"
             />
             <p className="text-xs text-white/50 mt-1">
               Texto que aparecerá en el footer de todos los emails
@@ -151,7 +151,7 @@ export default async function OwnerEmailsPage() {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-white text-slate-950 font-semibold hover:bg-white/90 transition"
+              className="px-5 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
             >
               Guardar configuración
             </button>
@@ -162,7 +162,7 @@ export default async function OwnerEmailsPage() {
       {/* ====================================
           SECCIÓN 2: TEMPLATES DE EMAILS
       ==================================== */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+      <div className="rounded-2xl border border-white/20 bg-white/10 p-6">
         <h2 className="text-xl font-semibold mb-4">Templates de Emails</h2>
         <p className="text-sm text-white/60 mb-6">
           Edita los templates de emails para eventos de billing. Puedes usar
@@ -210,7 +210,7 @@ export default async function OwnerEmailsPage() {
             return (
               <details
                 key={templateType.tipo}
-                className="group rounded-xl border border-white/10 bg-white/5 overflow-hidden"
+                className="group rounded-xl border border-white/20 bg-white/10 overflow-hidden"
               >
                 <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition">
                   <div>
@@ -278,7 +278,7 @@ export default async function OwnerEmailsPage() {
                       type="text"
                       defaultValue={template?.subject ?? ""}
                       placeholder="Ej: 🎉 ¡Bienvenido a {{planName}}!"
-                      className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
+                      className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
 
@@ -290,7 +290,7 @@ export default async function OwnerEmailsPage() {
                       name="html_body"
                       defaultValue={template?.html_body ?? ""}
                       placeholder="<h1>Hola {{clientName}}</h1><p>Contenido del email...</p>"
-                      className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30 min-h-[300px] font-mono text-sm"
+                      className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[300px] font-mono text-sm"
                     />
                     <p className="text-xs text-white/50 mt-1">
                       Escribe HTML y usa tokens como {`{{clientName}}`},{" "}
@@ -308,7 +308,7 @@ export default async function OwnerEmailsPage() {
                         type="text"
                         defaultValue={template?.cta_text ?? ""}
                         placeholder="Ej: Ir a mi panel"
-                        className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
+                        className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                       />
                     </div>
                     <div>
@@ -320,7 +320,7 @@ export default async function OwnerEmailsPage() {
                         type="text"
                         defaultValue={template?.cta_url ?? ""}
                         placeholder="Ej: {{adminUrl}} o https://..."
-                        className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white placeholder:text-white/30"
+                        className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                       />
                     </div>
                   </div>
@@ -328,7 +328,7 @@ export default async function OwnerEmailsPage() {
                   <div className="flex justify-end pt-2">
                     <button
                       type="submit"
-                      className="px-5 py-2.5 rounded-xl bg-white text-slate-950 font-semibold hover:bg-white/90 transition"
+                      className="px-5 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
                     >
                       Guardar template
                     </button>

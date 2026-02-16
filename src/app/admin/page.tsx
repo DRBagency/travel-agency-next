@@ -40,15 +40,15 @@ export default async function AdminPage() {
 
         {/* Métricas premium */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="rounded-2xl p-5 bg-white/10 border border-white/15 backdrop-blur-sm">
+          <div className="rounded-2xl p-5 bg-white/15 border border-white/20 backdrop-blur-sm">
             <p className="text-sm text-white/60 mb-1">Total facturado</p>
             <p className="text-2xl font-bold text-white">{totalFacturado} €</p>
           </div>
-          <div className="rounded-2xl p-5 bg-white/10 border border-drb-lime-500/25 backdrop-blur-sm">
+          <div className="rounded-2xl p-5 bg-white/15 border border-drb-lime-500/25 backdrop-blur-sm">
             <p className="text-sm text-white/60 mb-1">Reservas pagadas</p>
             <p className="text-2xl font-bold text-drb-lime-400">{numeroReservas}</p>
           </div>
-          <div className="rounded-2xl p-5 bg-white/10 border border-white/15 backdrop-blur-sm">
+          <div className="rounded-2xl p-5 bg-white/15 border border-white/20 backdrop-blur-sm">
             <p className="text-sm text-white/60 mb-1">Ticket medio</p>
             <p className="text-2xl font-bold text-white">{ticketMedio} €</p>
           </div>
@@ -111,12 +111,12 @@ export default async function AdminPage() {
         </div>
 
         {/* Últimas reservas */}
-        <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-sm p-6">
+        <div className="rounded-2xl border border-white/20 bg-white/15 backdrop-blur-sm p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Últimas reservas</h2>
             <a
               href="/admin/reservas"
-              className="text-sm text-drb-turquoise-400 hover:text-drb-turquoise-300 transition-colors"
+              className="text-sm px-3 py-1.5 rounded-lg bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
             >
               Ver todas →
             </a>
@@ -128,7 +128,7 @@ export default async function AdminPage() {
               {reservasSafe.slice(0, 5).map((r: any) => (
                 <div
                   key={r.id || r.created_at}
-                  className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+                  className="flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-4 py-3"
                 >
                   <div>
                     <div className="font-semibold text-white">{r.nombre || "Reserva"}</div>

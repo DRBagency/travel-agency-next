@@ -113,15 +113,15 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 border border-white/10 rounded-2xl bg-white/5">
+          <div className="p-4 border border-white/20 rounded-2xl bg-white/10">
             <p className="text-sm text-white/60">Total facturado</p>
             <p className="text-2xl font-bold">{totalFacturado} €</p>
           </div>
-          <div className="p-4 border border-white/10 rounded-2xl bg-white/5">
+          <div className="p-4 border border-white/20 rounded-2xl bg-white/10">
             <p className="text-sm text-white/60">Reservas pagadas</p>
             <p className="text-2xl font-bold">{numeroReservas}</p>
           </div>
-          <div className="p-4 border border-white/10 rounded-2xl bg-white/5">
+          <div className="p-4 border border-white/20 rounded-2xl bg-white/10">
             <p className="text-sm text-white/60">Ticket medio</p>
             <p className="text-2xl font-bold">{ticketMedio} €</p>
           </div>
@@ -132,13 +132,13 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             name="q"
             defaultValue={q}
             placeholder="Buscar nombre o email"
-            className="border border-white/10 bg-white/10 text-white px-3 py-2 rounded-xl"
+            className="border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400 px-3 py-2 rounded-xl"
           />
 
           <select
             name="estado"
             defaultValue={estado}
-            className="border border-white/10 px-3 py-2 rounded-xl bg-white/10 text-white"
+            className="border border-white/30 px-3 py-2 rounded-xl bg-white/95 text-gray-900"
           >
             <option value="todos">Todos</option>
             <option value="pagado">Pagado</option>
@@ -151,35 +151,25 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             type="date"
             name="from"
             defaultValue={from}
-            className="border border-white/10 px-3 py-2 rounded-xl bg-white/10 text-white"
+            className="border border-white/30 px-3 py-2 rounded-xl bg-white/95 text-gray-900"
           />
 
           <input
             type="date"
             name="to"
             defaultValue={to}
-            className="border border-white/10 px-3 py-2 rounded-xl bg-white/10 text-white"
+            className="border border-white/30 px-3 py-2 rounded-xl bg-white/95 text-gray-900"
           />
 
           <button
-            className={
-              client.primary_color
-                ? "px-4 py-2 text-white rounded-xl font-semibold"
-                : "px-4 py-2 bg-white text-slate-950 rounded-xl font-semibold"
-            }
-            style={brandStyle}
+            className="px-4 py-2 bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 rounded-xl font-bold transition-colors"
           >
             Filtrar
           </button>
 
           <a
             href={`/api/admin/export?estado=${estado}&q=${q}&from=${from}&to=${to}`}
-            className={
-              client.primary_color
-                ? "ml-auto px-4 py-2 text-white rounded-xl font-semibold"
-                : "ml-auto px-4 py-2 bg-white text-slate-950 rounded-xl font-semibold"
-            }
-            style={brandStyle}
+            className="ml-auto px-4 py-2 bg-white hover:bg-white/90 text-drb-turquoise-800 rounded-xl font-semibold transition-colors"
           >
             Exportar CSV
           </a>
@@ -189,8 +179,8 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
           <p className="text-white/70">No hay reservas.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full border border-white/10 rounded-2xl overflow-hidden">
-              <thead className="bg-white/5">
+            <table className="w-full border border-white/20 rounded-2xl overflow-hidden">
+              <thead className="bg-white/10">
                 <tr>
                   <th className="p-3 text-left">Fecha</th>
                   <th className="p-3 text-left">Cliente</th>
@@ -234,7 +224,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                           <select
                             name="estado"
                             defaultValue={r.estado_pago}
-                            className="border rounded-xl px-2 py-1 bg-white/10 text-white border-white/10"
+                            className="border rounded-xl px-2 py-1 bg-white/95 text-gray-900 border-white/30"
                           >
                             <option value="pagado">Pagado</option>
                             <option value="pendiente">Pendiente</option>
@@ -243,12 +233,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                           </select>
                           <button
                             type="submit"
-                            className={
-                              client.primary_color
-                                ? "px-2 py-1 text-sm text-white rounded-lg"
-                                : "px-2 py-1 text-sm bg-white text-slate-950 rounded-lg"
-                            }
-                            style={brandStyle}
+                            className="px-2 py-1 text-sm bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold rounded-lg transition-colors"
                           >
                             Guardar
                           </button>

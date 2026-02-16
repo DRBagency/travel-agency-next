@@ -33,7 +33,7 @@ export default async function AdminSoportePage() {
         </div>
         <Link
           href="/admin/soporte/nuevo"
-          className="px-4 py-2 bg-drb-turquoise-500 text-white rounded-xl hover:bg-drb-turquoise-600 transition-colors"
+          className="px-4 py-2 bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold rounded-xl transition-colors"
         >
           Nuevo Ticket
         </Link>
@@ -41,19 +41,19 @@ export default async function AdminSoportePage() {
 
       {/* Métricas rápidas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
           <p className="text-white/60 text-sm mb-1">Tickets abiertos</p>
           <p className="text-3xl font-bold text-white">
             {tickets.filter((t) => t.status === "open").length}
           </p>
         </div>
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
           <p className="text-white/60 text-sm mb-1">En progreso</p>
           <p className="text-3xl font-bold text-white">
             {tickets.filter((t) => t.status === "in_progress").length}
           </p>
         </div>
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
           <p className="text-white/60 text-sm mb-1">Cerrados</p>
           <p className="text-3xl font-bold text-white">
             {tickets.filter((t) => t.status === "closed").length}
@@ -62,7 +62,7 @@ export default async function AdminSoportePage() {
       </div>
 
       {/* Lista de tickets */}
-      <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+      <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -124,7 +124,7 @@ export default async function AdminSoportePage() {
                             ? "bg-green-500/20 text-green-300"
                             : ticket.status === "in_progress"
                               ? "bg-yellow-500/20 text-yellow-300"
-                              : "bg-gray-500/20 text-gray-300"
+                              : "bg-white/15 text-white/60 border border-white/20"
                         }`}
                       >
                         {ticket.status}

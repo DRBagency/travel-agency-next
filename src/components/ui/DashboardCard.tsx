@@ -58,7 +58,7 @@ export default function DashboardCard({
         absolute inset-0 rounded-3xl transition-opacity duration-300
         ${isHovered ? 'opacity-100' : 'opacity-0'}
         bg-gradient-to-r from-drb-turquoise-500 via-drb-lime-500 to-drb-turquoise-500
-        bg-[length:200%_100%] animate-pulse blur-xl -z-10
+        bg-[length:200%_100%] blur-xl -z-10
       `} />
     </>
   );
@@ -68,7 +68,7 @@ export default function DashboardCard({
     transition-all duration-300 ease-out
     ${gradient
       ? 'bg-gradient-to-br from-drb-turquoise-500/40 to-drb-lime-500/20 border border-drb-lime-500/30'
-      : 'bg-gradient-to-br from-white/10 to-drb-turquoise-500/10 backdrop-blur-md border border-white/15'
+      : 'bg-gradient-to-br from-white/15 to-drb-turquoise-500/10 backdrop-blur-md border border-white/20'
     }
     ${isHovered ? 'scale-105 shadow-premium-lg' : 'shadow-premium'}
     ${glowColor === 'turquoise' && isHovered ? 'shadow-drb-turquoise-500/30' : ''}

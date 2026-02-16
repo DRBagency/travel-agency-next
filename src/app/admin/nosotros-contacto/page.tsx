@@ -60,7 +60,7 @@ export default async function AdminAboutContactPage({
         <form action={updateAboutContact} className="space-y-8">
           <input type="hidden" name="client_id" value={client.id} />
 
-          <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-6">
+          <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">
             <div>
               <h2 className="text-xl font-semibold">Nosotros</h2>
               <p className="text-sm text-white/60">
@@ -76,7 +76,7 @@ export default async function AdminAboutContactPage({
                 <input
                   name="about_title"
                   defaultValue={client.about_title ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   placeholder="Ej: Tu agencia de viajes de confianza"
                 />
               </div>
@@ -88,7 +88,7 @@ export default async function AdminAboutContactPage({
                 <textarea
                   name="about_text_1"
                   defaultValue={client.about_text_1 ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[110px]"
                   placeholder="Describe la experiencia y propuesta de valor"
                 />
               </div>
@@ -100,14 +100,14 @@ export default async function AdminAboutContactPage({
                 <textarea
                   name="about_text_2"
                   defaultValue={client.about_text_2 ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[110px]"
                   placeholder="Añade confianza, proceso, equipo o garantías"
                 />
               </div>
             </div>
           </section>
 
-          <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-6">
+          <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">
             <div>
               <h2 className="text-xl font-semibold">Contacto</h2>
               <p className="text-sm text-white/60">
@@ -123,7 +123,7 @@ export default async function AdminAboutContactPage({
                 <input
                   name="contact_email"
                   defaultValue={client.contact_email ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   placeholder="contacto@agencia.com"
                 />
               </div>
@@ -134,7 +134,7 @@ export default async function AdminAboutContactPage({
                 <input
                   name="contact_phone"
                   defaultValue={client.contact_phone ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   placeholder="+34 900 000 000"
                 />
               </div>
@@ -147,7 +147,7 @@ export default async function AdminAboutContactPage({
               <textarea
                 name="contact_address"
                 defaultValue={client.contact_address ?? ""}
-                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
+                className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[110px]"
                 placeholder="Calle, ciudad, país"
               />
             </div>
@@ -156,12 +156,7 @@ export default async function AdminAboutContactPage({
           <div className="flex justify-end">
             <button
               type="submit"
-              className={
-                client.primary_color
-                  ? "px-5 py-3 rounded-xl text-white font-semibold"
-                  : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold"
-              }
-              style={brandStyle}
+              className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
             >
               Guardar cambios
             </button>

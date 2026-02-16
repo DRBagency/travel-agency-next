@@ -93,7 +93,7 @@ export default async function AdminEmailsPage({
             <form
               key={type.tipo}
               action={saveEmailTemplate}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4"
+              className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4"
             >
               <input type="hidden" name="client_id" value={client.id} />
               <input type="hidden" name="tipo" value={type.tipo} />
@@ -125,7 +125,7 @@ export default async function AdminEmailsPage({
                 <input
                   name="subject"
                   defaultValue={template?.subject ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   placeholder="Ej: ✅ Reserva confirmada"
                 />
               </div>
@@ -137,7 +137,7 @@ export default async function AdminEmailsPage({
                 <textarea
                   name="html_body"
                   defaultValue={template?.html_body ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[200px]"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[200px]"
                   placeholder="<h1>...</h1><p>...</p>"
                 />
               </div>
@@ -150,7 +150,7 @@ export default async function AdminEmailsPage({
                   <input
                     name="cta_text"
                     defaultValue={template?.cta_text ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                     placeholder="Ej: Ver detalles"
                   />
                 </div>
@@ -161,7 +161,7 @@ export default async function AdminEmailsPage({
                   <input
                     name="cta_url"
                     defaultValue={template?.cta_url ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                     placeholder="https://"
                   />
                 </div>
@@ -170,12 +170,7 @@ export default async function AdminEmailsPage({
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className={
-                    client.primary_color
-                      ? "px-5 py-3 rounded-xl text-white font-semibold"
-                      : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold"
-                  }
-                  style={brandStyle}
+                  className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
                 >
                   Guardar plantilla
                 </button>

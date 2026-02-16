@@ -96,7 +96,7 @@ export default function CalendarioContent() {
               <input
                 type="text"
                 placeholder="Título"
-                className="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder:text-white/40"
+                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400"
                 value={newEvent.title}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, title: e.target.value })
@@ -104,7 +104,7 @@ export default function CalendarioContent() {
               />
               <input
                 type="datetime-local"
-                className="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white"
+                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-white/95 text-gray-900"
                 value={newEvent.start}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, start: e.target.value })
@@ -112,7 +112,7 @@ export default function CalendarioContent() {
               />
               <input
                 type="datetime-local"
-                className="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white"
+                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-white/95 text-gray-900"
                 value={newEvent.end}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, end: e.target.value })
@@ -120,7 +120,7 @@ export default function CalendarioContent() {
               />
               <textarea
                 placeholder="Descripción"
-                className="w-full px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white placeholder:text-white/40"
+                className="w-full px-3 py-2 rounded-xl border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400"
                 value={newEvent.description}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, description: e.target.value })
@@ -130,13 +130,13 @@ export default function CalendarioContent() {
             <div className="flex gap-2 mt-4">
               <button
                 onClick={createEvent}
-                className="px-4 py-2 bg-drb-turquoise-500 text-white rounded-xl hover:bg-drb-turquoise-600 transition-colors"
+                className="px-4 py-2 bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold rounded-xl transition-colors"
               >
                 Crear
               </button>
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-white/10 border border-white/15 text-white rounded-xl hover:bg-white/20 transition-colors"
+                className="px-4 py-2 bg-white hover:bg-white/90 text-drb-turquoise-800 font-semibold rounded-xl transition-colors"
               >
                 Cancelar
               </button>

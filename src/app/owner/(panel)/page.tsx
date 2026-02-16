@@ -28,7 +28,7 @@ export default async function OwnerDashboardPage() {
 
       {/* Métricas principales con estilo premium */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="rounded-2xl p-6 bg-white/10 border border-white/15 backdrop-blur-sm">
+        <div className="rounded-2xl p-6 bg-white/15 border border-white/20 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-white/60 text-sm">Total de agencias</p>
             <span className="text-2xl">🏢</span>
@@ -48,7 +48,7 @@ export default async function OwnerDashboardPage() {
           <p className="text-xs text-white/50 mt-1">Ingresos mensuales recurrentes</p>
         </div>
 
-        <div className="rounded-2xl p-6 bg-white/10 border border-white/15 backdrop-blur-sm">
+        <div className="rounded-2xl p-6 bg-white/15 border border-white/20 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-white/60 text-sm">Reservas este mes</p>
             <span className="text-2xl">📅</span>
@@ -57,7 +57,7 @@ export default async function OwnerDashboardPage() {
           <p className="text-xs text-white/50 mt-1">Reservas procesadas</p>
         </div>
 
-        <div className="rounded-2xl p-6 bg-white/10 border border-white/15 backdrop-blur-sm">
+        <div className="rounded-2xl p-6 bg-white/15 border border-white/20 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-white/60 text-sm">Comisiones este mes</p>
             <span className="text-2xl">💵</span>
@@ -119,7 +119,7 @@ export default async function OwnerDashboardPage() {
       </div>
 
       {/* Últimos clientes */}
-      <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-sm">
+      <div className="rounded-2xl border border-white/20 bg-white/15 backdrop-blur-sm">
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-white">
@@ -127,7 +127,7 @@ export default async function OwnerDashboardPage() {
             </h2>
             <Link
               href="/owner/clientes"
-              className="text-sm text-drb-turquoise-400 hover:text-drb-turquoise-300 transition-colors"
+              className="text-sm px-3 py-1.5 rounded-lg bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
             >
               Ver todas →
             </Link>

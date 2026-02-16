@@ -103,7 +103,7 @@ export default async function AdminLegalesPage({
           </p>
         </div>
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-6">
+        <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">
           <div>
             <h2 className="text-xl font-semibold">Nueva página legal</h2>
             <p className="text-sm text-white/60">
@@ -121,7 +121,7 @@ export default async function AdminLegalesPage({
                 </label>
                 <input
                   name="titulo"
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   placeholder="Ej: Política de privacidad"
                 />
               </div>
@@ -131,7 +131,7 @@ export default async function AdminLegalesPage({
                 </label>
                 <input
                   name="slug"
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   placeholder="privacidad"
                 />
               </div>
@@ -143,7 +143,7 @@ export default async function AdminLegalesPage({
               </label>
               <textarea
                 name="contenido"
-                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[160px]"
+                className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[160px]"
                 placeholder="<h2>...</h2><p>...</p>"
               />
             </div>
@@ -156,12 +156,7 @@ export default async function AdminLegalesPage({
             <div className="flex justify-end">
               <button
                 type="submit"
-                className={
-                  client.primary_color
-                    ? "px-5 py-3 rounded-xl text-white font-semibold"
-                    : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold"
-                }
-                style={brandStyle}
+                className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
               >
                 Guardar página
               </button>
@@ -173,7 +168,7 @@ export default async function AdminLegalesPage({
           <h2 className="text-xl font-semibold">Listado</h2>
 
           {(!legales || legales.length === 0) && (
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white/70">
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 text-white/70">
               Todavía no hay páginas legales.
             </div>
           )}
@@ -182,7 +177,7 @@ export default async function AdminLegalesPage({
             <form
               key={item.id}
               action={updateLegal}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4"
+              className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4"
             >
               <input type="hidden" name="id" value={item.id} />
 
@@ -194,7 +189,7 @@ export default async function AdminLegalesPage({
                   <input
                     name="titulo"
                     defaultValue={item.titulo ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -204,7 +199,7 @@ export default async function AdminLegalesPage({
                   <input
                     name="slug"
                     defaultValue={item.slug ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -216,7 +211,7 @@ export default async function AdminLegalesPage({
                 <textarea
                   name="contenido"
                   defaultValue={item.contenido ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[160px]"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[160px]"
                 />
               </div>
 
@@ -232,18 +227,13 @@ export default async function AdminLegalesPage({
               <div className="flex flex-wrap items-center justify-end gap-3">
                 <button
                   type="submit"
-                  className={
-                    client.primary_color
-                      ? "px-5 py-2 rounded-xl text-white font-semibold"
-                      : "px-5 py-2 rounded-xl bg-white text-slate-950 font-semibold"
-                  }
-                  style={brandStyle}
+                  className="px-5 py-2 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
                 >
                   Guardar cambios
                 </button>
                 <button
                   formAction={deleteLegal}
-                  className="px-5 py-2 rounded-xl border border-white/10 text-white/80 hover:text-white hover:border-white/30 transition"
+                  className="px-5 py-2 rounded-xl bg-red-500/20 text-red-300 border border-red-500/30 hover:bg-red-500/30 transition"
                 >
                   Eliminar
                 </button>

@@ -96,7 +96,7 @@ export default async function AdminDestinosPage({
           </p>
         </div>
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-6">
+        <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">
           <div>
             <h2 className="text-xl font-semibold">Nuevo destino</h2>
             <p className="text-sm text-white/60">
@@ -114,7 +114,7 @@ export default async function AdminDestinosPage({
                 </label>
                 <input
                   name="nombre"
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   placeholder="Ej: Islas Canarias"
                 />
               </div>
@@ -126,7 +126,7 @@ export default async function AdminDestinosPage({
                   name="precio"
                   type="number"
                   min={0}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   placeholder="Ej: 799"
                 />
               </div>
@@ -138,7 +138,7 @@ export default async function AdminDestinosPage({
               </label>
               <textarea
                 name="descripcion"
-                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
+                className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[110px]"
                 placeholder="Descripción breve y atractiva del destino"
               />
             </div>
@@ -149,7 +149,7 @@ export default async function AdminDestinosPage({
               </label>
               <input
                 name="imagen_url"
-                className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                 placeholder="https://..."
               />
             </div>
@@ -162,12 +162,7 @@ export default async function AdminDestinosPage({
             <div className="flex justify-end">
               <button
                 type="submit"
-                className={
-                  client.primary_color
-                    ? "px-5 py-3 rounded-xl text-white font-semibold"
-                    : "px-5 py-3 rounded-xl bg-white text-slate-950 font-semibold"
-                }
-                style={brandStyle}
+                className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
               >
                 Guardar destino
               </button>
@@ -179,7 +174,7 @@ export default async function AdminDestinosPage({
           <h2 className="text-xl font-semibold">Listado</h2>
 
           {(!destinos || destinos.length === 0) && (
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white/70">
+            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 text-white/70">
               Todavía no hay destinos.
             </div>
           )}
@@ -188,7 +183,7 @@ export default async function AdminDestinosPage({
             <form
               key={destino.id}
               action={updateDestino}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4"
+              className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4"
             >
               <input type="hidden" name="id" value={destino.id} />
 
@@ -200,7 +195,7 @@ export default async function AdminDestinosPage({
                   <input
                     name="nombre"
                     defaultValue={destino.nombre ?? ""}
-                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -212,7 +207,7 @@ export default async function AdminDestinosPage({
                     type="number"
                     min={0}
                     defaultValue={destino.precio ?? 0}
-                    className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -224,7 +219,7 @@ export default async function AdminDestinosPage({
                 <textarea
                   name="descripcion"
                   defaultValue={destino.descripcion ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white min-h-[110px]"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[110px]"
                 />
               </div>
 
@@ -235,7 +230,7 @@ export default async function AdminDestinosPage({
                 <input
                   name="imagen_url"
                   defaultValue={destino.imagen_url ?? ""}
-                  className="w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-white"
+                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
                 />
               </div>
 
@@ -251,18 +246,13 @@ export default async function AdminDestinosPage({
               <div className="flex flex-wrap items-center justify-end gap-3">
                 <button
                   type="submit"
-                  className={
-                    client.primary_color
-                      ? "px-5 py-2 rounded-xl text-white font-semibold"
-                      : "px-5 py-2 rounded-xl bg-white text-slate-950 font-semibold"
-                  }
-                  style={brandStyle}
+                  className="px-5 py-2 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
                 >
                   Guardar cambios
                 </button>
                 <button
                   formAction={deleteDestino}
-                  className="px-5 py-2 rounded-xl border border-white/10 text-white/80 hover:text-white hover:border-white/30 transition"
+                  className="px-5 py-2 rounded-xl bg-red-500/20 text-red-300 border border-red-500/30 hover:bg-red-500/30 transition"
                 >
                   Eliminar
                 </button>
