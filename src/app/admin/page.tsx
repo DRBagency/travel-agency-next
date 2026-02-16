@@ -60,14 +60,18 @@ export default async function AdminPage() {
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
       <div className="space-y-8">
-        {/* Header */}
+        {/* Header premium */}
         <div>
-          <h1 className="text-3xl font-bold mb-1">
-            Panel de Control
-          </h1>
-          <p className="text-white/60">
-            {client.nombre} · {client.domain}
-          </p>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500" />
+              <div className="w-3 h-3 rounded-full bg-green-500" />
+            </div>
+            <span className="text-white/40 text-sm">{client.nombre} — Panel Agencia</span>
+          </div>
+          <h1 className="text-3xl font-bold mb-1">Dashboard</h1>
+          <p className="text-white/60">Vista general de tu agencia</p>
         </div>
 
         {/* 4 Métricas */}
