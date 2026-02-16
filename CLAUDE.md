@@ -295,3 +295,111 @@ git push origin main
 - Colores: Turquesa (#1CABB0) + Lima (#D4F24D)
 - Más ancho, más espacio, menos saturación
 - Gradientes, animaciones, hover effects, micro-interacciones
+
+---
+
+## VISIÓN DE NEGOCIO (Resumen)
+
+**Misión:** Democratizar la tecnología para agencias de viajes, permitiendo que negocios pequeños y medianos compitan con grandes operadores.
+
+### Roadmap por año:
+- **2026-2027 (Consolidación):** 100 agencias, €50K MRR. Rediseño UX, multi-idioma, CRM básico.
+- **2027-2028 (Expansión):** 500 agencias, €200K MRR. LATAM, MENA, app móvil, API pública.
+- **2028-2029 (Dominio):** 2,000 agencias, €500K MRR. AI-powered, chatbot, pricing dinámico.
+- **2029-2030 (Ecosystem):** 5,000+ agencias, €1M+ MRR. Fintech, marketplace, formación.
+
+### ICP (Ideal Customer Profile):
+- **Primario:** Agencia pequeña (1-5 empleados, 10-50 reservas/mes) → Plan Start
+- **Secundario:** Agencia mediana (5-20 empleados, 50-200 reservas/mes) → Plan Grow/Pro
+- **Terciario:** Emprendedor nuevo desde cero → Plan Start + soporte
+
+### Mercados prioritarios:
+1. España (~3,000 agencias, objetivo 10%)
+2. LATAM - México, Argentina, Colombia (~15,000, objetivo 5%)
+3. MENA - EAU, Arabia Saudí, Qatar (~5,000, objetivo 3%)
+
+### Competencia directa:
+- TravelgateX (enterprise, caro), Trekksoft (tours), Zaui (outdoors)
+- **Ventaja DRB:** 10x más barato, setup 1 día vs 3 meses, todo-en-uno, soporte ES/AR
+
+### GTM Strategy:
+- Inbound 70% (SEO, content, webinars, free trial)
+- Partnerships 20% (asociaciones, proveedores, influencers)
+- Outbound 10% (LinkedIn, cold email, ferias)
+
+### Métricas North Star:
+- MRR, Net Revenue Retention >100%, CAC Payback <6 meses, LTV/CAC >3x
+
+---
+
+## ONBOARDING DE CLIENTES (Resumen)
+
+**Meta:** Web publicada + primera reserva en <7 días.
+
+### 5 Fases:
+1. **Pre-venta:** Lead → responder <2h → demo 30min → propuesta
+2. **Contratación:** Firma contrato → solicitar datos (logo, textos, IBAN) → crear en /owner/clientes → enviar accesos
+3. **Setup técnico:** Kickoff call 45min → personalizar contenido → Stripe Connect onboarding → configurar dominio (subdominio DRB o dominio propio vía CNAME a cname.vercel-dns.com)
+4. **Testing & Publicación:** Testing interno → testing con cliente (tarjeta test 4242...) → Go Live
+5. **Post-launch:** Seguimiento día 1-7 → acompañamiento mes 1 → optimización mes 2-3 → relación largo plazo
+
+### KPIs onboarding:
+- Time to publish: <7 días
+- Time to first booking: <14 días
+- Activation rate: >90%
+- 60-day retention: >85%
+
+---
+
+## VENTAS (Resumen)
+
+### Pain points del comprador:
+- Sin web o web mala, gestión con Excel/WhatsApp, sin pagos online, competencia grande
+
+### Pricing strategy:
+- **Start (29€):** Agencia nueva, <10 reservas/mes
+- **Grow (59€):** Agencia establecida, 10-50 reservas/mes (80% de ventas aquí)
+- **Pro (99€):** Agencia grande, >50 reservas/mes
+
+### Descuentos permitidos:
+- Primer mes 50% (adquisición), pago anual 20% off, referidos 1 mes gratis
+- NUNCA bajar pricing base
+
+### Pipeline: Lead → Demo agendada (40%) → Propuesta (70%) → Cierre (50%) = 14% overall
+
+### Secuencia emails: Intro (D0) → Caso éxito (D2) → Video demo (D4) → Oferta (D7) → Breakup (D10)
+
+---
+
+## PARTNERSHIPS (Resumen)
+
+### 5 tipos de partners:
+1. **Asociaciones sector** (CEAV, IATA): Awareness, sponsor €2-5K/año
+2. **Proveedores tech** (hostings, freelancers): 20% comisión recurrente
+3. **Instituciones educativas:** Licencias estudiante 50% off
+4. **Influencers:** 30% comisión por 12 meses
+5. **Proveedores viajes** (hoteles, aerolíneas): Marketplace futuro
+
+### Programa de afiliados:
+- 30% del MRR recurrente por 12 meses
+- Pago automático vía Stripe Connect
+- Chargeback si cliente cancela en meses 1-3
+
+### Partner tiers (futuro):
+- Bronze (1-5 clientes, 20%) → Silver (6-20, 25%) → Gold (21-50, 30%) → Platinum (50+, 35%)
+
+---
+
+## DOCUMENTACIÓN EXTENDIDA
+
+Para contexto profundo, consultar `/docs/`:
+- `PROJECT_OVERVIEW.md` - Visión general y propuesta de valor
+- `TECH_STACK.md` - Stack tecnológico y convenciones
+- `CURRENT_STATE.md` - Estado actual de features
+- `DATABASE_SCHEMA.md` - Schema y checklist tablas
+- `ARCHITECTURE_DECISIONS.md` - Decisiones arquitectónicas
+- `DEVELOPMENT_WORKFLOW.md` - Flujo de desarrollo
+- `BUSINESS_VISION.md` - Visión de negocio completa
+- `CLIENT_ONBOARDING.md` - Proceso de onboarding detallado
+- `SALES_PLAYBOOK.md` - Playbook de ventas completo
+- `PARTNERSHIP_STRATEGY.md` - Estrategia de partnerships
