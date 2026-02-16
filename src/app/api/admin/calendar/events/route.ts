@@ -87,23 +87,22 @@ export async function POST(req: NextRequest) {
     try {
       const calendar = getCalendarClient(cliente.google_calendar_refresh_token);
 
-      const eventBody: Record<string, unknown> = {
-        summary: title,
-        description: description || "",
-      };
-
-      if (allDay) {
-        // For all-day events, use date format (YYYY-MM-DD)
-        eventBody.start = { date: start.split("T")[0] };
-        eventBody.end = { date: (end || start).split("T")[0] };
-      } else {
-        eventBody.start = { dateTime: start, timeZone: "Europe/Madrid" };
-        eventBody.end = { dateTime: end, timeZone: "Europe/Madrid" };
-      }
+      // Ensure proper ISO format for datetime
+      const startISO = allDay ? undefined : (start.length === 16 ? start + ":00" : start);
+      const endISO = allDay ? undefined : ((end || start).length === 16 ? (end || start) + ":00" : (end || start));
 
       const response = await calendar.events.insert({
         calendarId: "primary",
-        requestBody: eventBody as Parameters<typeof calendar.events.insert>[0] extends { requestBody?: infer R } ? R : never,
+        requestBody: {
+          summary: title,
+          description: description || "",
+          start: allDay
+            ? { date: start.split("T")[0] }
+            : { dateTime: startISO, timeZone: "Europe/Madrid" },
+          end: allDay
+            ? { date: (end || start).split("T")[0] }
+            : { dateTime: endISO, timeZone: "Europe/Madrid" },
+        },
       });
 
       return NextResponse.json({
