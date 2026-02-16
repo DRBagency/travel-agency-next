@@ -242,6 +242,7 @@ interface CalendarioContentProps {
   googleCalendarConnected: boolean;
   googleCalendarEmail?: string | null;
   googleCalendarUrl?: string | null;
+  apiBasePath?: string;
 }
 
 // --- Main component ---
@@ -249,6 +250,7 @@ export default function CalendarioContent({
   googleCalendarConnected,
   googleCalendarEmail,
   googleCalendarUrl,
+  apiBasePath = "/api/admin/calendar",
 }: CalendarioContentProps) {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(false);
@@ -275,7 +277,7 @@ export default function CalendarioContent({
   const fetchEvents = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/calendar/events");
+      const res = await fetch(`${apiBasePath}/events`);
       if (res.ok) {
         const data = await res.json();
         setEvents(data.events || []);
@@ -321,7 +323,7 @@ export default function CalendarioContent({
 
     try {
       if (editingEvent) {
-        const res = await fetch(`/api/admin/calendar/events/${editingEvent.id}`, {
+        const res = await fetch(`${apiBasePath}/events/${editingEvent.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -335,7 +337,7 @@ export default function CalendarioContent({
         });
         if (!res.ok) throw new Error("Error updating");
       } else {
-        const res = await fetch("/api/admin/calendar/events", {
+        const res = await fetch(`${apiBasePath}/events`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -363,7 +365,7 @@ export default function CalendarioContent({
     if (!confirm("¿Eliminar este evento?")) return;
 
     try {
-      const res = await fetch(`/api/admin/calendar/events?id=${eventId}`, {
+      const res = await fetch(`${apiBasePath}/events?id=${eventId}`, {
         method: "DELETE",
       });
       if (res.ok) {
@@ -380,7 +382,7 @@ export default function CalendarioContent({
     setDisconnecting(true);
 
     try {
-      const res = await fetch("/api/admin/calendar/oauth/disconnect", {
+      const res = await fetch(`${apiBasePath}/oauth/disconnect`, {
         method: "POST",
       });
       if (res.ok) {
@@ -398,7 +400,7 @@ export default function CalendarioContent({
     setSavingUrl(true);
     setSavedUrl(false);
     try {
-      const res = await fetch("/api/admin/calendar/google-url", {
+      const res = await fetch(`${apiBasePath}/google-url`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: embedUrl.trim() }),
@@ -800,7 +802,7 @@ export default function CalendarioContent({
         </p>
 
         <a
-          href="/api/admin/calendar/oauth/start"
+          href={`${apiBasePath}/oauth/start`}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-all shadow-lg shadow-drb-lime-500/20 hover:shadow-drb-lime-500/30"
         >
           <Link2 className="w-5 h-5" />

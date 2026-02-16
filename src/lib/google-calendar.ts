@@ -5,27 +5,34 @@ const SCOPES = [
   "https://www.googleapis.com/auth/userinfo.email",
 ];
 
-const REDIRECT_URI =
+const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://travel-agency-next-ten.vercel.app/api/admin/calendar/oauth/callback"
-    : "http://localhost:3000/api/admin/calendar/oauth/callback";
+    ? "https://travel-agency-next-ten.vercel.app"
+    : "http://localhost:3000";
 
-export function getOAuth2Client() {
+const ADMIN_REDIRECT_URI = `${BASE_URL}/api/admin/calendar/oauth/callback`;
+const OWNER_REDIRECT_URI = `${BASE_URL}/api/owner/calendar/oauth/callback`;
+
+export function getOAuth2Client(redirectUri?: string) {
   return new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    REDIRECT_URI
+    redirectUri || ADMIN_REDIRECT_URI
   );
 }
 
-export function getAuthUrl(state: string) {
-  const oauth2Client = getOAuth2Client();
+export function getAuthUrl(state: string, redirectUri?: string) {
+  const oauth2Client = getOAuth2Client(redirectUri);
   return oauth2Client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent",
     scope: SCOPES,
     state,
   });
+}
+
+export function getOwnerRedirectUri() {
+  return OWNER_REDIRECT_URI;
 }
 
 export function getCalendarClient(refreshToken: string) {

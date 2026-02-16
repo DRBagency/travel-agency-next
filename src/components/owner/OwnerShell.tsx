@@ -2,13 +2,6 @@
 
 import { ReactNode, useState, useEffect } from "react";
 import {
-  LayoutGrid,
-  Users,
-  Mail,
-  BarChart3,
-  CreditCard,
-  Zap,
-  LifeBuoy,
   Menu,
   X,
   Pin,
@@ -20,13 +13,14 @@ interface OwnerShellProps {
 }
 
 const navItems = [
-  { label: "Dashboard", href: "/owner", icon: LayoutGrid },
-  { label: "Clientes", href: "/owner/clientes", icon: Users },
-  { label: "Emails", href: "/owner/emails", icon: Mail },
-  { label: "Monetización", href: "/owner/monetizacion", icon: BarChart3 },
-  { label: "Stripe", href: "/owner/stripe", icon: CreditCard },
-  { label: "Automatización", href: "/owner/automatizaciones", icon: Zap },
-  { label: "Soporte", href: "/owner/soporte", icon: LifeBuoy },
+  { label: "Dashboard", href: "/owner", emoji: "\u{1F3E0}" },
+  { label: "Clientes", href: "/owner/clientes", emoji: "\u{1F465}" },
+  { label: "Calendario", href: "/owner/calendario", emoji: "\u{1F4C5}" },
+  { label: "Emails", href: "/owner/emails", emoji: "\u{1F4E7}" },
+  { label: "Monetización", href: "/owner/monetizacion", emoji: "\u{1F4B0}" },
+  { label: "Stripe", href: "/owner/stripe", emoji: "\u{1F4B3}" },
+  { label: "Automatización", href: "/owner/automatizaciones", emoji: "\u{26A1}" },
+  { label: "Soporte", href: "/owner/soporte", emoji: "\u{1F6E0}\u{FE0F}" },
 ];
 
 export default function OwnerShell({ children }: OwnerShellProps) {
@@ -68,9 +62,9 @@ export default function OwnerShell({ children }: OwnerShellProps) {
               <a
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-white/70 transition-all hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white"
               >
-                <item.icon className="h-4 w-4" />
+                <span className="text-lg leading-none">{item.emoji}</span>
                 {item.label}
               </a>
             ))}
@@ -145,9 +139,9 @@ export default function OwnerShell({ children }: OwnerShellProps) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setNavOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-white/70 transition-all hover:bg-white/10 hover:text-white"
+                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white"
                 >
-                  <item.icon className="h-4 w-4" />
+                  <span className="text-lg leading-none">{item.emoji}</span>
                   {item.label}
                 </a>
               ))}
