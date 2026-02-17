@@ -4,7 +4,8 @@ import { cookies } from "next/headers";
 export async function GET(req: NextRequest) {
   const cookieStore = await cookies();
   const session = cookieStore.get("admin_session");
-  if (!session || session.value !== "ok") {
+  const clienteId = cookieStore.get("cliente_id");
+  if ((!session || session.value !== "ok") && !clienteId?.value) {
     return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
 
