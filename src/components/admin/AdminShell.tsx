@@ -106,7 +106,7 @@ const AdminShell = ({
 
       {/* Header */}
       <header className={`sticky top-0 z-40 border-b border-white/10 bg-drb-turquoise-800/80 backdrop-blur-md ${pinned ? "ml-72" : ""}`}>
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-6 py-5">
           <div className="flex items-center gap-4">
             {/* Hamburger — only when not pinned */}
             {!pinned && (
@@ -122,11 +122,11 @@ const AdminShell = ({
                 <img
                   src={logoUrl}
                   alt={clientName}
-                  className="h-9 w-9 rounded-xl object-contain"
+                  className="h-8 w-8 rounded-lg object-contain"
                 />
               ) : (
                 <div
-                  className="h-9 w-9 rounded-xl"
+                  className="h-8 w-8 rounded-lg"
                   style={{
                     background: primaryColor
                       ? `linear-gradient(135deg, ${primaryColor}, color-mix(in srgb, ${primaryColor} 65%, #1CABB0))`
