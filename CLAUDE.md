@@ -166,7 +166,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ### Tablas en desarrollo (🔄):
 | Tabla | Estado |
 |-------|--------|
-| `calendar_events` | En desarrollo |
+| `calendar_events` | ✅ Completado |
 | `documents` | En desarrollo |
 | `support_tickets` | En desarrollo |
 | `ticket_messages` | En desarrollo |
@@ -222,7 +222,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 
 ### 🔄 En desarrollo (Fase 1):
 - Gráficas avanzadas en ambos paneles
-- Calendario completo con Google Calendar
+- ✅ Calendario completo con Google Calendar
 - Generador de documentos (presupuestos, contratos, facturas)
 
 ### 🔄 Próximo (Fase 2):

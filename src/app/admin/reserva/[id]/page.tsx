@@ -66,6 +66,7 @@ export default async function ReservaPage({
     <AdminShell
       clientName={client?.nombre ?? "Panel"}
       primaryColor={client?.primary_color ?? null}
+      logoUrl={client?.logo_url ?? null}
       subscriptionActive={Boolean(client?.stripe_subscription_id)}
     >
       <div className="space-y-6">

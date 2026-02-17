@@ -11,6 +11,7 @@ export default async function AdminCalendarioPage() {
     <AdminShell
       clientName={client.nombre}
       primaryColor={client.primary_color}
+      logoUrl={client.logo_url}
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
       <CalendarioContent

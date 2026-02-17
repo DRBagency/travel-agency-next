@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import DestinoImageField from "./DestinoImageField";
 
 async function createDestino(formData: FormData) {
   "use server";
@@ -86,6 +87,7 @@ export default async function AdminDestinosPage({
     <AdminShell
       clientName={client.nombre}
       primaryColor={client.primary_color}
+      logoUrl={client.logo_url}
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
       <div className="space-y-8">
@@ -143,16 +145,7 @@ export default async function AdminDestinosPage({
               />
             </div>
 
-            <div>
-              <label className="block text-sm text-white/70 mb-1">
-                Imagen (URL)
-              </label>
-              <input
-                name="imagen_url"
-                className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
-                placeholder="https://..."
-              />
-            </div>
+            <DestinoImageField />
 
             <label className="flex items-center gap-2 text-sm text-white/70">
               <input type="checkbox" name="activo" defaultChecked />
@@ -223,16 +216,10 @@ export default async function AdminDestinosPage({
                 />
               </div>
 
-              <div>
-                <label className="block text-sm text-white/70 mb-1">
-                  Imagen (URL)
-                </label>
-                <input
-                  name="imagen_url"
-                  defaultValue={destino.imagen_url ?? ""}
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
-                />
-              </div>
+              <DestinoImageField
+                defaultValue={destino.imagen_url ?? ""}
+                defaultQuery={destino.nombre ?? "travel destination"}
+              />
 
               <label className="flex items-center gap-2 text-sm text-white/70">
                 <input

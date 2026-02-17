@@ -23,6 +23,7 @@ export default async function AdminSoportePage() {
     <AdminShell
       clientName={client.nombre}
       primaryColor={client.primary_color}
+      logoUrl={client.logo_url}
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
     <div>

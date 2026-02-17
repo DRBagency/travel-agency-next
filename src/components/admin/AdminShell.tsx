@@ -11,6 +11,7 @@ import {
 interface AdminShellProps {
   clientName: string;
   primaryColor?: string | null;
+  logoUrl?: string | null;
   subscriptionActive?: boolean;
   allowWhenInactive?: boolean;
   children: ReactNode;
@@ -34,6 +35,7 @@ const navItems = [
 const AdminShell = ({
   clientName,
   primaryColor,
+  logoUrl,
   subscriptionActive = true,
   allowWhenInactive = false,
   children,
@@ -60,14 +62,22 @@ const AdminShell = ({
         <nav className="fixed left-0 top-0 bottom-0 w-72 bg-drb-turquoise-800 border-r border-white/10 z-50 overflow-y-auto">
           <div className="flex items-center justify-between p-5 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div
-                className="h-8 w-8 rounded-lg"
-                style={{
-                  background: primaryColor
-                    ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
-                    : "linear-gradient(135deg, #1CABB0, #D4F24D)",
-                }}
-              />
+              {logoUrl ? (
+                <img
+                  src={logoUrl}
+                  alt={clientName}
+                  className="h-8 w-8 rounded-lg object-contain"
+                />
+              ) : (
+                <div
+                  className="h-8 w-8 rounded-lg"
+                  style={{
+                    background: primaryColor
+                      ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
+                      : "linear-gradient(135deg, #1CABB0, #D4F24D)",
+                  }}
+                />
+              )}
               <span className="font-semibold">{clientName}</span>
             </div>
             <button
@@ -107,18 +117,23 @@ const AdminShell = ({
               </button>
             )}
             <div className="flex items-center gap-3">
-              <div
-                className="h-9 w-9 rounded-xl"
-                style={{
-                  background: primaryColor
-                    ? `linear-gradient(135deg, ${primaryColor}, color-mix(in srgb, ${primaryColor} 65%, #1CABB0))`
-                    : "linear-gradient(135deg, #1CABB0, #D4F24D)",
-                }}
-              />
-              <div>
-                <div className="text-xs text-white/50">Panel de</div>
-                <div className="font-display text-base font-semibold">{clientName}</div>
-              </div>
+              {logoUrl ? (
+                <img
+                  src={logoUrl}
+                  alt={clientName}
+                  className="h-9 w-9 rounded-xl object-contain"
+                />
+              ) : (
+                <div
+                  className="h-9 w-9 rounded-xl"
+                  style={{
+                    background: primaryColor
+                      ? `linear-gradient(135deg, ${primaryColor}, color-mix(in srgb, ${primaryColor} 65%, #1CABB0))`
+                      : "linear-gradient(135deg, #1CABB0, #D4F24D)",
+                  }}
+                />
+              )}
+              <div className="font-display text-base font-semibold">{clientName}</div>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -143,14 +158,22 @@ const AdminShell = ({
           <nav className="fixed left-0 top-0 bottom-0 w-72 bg-drb-turquoise-800 border-r border-white/10 z-50 animate-slide-in-left overflow-y-auto">
             <div className="flex items-center justify-between p-5 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div
-                  className="h-8 w-8 rounded-lg"
-                  style={{
-                    background: primaryColor
-                      ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
-                      : "linear-gradient(135deg, #1CABB0, #D4F24D)",
-                  }}
-                />
+                {logoUrl ? (
+                  <img
+                    src={logoUrl}
+                    alt={clientName}
+                    className="h-8 w-8 rounded-lg object-contain"
+                  />
+                ) : (
+                  <div
+                    className="h-8 w-8 rounded-lg"
+                    style={{
+                      background: primaryColor
+                        ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
+                        : "linear-gradient(135deg, #1CABB0, #D4F24D)",
+                    }}
+                  />
+                )}
                 <span className="font-semibold">{clientName}</span>
               </div>
               <div className="flex items-center gap-1">

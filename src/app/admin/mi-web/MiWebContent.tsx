@@ -281,22 +281,12 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
               <label className="block text-sm text-white/70 mb-1">
                 Logo (URL)
               </label>
-              <div className="flex gap-2">
-                <input
-                  value={fields.logo_url}
-                  onChange={(e) => updateField("logo_url", e.target.value)}
-                  className={inputClass + " flex-1"}
-                  placeholder="https://..."
-                />
-                <button
-                  type="button"
-                  onClick={() => openUnsplash("logo_url", client.nombre)}
-                  className="px-3 py-2 rounded-xl border border-white/20 hover:bg-white/10 transition-colors shrink-0"
-                  title="Buscar en Unsplash"
-                >
-                  <ImageIcon className="w-4 h-4" />
-                </button>
-              </div>
+              <input
+                value={fields.logo_url}
+                onChange={(e) => updateField("logo_url", e.target.value)}
+                className={inputClass}
+                placeholder="https://..."
+              />
               {fields.logo_url && (
                 <div className="mt-2 inline-block rounded-xl border border-white/20 bg-white/5 p-2">
                   <img
