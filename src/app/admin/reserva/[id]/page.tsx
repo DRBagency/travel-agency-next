@@ -68,7 +68,7 @@ export default async function ReservaPage({
             <h1 className="text-3xl font-bold">
               Reserva · {reserva.destino ?? "—"}
             </h1>
-            <p className="text-white/60">ID: {reserva.id}</p>
+            <p className="text-gray-500 dark:text-white/60">ID: {reserva.id}</p>
           </div>
           <span
             className="px-3 py-1 text-sm font-semibold rounded-full border"
@@ -79,22 +79,22 @@ export default async function ReservaPage({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-4 border border-white/10 rounded-2xl p-6 bg-white/5">
+          <div className="space-y-4 border border-gray-100 dark:border-white/10 rounded-2xl p-6 bg-gray-50/50 dark:bg-white/5">
           <div>
-            <span className="text-white/60">Cliente</span>
+            <span className="text-gray-500 dark:text-white/60">Cliente</span>
             <p className="font-semibold">{reserva.nombre ?? "—"}</p>
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-gray-400 dark:text-white/50">
               {reserva.email ?? "—"}
             </p>
             {reserva.telefono && (
-              <p className="text-sm text-white/50">
+              <p className="text-sm text-gray-400 dark:text-white/50">
                 Tel: {reserva.telefono}
               </p>
             )}
           </div>
 
           <div>
-            <span className="text-white/60">Fechas</span>
+            <span className="text-gray-500 dark:text-white/60">Fechas</span>
             <p>
               {reserva.fecha_salida ?? "—"} →{" "}
               {reserva.fecha_regreso ?? "—"}
@@ -102,19 +102,19 @@ export default async function ReservaPage({
           </div>
 
           <div>
-            <span className="text-white/60">Personas</span>
+            <span className="text-gray-500 dark:text-white/60">Personas</span>
             <p>{reserva.personas ?? "—"}</p>
           </div>
 
           <div>
-            <span className="text-white/60">Precio</span>
+            <span className="text-gray-500 dark:text-white/60">Precio</span>
             <p className="font-bold">{reserva.precio ?? "—"} €</p>
           </div>
         </div>
 
-        <div className="space-y-4 border border-white/10 rounded-2xl p-6 bg-white/5">
+        <div className="space-y-4 border border-gray-100 dark:border-white/10 rounded-2xl p-6 bg-gray-50/50 dark:bg-white/5">
           <div>
-            <span className="text-white/60">
+            <span className="text-gray-500 dark:text-white/60">
               Estado del pago
             </span>
             <form action={updateEstado} className="mt-2 flex gap-2">
@@ -122,7 +122,7 @@ export default async function ReservaPage({
               <select
                 name="estado"
                 defaultValue={reserva.estado_pago ?? "pendiente"}
-                className="border rounded-xl px-2 py-1 bg-white/10 text-white border-white/10"
+                className="border rounded-xl px-2 py-1 bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white border-gray-200 dark:border-white/10"
               >
                 <option value="pagado">Pagado</option>
                 <option value="pendiente">Pendiente</option>
@@ -134,7 +134,7 @@ export default async function ReservaPage({
                 className={
                   client?.primary_color
                     ? "px-3 py-1 text-sm text-white rounded-lg"
-                    : "px-3 py-1 text-sm bg-white text-slate-950 rounded-lg"
+                    : "px-3 py-1 text-sm bg-gray-900 dark:bg-white text-white dark:text-slate-950 rounded-lg"
                 }
                 style={brandStyle}
               >
@@ -144,14 +144,14 @@ export default async function ReservaPage({
           </div>
 
           <div>
-            <span className="text-white/60">Stripe ID</span>
+            <span className="text-gray-500 dark:text-white/60">Stripe ID</span>
             <p className="text-sm break-all">
               {reserva.stripe_session_id ?? "—"}
             </p>
           </div>
 
           <div>
-            <span className="text-white/60">Creada</span>
+            <span className="text-gray-500 dark:text-white/60">Creada</span>
             <p>
               {reserva.created_at
                 ? new Date(reserva.created_at).toLocaleString()
@@ -164,7 +164,7 @@ export default async function ReservaPage({
         <div className="mt-2">
         <a
           href={`/admin/reservas`}
-          className="text-white/70 underline hover:text-white"
+          className="text-gray-600 dark:text-white/70 underline hover:text-gray-900 dark:hover:text-white"
         >
           ← Volver a reservas
         </a>

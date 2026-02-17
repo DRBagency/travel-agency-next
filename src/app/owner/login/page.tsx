@@ -60,22 +60,22 @@ export default async function OwnerLoginPage({
   const { error } = await searchParams;
 
   return (
-    <div className="-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white flex items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-3xl border border-white/25 bg-white/15 backdrop-blur-md p-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-3xl border border-gray-200 dark:border-white/15 bg-white dark:bg-white/10 shadow-card dark:shadow-none backdrop-blur-md p-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-drb-turquoise-400 to-drb-lime-500" />
           <div>
-            <h1 className="font-display text-2xl font-bold">
+            <h1 className="font-display text-2xl font-bold text-gray-900 dark:text-white">
               Acceso Owner
             </h1>
-            <p className="text-white/60 text-sm">
+            <p className="text-gray-500 dark:text-white/60 text-sm">
               Inicia sesión para gestionar clientes.
             </p>
           </div>
         </div>
 
         {error && (
-          <div className="mb-4 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+          <div className="mb-4 rounded-xl border border-red-200 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-200">
             {error === "owner"
               ? "Este email no tiene acceso de owner."
               : "Credenciales incorrectas. Inténtalo de nuevo."}
@@ -84,25 +84,25 @@ export default async function OwnerLoginPage({
 
         <form action={handleOwnerLogin} className="space-y-4">
           <div>
-            <label className="block text-sm text-white/70 mb-1">
+            <label className="panel-label block mb-1">
               Email
             </label>
             <input
               name="email"
               type="email"
-              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2.5 text-gray-900 placeholder:text-gray-400"
+              className="panel-input w-full"
               placeholder="owner@agencia.com"
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-white/70 mb-1">
+            <label className="panel-label block mb-1">
               Contraseña
             </label>
             <input
               name="password"
               type="password"
-              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2.5 text-gray-900 placeholder:text-gray-400"
+              className="panel-input w-full"
               placeholder="••••••••"
               required
             />
@@ -110,7 +110,7 @@ export default async function OwnerLoginPage({
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold py-3 transition-colors"
+            className="w-full rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold py-3 transition-colors"
           >
             Entrar
           </button>

@@ -36,7 +36,7 @@ export default function SubmitButton({
   return (
     <>
       {showSuccess && (
-        <span className="flex items-center gap-1 text-sm text-green-400 animate-in fade-in">
+        <span className="flex items-center gap-1 text-sm text-emerald-600 dark:text-green-400 animate-in fade-in">
           <Check className="w-4 h-4" /> {successText}
         </span>
       )}

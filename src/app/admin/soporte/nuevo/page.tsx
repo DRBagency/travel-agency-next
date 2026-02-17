@@ -52,48 +52,48 @@ export default async function NuevoTicketPage() {
       <div className="flex items-center gap-4 mb-8">
         <Link
           href="/admin/soporte"
-          className="text-white/60 hover:text-white transition-colors"
+          className="text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
           &larr; Volver
         </Link>
         <div>
           <h1 className="text-3xl font-bold mb-1">Nuevo Ticket</h1>
-          <p className="text-white/60">Describe tu problema o consulta</p>
+          <p className="text-gray-500 dark:text-white/60">Describe tu problema o consulta</p>
         </div>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
+      <div className="panel-card p-6">
         <form action={createTicket} className="grid gap-4">
           <div>
-            <label className="block text-sm text-white/70 mb-1">Asunto</label>
+            <label className="panel-label">Asunto</label>
             <input
               name="subject"
               required
               placeholder="Resumen breve del problema"
-              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900"
+              className="panel-input"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-white/70 mb-1">
+            <label className="panel-label">
               Descripcion
             </label>
             <textarea
               name="description"
               required
               placeholder="Describe tu problema con el mayor detalle posible..."
-              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 min-h-[150px]"
+              className="panel-input min-h-[150px]"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-white/70 mb-1">
+            <label className="panel-label">
               Prioridad
             </label>
             <select
               name="priority"
               defaultValue="normal"
-              className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900"
+              className="panel-input"
             >
               <option value="normal">Normal</option>
               <option value="high">Alta</option>

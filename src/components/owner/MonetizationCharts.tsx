@@ -13,12 +13,26 @@ import {
   Legend,
   ReferenceLine,
 } from "recharts";
+import { useTheme } from "next-themes";
 
-const tooltipStyle = {
-  backgroundColor: "rgba(0,0,0,0.8)",
-  border: "1px solid rgba(255,255,255,0.2)",
-  borderRadius: "8px",
-};
+function useChartStyles() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  return {
+    tooltipStyle: {
+      backgroundColor: isDark ? "rgba(0,0,0,0.8)" : "#fff",
+      border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #e5e7eb",
+      borderRadius: "8px",
+      color: isDark ? "#fff" : "#111827",
+    },
+    labelStyle: { color: isDark ? "#fff" : "#111827" },
+    legendStyle: { color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)", fontSize: 12 },
+    gridStroke: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)",
+    axisStroke: isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.4)",
+    refLineStroke: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)",
+    refLabelFill: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)",
+  };
+}
 
 interface MonthlyComparison {
   month: string;
@@ -34,37 +48,28 @@ interface ProjectionPoint {
 }
 
 export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
+  const styles = useChartStyles();
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-6">
-      <h3 className="text-lg font-semibold text-white mb-1">
+    <div className="panel-card p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
         Comparativa mensual
       </h3>
-      <p className="text-sm text-white/40 mb-4">
+      <p className="text-sm text-gray-500 dark:text-white/40 mb-4">
         MRR vs Comisiones (ultimos 6 meses)
       </p>
       <ResponsiveContainer width="100%" height={280}>
         <BarChart data={data}>
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="rgba(255,255,255,0.1)"
-          />
-          <XAxis dataKey="month" stroke="rgba(255,255,255,0.6)" />
-          <YAxis stroke="rgba(255,255,255,0.6)" />
+          <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
+          <XAxis dataKey="month" stroke={styles.axisStroke} />
+          <YAxis stroke={styles.axisStroke} />
           <Tooltip
-            contentStyle={tooltipStyle}
-            labelStyle={{ color: "#fff" }}
+            contentStyle={styles.tooltipStyle}
+            labelStyle={styles.labelStyle}
             formatter={(value) => `${Number(value).toLocaleString("es-ES")} EUR`}
           />
-          <Legend
-            wrapperStyle={{ color: "rgba(255,255,255,0.7)", fontSize: 12 }}
-          />
+          <Legend wrapperStyle={styles.legendStyle} />
           <Bar dataKey="mrr" fill="#10b981" name="MRR" radius={[4, 4, 0, 0]} />
-          <Bar
-            dataKey="comisiones"
-            fill="#3b82f6"
-            name="Comisiones"
-            radius={[4, 4, 0, 0]}
-          />
+          <Bar dataKey="comisiones" fill="#3b82f6" name="Comisiones" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -72,48 +77,42 @@ export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
 }
 
 export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
-  // Split into actual and projected for dual lines
+  const styles = useChartStyles();
+
   const chartData = data.map((d) => ({
     month: d.month,
     actual: d.tipo === "actual" ? d.mrr : undefined,
     proyectado: d.mrr,
   }));
 
-  // Find the dividing index between actual and projected
   const lastActualIdx = data.findLastIndex((d) => d.tipo === "actual");
-  // Bridge: repeat last actual point in projected line
   if (lastActualIdx >= 0 && lastActualIdx < chartData.length - 1) {
     chartData[lastActualIdx].proyectado = data[lastActualIdx].mrr;
   }
 
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-6">
-      <h3 className="text-lg font-semibold text-white mb-1">
+    <div className="panel-card p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
         Proyeccion de ingresos (MRR)
       </h3>
-      <p className="text-sm text-white/40 mb-4">
+      <p className="text-sm text-gray-500 dark:text-white/40 mb-4">
         Basada en tendencia lineal de los ultimos 6 meses
       </p>
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={chartData}>
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="rgba(255,255,255,0.1)"
-          />
-          <XAxis dataKey="month" stroke="rgba(255,255,255,0.6)" />
-          <YAxis stroke="rgba(255,255,255,0.6)" />
+          <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
+          <XAxis dataKey="month" stroke={styles.axisStroke} />
+          <YAxis stroke={styles.axisStroke} />
           <Tooltip
-            contentStyle={tooltipStyle}
-            labelStyle={{ color: "#fff" }}
+            contentStyle={styles.tooltipStyle}
+            labelStyle={styles.labelStyle}
             formatter={(value) =>
               value !== undefined
                 ? `${Number(value).toLocaleString("es-ES")} EUR`
                 : "-"
             }
           />
-          <Legend
-            wrapperStyle={{ color: "rgba(255,255,255,0.7)", fontSize: 12 }}
-          />
+          <Legend wrapperStyle={styles.legendStyle} />
           <Line
             type="monotone"
             dataKey="actual"
@@ -136,12 +135,12 @@ export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
           {lastActualIdx >= 0 && (
             <ReferenceLine
               x={data[lastActualIdx]?.month}
-              stroke="rgba(255,255,255,0.2)"
+              stroke={styles.refLineStroke}
               strokeDasharray="3 3"
               label={{
                 value: "Hoy",
                 position: "top",
-                fill: "rgba(255,255,255,0.4)",
+                fill: styles.refLabelFill,
                 fontSize: 11,
               }}
             />

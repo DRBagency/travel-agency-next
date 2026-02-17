@@ -1,6 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import Link from "next/link";
+import { Receipt, FileText, FileCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -19,9 +20,9 @@ export default async function AdminDocumentosPage() {
   const documents = await getDocuments(client.id);
 
   const documentTypes = [
-    { id: "presupuesto", name: "Presupuesto", icon: "💰", color: "bg-drb-turquoise-500" },
-    { id: "contrato", name: "Contrato", icon: "📄", color: "bg-drb-lime-600" },
-    { id: "factura", name: "Factura", icon: "🧾", color: "bg-drb-turquoise-600" },
+    { id: "presupuesto", name: "Presupuesto", icon: Receipt, color: "bg-drb-turquoise-500" },
+    { id: "contrato", name: "Contrato", icon: FileText, color: "bg-drb-lime-600" },
+    { id: "factura", name: "Factura", icon: FileCheck, color: "bg-drb-turquoise-600" },
   ];
 
   return (
@@ -29,7 +30,7 @@ export default async function AdminDocumentosPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Documentos</h1>
-          <p className="text-white/60">Crea y gestiona tus documentos</p>
+          <p className="text-gray-500 dark:text-white/60">Crea y gestiona tus documentos</p>
         </div>
       </div>
 
@@ -39,19 +40,19 @@ export default async function AdminDocumentosPage() {
           <Link
             key={type.id}
             href={`/admin/documentos/nuevo?tipo=${type.id}`}
-            className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-6 hover:bg-white/10 transition-colors"
+            className="panel-card p-6 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors"
           >
             <div className="flex items-center gap-4">
               <div
-                className={`${type.color} w-12 h-12 rounded-lg flex items-center justify-center text-2xl`}
+                className={`${type.color} w-12 h-12 rounded-lg flex items-center justify-center`}
               >
-                {type.icon}
+                <type.icon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Crear {type.name}
                 </h3>
-                <p className="text-sm text-white/60">Nuevo documento</p>
+                <p className="text-sm text-gray-500 dark:text-white/60">Nuevo documento</p>
               </div>
             </div>
           </Link>
@@ -59,29 +60,29 @@ export default async function AdminDocumentosPage() {
       </div>
 
       {/* Lista de documentos */}
-      <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-        <div className="p-6 border-b border-white/10">
-          <h2 className="text-xl font-semibold text-white">
+      <div className="panel-card overflow-hidden">
+        <div className="p-6 border-b border-gray-100 dark:border-white/10">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             Documentos recientes
           </h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left p-4 text-sm font-medium text-white/60">
+              <tr className="border-b border-gray-100 dark:border-white/10">
+                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
                   Tipo
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-white/60">
+                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
                   Título
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-white/60">
+                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
                   Estado
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-white/60">
+                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
                   Fecha
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-white/60">
+                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
                   Acciones
                 </th>
               </tr>
@@ -91,7 +92,7 @@ export default async function AdminDocumentosPage() {
                 <tr>
                   <td
                     colSpan={5}
-                    className="p-8 text-center text-white/40"
+                    className="p-8 text-center text-gray-400 dark:text-white/40"
                   >
                     No hay documentos creados
                   </td>
@@ -100,32 +101,32 @@ export default async function AdminDocumentosPage() {
                 documents.map((doc) => (
                   <tr
                     key={doc.id}
-                    className="border-b border-white/5 hover:bg-white/5"
+                    className="table-row"
                   >
                     <td className="p-4">
-                      <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-300">
+                      <span className="badge-info px-2 py-1 rounded text-xs">
                         {doc.document_type}
                       </span>
                     </td>
-                    <td className="p-4 text-white">{doc.title}</td>
+                    <td className="p-4 text-gray-900 dark:text-white">{doc.title}</td>
                     <td className="p-4">
                       <span
                         className={`px-2 py-1 rounded text-xs ${
                           doc.status === "sent"
-                            ? "bg-green-500/20 text-green-300"
-                            : "bg-yellow-500/20 text-yellow-300"
+                            ? "badge-success"
+                            : "badge-warning"
                         }`}
                       >
                         {doc.status}
                       </span>
                     </td>
-                    <td className="p-4 text-white/60 text-sm">
+                    <td className="p-4 text-gray-500 dark:text-white/60 text-sm">
                       {new Date(doc.created_at).toLocaleDateString("es-ES")}
                     </td>
                     <td className="p-4">
                       <Link
                         href={`/admin/documentos/${doc.id}`}
-                        className="text-blue-400 hover:text-blue-300 text-sm"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 text-sm"
                       >
                         Ver
                       </Link>

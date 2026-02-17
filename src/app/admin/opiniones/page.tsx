@@ -85,15 +85,15 @@ export default async function AdminOpinionsPage({
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Opiniones</h1>
-          <p className="text-white/60">
+          <p className="text-gray-500 dark:text-white/60">
             Crea, edita y activa opiniones que aparecen en la web pública.
           </p>
         </div>
 
-        <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">
+        <section className="panel-card p-6 space-y-6">
           <div>
             <h2 className="text-xl font-semibold">Nueva opinión</h2>
-            <p className="text-sm text-white/60">
+            <p className="text-sm text-gray-500 dark:text-white/60">
               Añade una opinión visible para tus clientes.
             </p>
           </div>
@@ -103,41 +103,41 @@ export default async function AdminOpinionsPage({
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label">
                   Nombre
                 </label>
                 <input
                   name="nombre"
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                  className="panel-input"
                   placeholder="Ej: Ana Martínez"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label">
                   Ubicación
                 </label>
                 <input
                   name="ubicacion"
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                  className="panel-input"
                   placeholder="Ej: Madrid"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label">
                 Comentario
               </label>
               <textarea
                 name="comentario"
-                className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[110px]"
+                className="panel-input min-h-[110px]"
                 placeholder="Cuéntanos la experiencia del cliente"
               />
             </div>
 
             <div className="grid md:grid-cols-2 gap-4 items-end">
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label">
                   Rating (1-5)
                 </label>
                 <input
@@ -146,10 +146,10 @@ export default async function AdminOpinionsPage({
                   min={1}
                   max={5}
                   defaultValue={5}
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                  className="panel-input"
                 />
               </div>
-              <label className="flex items-center gap-2 text-sm text-white/70">
+              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
                 <input type="checkbox" name="activo" defaultChecked />
                 Publicar ahora
               </label>
@@ -169,7 +169,7 @@ export default async function AdminOpinionsPage({
           <h2 className="text-xl font-semibold">Listado</h2>
 
           {(!opiniones || opiniones.length === 0) && (
-            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 text-white/70">
+            <div className="panel-card p-6 text-gray-600 dark:text-white/70">
               Todavía no hay opiniones.
             </div>
           )}
@@ -178,47 +178,47 @@ export default async function AdminOpinionsPage({
             <form
               key={opinion.id}
               action={updateOpinion}
-              className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4"
+              className="panel-card p-6 space-y-4"
             >
               <input type="hidden" name="id" value={opinion.id} />
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-white/70 mb-1">
+                  <label className="panel-label">
                     Nombre
                   </label>
                   <input
                     name="nombre"
                     defaultValue={opinion.nombre ?? ""}
-                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                    className="panel-input"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-white/70 mb-1">
+                  <label className="panel-label">
                     Ubicación
                   </label>
                   <input
                     name="ubicacion"
                     defaultValue={opinion.ubicacion ?? ""}
-                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                    className="panel-input"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label">
                   Comentario
                 </label>
                 <textarea
                   name="comentario"
                   defaultValue={opinion.comentario ?? ""}
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[110px]"
+                  className="panel-input min-h-[110px]"
                 />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4 items-end">
                 <div>
-                  <label className="block text-sm text-white/70 mb-1">
+                  <label className="panel-label">
                     Rating (1-5)
                   </label>
                   <input
@@ -227,10 +227,10 @@ export default async function AdminOpinionsPage({
                     min={1}
                     max={5}
                     defaultValue={opinion.rating ?? 5}
-                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                    className="panel-input"
                   />
                 </div>
-                <label className="flex items-center gap-2 text-sm text-white/70">
+                <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
                   <input
                     type="checkbox"
                     name="activo"
@@ -248,7 +248,7 @@ export default async function AdminOpinionsPage({
                 </SubmitButton>
                 <button
                   formAction={deleteOpinion}
-                  className="px-5 py-2 rounded-xl bg-red-500/20 text-red-300 border border-red-500/30 hover:bg-red-500/30 transition"
+                  className="badge-danger px-5 py-2 rounded-xl hover:bg-red-500/30 transition"
                 >
                   Eliminar
                 </button>

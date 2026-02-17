@@ -82,7 +82,7 @@ export default function ExportPDFButton({
     <button
       onClick={handleExportPDF}
       disabled={loading}
-      className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold transition-colors border border-white/20"
+      className="px-4 py-2 bg-white dark:bg-white/10 hover:bg-gray-100 dark:hover:bg-white/20 text-gray-900 dark:text-white rounded-xl font-semibold transition-colors border border-gray-200 dark:border-white/20"
     >
       {loading ? "Generando..." : "Exportar PDF"}
     </button>

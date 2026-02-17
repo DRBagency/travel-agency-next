@@ -108,7 +108,7 @@ export default async function DocumentDetailPage({
       <div className="flex items-center gap-4 mb-6">
         <Link
           href="/admin/documentos"
-          className="text-white/60 hover:text-white transition-colors"
+          className="text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
           &larr; Volver
         </Link>
@@ -118,19 +118,19 @@ export default async function DocumentDetailPage({
         <div>
           <h1 className="text-2xl font-bold mb-2">{doc.title}</h1>
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-300">
+            <span className="badge-info px-2 py-1 rounded text-xs">
               {typeLabel}
             </span>
             <span
               className={`px-2 py-1 rounded text-xs ${
                 doc.status === "sent"
-                  ? "bg-green-500/20 text-green-300"
-                  : "bg-yellow-500/20 text-yellow-300"
+                  ? "badge-success"
+                  : "badge-warning"
               }`}
             >
               {doc.status}
             </span>
-            <span className="text-white/40 text-sm">
+            <span className="text-gray-400 dark:text-white/40 text-sm">
               {new Date(doc.created_at).toLocaleDateString("es-ES")}
             </span>
           </div>
@@ -139,14 +139,14 @@ export default async function DocumentDetailPage({
         <form action={deleteBound}>
           <button
             type="submit"
-            className="px-4 py-2 rounded-xl text-sm font-bold bg-red-600/20 text-red-300 hover:bg-red-600/30 border border-red-500/30 transition-colors"
+            className="badge-danger px-4 py-2 rounded-xl text-sm font-bold hover:bg-red-600/30 transition-colors"
           >
             Eliminar documento
           </button>
         </form>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
+      <div className="panel-card p-6">
         <form action={updateBound} className="grid gap-4">
           <DocumentFormClient
             documentType={doc.document_type}

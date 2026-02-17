@@ -72,11 +72,11 @@ export default async function AdminEmailsPage({
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Emails</h1>
-          <p className="text-white/60">
+          <p className="text-gray-500 dark:text-white/60">
             Edita los emails automáticos. Acepta HTML y placeholders como
             {" "}{"{{customerName}}"}, {"{{destination}}"}, {"{{total}}"}.
           </p>
-          <p className="text-white/50 text-sm mt-2">
+          <p className="text-gray-400 dark:text-white/50 text-sm mt-2">
             Nota: la página /success puede recibir <strong>session_id</strong> en la URL para mostrar un resumen real de la reserva.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default async function AdminEmailsPage({
               key={type.tipo}
               id={`email-form-${type.tipo}`}
               action={saveEmailTemplate}
-              className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4"
+              className="panel-card p-6 space-y-4"
             >
               <input type="hidden" name="client_id" value={client.id} />
               <input type="hidden" name="tipo" value={type.tipo} />
@@ -100,11 +100,11 @@ export default async function AdminEmailsPage({
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-semibold">{type.label}</h2>
-                  <p className="text-sm text-white/60">
+                  <p className="text-sm text-gray-500 dark:text-white/60">
                     Tipo: {type.tipo}
                   </p>
                 </div>
-                <label className="flex items-center gap-2 text-sm text-white/70">
+                <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
                   <input
                     type="checkbox"
                     name="activo"
@@ -115,49 +115,49 @@ export default async function AdminEmailsPage({
               </div>
 
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label">
                   Asunto
                 </label>
                 <input
                   name="subject"
                   defaultValue={template?.subject ?? ""}
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
-                  placeholder="Ej: ✅ Reserva confirmada"
+                  className="panel-input"
+                  placeholder="Ej: Reserva confirmada"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label">
                   HTML Body
                 </label>
                 <textarea
                   name="html_body"
                   defaultValue={template?.html_body ?? ""}
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[200px]"
+                  className="panel-input min-h-[200px]"
                   placeholder="<h1>...</h1><p>...</p>"
                 />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-white/70 mb-1">
+                  <label className="panel-label">
                     CTA · Texto
                   </label>
                   <input
                     name="cta_text"
                     defaultValue={template?.cta_text ?? ""}
-                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                    className="panel-input"
                     placeholder="Ej: Ver detalles"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-white/70 mb-1">
+                  <label className="panel-label">
                     CTA · URL
                   </label>
                   <input
                     name="cta_url"
                     defaultValue={template?.cta_url ?? ""}
-                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                    className="panel-input"
                     placeholder="https://"
                   />
                 </div>

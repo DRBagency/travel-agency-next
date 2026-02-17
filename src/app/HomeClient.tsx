@@ -25,7 +25,7 @@ export default function HomeClient({
     useState<Destination | null>(null);
 
   return (
-    <>
+    <main className="relative pt-20 min-h-screen bg-slate-950 text-white">
       <Navbar
         clientName={client.nombre}
         logoUrl={client.logo_url}
@@ -95,6 +95,6 @@ export default function HomeClient({
         subscriptionActive={Boolean(client.stripe_subscription_id)}
         onClose={() => setSelectedDestination(null)}
       />
-    </>
+    </main>
   );
 }

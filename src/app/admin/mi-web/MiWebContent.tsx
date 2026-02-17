@@ -8,6 +8,15 @@ import {
   Loader2,
   Check,
   ImageIcon,
+  Palette,
+  Image,
+  BarChart3,
+  Users,
+  Phone,
+  Share2,
+  FileText,
+  Link2,
+  type LucideIcon,
 } from "lucide-react";
 import UnsplashPicker from "./UnsplashPicker";
 
@@ -171,27 +180,22 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
     updateField(unsplash.field, url);
   }
 
-  const inputClass =
-    "w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400";
-  const textareaClass =
-    "w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[100px]";
-
   function renderSaveButton(section: SectionKey, fieldKeys: string[]) {
     const state = saveStates[section];
     return (
       <div className="flex items-center gap-3 justify-end pt-2">
         {state.error && (
-          <span className="text-sm text-red-400">{state.error}</span>
+          <span className="text-sm text-red-600 dark:text-red-400">{state.error}</span>
         )}
         {state.success && (
-          <span className="flex items-center gap-1 text-sm text-green-400">
+          <span className="flex items-center gap-1 text-sm text-emerald-600 dark:text-green-400">
             <Check className="w-4 h-4" /> Guardado
           </span>
         )}
         <button
           onClick={() => saveSection(section, fieldKeys)}
           disabled={state.loading}
-          className="px-5 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors disabled:opacity-50 flex items-center gap-2"
+          className="px-5 py-2.5 rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold transition-colors disabled:opacity-50 flex items-center gap-2"
         >
           {state.loading && <Loader2 className="w-4 h-4 animate-spin" />}
           Guardar
@@ -202,12 +206,12 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
 
   function SectionHeader({
     sectionKey,
-    emoji,
+    icon: Icon,
     title,
     subtitle,
   }: {
     sectionKey: SectionKey;
-    emoji: string;
+    icon: LucideIcon;
     title: string;
     subtitle: string;
   }) {
@@ -217,15 +221,17 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         onClick={() => toggleSection(sectionKey)}
         className="w-full flex items-center gap-3 text-left"
       >
-        <span className="text-xl">{emoji}</span>
+        <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/20 flex items-center justify-center">
+          <Icon className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-300" />
+        </div>
         <div className="flex-1">
-          <h2 className="text-lg font-semibold text-white">{title}</h2>
-          <p className="text-sm text-white/50">{subtitle}</p>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
+          <p className="text-sm text-gray-400 dark:text-white/50">{subtitle}</p>
         </div>
         {isOpen ? (
-          <ChevronDown className="w-5 h-5 text-white/50" />
+          <ChevronDown className="w-5 h-5 text-gray-400 dark:text-white/50" />
         ) : (
-          <ChevronRight className="w-5 h-5 text-white/50" />
+          <ChevronRight className="w-5 h-5 text-gray-400 dark:text-white/50" />
         )}
       </button>
     );
@@ -236,8 +242,8 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-1">Mi Web</h1>
-          <p className="text-white/60">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Mi Web</h1>
+          <p className="text-gray-500 dark:text-white/60">
             Construye y personaliza tu pagina web. Todo lo que edites aqui se
             refleja en tu landing page al instante.
           </p>
@@ -246,7 +252,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
           href={`https://${client.domain}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/20 hover:bg-white/10 text-sm font-medium transition-colors shrink-0"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/20 hover:bg-gray-50 dark:hover:bg-white/10 text-sm font-medium text-gray-700 dark:text-white transition-colors shrink-0"
         >
           <ExternalLink className="w-4 h-4" />
           Ver mi web
@@ -254,41 +260,41 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       </div>
 
       {/* Marca y Estilo */}
-      <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-5">
+      <section className="panel-card p-6 space-y-5">
         <SectionHeader
           sectionKey="marca"
-          emoji="🎨"
+          icon={Palette}
           title="Marca y Estilo"
           subtitle="Logo, color principal y nombre de tu agencia"
         />
         {openSections.has("marca") && (
           <div className="space-y-4 pt-2">
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Nombre de la agencia
               </label>
               <input
                 value={client.nombre}
                 readOnly
-                className="w-full rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-white/50 cursor-not-allowed"
+                className="w-full rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 px-3 py-2 text-gray-400 dark:text-white/50 cursor-not-allowed"
               />
-              <p className="text-xs text-white/40 mt-1">
+              <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
                 Solo lectura. Se modifica desde el panel del owner.
               </p>
             </div>
 
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Logo (URL)
               </label>
               <input
                 value={fields.logo_url}
                 onChange={(e) => updateField("logo_url", e.target.value)}
-                className={inputClass}
+                className="panel-input w-full"
                 placeholder="https://..."
               />
               {fields.logo_url && (
-                <div className="mt-2 inline-block rounded-xl border border-white/20 bg-white/5 p-2">
+                <div className="mt-2 inline-block rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-2">
                   <img
                     src={fields.logo_url}
                     alt="Logo preview"
@@ -299,7 +305,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
             </div>
 
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Color principal
               </label>
               <div className="flex items-center gap-3">
@@ -307,16 +313,16 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                   type="color"
                   value={fields.primary_color}
                   onChange={(e) => updateField("primary_color", e.target.value)}
-                  className="h-10 w-14 rounded-lg border border-white/30 cursor-pointer bg-transparent"
+                  className="h-10 w-14 rounded-lg border border-gray-200 dark:border-white/30 cursor-pointer bg-transparent"
                 />
                 <input
                   value={fields.primary_color}
                   onChange={(e) => updateField("primary_color", e.target.value)}
-                  className="w-32 rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 font-mono text-sm"
+                  className="w-32 panel-input font-mono text-sm"
                   placeholder="#1CABB0"
                 />
                 <div
-                  className="h-10 w-10 rounded-xl border border-white/20"
+                  className="h-10 w-10 rounded-xl border border-gray-200 dark:border-white/20"
                   style={{ backgroundColor: fields.primary_color }}
                 />
               </div>
@@ -328,66 +334,66 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       </section>
 
       {/* Hero */}
-      <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-5">
+      <section className="panel-card p-6 space-y-5">
         <SectionHeader
           sectionKey="hero"
-          emoji="🖼️"
+          icon={Image}
           title="Hero (portada)"
           subtitle="Titulo, subtitulo, boton CTA e imagen de portada"
         />
         {openSections.has("hero") && (
           <div className="space-y-4 pt-2">
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Titulo principal
               </label>
               <input
                 value={fields.hero_title}
                 onChange={(e) => updateField("hero_title", e.target.value)}
-                className={inputClass}
+                className="panel-input w-full"
                 placeholder="Ej: Viaja a tu ritmo con una agencia premium"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Subtitulo
               </label>
               <textarea
                 value={fields.hero_subtitle}
                 onChange={(e) => updateField("hero_subtitle", e.target.value)}
-                className={textareaClass}
+                className="panel-input w-full min-h-[100px]"
                 placeholder="Describe el valor principal de la agencia"
               />
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label block mb-1">
                   CTA - Texto
                 </label>
                 <input
                   value={fields.hero_cta_text}
                   onChange={(e) => updateField("hero_cta_text", e.target.value)}
-                  className={inputClass}
+                  className="panel-input w-full"
                   placeholder="Ej: Reservar ahora"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label block mb-1">
                   CTA - Link
                 </label>
                 <input
                   value={fields.hero_cta_link}
                   onChange={(e) => updateField("hero_cta_link", e.target.value)}
-                  className={inputClass}
+                  className="panel-input w-full"
                   placeholder="https://"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Imagen del hero (URL)
               </label>
               <div className="flex gap-2">
@@ -396,20 +402,20 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                   onChange={(e) =>
                     updateField("hero_image_url", e.target.value)
                   }
-                  className={inputClass + " flex-1"}
+                  className="panel-input w-full flex-1"
                   placeholder="https://..."
                 />
                 <button
                   type="button"
                   onClick={() => openUnsplash("hero_image_url", "travel")}
-                  className="px-3 py-2 rounded-xl border border-white/20 hover:bg-white/10 transition-colors shrink-0"
+                  className="px-3 py-2 rounded-xl border border-gray-200 dark:border-white/20 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors shrink-0"
                   title="Buscar en Unsplash"
                 >
-                  <ImageIcon className="w-4 h-4" />
+                  <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/70" />
                 </button>
               </div>
               {fields.hero_image_url && (
-                <div className="mt-2 rounded-xl border border-white/20 overflow-hidden max-w-sm">
+                <div className="mt-2 rounded-xl border border-gray-200 dark:border-white/20 overflow-hidden max-w-sm">
                   <img
                     src={fields.hero_image_url}
                     alt="Hero preview"
@@ -431,10 +437,10 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       </section>
 
       {/* Stats */}
-      <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-5">
+      <section className="panel-card p-6 space-y-5">
         <SectionHeader
           sectionKey="stats"
-          emoji="📊"
+          icon={BarChart3}
           title="Estadisticas"
           subtitle="Metricas que se muestran en Hero y Nosotros"
         />
@@ -442,18 +448,18 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
           <div className="space-y-4 pt-2">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label block mb-1">
                   Anos de experiencia
                 </label>
                 <input
                   value={fields.stats_years}
                   onChange={(e) => updateField("stats_years", e.target.value)}
-                  className={inputClass}
+                  className="panel-input w-full"
                   placeholder="Ej: 15+"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label block mb-1">
                   Destinos
                 </label>
                 <input
@@ -461,12 +467,12 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                   onChange={(e) =>
                     updateField("stats_destinations", e.target.value)
                   }
-                  className={inputClass}
+                  className="panel-input w-full"
                   placeholder="Ej: 50+"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label block mb-1">
                   Viajeros
                 </label>
                 <input
@@ -474,19 +480,19 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                   onChange={(e) =>
                     updateField("stats_travelers", e.target.value)
                   }
-                  className={inputClass}
+                  className="panel-input w-full"
                   placeholder="Ej: 10K+"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label block mb-1">
                   Rating
                 </label>
                 <input
                   value={fields.stats_rating}
                   onChange={(e) => updateField("stats_rating", e.target.value)}
-                  className={inputClass}
-                  placeholder="Ej: 4.9★"
+                  className="panel-input w-full"
+                  placeholder="Ej: 4.9"
                 />
               </div>
             </div>
@@ -502,45 +508,45 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       </section>
 
       {/* Sobre nosotros */}
-      <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-5">
+      <section className="panel-card p-6 space-y-5">
         <SectionHeader
           sectionKey="about"
-          emoji="👥"
+          icon={Users}
           title="Sobre nosotros"
           subtitle="Texto principal y descripcion de la agencia"
         />
         {openSections.has("about") && (
           <div className="space-y-4 pt-2">
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Titulo
               </label>
               <input
                 value={fields.about_title}
                 onChange={(e) => updateField("about_title", e.target.value)}
-                className={inputClass}
+                className="panel-input w-full"
                 placeholder="Ej: Tu agencia de viajes de confianza"
               />
             </div>
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Texto 1
               </label>
               <textarea
                 value={fields.about_text_1}
                 onChange={(e) => updateField("about_text_1", e.target.value)}
-                className={textareaClass}
+                className="panel-input w-full min-h-[100px]"
                 placeholder="Describe la experiencia y propuesta de valor"
               />
             </div>
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Texto 2
               </label>
               <textarea
                 value={fields.about_text_2}
                 onChange={(e) => updateField("about_text_2", e.target.value)}
-                className={textareaClass}
+                className="panel-input w-full min-h-[100px]"
                 placeholder="Anade confianza, proceso, equipo o garantias"
               />
             </div>
@@ -555,10 +561,10 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       </section>
 
       {/* Contacto */}
-      <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-5">
+      <section className="panel-card p-6 space-y-5">
         <SectionHeader
           sectionKey="contact"
-          emoji="📞"
+          icon={Phone}
           title="Contacto"
           subtitle="Datos de contacto que se muestran en la web"
         />
@@ -566,7 +572,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
           <div className="space-y-4 pt-2">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label block mb-1">
                   Email
                 </label>
                 <input
@@ -574,12 +580,12 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                   onChange={(e) =>
                     updateField("contact_email", e.target.value)
                   }
-                  className={inputClass}
+                  className="panel-input w-full"
                   placeholder="contacto@agencia.com"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label block mb-1">
                   Telefono
                 </label>
                 <input
@@ -587,13 +593,13 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                   onChange={(e) =>
                     updateField("contact_phone", e.target.value)
                   }
-                  className={inputClass}
+                  className="panel-input w-full"
                   placeholder="+34 900 000 000"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Direccion
               </label>
               <textarea
@@ -601,7 +607,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                 onChange={(e) =>
                   updateField("contact_address", e.target.value)
                 }
-                className={textareaClass}
+                className="panel-input w-full min-h-[100px]"
                 placeholder="Calle, ciudad, pais"
               />
             </div>
@@ -616,45 +622,45 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       </section>
 
       {/* Redes sociales */}
-      <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-5">
+      <section className="panel-card p-6 space-y-5">
         <SectionHeader
           sectionKey="social"
-          emoji="🔗"
+          icon={Share2}
           title="Redes sociales"
           subtitle="Enlaces a tus perfiles sociales"
         />
         {openSections.has("social") && (
           <div className="space-y-4 pt-2">
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Instagram
               </label>
               <input
                 value={fields.instagram_url}
                 onChange={(e) => updateField("instagram_url", e.target.value)}
-                className={inputClass}
+                className="panel-input w-full"
                 placeholder="https://instagram.com/tu-agencia"
               />
             </div>
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Facebook
               </label>
               <input
                 value={fields.facebook_url}
                 onChange={(e) => updateField("facebook_url", e.target.value)}
-                className={inputClass}
+                className="panel-input w-full"
                 placeholder="https://facebook.com/tu-agencia"
               />
             </div>
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 TikTok
               </label>
               <input
                 value={fields.tiktok_url}
                 onChange={(e) => updateField("tiktok_url", e.target.value)}
-                className={inputClass}
+                className="panel-input w-full"
                 placeholder="https://tiktok.com/@tu-agencia"
               />
             </div>
@@ -669,23 +675,23 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       </section>
 
       {/* Footer */}
-      <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-5">
+      <section className="panel-card p-6 space-y-5">
         <SectionHeader
           sectionKey="footer"
-          emoji="📝"
+          icon={FileText}
           title="Footer"
           subtitle="Texto del pie de pagina"
         />
         {openSections.has("footer") && (
           <div className="space-y-4 pt-2">
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label block mb-1">
                 Texto del footer
               </label>
               <textarea
                 value={fields.footer_text}
                 onChange={(e) => updateField("footer_text", e.target.value)}
-                className={textareaClass}
+                className="panel-input w-full min-h-[100px]"
                 placeholder="Ej: © 2026 Tu Agencia. Todos los derechos reservados."
               />
             </div>
@@ -696,58 +702,57 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       </section>
 
       {/* Enlaces rapidos */}
-      <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-5">
+      <section className="panel-card p-6 space-y-5">
         <div>
-          <h2 className="text-lg font-semibold text-white flex items-center gap-3">
-            <span className="text-xl">🔗</span>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/20 flex items-center justify-center">
+              <Link2 className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-300" />
+            </div>
             Secciones relacionadas
           </h2>
-          <p className="text-sm text-white/50 mt-1">
+          <p className="text-sm text-gray-400 dark:text-white/50 mt-1">
             Estas secciones se gestionan desde sus paginas propias
           </p>
         </div>
         <div className="grid sm:grid-cols-3 gap-4">
           <a
             href="/admin/destinos"
-            className="rounded-xl border border-white/20 bg-white/5 p-4 hover:bg-white/10 transition-colors group"
+            className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-lg">🌍</span>
-              <span className="font-semibold group-hover:text-white transition-colors">
+              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
                 Destinos
               </span>
             </div>
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-gray-400 dark:text-white/50">
               {counts.destinos} destino{counts.destinos !== 1 ? "s" : ""} activo
               {counts.destinos !== 1 ? "s" : ""}
             </p>
           </a>
           <a
             href="/admin/opiniones"
-            className="rounded-xl border border-white/20 bg-white/5 p-4 hover:bg-white/10 transition-colors group"
+            className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-lg">⭐</span>
-              <span className="font-semibold group-hover:text-white transition-colors">
+              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
                 Opiniones
               </span>
             </div>
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-gray-400 dark:text-white/50">
               {counts.opiniones} opinion{counts.opiniones !== 1 ? "es" : ""}{" "}
               publicada{counts.opiniones !== 1 ? "s" : ""}
             </p>
           </a>
           <a
             href="/admin/legales"
-            className="rounded-xl border border-white/20 bg-white/5 p-4 hover:bg-white/10 transition-colors group"
+            className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-lg">📜</span>
-              <span className="font-semibold group-hover:text-white transition-colors">
+              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
                 Legales
               </span>
             </div>
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-gray-400 dark:text-white/50">
               {counts.legales} pagina{counts.legales !== 1 ? "s" : ""} legal
               {counts.legales !== 1 ? "es" : ""}
             </p>

@@ -200,31 +200,31 @@ export default function DocumentFormClient({
 
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm text-white/70 mb-1">Titulo</label>
+          <label className="panel-label">Titulo</label>
           <input
             name="title"
             required
             defaultValue={defaultValues?.title || ""}
             placeholder={`${typeLabel} - Nombre del proyecto`}
-            className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900"
+            className="panel-input"
           />
         </div>
         <div>
-          <label className="block text-sm text-white/70 mb-1">
+          <label className="panel-label">
             Fecha de validez
           </label>
           <input
             name="validity_date"
             type="date"
             defaultValue={defaultValues?.validity_date || ""}
-            className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900"
+            className="panel-input"
           />
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm text-white/70 mb-1">
+          <label className="panel-label">
             Nombre del cliente
           </label>
           <input
@@ -232,11 +232,11 @@ export default function DocumentFormClient({
             required
             defaultValue={defaultValues?.client_name || ""}
             placeholder="Nombre completo"
-            className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900"
+            className="panel-input"
           />
         </div>
         <div>
-          <label className="block text-sm text-white/70 mb-1">
+          <label className="panel-label">
             Email del cliente
           </label>
           <input
@@ -244,7 +244,7 @@ export default function DocumentFormClient({
             type="email"
             defaultValue={defaultValues?.client_email || ""}
             placeholder="email@ejemplo.com"
-            className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900"
+            className="panel-input"
           />
         </div>
       </div>
@@ -252,11 +252,11 @@ export default function DocumentFormClient({
       {/* Items */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-sm text-white/70">Items / Conceptos</label>
+          <label className="text-sm text-gray-600 dark:text-white/70">Items / Conceptos</label>
           <button
             type="button"
             onClick={addItem}
-            className="flex items-center gap-1 text-sm text-drb-lime-400 hover:text-drb-lime-300 transition-colors"
+            className="flex items-center gap-1 text-sm text-drb-lime-600 dark:text-drb-lime-400 hover:text-drb-lime-500 dark:hover:text-drb-lime-300 transition-colors"
           >
             <Plus className="w-4 h-4" /> Anadir fila
           </button>
@@ -270,7 +270,7 @@ export default function DocumentFormClient({
             >
               <div>
                 {i === 0 && (
-                  <span className="text-xs text-white/40 block mb-1">
+                  <span className="text-xs text-gray-400 dark:text-white/40 block mb-1">
                     Descripcion
                   </span>
                 )}
@@ -278,12 +278,12 @@ export default function DocumentFormClient({
                   value={item.description}
                   onChange={(e) => updateItem(i, "description", e.target.value)}
                   placeholder="Servicio o concepto"
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 text-sm"
+                  className="panel-input text-sm"
                 />
               </div>
               <div>
                 {i === 0 && (
-                  <span className="text-xs text-white/40 block mb-1">
+                  <span className="text-xs text-gray-400 dark:text-white/40 block mb-1">
                     Cant.
                   </span>
                 )}
@@ -292,12 +292,12 @@ export default function DocumentFormClient({
                   min="1"
                   value={item.quantity}
                   onChange={(e) => updateItem(i, "quantity", e.target.value)}
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 text-sm"
+                  className="panel-input text-sm"
                 />
               </div>
               <div>
                 {i === 0 && (
-                  <span className="text-xs text-white/40 block mb-1">
+                  <span className="text-xs text-gray-400 dark:text-white/40 block mb-1">
                     Precio Ud.
                   </span>
                 )}
@@ -307,12 +307,12 @@ export default function DocumentFormClient({
                   step="0.01"
                   value={item.unit_price}
                   onChange={(e) => updateItem(i, "unit_price", e.target.value)}
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 text-sm"
+                  className="panel-input text-sm"
                 />
               </div>
               <div>
                 {i === 0 && (
-                  <span className="text-xs text-white/40 block mb-1">
+                  <span className="text-xs text-gray-400 dark:text-white/40 block mb-1">
                     IVA %
                   </span>
                 )}
@@ -321,14 +321,14 @@ export default function DocumentFormClient({
                   min="0"
                   value={item.iva_percent}
                   onChange={(e) => updateItem(i, "iva_percent", e.target.value)}
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 text-sm"
+                  className="panel-input text-sm"
                 />
               </div>
               <div>
                 <button
                   type="button"
                   onClick={() => removeItem(i)}
-                  className="p-2 text-red-400 hover:text-red-300 transition-colors"
+                  className="p-2 text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 transition-colors"
                   title="Eliminar fila"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -340,38 +340,38 @@ export default function DocumentFormClient({
       </div>
 
       {/* Totals */}
-      <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-        <div className="flex justify-between text-sm text-white/60 mb-1">
+      <div className="bg-gray-50/50 dark:bg-white/5 rounded-xl p-4 border border-gray-100 dark:border-white/10">
+        <div className="flex justify-between text-sm text-gray-500 dark:text-white/60 mb-1">
           <span>Subtotal</span>
           <span>{subtotal.toFixed(2)} EUR</span>
         </div>
-        <div className="flex justify-between text-sm text-white/60 mb-1">
+        <div className="flex justify-between text-sm text-gray-500 dark:text-white/60 mb-1">
           <span>IVA</span>
           <span>{ivaTotal.toFixed(2)} EUR</span>
         </div>
-        <div className="flex justify-between text-lg font-bold text-white border-t border-white/10 pt-2 mt-2">
+        <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white border-t border-gray-100 dark:border-white/10 pt-2 mt-2">
           <span>Total</span>
           <span>{total.toFixed(2)} EUR</span>
         </div>
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-1">Condiciones</label>
+        <label className="panel-label">Condiciones</label>
         <textarea
           name="conditions"
           defaultValue={defaultValues?.conditions || ""}
           placeholder="Condiciones de pago, cancelacion, etc."
-          className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 min-h-[80px]"
+          className="panel-input min-h-[80px]"
         />
       </div>
 
       <div>
-        <label className="block text-sm text-white/70 mb-1">Notas</label>
+        <label className="panel-label">Notas</label>
         <textarea
           name="notes"
           defaultValue={defaultValues?.notes || ""}
           placeholder="Notas adicionales..."
-          className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 min-h-[80px]"
+          className="panel-input min-h-[80px]"
         />
       </div>
 
@@ -381,7 +381,7 @@ export default function DocumentFormClient({
         <button
           type="button"
           onClick={handleGeneratePDF}
-          className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold border border-white/20 transition-colors"
+          className="px-5 py-3 rounded-xl bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-900 dark:text-white font-bold border border-gray-200 dark:border-white/20 transition-colors"
         >
           Generar PDF
         </button>

@@ -46,7 +46,7 @@ export default function EmailPreviewButton({
         type="button"
         onClick={handlePreview}
         disabled={loading}
-        className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold border border-white/20 transition-colors text-sm flex items-center gap-2"
+        className="px-4 py-2.5 rounded-xl bg-white dark:bg-white/10 hover:bg-gray-100 dark:hover:bg-white/20 text-gray-900 dark:text-white font-semibold border border-gray-200 dark:border-white/20 transition-colors text-sm flex items-center gap-2"
       >
         <Eye className="w-4 h-4" />
         {loading ? "Cargando..." : "Preview"}

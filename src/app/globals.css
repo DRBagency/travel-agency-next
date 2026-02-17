@@ -19,21 +19,66 @@ html {
 }
 
 @layer base {
+  /* ─── LIGHT MODE (default) ─── */
   :root {
-    --background: 222 47% 11%;
+    --background: 0 0% 100%;
+    --foreground: 224 71% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 176 72% 40%;
+    --primary: 176 72% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 224 71% 4%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 224 71% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+    --gold: 44 96% 55%;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 9% 46%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-accent: 176 60% 95%;
+    --sidebar-accent-foreground: 176 72% 30%;
+  }
+
+  /* ─── DARK MODE ─── */
+  .dark {
+    --background: 222 47% 5%;
     --foreground: 210 40% 98%;
-    --card: 222 47% 13%;
+    --card: 222 47% 8%;
     --card-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 70%;
+    --muted: 217 33% 14%;
+    --muted-foreground: 215 20% 65%;
     --border: 217 33% 18%;
     --input: 217 33% 20%;
-    --ring: 217 91% 60%;
-    --primary: 212 95% 58%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 190 90% 45%;
+    --ring: 176 72% 40%;
+    --primary: 176 72% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 14%;
     --secondary-foreground: 210 40% 98%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --accent: 217 33% 14%;
+    --accent-foreground: 210 40% 98%;
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
     --gold: 44 96% 55%;
+
+    /* Sidebar */
+    --sidebar-background: 222 47% 5%;
+    --sidebar-foreground: 215 20% 65%;
+    --sidebar-border: 217 33% 18%;
+    --sidebar-accent: 176 72% 10%;
+    --sidebar-accent-foreground: 176 60% 70%;
   }
 
   body {
@@ -46,10 +91,49 @@ html {
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_10px_30px_rgba(3,7,18,0.45)];
+  /* ─── Panel utility classes ─── */
+  .panel-card {
+    @apply bg-white dark:bg-white/10 border border-gray-200 dark:border-white/10 rounded-2xl shadow-card dark:shadow-none;
   }
 
+  .kpi-card {
+    @apply bg-white dark:bg-white/10 border border-gray-200 dark:border-white/10 rounded-2xl shadow-card dark:shadow-none p-6 transition-all duration-200 hover:shadow-premium dark:hover:shadow-none;
+  }
+
+  .panel-input {
+    @apply bg-white dark:bg-white/10 border border-gray-200 dark:border-white/20 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/40 focus:border-drb-turquoise-500 transition-colors;
+  }
+
+  .panel-label {
+    @apply text-sm font-medium text-gray-700 dark:text-white/80;
+  }
+
+  .badge-success {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300;
+  }
+
+  .badge-warning {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300;
+  }
+
+  .badge-danger {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 dark:bg-red-500/20 dark:text-red-300;
+  }
+
+  .badge-info {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-50 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300;
+  }
+
+  .table-row {
+    @apply border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors;
+  }
+
+  /* ─── Glass card (both modes) ─── */
+  .glass-card {
+    @apply bg-white/80 dark:bg-white/5 backdrop-blur-xl border border-gray-200 dark:border-white/10 shadow-card dark:shadow-[0_10px_30px_rgba(3,7,18,0.45)];
+  }
+
+  /* ─── Landing page only (dark context) ─── */
   .section-gradient {
     @apply relative;
   }
@@ -65,7 +149,7 @@ html {
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-sky-400 via-cyan-300 to-teal-300 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-drb-turquoise-500 via-drb-turquoise-400 to-drb-lime-500 dark:from-sky-400 dark:via-cyan-300 dark:to-teal-300 bg-clip-text text-transparent;
   }
 
   .gradient-text-ocean {
@@ -77,6 +161,6 @@ html {
   }
 
   .btn-gradient {
-    @apply bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-500 text-white shadow-[0_12px_30px_rgba(56,189,248,0.35)] hover:brightness-110;
+    @apply bg-gradient-to-r from-drb-turquoise-500 to-drb-turquoise-600 dark:from-sky-500 dark:via-cyan-500 dark:to-teal-500 text-white shadow-premium hover:brightness-110 transition-all;
   }
 }

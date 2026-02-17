@@ -95,29 +95,29 @@ function CustomDatePicker({
 
   return (
     <div className="relative" ref={ref}>
-      <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-1.5">
+      <label className="block text-xs font-medium text-gray-400 dark:text-white/50 uppercase tracking-wider mb-1.5">
         {label}
       </label>
       <button
         type="button"
         onClick={() => setShowPicker(!showPicker)}
-        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.07] border border-white/[0.12] hover:border-white/25 text-white text-left transition-all"
+        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] hover:border-gray-300 dark:hover:border-white/25 text-gray-900 dark:text-white text-left transition-all"
       >
-        <CalendarDays className="w-4 h-4 text-drb-lime-400 shrink-0" />
+        <CalendarDays className="w-4 h-4 text-drb-lime-600 dark:text-drb-lime-400 shrink-0" />
         <span className="text-sm font-medium">{displayDate}</span>
       </button>
 
       {showPicker && (
-        <div className="absolute z-50 top-full mt-2 left-0 w-72 rounded-2xl bg-[#0d3234] border border-white/15 shadow-2xl shadow-black/40 p-4 animate-in fade-in slide-in-from-top-2">
+        <div className="absolute z-50 top-full mt-2 left-0 w-72 rounded-2xl bg-white dark:bg-[#0d3234] border border-gray-200 dark:border-white/15 shadow-2xl shadow-black/10 dark:shadow-black/40 p-4 animate-in fade-in slide-in-from-top-2">
           {/* Header */}
           <div className="flex items-center justify-between mb-3">
-            <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors">
+            <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors">
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-sm font-semibold text-white">
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">
               {monthNames[viewMonth]} {viewYear}
             </span>
-            <button onClick={nextMonth} className="p-1.5 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors">
+            <button onClick={nextMonth} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors">
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -125,7 +125,7 @@ function CustomDatePicker({
           {/* Day names */}
           <div className="grid grid-cols-7 mb-1">
             {dayNames.map((d) => (
-              <div key={d} className="text-center text-[10px] font-semibold text-white/30 uppercase py-1">
+              <div key={d} className="text-center text-[10px] font-semibold text-gray-400 dark:text-white/30 uppercase py-1">
                 {d}
               </div>
             ))}
@@ -154,8 +154,8 @@ function CustomDatePicker({
                     ${isSelected
                       ? "bg-drb-lime-500 text-drb-turquoise-900 font-bold shadow-lg shadow-drb-lime-500/20"
                       : isToday
-                        ? "bg-white/10 text-drb-lime-400 ring-1 ring-drb-lime-400/30"
-                        : "text-white/70 hover:bg-white/10 hover:text-white"
+                        ? "bg-gray-100 dark:bg-white/10 text-drb-lime-600 dark:text-drb-lime-400 ring-1 ring-drb-lime-400/30"
+                        : "text-gray-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
                     }
                   `}
                 >
@@ -193,30 +193,30 @@ function CustomTimePicker({
 
   return (
     <div>
-      <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-1.5">
+      <label className="block text-xs font-medium text-gray-400 dark:text-white/50 uppercase tracking-wider mb-1.5">
         {label}
       </label>
-      <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/[0.07] border border-white/[0.12]">
-        <Clock className="w-4 h-4 text-drb-lime-400 shrink-0" />
+      <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12]">
+        <Clock className="w-4 h-4 text-drb-lime-600 dark:text-drb-lime-400 shrink-0" />
         <select
           value={hours}
           onChange={(e) => setTime(Number(e.target.value), minutes)}
-          className="bg-transparent text-white text-sm font-medium appearance-none cursor-pointer outline-none pr-1"
+          className="bg-transparent text-gray-900 dark:text-white text-sm font-medium appearance-none cursor-pointer outline-none pr-1"
         >
           {hourOptions.map((h) => (
-            <option key={h} value={h} className="bg-[#0d3234] text-white">
+            <option key={h} value={h} className="bg-white dark:bg-[#0d3234] text-gray-900 dark:text-white">
               {String(h).padStart(2, "0")}
             </option>
           ))}
         </select>
-        <span className="text-white/40 font-bold text-lg leading-none">:</span>
+        <span className="text-gray-400 dark:text-white/40 font-bold text-lg leading-none">:</span>
         <select
           value={minutes}
           onChange={(e) => setTime(hours, Number(e.target.value))}
-          className="bg-transparent text-white text-sm font-medium appearance-none cursor-pointer outline-none"
+          className="bg-transparent text-gray-900 dark:text-white text-sm font-medium appearance-none cursor-pointer outline-none"
         >
           {minuteOptions.map((m) => (
-            <option key={m} value={m} className="bg-[#0d3234] text-white">
+            <option key={m} value={m} className="bg-white dark:bg-[#0d3234] text-gray-900 dark:text-white">
               {String(m).padStart(2, "0")}
             </option>
           ))}
@@ -423,11 +423,11 @@ export default function CalendarioContent({
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setModalOpen(false)}>
         {/* Backdrop */}
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm" />
 
         {/* Modal */}
         <div
-          className="relative w-full max-w-lg rounded-3xl bg-gradient-to-b from-[#0f3a3d] to-[#0a2a2c] border border-white/[0.12] shadow-2xl shadow-black/50 overflow-hidden"
+          className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-gradient-to-b dark:from-[#0f3a3d] dark:to-[#0a2a2c] border border-gray-200 dark:border-white/[0.12] shadow-2xl shadow-black/10 dark:shadow-black/50 overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header with color accent */}
@@ -438,16 +438,16 @@ export default function CalendarioContent({
             />
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                   {editingEvent ? "Editar evento" : "Nuevo evento"}
                 </h3>
-                <p className="text-xs text-white/40 mt-0.5">
+                <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5">
                   {editingEvent ? "Modifica los detalles del evento" : "Crea un nuevo evento en tu calendario"}
                 </p>
               </div>
               <button
                 onClick={() => setModalOpen(false)}
-                className="p-2 rounded-xl hover:bg-white/10 text-white/40 hover:text-white transition-all"
+                className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 dark:text-white/40 hover:text-gray-900 dark:hover:text-white transition-all"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -458,7 +458,7 @@ export default function CalendarioContent({
           <div className="px-7 pb-6 space-y-5">
             {/* Title */}
             <div>
-              <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-medium text-gray-400 dark:text-white/50 uppercase tracking-wider mb-1.5">
                 Titulo
               </label>
               <input
@@ -467,13 +467,13 @@ export default function CalendarioContent({
                 onChange={(e) => setFormTitle(e.target.value)}
                 placeholder="Reunion con cliente, vuelo a Madrid..."
                 autoFocus
-                className="w-full px-4 py-3 rounded-xl bg-white/[0.07] border border-white/[0.12] text-white placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-lime-400/50 focus:ring-1 focus:ring-drb-lime-400/20 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-lime-400/50 focus:ring-1 focus:ring-drb-lime-400/20 transition-all"
               />
             </div>
 
             {/* Color picker */}
             <div>
-              <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-medium text-gray-400 dark:text-white/50 uppercase tracking-wider mb-2">
                 Color
               </label>
               <div className="flex gap-2">
@@ -484,7 +484,7 @@ export default function CalendarioContent({
                     onClick={() => setFormColor(c.bg)}
                     className={`w-8 h-8 rounded-full transition-all ${
                       formColor === c.bg
-                        ? "ring-2 ring-white ring-offset-2 ring-offset-[#0f3a3d] scale-110"
+                        ? "ring-2 ring-gray-900 dark:ring-white ring-offset-2 ring-offset-white dark:ring-offset-[#0f3a3d] scale-110"
                         : "hover:scale-110 opacity-70 hover:opacity-100"
                     }`}
                     style={{ backgroundColor: c.bg }}
@@ -500,7 +500,7 @@ export default function CalendarioContent({
                 type="button"
                 onClick={() => setFormAllDay(!formAllDay)}
                 className={`relative w-11 h-6 rounded-full transition-colors ${
-                  formAllDay ? "bg-drb-lime-500" : "bg-white/15"
+                  formAllDay ? "bg-drb-lime-500" : "bg-gray-300 dark:bg-white/15"
                 }`}
               >
                 <div
@@ -509,7 +509,7 @@ export default function CalendarioContent({
                   }`}
                 />
               </button>
-              <span className="text-sm text-white/60">Todo el dia</span>
+              <span className="text-sm text-gray-500 dark:text-white/60">Todo el dia</span>
             </div>
 
             {/* Date & time */}
@@ -533,7 +533,7 @@ export default function CalendarioContent({
 
             {/* Description */}
             <div>
-              <label className="block text-xs font-medium text-white/50 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-medium text-gray-400 dark:text-white/50 uppercase tracking-wider mb-1.5">
                 Descripcion
               </label>
               <textarea
@@ -541,17 +541,17 @@ export default function CalendarioContent({
                 onChange={(e) => setFormDescription(e.target.value)}
                 placeholder="Notas adicionales sobre el evento..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl bg-white/[0.07] border border-white/[0.12] text-white placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-lime-400/50 focus:ring-1 focus:ring-drb-lime-400/20 transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-lime-400/50 focus:ring-1 focus:ring-drb-lime-400/20 transition-all resize-none"
               />
             </div>
           </div>
 
           {/* Footer */}
-          <div className="px-7 py-4 border-t border-white/[0.08] bg-white/[0.02] flex items-center justify-between">
+          <div className="px-7 py-4 border-t border-gray-100 dark:border-white/[0.08] bg-gray-50/50 dark:bg-white/[0.02] flex items-center justify-between">
             {editingEvent ? (
               <button
                 onClick={() => handleDeleteEvent(editingEvent.id)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 border border-red-500/20 hover:border-red-500/30 transition-all text-sm font-medium"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-600 dark:text-red-400 hover:bg-red-500/10 border border-red-500/20 hover:border-red-500/30 transition-all text-sm font-medium"
               >
                 <Trash2 className="w-4 h-4" />
                 Eliminar
@@ -562,7 +562,7 @@ export default function CalendarioContent({
             <div className="flex gap-3">
               <button
                 onClick={() => setModalOpen(false)}
-                className="px-5 py-2.5 rounded-xl text-white/50 hover:text-white hover:bg-white/10 transition-all text-sm font-medium"
+                className="px-5 py-2.5 rounded-xl text-gray-400 dark:text-white/50 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all text-sm font-medium"
               >
                 Cancelar
               </button>
@@ -587,19 +587,19 @@ export default function CalendarioContent({
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold mb-2">Calendario</h1>
-          <p className="text-white/60">
+          <p className="text-gray-500 dark:text-white/60">
             Gestiona tus eventos directamente desde Google Calendar.
           </p>
         </div>
 
         {/* Connection status */}
-        <div className="rounded-2xl border border-white/[0.12] bg-white/[0.06] p-5">
+        <div className="panel-card p-5">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-green-400 shadow-lg shadow-green-400/50" />
-              <span className="text-sm text-white/60">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-green-400 shadow-lg shadow-green-400/50" />
+              <span className="text-sm text-gray-500 dark:text-white/60">
                 Conectado como{" "}
-                <span className="font-semibold text-white">
+                <span className="font-semibold text-gray-900 dark:text-white">
                   {googleCalendarEmail}
                 </span>
               </span>
@@ -615,7 +615,7 @@ export default function CalendarioContent({
               <button
                 onClick={handleDisconnect}
                 disabled={disconnecting}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-white/40 hover:text-red-400 hover:border-red-400/30 hover:bg-red-400/5 transition-all text-sm disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-gray-400 dark:text-white/40 hover:text-red-600 dark:hover:text-red-400 hover:border-red-400/30 hover:bg-red-400/5 transition-all text-sm disabled:opacity-50"
               >
                 <Link2Off className="w-4 h-4" />
                 {disconnecting ? "..." : "Desconectar"}
@@ -625,7 +625,7 @@ export default function CalendarioContent({
         </div>
 
         {/* FullCalendar */}
-        <div className="rounded-2xl border border-white/[0.12] bg-white/[0.04] p-5 overflow-hidden">
+        <div className="panel-card p-5 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-24">
               <div className="animate-spin rounded-full h-8 w-8 border-2 border-drb-lime-400 border-t-transparent" />
@@ -783,19 +783,19 @@ export default function CalendarioContent({
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold mb-2">Calendario</h1>
-        <p className="text-white/60">
+        <p className="text-gray-500 dark:text-white/60">
           Conecta tu Google Calendar para gestionar citas y eventos.
         </p>
       </div>
 
       {/* Connect Google Calendar */}
-      <div className="rounded-2xl border border-white/[0.12] bg-white/[0.06] p-6 space-y-4">
+      <div className="panel-card p-6 space-y-4">
         <div className="flex items-center gap-3">
-          <Calendar className="w-5 h-5 text-drb-lime-400" />
+          <Calendar className="w-5 h-5 text-drb-lime-600 dark:text-drb-lime-400" />
           <h2 className="text-xl font-semibold">Google Calendar</h2>
         </div>
 
-        <p className="text-white/60 text-sm leading-relaxed">
+        <p className="text-gray-500 dark:text-white/60 text-sm leading-relaxed">
           Conecta tu cuenta de Google para crear, editar y eliminar eventos
           directamente desde este panel. Los cambios se sincronizaran
           automaticamente con tu Google Calendar.
@@ -811,16 +811,16 @@ export default function CalendarioContent({
       </div>
 
       {/* Embed URL fallback */}
-      <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 space-y-4">
+      <div className="rounded-2xl border border-gray-100 dark:border-white/[0.08] bg-gray-50/50 dark:bg-white/[0.03] p-6 space-y-4">
         <div className="flex items-center gap-3">
-          <Calendar className="w-5 h-5 text-white/30" />
-          <h2 className="text-base font-semibold text-white/50">
+          <Calendar className="w-5 h-5 text-gray-400 dark:text-white/30" />
+          <h2 className="text-base font-semibold text-gray-400 dark:text-white/50">
             Alternativa: Calendario embebido (solo lectura)
           </h2>
         </div>
 
         <div className="space-y-3">
-          <label className="block text-xs font-medium text-white/40 uppercase tracking-wider">
+          <label className="block text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
             URL de embed de Google Calendar
           </label>
           <div className="flex gap-3">
@@ -829,12 +829,12 @@ export default function CalendarioContent({
               value={embedUrl}
               onChange={(e) => setEmbedUrl(e.target.value)}
               placeholder="https://calendar.google.com/calendar/embed?src=..."
-              className="flex-1 px-4 py-2.5 rounded-xl bg-white/[0.07] border border-white/[0.12] text-white placeholder:text-white/20 text-sm focus:outline-none focus:border-white/25 transition-all"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/20 text-sm focus:outline-none focus:border-gray-300 dark:focus:border-white/25 transition-all"
             />
             <button
               onClick={handleSaveEmbedUrl}
               disabled={savingUrl}
-              className="px-5 py-2.5 rounded-xl bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.12] text-white/60 hover:text-white font-medium text-sm disabled:opacity-60 transition-all whitespace-nowrap"
+              className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-white/[0.07] hover:bg-gray-200 dark:hover:bg-white/[0.12] border border-gray-200 dark:border-white/[0.12] text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white font-medium text-sm disabled:opacity-60 transition-all whitespace-nowrap"
             >
               {savingUrl ? "..." : savedUrl ? "Guardado" : "Guardar"}
             </button>
@@ -844,7 +844,7 @@ export default function CalendarioContent({
 
       {/* Calendar iframe */}
       {embedUrl.trim() && (
-        <div className="rounded-2xl border border-white/[0.12] bg-white/[0.04] overflow-hidden">
+        <div className="panel-card overflow-hidden">
           <iframe
             src={embedUrl.trim()}
             className="w-full border-0"

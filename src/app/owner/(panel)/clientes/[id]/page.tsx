@@ -83,72 +83,72 @@ export default async function ClientePage({ params }: ClientePageProps) {
   if (!cliente) {
     return (
       <div className="p-8">
-        <h1 className="text-2xl font-bold">Cliente no encontrado</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Cliente no encontrado</h1>
       </div>
     );
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Editar cliente</h1>
+    <div>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Editar cliente</h1>
 
       <form action={updateCliente} className="space-y-4 max-w-2xl">
         <input type="hidden" name="id" value={cliente.id} />
 
         <div>
-          <label className="block text-sm mb-1">Nombre</label>
+          <label className="panel-label block mb-1">Nombre</label>
           <input
             name="nombre"
             defaultValue={cliente.nombre ?? ""}
-            className="w-full border rounded px-3 py-2 bg-white text-black placeholder-gray-400"
+            className="w-full panel-input"
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">Domain</label>
+          <label className="panel-label block mb-1">Domain</label>
           <input
             name="domain"
             defaultValue={cliente.domain ?? ""}
-            className="w-full border rounded px-3 py-2 bg-white text-black placeholder-gray-400"
+            className="w-full panel-input"
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">Primary Color</label>
+          <label className="panel-label block mb-1">Primary Color</label>
           <input
             name="primary_color"
             defaultValue={cliente.primary_color ?? ""}
-            className="w-full border rounded px-3 py-2 bg-white text-black placeholder-gray-400"
+            className="w-full panel-input"
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">Hero Title</label>
+          <label className="panel-label block mb-1">Hero Title</label>
           <input
             name="hero_title"
             defaultValue={cliente.hero_title ?? ""}
-            className="w-full border rounded px-3 py-2 bg-white text-black placeholder-gray-400"
+            className="w-full panel-input"
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">Hero Subtitle</label>
+          <label className="panel-label block mb-1">Hero Subtitle</label>
           <textarea
             name="hero_subtitle"
             defaultValue={cliente.hero_subtitle ?? ""}
-            className="w-full border rounded px-3 py-2 bg-white text-black placeholder-gray-400"
+            className="w-full panel-input"
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">Hero CTA Text</label>
+          <label className="panel-label block mb-1">Hero CTA Text</label>
           <input
             name="hero_cta_text"
             defaultValue={cliente.hero_cta_text ?? ""}
-            className="w-full border rounded px-3 py-2 bg-white text-black placeholder-gray-400"
+            className="w-full panel-input"
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">Plan</label>
+          <label className="panel-label block mb-1">Plan</label>
           <select
             name="plan"
             defaultValue={cliente.plan ?? "start"}
-            className="w-full border rounded px-3 py-2 bg-white text-black"
+            className="w-full panel-input"
           >
             <option value="start">Start</option>
             <option value="grow">Grow</option>
@@ -161,10 +161,10 @@ export default async function ClientePage({ params }: ClientePageProps) {
             name="activo"
             defaultChecked={Boolean(cliente.activo)}
           />
-          <label className="text-sm">Activo</label>
+          <label className="text-sm text-gray-700 dark:text-white/70">Activo</label>
         </div>
 
-        <button type="submit" className="px-4 py-2 rounded bg-black text-white">
+        <button type="submit" className="px-5 py-2.5 rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold transition-colors">
           Guardar cambios
         </button>
       </form>

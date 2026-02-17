@@ -48,7 +48,6 @@ async function getClientAnalytics(clienteId: string, fromDate?: string, toDate?:
     })
   );
 
-  // Top destinos
   let destinosQuery = supabaseAdmin
     .from("reservas")
     .select("destino")
@@ -70,7 +69,6 @@ async function getClientAnalytics(clienteId: string, fromDate?: string, toDate?:
     .sort((a, b) => b.value - a.value)
     .slice(0, 5);
 
-  // KPI totals
   const totalReservas = reservasPorMes.reduce((s, m) => s + m.reservas, 0);
   const totalPagadas = reservasPorMes.reduce((s, m) => s + m.pagadas, 0);
   const totalIngresos = reservasPorMes.reduce((s, m) => s + m.ingresos, 0);
@@ -93,8 +91,8 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold mb-1">Analytics</h1>
-          <p className="text-white/60">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Analytics</h1>
+          <p className="text-gray-500 dark:text-white/60">
             Metricas y estadisticas de tu agencia (ultimos 6 meses)
           </p>
         </div>
@@ -106,22 +104,22 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
           type="date"
           name="from"
           defaultValue={from}
-          className="border border-white/30 px-3 py-2 rounded-xl bg-white/95 text-gray-900"
+          className="panel-input"
         />
         <input
           type="date"
           name="to"
           defaultValue={to}
-          className="border border-white/30 px-3 py-2 rounded-xl bg-white/95 text-gray-900"
+          className="panel-input"
         />
-        <button className="px-4 py-2 bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 rounded-xl font-bold transition-colors">
+        <button className="px-4 py-2 bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white rounded-xl font-bold transition-colors">
           Filtrar
         </button>
         <div className="ml-auto flex gap-2">
           <ExportPDFButton estado="todos" q="" from={from} to={to} />
           <a
             href={`/api/admin/export?estado=todos&q=&from=${from}&to=${to}`}
-            className="px-4 py-2 bg-white hover:bg-white/90 text-drb-turquoise-800 rounded-xl font-semibold transition-colors"
+            className="px-4 py-2 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-900 dark:text-white rounded-xl font-semibold transition-colors"
           >
             Exportar CSV
           </a>
@@ -130,25 +128,25 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        <div className="p-4 border border-white/20 rounded-2xl bg-white/10">
-          <p className="text-sm text-white/60">Total reservas</p>
-          <p className="text-2xl font-bold">{analytics.kpis.totalReservas}</p>
+        <div className="kpi-card">
+          <p className="text-sm text-gray-500 dark:text-white/60">Total reservas</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{analytics.kpis.totalReservas}</p>
         </div>
-        <div className="p-4 border border-white/20 rounded-2xl bg-white/10">
-          <p className="text-sm text-white/60">Pagadas</p>
-          <p className="text-2xl font-bold text-green-400">{analytics.kpis.totalPagadas}</p>
+        <div className="kpi-card">
+          <p className="text-sm text-gray-500 dark:text-white/60">Pagadas</p>
+          <p className="text-2xl font-bold text-emerald-600 dark:text-green-400">{analytics.kpis.totalPagadas}</p>
         </div>
-        <div className="p-4 border border-drb-lime-500/25 rounded-2xl bg-white/10">
-          <p className="text-sm text-white/60">Ingresos totales</p>
-          <p className="text-2xl font-bold text-drb-lime-400">{analytics.kpis.totalIngresos.toLocaleString("es-ES")} EUR</p>
+        <div className="kpi-card border-drb-lime-200 dark:border-drb-lime-500/25">
+          <p className="text-sm text-gray-500 dark:text-white/60">Ingresos totales</p>
+          <p className="text-2xl font-bold text-drb-lime-600 dark:text-drb-lime-400">{analytics.kpis.totalIngresos.toLocaleString("es-ES")} EUR</p>
         </div>
-        <div className="p-4 border border-white/20 rounded-2xl bg-white/10">
-          <p className="text-sm text-white/60">Ticket medio</p>
-          <p className="text-2xl font-bold">{analytics.kpis.ticketMedio} EUR</p>
+        <div className="kpi-card">
+          <p className="text-sm text-gray-500 dark:text-white/60">Ticket medio</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{analytics.kpis.ticketMedio} EUR</p>
         </div>
-        <div className="p-4 border border-white/20 rounded-2xl bg-white/10">
-          <p className="text-sm text-white/60">Tasa conversion</p>
-          <p className="text-2xl font-bold">{analytics.kpis.conversionRate}%</p>
+        <div className="kpi-card">
+          <p className="text-sm text-gray-500 dark:text-white/60">Tasa conversion</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{analytics.kpis.conversionRate}%</p>
         </div>
       </div>
 
@@ -158,30 +156,29 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
         <IngresosChart data={analytics.reservasPorMes} />
       </div>
 
-      {/* Top destinos */}
+      {/* Top destinos + Monthly table */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <DestinosChart data={analytics.topDestinos} />
 
-        {/* Monthly data table */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Desglose mensual</h3>
+        <div className="panel-card p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Desglose mensual</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left p-2 text-white/60">Mes</th>
-                  <th className="text-right p-2 text-white/60">Reservas</th>
-                  <th className="text-right p-2 text-white/60">Pagadas</th>
-                  <th className="text-right p-2 text-white/60">Ingresos</th>
+                <tr className="border-b border-gray-100 dark:border-white/10">
+                  <th className="text-left p-2 text-gray-500 dark:text-white/60">Mes</th>
+                  <th className="text-right p-2 text-gray-500 dark:text-white/60">Reservas</th>
+                  <th className="text-right p-2 text-gray-500 dark:text-white/60">Pagadas</th>
+                  <th className="text-right p-2 text-gray-500 dark:text-white/60">Ingresos</th>
                 </tr>
               </thead>
               <tbody>
                 {analytics.reservasPorMes.map((m) => (
-                  <tr key={m.month} className="border-b border-white/5">
-                    <td className="p-2 text-white">{m.month}</td>
-                    <td className="p-2 text-right text-white/60">{m.reservas}</td>
-                    <td className="p-2 text-right text-green-400">{m.pagadas}</td>
-                    <td className="p-2 text-right text-drb-lime-400">{m.ingresos.toLocaleString("es-ES")} EUR</td>
+                  <tr key={m.month} className="table-row">
+                    <td className="p-2 text-gray-900 dark:text-white">{m.month}</td>
+                    <td className="p-2 text-right text-gray-500 dark:text-white/60">{m.reservas}</td>
+                    <td className="p-2 text-right text-emerald-600 dark:text-green-400">{m.pagadas}</td>
+                    <td className="p-2 text-right text-drb-lime-600 dark:text-drb-lime-400">{m.ingresos.toLocaleString("es-ES")} EUR</td>
                   </tr>
                 ))}
               </tbody>

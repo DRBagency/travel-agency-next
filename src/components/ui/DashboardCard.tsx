@@ -28,34 +28,37 @@ export default function DashboardCard({
   const content = (
     <>
       {/* Gradient overlay animado */}
-      <div className="absolute inset-0 bg-gradient-to-br from-drb-turquoise-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-br from-drb-turquoise-500/5 dark:from-drb-turquoise-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       {/* Contenido */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-4">
         <div className={`
-          w-20 h-20 rounded-2xl flex items-center justify-center
-          ${gradient ? 'bg-white/20' : 'bg-drb-turquoise-500/25'}
+          w-16 h-16 rounded-2xl flex items-center justify-center
+          ${gradient
+            ? 'bg-drb-turquoise-50 dark:bg-white/20'
+            : 'bg-drb-turquoise-50 dark:bg-drb-turquoise-500/25'
+          }
           transition-all duration-300
           ${isHovered ? 'scale-110 rotate-3' : ''}
         `}>
-          <div className="text-4xl">{icon}</div>
+          <div className="text-3xl text-drb-turquoise-600 dark:text-drb-turquoise-300">{icon}</div>
         </div>
 
-        <h3 className="text-xl font-semibold text-white">{title}</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
 
         {subtitle && (
-          <p className="text-sm text-white/50">{subtitle}</p>
+          <p className="text-sm text-gray-500 dark:text-white/50">{subtitle}</p>
         )}
 
         <ChevronRight className={`
-          w-6 h-6 text-white/60 transition-all duration-300
-          ${isHovered ? 'translate-x-1 text-white' : ''}
+          w-5 h-5 text-gray-400 dark:text-white/60 transition-all duration-300
+          ${isHovered ? 'translate-x-1 text-drb-turquoise-500 dark:text-white' : ''}
         `} />
       </div>
 
-      {/* Borde brillante en hover */}
+      {/* Borde brillante en hover (dark only) */}
       <div className={`
-        absolute inset-0 rounded-3xl transition-opacity duration-300
+        absolute inset-0 rounded-2xl transition-opacity duration-300 hidden dark:block
         ${isHovered ? 'opacity-100' : 'opacity-0'}
         bg-gradient-to-r from-drb-turquoise-500 via-drb-lime-500 to-drb-turquoise-500
         bg-[length:200%_100%] blur-xl -z-10
@@ -64,15 +67,11 @@ export default function DashboardCard({
   );
 
   const className = `
-    relative overflow-hidden rounded-3xl p-8 cursor-pointer
+    relative overflow-hidden rounded-2xl p-6 cursor-pointer
     transition-all duration-300 ease-out
-    ${gradient
-      ? 'bg-gradient-to-br from-drb-turquoise-500/40 to-drb-lime-500/20 border border-drb-lime-500/30'
-      : 'bg-gradient-to-br from-white/15 to-drb-turquoise-500/10 backdrop-blur-md border border-white/20'
-    }
-    ${isHovered ? 'scale-105 shadow-premium-lg' : 'shadow-premium'}
-    ${glowColor === 'turquoise' && isHovered ? 'shadow-drb-turquoise-500/30' : ''}
-    ${glowColor === 'lime' && isHovered ? 'shadow-drb-lime-500/30' : ''}
+    bg-white dark:bg-white/10 border border-gray-200 dark:border-white/15
+    backdrop-blur-md
+    ${isHovered ? 'scale-[1.03] shadow-premium-lg dark:shadow-premium-lg' : 'shadow-card dark:shadow-premium'}
     group
   `;
 

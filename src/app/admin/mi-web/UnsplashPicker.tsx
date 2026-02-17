@@ -94,22 +94,22 @@ export default function UnsplashPicker({
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-drb-turquoise-800 border border-white/20 rounded-2xl w-full max-w-3xl max-h-[80vh] flex flex-col shadow-2xl mx-4">
+      <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/20 rounded-2xl w-full max-w-3xl max-h-[80vh] flex flex-col shadow-2xl mx-4">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10">
-          <h3 className="text-lg font-semibold text-white">
+        <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-white/10">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             Buscar en Unsplash
           </h3>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
           >
-            <X className="w-5 h-5 text-white/70" />
+            <X className="w-5 h-5 text-gray-600 dark:text-white/70" />
           </button>
         </div>
 
         {/* Search */}
-        <div className="p-4 border-b border-white/10">
+        <div className="p-4 border-b border-gray-100 dark:border-white/10">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
@@ -117,7 +117,7 @@ export default function UnsplashPicker({
               value={query}
               onChange={(e) => handleInputChange(e.target.value)}
               placeholder="Buscar fotos... ej: playa, montaña, ciudad"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-white/30 bg-white/95 text-gray-900 placeholder:text-gray-400"
+              className="w-full pl-10 pr-4 py-2.5 panel-input"
               autoFocus
             />
           </div>
@@ -127,24 +127,24 @@ export default function UnsplashPicker({
         <div className="flex-1 overflow-y-auto p-4">
           {loading && (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-white/50" />
+              <Loader2 className="w-6 h-6 animate-spin text-gray-400 dark:text-white/50" />
             </div>
           )}
 
           {error && (
-            <div className="text-center py-12 text-red-400 text-sm">
+            <div className="text-center py-12 text-red-600 dark:text-red-400 text-sm">
               {error}
             </div>
           )}
 
           {!loading && !error && photos.length === 0 && query.trim() && (
-            <div className="text-center py-12 text-white/50 text-sm">
+            <div className="text-center py-12 text-gray-400 dark:text-white/50 text-sm">
               No se encontraron fotos para &quot;{query}&quot;
             </div>
           )}
 
           {!loading && !error && photos.length === 0 && !query.trim() && (
-            <div className="text-center py-12 text-white/50 text-sm">
+            <div className="text-center py-12 text-gray-400 dark:text-white/50 text-sm">
               Escribe para buscar fotos gratuitas en Unsplash
             </div>
           )}
@@ -156,7 +156,7 @@ export default function UnsplashPicker({
                   <button
                     key={photo.id}
                     onClick={() => handleSelect(photo)}
-                    className="group relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10 hover:border-white/40 transition-all hover:scale-[1.02]"
+                    className="group relative aspect-[4/3] rounded-xl overflow-hidden border border-gray-100 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/40 transition-all hover:scale-[1.02]"
                   >
                     <img
                       src={photo.url_small}
@@ -179,17 +179,17 @@ export default function UnsplashPicker({
                   <button
                     onClick={() => searchPhotos(query, page - 1)}
                     disabled={page <= 1}
-                    className="px-3 py-1.5 rounded-lg text-sm bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="px-3 py-1.5 rounded-lg text-sm bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   >
                     Anterior
                   </button>
-                  <span className="text-sm text-white/50">
+                  <span className="text-sm text-gray-400 dark:text-white/50">
                     {page} / {totalPages}
                   </span>
                   <button
                     onClick={() => searchPhotos(query, page + 1)}
                     disabled={page >= totalPages}
-                    className="px-3 py-1.5 rounded-lg text-sm bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="px-3 py-1.5 rounded-lg text-sm bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   >
                     Siguiente
                   </button>
@@ -200,14 +200,14 @@ export default function UnsplashPicker({
         </div>
 
         {/* Footer attribution */}
-        <div className="p-3 border-t border-white/10 text-center">
-          <p className="text-[11px] text-white/40">
+        <div className="p-3 border-t border-gray-100 dark:border-white/10 text-center">
+          <p className="text-[11px] text-gray-400 dark:text-white/40">
             Fotos proporcionadas por{" "}
             <a
               href="https://unsplash.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-white/60"
+              className="underline hover:text-gray-600 dark:hover:text-white/60"
             >
               Unsplash
             </a>

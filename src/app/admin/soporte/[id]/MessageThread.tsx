@@ -50,7 +50,7 @@ export default function MessageThread({
           if (msg.sender_type === "system") {
             return (
               <div key={msg.id} className="text-center">
-                <span className="text-xs text-white/40 italic">
+                <span className="text-xs text-gray-400 dark:text-white/40 italic">
                   {msg.message}
                 </span>
               </div>
@@ -67,14 +67,14 @@ export default function MessageThread({
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
                   isClient
-                    ? "bg-green-600/30 text-green-100 rounded-br-md"
-                    : "bg-white/10 text-white/90 rounded-bl-md"
+                    ? "bg-drb-turquoise-500 dark:bg-drb-turquoise-600 text-white rounded-br-md"
+                    : "bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white/90 rounded-bl-md"
                 }`}
               >
                 <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
                 <p
                   className={`text-[10px] mt-1 ${
-                    isClient ? "text-green-300/60" : "text-white/30"
+                    isClient ? "text-white/60" : "text-gray-400 dark:text-white/30"
                   }`}
                 >
                   {new Date(msg.created_at).toLocaleString("es-ES", {
@@ -92,9 +92,9 @@ export default function MessageThread({
       </div>
 
       {/* Input area */}
-      <div className="border-t border-white/10 p-4">
+      <div className="border-t border-gray-100 dark:border-white/10 p-4">
         {isClosed ? (
-          <p className="text-center text-white/40 text-sm py-2">
+          <p className="text-center text-gray-400 dark:text-white/40 text-sm py-2">
             Este ticket esta cerrado. Envia un mensaje para reabrirlo.
           </p>
         ) : null}
@@ -105,7 +105,7 @@ export default function MessageThread({
             placeholder={
               isClosed ? "Escribe para reabrir el ticket..." : "Escribe un mensaje..."
             }
-            className="flex-1 rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900"
+            className="panel-input flex-1"
           />
           <button
             type="submit"

@@ -85,17 +85,17 @@ export default async function NuevoDocumentoPage({
       <div className="flex items-center gap-4 mb-8">
         <Link
           href="/admin/documentos"
-          className="text-white/60 hover:text-white transition-colors"
+          className="text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
           &larr; Volver
         </Link>
         <div>
           <h1 className="text-3xl font-bold mb-1">Crear {typeLabel}</h1>
-          <p className="text-white/60">Rellena los datos del documento</p>
+          <p className="text-gray-500 dark:text-white/60">Rellena los datos del documento</p>
         </div>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
+      <div className="panel-card p-6">
         <form action={createDocument} className="grid gap-4">
           <input type="hidden" name="document_type" value={documentType} />
           <DocumentFormClient documentType={documentType}>

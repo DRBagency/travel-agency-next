@@ -14,25 +14,37 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
-const tooltipStyle = {
-  backgroundColor: "rgba(0,0,0,0.8)",
-  border: "1px solid rgba(255,255,255,0.2)",
-  borderRadius: "8px",
-};
+import { useTheme } from "next-themes";
 
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 
+function useChartStyles() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  return {
+    tooltipStyle: {
+      backgroundColor: isDark ? "rgba(0,0,0,0.8)" : "#fff",
+      border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #e5e7eb",
+      borderRadius: "8px",
+      color: isDark ? "#fff" : "#111827",
+    },
+    gridStroke: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)",
+    axisStroke: isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.4)",
+    labelColor: isDark ? "#fff" : "#111827",
+  };
+}
+
 export function ReservasChart({ data }: { data: { month: string; reservas: number }[] }) {
+  const styles = useChartStyles();
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
-      <h3 className="text-lg font-semibold text-white mb-4">Reservas (últimos 6 meses)</h3>
+    <div className="panel-card p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Reservas (últimos 6 meses)</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-          <XAxis dataKey="month" stroke="rgba(255,255,255,0.6)" />
-          <YAxis stroke="rgba(255,255,255,0.6)" />
-          <Tooltip contentStyle={tooltipStyle} />
+          <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
+          <XAxis dataKey="month" stroke={styles.axisStroke} />
+          <YAxis stroke={styles.axisStroke} />
+          <Tooltip contentStyle={styles.tooltipStyle} />
           <Bar dataKey="reservas" fill="#3b82f6" name="Reservas" />
         </BarChart>
       </ResponsiveContainer>
@@ -41,15 +53,16 @@ export function ReservasChart({ data }: { data: { month: string; reservas: numbe
 }
 
 export function IngresosChart({ data }: { data: { month: string; ingresos: number }[] }) {
+  const styles = useChartStyles();
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
-      <h3 className="text-lg font-semibold text-white mb-4">Ingresos (últimos 6 meses)</h3>
+    <div className="panel-card p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Ingresos (últimos 6 meses)</h3>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-          <XAxis dataKey="month" stroke="rgba(255,255,255,0.6)" />
-          <YAxis stroke="rgba(255,255,255,0.6)" />
-          <Tooltip contentStyle={tooltipStyle} />
+          <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
+          <XAxis dataKey="month" stroke={styles.axisStroke} />
+          <YAxis stroke={styles.axisStroke} />
+          <Tooltip contentStyle={styles.tooltipStyle} />
           <Line type="monotone" dataKey="ingresos" stroke="#10b981" strokeWidth={2} name="Ingresos (€)" />
         </LineChart>
       </ResponsiveContainer>
@@ -58,9 +71,10 @@ export function IngresosChart({ data }: { data: { month: string; ingresos: numbe
 }
 
 export function DestinosChart({ data }: { data: { destino: string; value: number }[] }) {
+  const styles = useChartStyles();
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6">
-      <h3 className="text-lg font-semibold text-white mb-4">Top 5 Destinos más vendidos</h3>
+    <div className="panel-card p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top 5 Destinos más vendidos</h3>
       <div className="flex items-center justify-center">
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
@@ -69,13 +83,13 @@ export function DestinosChart({ data }: { data: { destino: string; value: number
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ destino, value, cx, cy, midAngle, outerRadius, index }: any) => {
+              label={({ destino, value, cx, cy, midAngle, outerRadius }: any) => {
                 const RADIAN = Math.PI / 180;
                 const radius = outerRadius + 25;
                 const x = cx + radius * Math.cos(-midAngle * RADIAN);
                 const y = cy + radius * Math.sin(-midAngle * RADIAN);
                 return (
-                  <text x={x} y={y} fill="#fff" textAnchor={x > cx ? "start" : "end"} dominantBaseline="central" fontSize={12}>
+                  <text x={x} y={y} fill={styles.labelColor} textAnchor={x > cx ? "start" : "end"} dominantBaseline="central" fontSize={12}>
                     {`${destino} (${value})`}
                   </text>
                 );

@@ -89,18 +89,18 @@ export default async function AdminLegalesPage({
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Legales</h1>
-          <p className="text-white/60">
+          <p className="text-gray-500 dark:text-white/60">
             Gestiona páginas legales que se muestran en /legal/[slug].
           </p>
-          <p className="text-white/50 text-sm mt-2">
+          <p className="text-gray-400 dark:text-white/50 text-sm mt-2">
             Nota: solo las páginas con "Activa en la web" aparecen en el footer.
           </p>
         </div>
 
-        <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">
+        <section className="panel-card p-6 space-y-6">
           <div>
             <h2 className="text-xl font-semibold">Nueva página legal</h2>
-            <p className="text-sm text-white/60">
+            <p className="text-sm text-gray-500 dark:text-white/60">
               El contenido acepta HTML (se renderiza tal cual).
             </p>
           </div>
@@ -110,39 +110,39 @@ export default async function AdminLegalesPage({
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label">
                   Título
                 </label>
                 <input
                   name="titulo"
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                  className="panel-input"
                   placeholder="Ej: Política de privacidad"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label">
                   Slug
                 </label>
                 <input
                   name="slug"
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                  className="panel-input"
                   placeholder="privacidad"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm text-white/70 mb-1">
+              <label className="panel-label">
                 Contenido (HTML)
               </label>
               <textarea
                 name="contenido"
-                className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[160px]"
+                className="panel-input min-h-[160px]"
                 placeholder="<h2>...</h2><p>...</p>"
               />
             </div>
 
-            <label className="flex items-center gap-2 text-sm text-white/70">
+            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
               <input type="checkbox" name="activo" defaultChecked />
               Publicar ahora
             </label>
@@ -161,7 +161,7 @@ export default async function AdminLegalesPage({
           <h2 className="text-xl font-semibold">Listado</h2>
 
           {(!legales || legales.length === 0) && (
-            <div className="rounded-2xl border border-white/20 bg-white/10 p-6 text-white/70">
+            <div className="panel-card p-6 text-gray-600 dark:text-white/70">
               Todavía no hay páginas legales.
             </div>
           )}
@@ -170,45 +170,45 @@ export default async function AdminLegalesPage({
             <form
               key={item.id}
               action={updateLegal}
-              className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4"
+              className="panel-card p-6 space-y-4"
             >
               <input type="hidden" name="id" value={item.id} />
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-white/70 mb-1">
+                  <label className="panel-label">
                     Título
                   </label>
                   <input
                     name="titulo"
                     defaultValue={item.titulo ?? ""}
-                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                    className="panel-input"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-white/70 mb-1">
+                  <label className="panel-label">
                     Slug
                   </label>
                   <input
                     name="slug"
                     defaultValue={item.slug ?? ""}
-                    className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400"
+                    className="panel-input"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm text-white/70 mb-1">
+                <label className="panel-label">
                   Contenido (HTML)
                 </label>
                 <textarea
                   name="contenido"
                   defaultValue={item.contenido ?? ""}
-                  className="w-full rounded-xl border border-white/30 bg-white/95 px-3 py-2 text-gray-900 placeholder:text-gray-400 min-h-[160px]"
+                  className="panel-input min-h-[160px]"
                 />
               </div>
 
-              <label className="flex items-center gap-2 text-sm text-white/70">
+              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
                 <input
                   type="checkbox"
                   name="activo"
@@ -225,7 +225,7 @@ export default async function AdminLegalesPage({
                 </SubmitButton>
                 <button
                   formAction={deleteLegal}
-                  className="px-5 py-2 rounded-xl bg-red-500/20 text-red-300 border border-red-500/30 hover:bg-red-500/30 transition"
+                  className="badge-danger px-5 py-2 rounded-xl hover:bg-red-500/30 transition"
                 >
                   Eliminar
                 </button>

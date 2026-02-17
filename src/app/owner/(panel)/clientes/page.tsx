@@ -19,8 +19,8 @@ export default async function OwnerClientesPage() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border border-white/10 rounded-2xl overflow-hidden">
-          <thead className="bg-white/5">
+        <table className="w-full panel-card rounded-2xl overflow-hidden">
+          <thead className="bg-gray-50/50 dark:bg-white/5">
             <tr>
               <th className="p-3 text-left">Nombre</th>
               <th className="p-3 text-left">Dominio</th>
@@ -34,12 +34,12 @@ export default async function OwnerClientesPage() {
             {clientes?.map((cliente) => (
               <tr
                 key={cliente.id}
-                className="border-t border-white/10 hover:bg-white/5 transition-colors"
+                className="table-row"
               >
                 <td className="p-3">
                   <a
                     href={`/owner/clientes/${cliente.id}`}
-                    className="text-white/90 hover:text-white underline"
+                    className="text-gray-800 dark:text-white/90 hover:text-gray-900 dark:hover:text-white underline"
                   >
                     {cliente.nombre}
                   </a>
@@ -53,15 +53,15 @@ export default async function OwnerClientesPage() {
                 </td>
                 <td className="p-3">
                   {cliente.stripe_charges_enabled ? (
-                    <span className="inline-flex items-center rounded-full bg-emerald-500/15 text-emerald-300 px-3 py-1 text-xs font-semibold">
+                    <span className="badge-success px-3 py-1 text-xs font-semibold">
                       Stripe activo
                     </span>
                   ) : cliente.stripe_account_id ? (
-                    <span className="inline-flex items-center rounded-full bg-amber-500/15 text-amber-300 px-3 py-1 text-xs font-semibold">
+                    <span className="badge-warning px-3 py-1 text-xs font-semibold">
                       Stripe pendiente
                     </span>
                   ) : (
-                    <span className="inline-flex items-center rounded-full bg-white/10 text-white/70 px-3 py-1 text-xs font-semibold">
+                    <span className="inline-flex items-center rounded-full bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-white/70 px-3 py-1 text-xs font-semibold">
                       Stripe no conectado
                     </span>
                   )}
@@ -71,7 +71,7 @@ export default async function OwnerClientesPage() {
             ))}
             {!clientes?.length && (
               <tr>
-                <td className="p-3 text-white/70" colSpan={6}>
+                <td className="p-3 text-gray-600 dark:text-white/70" colSpan={6}>
                   No hay clientes.
                 </td>
               </tr>
