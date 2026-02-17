@@ -43,10 +43,12 @@ const AdminShell = ({
 }: AdminShellProps) => {
   const [navOpen, setNavOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("admin-sidebar-pinned");
     if (stored === "true") setPinned(true);
+    setReady(true);
   }, []);
 
   const togglePin = () => {
@@ -57,7 +59,7 @@ const AdminShell = ({
   };
 
   return (
-    <div className="-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white">
+    <div className={`-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white transition-opacity duration-100 ${ready ? "opacity-100" : "opacity-0"}`}>
       {/* Pinned sidebar */}
       {pinned && (
         <nav className="fixed left-0 top-0 bottom-0 w-72 bg-drb-turquoise-800 border-r border-white/10 z-50 overflow-y-auto">

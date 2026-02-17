@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Menu,
   X,
@@ -26,10 +27,12 @@ const navItems = [
 export default function OwnerShell({ children }: OwnerShellProps) {
   const [navOpen, setNavOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("owner-sidebar-pinned");
     if (stored === "true") setPinned(true);
+    setReady(true);
   }, []);
 
   const togglePin = () => {
@@ -40,7 +43,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
   };
 
   return (
-    <div className="-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white">
+    <div className={`-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white transition-opacity duration-100 ${ready ? "opacity-100" : "opacity-0"}`}>
       {/* Pinned sidebar */}
       {pinned && (
         <nav className="fixed left-0 top-0 bottom-0 w-72 bg-drb-turquoise-800 border-r border-white/10 z-50 overflow-y-auto">
@@ -59,14 +62,14 @@ export default function OwnerShell({ children }: OwnerShellProps) {
           </div>
           <div className="p-3 space-y-0.5">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white"
               >
                 <span className="text-lg leading-none">{item.emoji}</span>
                 {item.label}
-              </a>
+              </Link>
             ))}
           </div>
         </nav>
@@ -74,7 +77,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
 
       {/* Header */}
       <header className={`sticky top-0 z-40 border-b border-white/10 bg-drb-turquoise-800/80 backdrop-blur-md ${pinned ? "ml-72" : ""}`}>
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-6 py-5">
           <div className="flex items-center gap-4">
             {!pinned && (
               <button
@@ -85,7 +88,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
               </button>
             )}
             <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-drb-turquoise-400 to-drb-lime-500" />
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-drb-turquoise-400 to-drb-lime-500" />
               <div>
                 <div className="text-xs text-white/50">Panel Owner</div>
                 <div className="font-display text-base font-semibold">DRB Agency</div>
@@ -135,7 +138,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
             </div>
             <div className="p-3 space-y-0.5">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setNavOpen(false)}
@@ -143,7 +146,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
                 >
                   <span className="text-lg leading-none">{item.emoji}</span>
                   {item.label}
-                </a>
+                </Link>
               ))}
             </div>
           </nav>
