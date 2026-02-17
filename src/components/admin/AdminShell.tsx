@@ -2,6 +2,7 @@
 
 import { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Menu,
   X,
@@ -41,9 +42,13 @@ const AdminShell = ({
   allowWhenInactive = false,
   children,
 }: AdminShellProps) => {
+  const pathname = usePathname();
   const [navOpen, setNavOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
   const [ready, setReady] = useState(false);
+
+  const isActive = (href: string) =>
+    href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 
   useEffect(() => {
     const stored = localStorage.getItem("admin-sidebar-pinned");
@@ -96,7 +101,11 @@ const AdminShell = ({
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white"
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium transition-all ${
+                  isActive(item.href)
+                    ? "bg-white/15 text-white"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
               >
                 <span className="text-lg leading-none">{item.emoji}</span>
                 {item.label}
@@ -139,11 +148,11 @@ const AdminShell = ({
               <div className="font-display text-base font-semibold">{clientName}</div>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 h-8">
             <span className="text-sm text-white/50 hidden sm:block">Área de gestión</span>
             <a
               href="/admin/logout"
-              className="rounded-full border border-white/15 px-4 py-1.5 text-sm text-white/70 hover:text-white hover:border-white/30 transition-all"
+              className="rounded-full border border-white/15 px-4 h-8 flex items-center text-sm text-white/70 hover:text-white hover:border-white/30 transition-all"
             >
               Cerrar sesión
             </a>
@@ -201,7 +210,11 @@ const AdminShell = ({
                   key={item.href}
                   href={item.href}
                   onClick={() => setNavOpen(false)}
-                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white"
+                  className={`flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium transition-all ${
+                    isActive(item.href)
+                      ? "bg-white/15 text-white"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
+                  }`}
                 >
                   <span className="text-lg leading-none">{item.emoji}</span>
                   {item.label}
