@@ -2,6 +2,7 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/components/admin/SubmitButton";
+import ExportPDFButton from "@/components/admin/ExportPDFButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 
 async function updateEstado(formData: FormData) {
@@ -150,12 +151,15 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             Filtrar
           </button>
 
-          <a
-            href={`/api/admin/export?estado=${estado}&q=${q}&from=${from}&to=${to}`}
-            className="ml-auto px-4 py-2 bg-white hover:bg-white/90 text-drb-turquoise-800 rounded-xl font-semibold transition-colors"
-          >
-            Exportar CSV
-          </a>
+          <div className="ml-auto flex gap-2">
+            <ExportPDFButton estado={estado} q={q} from={from} to={to} />
+            <a
+              href={`/api/admin/export?estado=${estado}&q=${q}&from=${from}&to=${to}`}
+              className="px-4 py-2 bg-white hover:bg-white/90 text-drb-turquoise-800 rounded-xl font-semibold transition-colors"
+            >
+              Exportar CSV
+            </a>
+          </div>
         </form>
 
         {reservasSafe.length === 0 ? (

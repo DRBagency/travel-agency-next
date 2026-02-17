@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
+import EmailPreviewButton from "@/components/admin/EmailPreviewButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 
 const EMAIL_TYPES = [
@@ -86,6 +87,7 @@ export default async function AdminEmailsPage({
           return (
             <form
               key={type.tipo}
+              id={`email-form-${type.tipo}`}
               action={saveEmailTemplate}
               className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-4"
             >
@@ -161,7 +163,11 @@ export default async function AdminEmailsPage({
                 </div>
               </div>
 
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-3">
+                <EmailPreviewButton
+                  apiUrl="/api/admin/email-preview"
+                  formId={`email-form-${type.tipo}`}
+                />
                 <SubmitButton
                   className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
                 >

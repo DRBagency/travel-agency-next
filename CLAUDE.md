@@ -213,10 +213,10 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - Stripe Connect (onboarding, cobro reservas, comisión automática, webhook)
 - Stripe Billing (3 planes, checkout, cambio, cancelación, reactivación, webhook)
 
-### ⚠️ Pendientes menores:
-- Preview de emails (owner y admin)
-- Export reservas a Excel/PDF
-- Comparativa mensual y proyección de ingresos en monetización
+### ✅ Pendientes menores completados:
+- ✅ Preview de emails (owner y admin) — boton Preview con modal iframe
+- ✅ Export reservas a CSV + PDF (con filtros aplicados)
+- ✅ Comparativa mensual y proyección de ingresos en monetización
 
 ### 🔄 En desarrollo (Fase 1):
 - Gráficas avanzadas en ambos paneles

@@ -1,9 +1,17 @@
 import { getMonetizationData } from "@/lib/owner/get-monetization-data";
+import { getComparisonData } from "@/lib/owner/get-comparison-data";
+import {
+  ComparisonChart,
+  ProjectionChart,
+} from "@/components/owner/MonetizationCharts";
 
 export const dynamic = "force-dynamic";
 
 export default async function OwnerMonetizacionPage() {
-  const data = await getMonetizationData();
+  const [data, chartData] = await Promise.all([
+    getMonetizationData(),
+    getComparisonData(),
+  ]);
 
   return (
     <div>
@@ -63,6 +71,12 @@ export default async function OwnerMonetizacionPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Charts: Comparativa + Proyeccion */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <ComparisonChart data={chartData.comparison} />
+        <ProjectionChart data={chartData.projection} />
       </div>
 
       {/* Top comisiones por cliente */}

@@ -6,6 +6,7 @@ import {
   updateBillingTemplate,
   type BillingTemplateType,
 } from "@/lib/billing/settings";
+import EmailPreviewButton from "@/components/admin/EmailPreviewButton";
 
 // ============================================================================
 // SERVER ACTIONS
@@ -210,6 +211,7 @@ export default async function OwnerEmailsPage() {
             return (
               <details
                 key={templateType.tipo}
+                id={`billing-form-${templateType.tipo}`}
                 className="group rounded-xl border border-white/20 bg-white/10 overflow-hidden"
               >
                 <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition">
@@ -248,6 +250,7 @@ export default async function OwnerEmailsPage() {
                 </summary>
 
                 <form
+                  id={`billing-form-${templateType.tipo}`}
                   action={updateBillingTemplateAction}
                   className="p-4 border-t border-white/10 space-y-4"
                 >
@@ -325,7 +328,11 @@ export default async function OwnerEmailsPage() {
                     </div>
                   </div>
 
-                  <div className="flex justify-end pt-2">
+                  <div className="flex justify-end gap-3 pt-2">
+                    <EmailPreviewButton
+                      apiUrl="/api/owner/email-preview"
+                      formId={`billing-form-${templateType.tipo}`}
+                    />
                     <button
                       type="submit"
                       className="px-5 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
