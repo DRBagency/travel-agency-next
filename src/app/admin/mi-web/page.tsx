@@ -1,4 +1,3 @@
-import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import MiWebContent from "./MiWebContent";
@@ -32,12 +31,6 @@ export default async function MiWebPage() {
   };
 
   return (
-    <AdminShell
-      clientName={client.nombre}
-      primaryColor={client.primary_color}
-      logoUrl={client.logo_url}
-      subscriptionActive={Boolean(client.stripe_subscription_id)}
-    >
       <MiWebContent
         client={{
           id: client.id,
@@ -67,6 +60,5 @@ export default async function MiWebPage() {
         }}
         counts={counts}
       />
-    </AdminShell>
   );
 }

@@ -1,7 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import AdminShell from "@/components/admin/AdminShell";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 
@@ -88,12 +87,6 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
       : 0;
 
   return (
-    <AdminShell
-      clientName={client.nombre}
-      primaryColor={client.primary_color}
-      logoUrl={client.logo_url}
-      subscriptionActive={Boolean(client.stripe_subscription_id)}
-    >
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold mb-1">
@@ -244,6 +237,5 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
           </div>
         )}
       </div>
-    </AdminShell>
   );
 }

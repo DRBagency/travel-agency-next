@@ -1,5 +1,4 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
-import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DashboardCard from "@/components/ui/DashboardCard";
 import { ReservasChart, IngresosChart } from "@/components/admin/AdminAnalyticsCharts";
@@ -54,12 +53,6 @@ export default async function AdminPage() {
   }
 
   return (
-    <AdminShell
-      clientName={client.nombre}
-      primaryColor={client.primary_color}
-      logoUrl={client.logo_url}
-      subscriptionActive={Boolean(client.stripe_subscription_id)}
-    >
       <div className="space-y-8">
         {/* Header premium */}
         <div>
@@ -201,6 +194,5 @@ export default async function AdminPage() {
           )}
         </div>
       </div>
-    </AdminShell>
   );
 }

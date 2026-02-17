@@ -15,7 +15,6 @@ interface AdminShellProps {
   primaryColor?: string | null;
   logoUrl?: string | null;
   subscriptionActive?: boolean;
-  allowWhenInactive?: boolean;
   children: ReactNode;
 }
 
@@ -39,21 +38,22 @@ const AdminShell = ({
   primaryColor,
   logoUrl,
   subscriptionActive = true,
-  allowWhenInactive = false,
   children,
 }: AdminShellProps) => {
   const pathname = usePathname();
   const [navOpen, setNavOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 
+  const allowWhenInactive = pathname.startsWith("/admin/stripe");
+
   useEffect(() => {
     const stored = localStorage.getItem("admin-sidebar-pinned");
     if (stored === "true") setPinned(true);
-    setReady(true);
+    setHydrated(true);
   }, []);
 
   const togglePin = () => {
@@ -64,9 +64,9 @@ const AdminShell = ({
   };
 
   return (
-    <div className={`-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white transition-opacity duration-100 ${ready ? "opacity-100" : "opacity-0"}`}>
-      {/* Pinned sidebar */}
-      {pinned && (
+    <div className={`-mt-20 min-h-screen bg-gradient-to-b from-drb-turquoise-800 via-drb-turquoise-700 to-drb-turquoise-600 text-white`}>
+      {/* Pinned sidebar — only show after hydration to avoid layout shift */}
+      {hydrated && pinned && (
         <nav className="fixed left-0 top-0 bottom-0 w-72 bg-drb-turquoise-800 border-r border-white/10 z-50 overflow-y-auto">
           <div className="flex items-center justify-between p-5 border-b border-white/10">
             <div className="flex items-center gap-3">
@@ -116,7 +116,7 @@ const AdminShell = ({
       )}
 
       {/* Header */}
-      <header className={`sticky top-0 z-40 border-b border-white/10 bg-drb-turquoise-800/80 backdrop-blur-md ${pinned ? "ml-72" : ""}`}>
+      <header className={`sticky top-0 z-40 border-b border-white/10 bg-drb-turquoise-800/80 backdrop-blur-md ${hydrated && pinned ? "ml-72" : ""}`}>
         <div className="flex items-center justify-between px-6 py-5">
           <div className="flex items-center gap-4">
             {/* Hamburger — only when not pinned */}
@@ -226,7 +226,7 @@ const AdminShell = ({
       )}
 
       {/* Main content */}
-      <main className={`w-full max-w-7xl mx-auto px-6 py-8 ${pinned ? "ml-72" : ""}`}>
+      <main className={`w-full max-w-7xl mx-auto px-6 py-8 ${hydrated && pinned ? "ml-72" : ""}`}>
         {subscriptionActive || allowWhenInactive ? (
           children
         ) : (

@@ -2,7 +2,6 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 
 interface ReservaPageProps {
@@ -63,12 +62,6 @@ export default async function ReservaPage({
     : undefined;
 
   return (
-    <AdminShell
-      clientName={client?.nombre ?? "Panel"}
-      primaryColor={client?.primary_color ?? null}
-      logoUrl={client?.logo_url ?? null}
-      subscriptionActive={Boolean(client?.stripe_subscription_id)}
-    >
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -177,6 +170,5 @@ export default async function ReservaPage({
         </a>
         </div>
       </div>
-    </AdminShell>
   );
 }

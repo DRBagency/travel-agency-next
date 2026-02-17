@@ -1,6 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
-import AdminShell from "@/components/admin/AdminShell";
 import { subMonths, format, startOfMonth, endOfMonth } from "date-fns";
 import {
   ReservasChart,
@@ -64,12 +63,6 @@ export default async function AdminAnalyticsPage() {
   const analytics = await getClientAnalytics(client.id);
 
   return (
-    <AdminShell
-      clientName={client.nombre}
-      primaryColor={client.primary_color}
-      logoUrl={client.logo_url}
-      subscriptionActive={Boolean(client.stripe_subscription_id)}
-    >
       <div>
         <h1 className="text-3xl font-bold mb-2">Analytics</h1>
         <p className="text-white/60 mb-8">Métricas y estadísticas de tu agencia</p>
@@ -83,6 +76,5 @@ export default async function AdminAnalyticsPage() {
         {/* Top destinos */}
         <DestinosChart data={analytics.topDestinos} />
       </div>
-    </AdminShell>
   );
 }

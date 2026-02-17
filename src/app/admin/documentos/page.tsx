@@ -1,6 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
-import AdminShell from "@/components/admin/AdminShell";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -26,12 +25,6 @@ export default async function AdminDocumentosPage() {
   ];
 
   return (
-    <AdminShell
-      clientName={client.nombre}
-      primaryColor={client.primary_color}
-      logoUrl={client.logo_url}
-      subscriptionActive={Boolean(client.stripe_subscription_id)}
-    >
       <div>
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -142,6 +135,5 @@ export default async function AdminDocumentosPage() {
         </div>
       </div>
       </div>
-    </AdminShell>
   );
 }

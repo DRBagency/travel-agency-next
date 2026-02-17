@@ -1,4 +1,3 @@
-import AdminShell from "@/components/admin/AdminShell";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import ConnectStripeButton from "./ConnectStripeButton";
 import SubscriptionButton from "./SubscriptionButton";
@@ -59,13 +58,6 @@ export default async function AdminStripePage() {
     : null;
 
   return (
-    <AdminShell
-      clientName={client.nombre}
-      primaryColor={client.primary_color}
-      logoUrl={client.logo_url}
-      subscriptionActive={Boolean(client.stripe_subscription_id)}
-      allowWhenInactive
-    >
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Stripe / Pagos</h1>
@@ -195,6 +187,5 @@ export default async function AdminStripePage() {
           </ul>
         </section>
       </div>
-    </AdminShell>
   );
 }
