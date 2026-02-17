@@ -2,7 +2,6 @@
 
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 interface DashboardCardProps {
@@ -40,17 +39,16 @@ export default function DashboardCard({
   const colorClasses = iconColor || iconColors[colorIndex];
 
   const content = (
-    <div className="flex items-center gap-4">
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${colorClasses}`}>
-        <div className="w-6 h-6">{icon}</div>
+    <div className="flex flex-col items-center text-center gap-3 py-2">
+      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${colorClasses}`}>
+        <div className="w-5 h-5">{icon}</div>
       </div>
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
         {subtitle && (
           <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5">{subtitle}</p>
         )}
       </div>
-      <ChevronRight className="w-4 h-4 text-gray-300 dark:text-white/20 shrink-0 group-hover:text-drb-turquoise-500 dark:group-hover:text-drb-turquoise-400 transition-colors" />
     </div>
   );
 

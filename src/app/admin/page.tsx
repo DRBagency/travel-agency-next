@@ -173,7 +173,7 @@ export default async function AdminPage() {
           />
           <DashboardCard
             icon={<BarChart3 className="w-5 h-5" />}
-            title="Analytics"
+            title="Estadísticas"
             subtitle="Métricas y gráficas"
             href="/admin/analytics"
           />
