@@ -1,9 +1,8 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import AdminShell from "@/components/admin/AdminShell";
-import SaveToast from "@/components/admin/SaveToast";
+import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 
 async function updateEstado(formData: FormData) {
@@ -22,7 +21,6 @@ async function updateEstado(formData: FormData) {
 
   revalidatePath("/admin");
   revalidatePath("/admin/reservas");
-  redirect("/admin/reservas?saved=guardado");
 }
 
 interface AdminPageProps {
@@ -31,7 +29,6 @@ interface AdminPageProps {
     q?: string;
     from?: string;
     to?: string;
-    saved?: string;
   }>;
 }
 
@@ -41,7 +38,6 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
     q = "",
     from = "",
     to = "",
-    saved,
   } = await searchParams;
 
   const client = await requireAdminClient();
@@ -99,14 +95,11 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
       <div className="space-y-6">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold mb-1">
-              Reservas · {client.nombre}
-            </h1>
-            <p className="text-white/60">Dominio: {client.domain}</p>
-          </div>
-          <SaveToast message={saved === "guardado" ? "Estado actualizado" : null} />
+        <div>
+          <h1 className="text-3xl font-bold mb-1">
+            Reservas · {client.nombre}
+          </h1>
+          <p className="text-white/60">Dominio: {client.domain}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -236,12 +229,11 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                             <option value="revisada">Revisada</option>
                             <option value="cancelada">Cancelada</option>
                           </select>
-                          <button
-                            type="submit"
+                          <SubmitButton
                             className="px-2 py-1 text-sm bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold rounded-lg transition-colors"
                           >
                             Guardar
-                          </button>
+                          </SubmitButton>
                         </form>
                       </div>
                     </td>

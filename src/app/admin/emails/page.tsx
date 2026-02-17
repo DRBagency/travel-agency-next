@@ -1,9 +1,8 @@
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import AdminShell from "@/components/admin/AdminShell";
-import SaveToast from "@/components/admin/SaveToast";
+import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 
 const EMAIL_TYPES = [
@@ -39,17 +38,16 @@ async function saveEmailTemplate(formData: FormData) {
   }
 
   revalidatePath("/admin/emails");
-  redirect("/admin/emails?saved=guardado");
 }
 
 interface AdminEmailsPageProps {
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{}>;
 }
 
 export default async function AdminEmailsPage({
   searchParams,
 }: AdminEmailsPageProps) {
-  const { saved } = await searchParams;
+  await searchParams;
 
   const client = await requireAdminClient();
 
@@ -78,8 +76,7 @@ export default async function AdminEmailsPage({
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
       <div className="space-y-8">
-        <div className="flex items-center justify-between gap-4">
-          <div>
+        <div>
           <h1 className="text-3xl font-bold mb-1">Emails</h1>
           <p className="text-white/60">
             Edita los emails automáticos. Acepta HTML y placeholders como
@@ -88,8 +85,6 @@ export default async function AdminEmailsPage({
           <p className="text-white/50 text-sm mt-2">
             Nota: la página /success puede recibir <strong>session_id</strong> en la URL para mostrar un resumen real de la reserva.
           </p>
-          </div>
-          <SaveToast message={saved === "guardado" ? "Plantilla guardada" : null} />
         </div>
 
         {EMAIL_TYPES.map((type) => {
@@ -174,12 +169,11 @@ export default async function AdminEmailsPage({
               </div>
 
               <div className="flex justify-end">
-                <button
-                  type="submit"
+                <SubmitButton
                   className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
                 >
                   Guardar plantilla
-                </button>
+                </SubmitButton>
               </div>
             </form>
           );

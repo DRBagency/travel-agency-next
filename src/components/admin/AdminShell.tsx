@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Menu,
   X,
@@ -90,14 +91,14 @@ const AdminShell = ({
           </div>
           <div className="p-3 space-y-0.5">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white"
               >
                 <span className="text-lg leading-none">{item.emoji}</span>
                 {item.label}
-              </a>
+              </Link>
             ))}
           </div>
         </nav>
@@ -194,7 +195,7 @@ const AdminShell = ({
             </div>
             <div className="p-3 space-y-0.5">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setNavOpen(false)}
@@ -202,7 +203,7 @@ const AdminShell = ({
                 >
                   <span className="text-lg leading-none">{item.emoji}</span>
                   {item.label}
-                </a>
+                </Link>
               ))}
             </div>
           </nav>
