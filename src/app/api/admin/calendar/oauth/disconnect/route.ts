@@ -5,10 +5,9 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 
 export async function POST() {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("admin_session");
   const clienteId = cookieStore.get("cliente_id")?.value;
 
-  if (!sessionCookie || !clienteId) {
+  if (!clienteId) {
     return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
 

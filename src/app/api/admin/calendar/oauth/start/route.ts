@@ -4,10 +4,9 @@ import { getAuthUrl } from "@/lib/google-calendar";
 
 export async function GET() {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("admin_session");
   const clienteId = cookieStore.get("cliente_id")?.value;
 
-  if (!sessionCookie || !clienteId) {
+  if (!clienteId) {
     return NextResponse.redirect(new URL("/admin/login", process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"));
   }
 

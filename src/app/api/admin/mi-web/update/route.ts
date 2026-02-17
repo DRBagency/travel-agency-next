@@ -29,14 +29,9 @@ const ALLOWED_FIELDS = new Set([
 
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
-  const session = cookieStore.get("admin_session");
-  if (!session || session.value !== "ok") {
-    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-  }
-
   const clientId = cookieStore.get("cliente_id")?.value;
   if (!clientId) {
-    return NextResponse.json({ error: "Cliente no encontrado" }, { status: 401 });
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
 
   const body = await req.json();

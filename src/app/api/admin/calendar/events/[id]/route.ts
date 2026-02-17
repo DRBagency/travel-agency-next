@@ -34,8 +34,8 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("admin_session");
-  if (!sessionCookie) {
+  const clienteId = cookieStore.get("cliente_id")?.value;
+  if (!clienteId) {
     return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
 

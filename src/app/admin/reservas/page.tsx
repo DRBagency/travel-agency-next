@@ -7,8 +7,8 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 async function updateEstado(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) return;
 
   const id = formData.get("id") as string;
   const estado = formData.get("estado") as string;

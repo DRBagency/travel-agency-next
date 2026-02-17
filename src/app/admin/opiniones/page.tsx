@@ -7,8 +7,8 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 async function createOpinion(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) return;
 
   const clientId = formData.get("client_id") as string;
 
@@ -29,8 +29,8 @@ async function createOpinion(formData: FormData) {
 async function updateOpinion(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) return;
 
   const id = formData.get("id") as string;
 
@@ -50,8 +50,8 @@ async function updateOpinion(formData: FormData) {
 async function deleteOpinion(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) return;
 
   const id = formData.get("id") as string;
 

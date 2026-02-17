@@ -17,9 +17,9 @@ export async function POST(
 
   const body = await req.json();
   const { estado } = body;
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") {
-    return new NextResponse("Unauthorized", { status: 401 });
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
 
   const allowed = ["pagado", "cancelada", "revisada", "pendiente"];

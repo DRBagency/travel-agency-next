@@ -7,8 +7,8 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 async function createLegal(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) return;
 
   const clientId = formData.get("client_id") as string;
 
@@ -31,8 +31,8 @@ async function createLegal(formData: FormData) {
 async function updateLegal(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) return;
 
   const id = formData.get("id") as string;
 
@@ -54,8 +54,8 @@ async function updateLegal(formData: FormData) {
 async function deleteLegal(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) return;
 
   const id = formData.get("id") as string;
 

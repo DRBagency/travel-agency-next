@@ -12,8 +12,8 @@ const EMAIL_TYPES = [
 async function saveEmailTemplate(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) return;
 
   const clientId = formData.get("client_id") as string;
 

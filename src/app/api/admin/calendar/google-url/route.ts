@@ -10,9 +10,9 @@ const supabaseAdmin = createClient(
 
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("admin_session");
+  const clienteId = cookieStore.get("cliente_id")?.value;
 
-  if (!sessionCookie) {
+  if (!clienteId) {
     return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
 

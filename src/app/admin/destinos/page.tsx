@@ -8,10 +8,8 @@ import DestinoImageField from "./DestinoImageField";
 async function createDestino(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
-
-  const clientId = formData.get("client_id") as string;
+  const clientId = (await cookies()).get("cliente_id")?.value;
+  if (!clientId) return;
 
   const payload = {
     cliente_id: clientId,
@@ -30,8 +28,8 @@ async function createDestino(formData: FormData) {
 async function updateDestino(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clientId = (await cookies()).get("cliente_id")?.value;
+  if (!clientId) return;
 
   const id = formData.get("id") as string;
 
@@ -51,8 +49,8 @@ async function updateDestino(formData: FormData) {
 async function deleteDestino(formData: FormData) {
   "use server";
 
-  const session = (await cookies()).get("admin_session");
-  if (!session || session.value !== "ok") return;
+  const clientId = (await cookies()).get("cliente_id")?.value;
+  if (!clientId) return;
 
   const id = formData.get("id") as string;
 
@@ -107,7 +105,6 @@ export default async function AdminDestinosPage({
           </div>
 
           <form action={createDestino} className="grid gap-4">
-            <input type="hidden" name="client_id" value={client.id} />
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>

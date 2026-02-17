@@ -33,8 +33,8 @@ const GOOGLE_COLOR_TO_HEX: Record<string, string> = {
 
 async function getAuthenticatedClient() {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("admin_session");
-  if (!sessionCookie) return null;
+  const clienteId = cookieStore.get("cliente_id")?.value;
+  if (!clienteId) return null;
 
   const cliente = await getClientByDomain();
   return cliente;

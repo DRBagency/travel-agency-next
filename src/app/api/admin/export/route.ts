@@ -13,8 +13,8 @@ export async function GET(req: Request) {
 
   const url = new URL(req.url);
   const cookieStore = await cookies();
-  const session = cookieStore.get("admin_session");
-  if (!session || session.value !== "ok") {
+  const clienteId = cookieStore.get("cliente_id")?.value;
+  if (!clienteId) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
