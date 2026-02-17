@@ -1,0 +1,189 @@
+import { cookies } from "next/headers";
+import { redirect, notFound } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { supabaseAdmin } from "@/lib/supabase-server";
+import { requireAdminClient } from "@/lib/requireAdminClient";
+import Link from "next/link";
+import MessageThread from "./MessageThread";
+
+export const dynamic = "force-dynamic";
+
+async function addMessage(ticketId: string, formData: FormData) {
+  "use server";
+
+  const clientId = (await cookies()).get("cliente_id")?.value;
+  if (!clientId) return;
+
+  const message = formData.get("message") as string;
+  if (!message?.trim()) return;
+
+  // Check ticket belongs to client
+  const { data: ticket } = await supabaseAdmin
+    .from("support_tickets")
+    .select("id, status")
+    .eq("id", ticketId)
+    .eq("cliente_id", clientId)
+    .single();
+
+  if (!ticket) return;
+
+  await supabaseAdmin.from("ticket_messages").insert({
+    ticket_id: ticketId,
+    sender_type: "client",
+    message: message.trim(),
+  });
+
+  // Reopen if closed
+  if (ticket.status === "closed") {
+    await supabaseAdmin
+      .from("support_tickets")
+      .update({ status: "open", closed_at: null })
+      .eq("id", ticketId);
+
+    await supabaseAdmin.from("ticket_messages").insert({
+      ticket_id: ticketId,
+      sender_type: "system",
+      message: "Ticket reabierto por el cliente",
+    });
+  }
+
+  revalidatePath(`/admin/soporte/${ticketId}`);
+}
+
+async function updateTicketStatus(ticketId: string, formData: FormData) {
+  "use server";
+
+  const clientId = (await cookies()).get("cliente_id")?.value;
+  if (!clientId) return;
+
+  const newStatus = formData.get("status") as string;
+  if (!newStatus) return;
+
+  const updateData: Record<string, unknown> = { status: newStatus };
+  if (newStatus === "closed") {
+    updateData.closed_at = new Date().toISOString();
+  } else {
+    updateData.closed_at = null;
+  }
+
+  await supabaseAdmin
+    .from("support_tickets")
+    .update(updateData)
+    .eq("id", ticketId)
+    .eq("cliente_id", clientId);
+
+  const statusLabel = newStatus === "closed" ? "cerrado" : "reabierto";
+  await supabaseAdmin.from("ticket_messages").insert({
+    ticket_id: ticketId,
+    sender_type: "system",
+    message: `Ticket ${statusLabel} por el cliente`,
+  });
+
+  revalidatePath(`/admin/soporte/${ticketId}`);
+}
+
+export default async function TicketDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const client = await requireAdminClient();
+  const { id } = await params;
+
+  const { data: ticket } = await supabaseAdmin
+    .from("support_tickets")
+    .select("*")
+    .eq("id", id)
+    .eq("cliente_id", client.id)
+    .single();
+
+  if (!ticket) notFound();
+
+  const { data: messages } = await supabaseAdmin
+    .from("ticket_messages")
+    .select("*")
+    .eq("ticket_id", id)
+    .order("created_at", { ascending: true });
+
+  const addMessageBound = addMessage.bind(null, id);
+  const updateStatusBound = updateTicketStatus.bind(null, id);
+
+  const isClosed = ticket.status === "closed";
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-6">
+        <Link
+          href="/admin/soporte"
+          className="text-white/60 hover:text-white transition-colors"
+        >
+          &larr; Volver
+        </Link>
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold mb-2">{ticket.subject}</h1>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-white/40 text-sm font-mono">
+              #{ticket.id.substring(0, 8)}
+            </span>
+            <span
+              className={`px-2 py-1 rounded text-xs ${
+                ticket.status === "open"
+                  ? "bg-green-500/20 text-green-300"
+                  : ticket.status === "in_progress"
+                    ? "bg-yellow-500/20 text-yellow-300"
+                    : "bg-white/15 text-white/60 border border-white/20"
+              }`}
+            >
+              {ticket.status}
+            </span>
+            <span
+              className={`px-2 py-1 rounded text-xs ${
+                ticket.priority === "urgent"
+                  ? "bg-red-500/20 text-red-300"
+                  : ticket.priority === "high"
+                    ? "bg-orange-500/20 text-orange-300"
+                    : "bg-blue-500/20 text-blue-300"
+              }`}
+            >
+              {ticket.priority}
+            </span>
+            <span className="text-white/40 text-sm">
+              {new Date(ticket.created_at).toLocaleDateString("es-ES")}
+            </span>
+          </div>
+        </div>
+
+        <form action={updateStatusBound}>
+          <input
+            type="hidden"
+            name="status"
+            value={isClosed ? "open" : "closed"}
+          />
+          <button
+            type="submit"
+            className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+              isClosed
+                ? "bg-green-600/20 text-green-300 hover:bg-green-600/30 border border-green-500/30"
+                : "bg-red-600/20 text-red-300 hover:bg-red-600/30 border border-red-500/30"
+            }`}
+          >
+            {isClosed ? "Reabrir ticket" : "Cerrar ticket"}
+          </button>
+        </form>
+      </div>
+
+      {/* Chat */}
+      <div className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+        <MessageThread
+          messages={messages || []}
+          ticketStatus={ticket.status}
+          addMessageAction={addMessageBound}
+        />
+      </div>
+    </div>
+  );
+}

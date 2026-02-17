@@ -123,9 +123,12 @@ export default async function AdminDocumentosPage() {
                       {new Date(doc.created_at).toLocaleDateString("es-ES")}
                     </td>
                     <td className="p-4">
-                      <button className="text-blue-400 hover:text-blue-300 text-sm">
+                      <Link
+                        href={`/admin/documentos/${doc.id}`}
+                        className="text-blue-400 hover:text-blue-300 text-sm"
+                      >
                         Ver
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 ))

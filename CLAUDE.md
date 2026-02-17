@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 10 Febrero 2026
+> **Última actualización:** 17 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -157,19 +157,15 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 | `destinos` | Admin | `/admin/destinos` |
 | `opiniones` | Admin | `/admin/opiniones` |
 | `paginas_legales` | Admin | `/admin/legales` |
+| `calendar_events` | Admin | `/admin/calendario` |
+| `documents` | Admin | `/admin/documentos` (crear, editar, eliminar, PDF) |
+| `support_tickets` | Admin | `/admin/soporte` (crear, detalle, cerrar/reabrir) |
+| `ticket_messages` | Admin | `/admin/soporte/[id]` (chat en tiempo real) |
 
 ### Tablas con UI parcial (⚠️):
 | Tabla | Estado |
 |-------|--------|
 | `reservas` | Solo lectura en `/admin/reservas` |
-
-### Tablas en desarrollo (🔄):
-| Tabla | Estado |
-|-------|--------|
-| `calendar_events` | ✅ Completado |
-| `documents` | En desarrollo |
-| `support_tickets` | En desarrollo |
-| `ticket_messages` | En desarrollo |
 
 ### Tablas sin UI (❌):
 | Tabla | Estado |
@@ -206,6 +202,8 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - Emails (2 templates: reserva_cliente, reserva_agencia)
 - Páginas legales (CRUD + editor HTML)
 - Stripe/Pagos (Connect onboarding, suscripción, cambio plan, cancelar, reactivar)
+- Documentos (presupuestos, contratos, facturas — crear, editar, eliminar, generar PDF con jsPDF)
+- Soporte (tickets con chat — crear, ver detalle, enviar mensajes, cerrar/reabrir)
 
 ### ✅ Sistema de Emails:
 - Emails de reservas (cliente + agencia, templates editables, tokens, branding)
@@ -223,10 +221,10 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ### 🔄 En desarrollo (Fase 1):
 - Gráficas avanzadas en ambos paneles
 - ✅ Calendario completo con Google Calendar
-- Generador de documentos (presupuestos, contratos, facturas)
+- ✅ Generador de documentos (presupuestos, contratos, facturas) con PDF
+- ✅ Sistema de tickets completo con chat
 
 ### 🔄 Próximo (Fase 2):
-- Sistema de tickets completo con chat
 - Analytics avanzado con filtros y exports
 - Automatizaciones funcionales
 

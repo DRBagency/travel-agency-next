@@ -95,9 +95,21 @@ export default async function AdminSoportePage() {
                     className="border-b border-white/5 hover:bg-white/5"
                   >
                     <td className="p-4 text-white/60 text-sm font-mono">
-                      #{ticket.id.substring(0, 8)}
+                      <Link
+                        href={`/admin/soporte/${ticket.id}`}
+                        className="hover:text-white transition-colors"
+                      >
+                        #{ticket.id.substring(0, 8)}
+                      </Link>
                     </td>
-                    <td className="p-4 text-white">{ticket.subject}</td>
+                    <td className="p-4 text-white">
+                      <Link
+                        href={`/admin/soporte/${ticket.id}`}
+                        className="hover:underline"
+                      >
+                        {ticket.subject}
+                      </Link>
+                    </td>
                     <td className="p-4">
                       <span
                         className={`px-2 py-1 rounded text-xs ${
