@@ -167,11 +167,11 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 |-------|--------|
 | `reservas` | Solo lectura en `/admin/reservas` |
 
-### Tablas sin UI (❌):
-| Tabla | Estado |
-|-------|--------|
-| `automations` | Sin UI funcional |
-| `automation_executions` | Sin UI (solo logs) |
+### Tablas con CRUD en Owner (✅):
+| Tabla | Panel | Ruta |
+|-------|-------|------|
+| `automations` | Owner | `/owner/automatizaciones` (crear, activar/desactivar, eliminar) |
+| `automation_executions` | Owner | `/owner/automatizaciones` (tabla de logs) |
 
 ### CHECKLIST AL AÑADIR TABLA NUEVA:
 1. Crear migración SQL en `supabase/migrations/`
@@ -188,18 +188,19 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ## ESTADO ACTUAL DE FEATURES
 
 ### ✅ Panel OWNER completado:
-- Dashboard con métricas (clientes, MRR, reservas, comisiones) + gráficas
+- Dashboard con métricas (clientes, MRR, reservas, comisiones) + 3 gráficas (MRR, clientes, reservas)
 - Gestión de clientes (CRUD + auto-creación templates)
-- Emails de billing (3 templates: bienvenida, cambio plan, cancelación)
-- Monetización (MRR, desglose por planes, top comisiones)
+- Emails de billing (3 templates + preview en modal)
+- Monetización (MRR, desglose por planes, top comisiones, comparativa mensual, proyección ingresos)
 - Configuración Stripe (modo, keys, price IDs, webhooks)
+- Automatizaciones (CRUD + logs de ejecuciones)
 
 ### ✅ Panel CLIENTE completado:
 - Contenido web (hero, nosotros, contacto)
 - Destinos (CRUD + imágenes + activo/inactivo)
-- Reservas (visualización + filtrado — solo lectura)
+- Reservas (visualización + filtrado + export CSV/PDF)
 - Opiniones (CRUD + rating + moderación)
-- Emails (2 templates: reserva_cliente, reserva_agencia)
+- Emails (2 templates: reserva_cliente, reserva_agencia + preview en modal)
 - Páginas legales (CRUD + editor HTML)
 - Stripe/Pagos (Connect onboarding, suscripción, cambio plan, cancelar, reactivar)
 - Documentos (presupuestos, contratos, facturas — crear, editar, eliminar, generar PDF con jsPDF)
@@ -218,15 +219,15 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ Export reservas a CSV + PDF (con filtros aplicados)
 - ✅ Comparativa mensual y proyección de ingresos en monetización
 
-### 🔄 En desarrollo (Fase 1):
-- Gráficas avanzadas en ambos paneles
+### ✅ Fase 1 completada:
+- ✅ Gráficas avanzadas en ambos paneles (KPIs, desglose mensual, reservas owner)
 - ✅ Calendario completo con Google Calendar
 - ✅ Generador de documentos (presupuestos, contratos, facturas) con PDF
 - ✅ Sistema de tickets completo con chat
 
-### 🔄 Próximo (Fase 2):
-- Analytics avanzado con filtros y exports
-- Automatizaciones funcionales
+### ✅ Fase 2 completada:
+- ✅ Analytics avanzado con KPIs, filtros de fecha, tabla mensual y exports CSV/PDF
+- ✅ Automatizaciones funcionales (CRUD + logs de ejecuciones)
 
 ### 🔄 Futuro (Fase 3):
 - Rediseño UX/UI premium (Turquesa #1CABB0 + Lima #D4F24D)

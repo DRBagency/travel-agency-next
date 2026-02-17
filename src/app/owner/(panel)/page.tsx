@@ -1,6 +1,6 @@
 import { getDashboardMetrics } from "@/lib/owner/get-dashboard-metrics";
 import { getChartData } from "@/lib/owner/get-chart-data";
-import { MRRChart, ClientesChart } from "@/components/owner/OwnerCharts";
+import { MRRChart, ClientesChart, ReservasOwnerChart } from "@/components/owner/OwnerCharts";
 import DashboardCard from "@/components/ui/DashboardCard";
 import Link from "next/link";
 
@@ -68,9 +68,10 @@ export default async function OwnerDashboardPage() {
       </div>
 
       {/* Gráficas */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
         <MRRChart data={chartData.mrrPorMes} />
         <ClientesChart data={chartData.clientesPorMes} />
+        <ReservasOwnerChart data={chartData.reservasPorMes} />
       </div>
 
       {/* Grid de Cards de navegación premium */}

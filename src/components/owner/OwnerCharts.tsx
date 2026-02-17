@@ -55,3 +55,22 @@ export function ClientesChart({ data }: { data: { month: string; clientes: numbe
     </div>
   );
 }
+
+export function ReservasOwnerChart({ data }: { data: { month: string; reservas: number }[] }) {
+  return (
+    <div className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 p-6">
+      <h3 className="text-lg font-semibold text-white mb-4">
+        Reservas plataforma (últimos 6 meses)
+      </h3>
+      <ResponsiveContainer width="100%" height={250}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+          <XAxis dataKey="month" stroke="rgba(255,255,255,0.6)" />
+          <YAxis stroke="rgba(255,255,255,0.6)" />
+          <Tooltip contentStyle={tooltipStyle} labelStyle={{ color: "#fff" }} />
+          <Bar dataKey="reservas" fill="#f59e0b" name="Reservas" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
