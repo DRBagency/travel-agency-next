@@ -1,7 +1,9 @@
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import AdminShell from "@/components/admin/AdminShell";
+import SaveToast from "@/components/admin/SaveToast";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DestinoImageField from "./DestinoImageField";
 
@@ -23,6 +25,7 @@ async function createDestino(formData: FormData) {
   await supabaseAdmin.from("destinos").insert(payload);
   revalidatePath("/");
   revalidatePath("/admin/destinos");
+  redirect("/admin/destinos?saved=creado");
 }
 
 async function updateDestino(formData: FormData) {
@@ -44,6 +47,7 @@ async function updateDestino(formData: FormData) {
   await supabaseAdmin.from("destinos").update(payload).eq("id", id);
   revalidatePath("/");
   revalidatePath("/admin/destinos");
+  redirect("/admin/destinos?saved=guardado");
 }
 
 async function deleteDestino(formData: FormData) {
@@ -57,17 +61,23 @@ async function deleteDestino(formData: FormData) {
   await supabaseAdmin.from("destinos").delete().eq("id", id);
   revalidatePath("/");
   revalidatePath("/admin/destinos");
+  redirect("/admin/destinos?saved=eliminado");
 }
 
 interface AdminDestinosPageProps {
-  searchParams: Promise<{
-  }>;
+  searchParams: Promise<{ saved?: string }>;
 }
+
+const toastMessages: Record<string, string> = {
+  creado: "Destino creado correctamente",
+  guardado: "Cambios guardados",
+  eliminado: "Destino eliminado",
+};
 
 export default async function AdminDestinosPage({
   searchParams,
 }: AdminDestinosPageProps) {
-  await searchParams;
+  const { saved } = await searchParams;
 
   const client = await requireAdminClient();
 
@@ -89,11 +99,14 @@ export default async function AdminDestinosPage({
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
       <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-1">Destinos</h1>
-          <p className="text-white/60">
-            Crea y actualiza los destinos visibles en la web.
-          </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold mb-1">Destinos</h1>
+            <p className="text-white/60">
+              Crea y actualiza los destinos visibles en la web.
+            </p>
+          </div>
+          <SaveToast message={saved ? toastMessages[saved] || "Guardado" : null} />
         </div>
 
         <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">

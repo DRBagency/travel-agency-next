@@ -1,7 +1,9 @@
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import AdminShell from "@/components/admin/AdminShell";
+import SaveToast from "@/components/admin/SaveToast";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 
 async function createOpinion(formData: FormData) {
@@ -24,6 +26,7 @@ async function createOpinion(formData: FormData) {
   await supabaseAdmin.from("opiniones").insert(payload);
   revalidatePath("/");
   revalidatePath("/admin/opiniones");
+  redirect("/admin/opiniones?saved=creado");
 }
 
 async function updateOpinion(formData: FormData) {
@@ -45,6 +48,7 @@ async function updateOpinion(formData: FormData) {
   await supabaseAdmin.from("opiniones").update(payload).eq("id", id);
   revalidatePath("/");
   revalidatePath("/admin/opiniones");
+  redirect("/admin/opiniones?saved=guardado");
 }
 
 async function deleteOpinion(formData: FormData) {
@@ -58,17 +62,23 @@ async function deleteOpinion(formData: FormData) {
   await supabaseAdmin.from("opiniones").delete().eq("id", id);
   revalidatePath("/");
   revalidatePath("/admin/opiniones");
+  redirect("/admin/opiniones?saved=eliminado");
 }
 
 interface AdminOpinionsPageProps {
-  searchParams: Promise<{
-  }>;
+  searchParams: Promise<{ saved?: string }>;
 }
+
+const toastMessages: Record<string, string> = {
+  creado: "Opinión creada correctamente",
+  guardado: "Cambios guardados",
+  eliminado: "Opinión eliminada",
+};
 
 export default async function AdminOpinionsPage({
   searchParams,
 }: AdminOpinionsPageProps) {
-  await searchParams;
+  const { saved } = await searchParams;
 
   const client = await requireAdminClient();
 
@@ -90,11 +100,14 @@ export default async function AdminOpinionsPage({
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
       <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-1">Opiniones</h1>
-          <p className="text-white/60">
-            Crea, edita y activa opiniones que aparecen en la web pública.
-          </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold mb-1">Opiniones</h1>
+            <p className="text-white/60">
+              Crea, edita y activa opiniones que aparecen en la web pública.
+            </p>
+          </div>
+          <SaveToast message={saved ? toastMessages[saved] || "Guardado" : null} />
         </div>
 
         <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">

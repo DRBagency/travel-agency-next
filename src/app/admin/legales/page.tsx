@@ -1,7 +1,9 @@
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import AdminShell from "@/components/admin/AdminShell";
+import SaveToast from "@/components/admin/SaveToast";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 
 async function createLegal(formData: FormData) {
@@ -26,6 +28,7 @@ async function createLegal(formData: FormData) {
   if (payload.slug) {
     revalidatePath(`/legal/${payload.slug}`);
   }
+  redirect("/admin/legales?saved=creado");
 }
 
 async function updateLegal(formData: FormData) {
@@ -49,6 +52,7 @@ async function updateLegal(formData: FormData) {
   if (payload.slug) {
     revalidatePath(`/legal/${payload.slug}`);
   }
+  redirect("/admin/legales?saved=guardado");
 }
 
 async function deleteLegal(formData: FormData) {
@@ -62,17 +66,23 @@ async function deleteLegal(formData: FormData) {
   await supabaseAdmin.from("paginas_legales").delete().eq("id", id);
   revalidatePath("/");
   revalidatePath("/admin/legales");
+  redirect("/admin/legales?saved=eliminado");
 }
 
 interface AdminLegalesPageProps {
-  searchParams: Promise<{
-  }>;
+  searchParams: Promise<{ saved?: string }>;
 }
+
+const toastMessages: Record<string, string> = {
+  creado: "Página legal creada correctamente",
+  guardado: "Cambios guardados",
+  eliminado: "Página eliminada",
+};
 
 export default async function AdminLegalesPage({
   searchParams,
 }: AdminLegalesPageProps) {
-  await searchParams;
+  const { saved } = await searchParams;
 
   const client = await requireAdminClient();
 
@@ -94,14 +104,17 @@ export default async function AdminLegalesPage({
       subscriptionActive={Boolean(client.stripe_subscription_id)}
     >
       <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-1">Legales</h1>
-          <p className="text-white/60">
-            Gestiona páginas legales que se muestran en /legal/[slug].
-          </p>
-          <p className="text-white/50 text-sm mt-2">
-            Nota: solo las páginas con “Activa en la web” aparecen en el footer.
-          </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold mb-1">Legales</h1>
+            <p className="text-white/60">
+              Gestiona páginas legales que se muestran en /legal/[slug].
+            </p>
+            <p className="text-white/50 text-sm mt-2">
+              Nota: solo las páginas con "Activa en la web" aparecen en el footer.
+            </p>
+          </div>
+          <SaveToast message={saved ? toastMessages[saved] || "Guardado" : null} />
         </div>
 
         <section className="rounded-2xl border border-white/20 bg-white/10 p-6 space-y-6">
