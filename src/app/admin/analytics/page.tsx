@@ -138,7 +138,7 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
         </div>
         <div className="kpi-card">
           <p className="text-sm text-gray-500 dark:text-white/60">Ingresos totales</p>
-          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{analytics.kpis.totalIngresos.toLocaleString("es-ES")} EUR</p>
+          <p className="text-2xl font-bold text-drb-turquoise-600 dark:text-drb-turquoise-400">{analytics.kpis.totalIngresos.toLocaleString("es-ES")} EUR</p>
         </div>
         <div className="kpi-card">
           <p className="text-sm text-gray-500 dark:text-white/60">Ticket medio</p>
@@ -178,7 +178,7 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
                     <td className="p-2 text-gray-900 dark:text-white">{m.month}</td>
                     <td className="p-2 text-right text-gray-500 dark:text-white/60">{m.reservas}</td>
                     <td className="p-2 text-right text-emerald-600 dark:text-green-400">{m.pagadas}</td>
-                    <td className="p-2 text-right text-blue-600 dark:text-blue-400">{m.ingresos.toLocaleString("es-ES")} EUR</td>
+                    <td className="p-2 text-right text-drb-turquoise-600 dark:text-drb-turquoise-400">{m.ingresos.toLocaleString("es-ES")} EUR</td>
                   </tr>
                 ))}
               </tbody>

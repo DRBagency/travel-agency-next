@@ -18,8 +18,6 @@ import {
   Mail,
   Scale,
   LogOut,
-  Search,
-  Bell,
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
@@ -30,6 +28,8 @@ import {
 } from "@/components/ui/sheet";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import PageTransition from "@/components/ui/PageTransition";
+import SearchBar from "@/components/ui/SearchBar";
+import NotificationBell from "@/components/ui/NotificationBell";
 
 interface AdminShellProps {
   clientName: string;
@@ -53,7 +53,7 @@ const navItems: NavItem[] = [
   { label: "Opiniones", href: "/admin/opiniones", icon: Star },
   { label: "Destinos", href: "/admin/destinos", icon: MapPin },
   { label: "Reservas", href: "/admin/reservas", icon: CalendarCheck },
-  { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+  { label: "Estadísticas", href: "/admin/analytics", icon: BarChart3 },
   { label: "Calendario", href: "/admin/calendario", icon: Calendar },
   { label: "Documentos", href: "/admin/documentos", icon: FileText },
   { label: "Soporte", href: "/admin/soporte", icon: Headphones },
@@ -68,7 +68,7 @@ const pageTitles: Record<string, string> = {
   "/admin/opiniones": "Opiniones",
   "/admin/destinos": "Destinos",
   "/admin/reservas": "Reservas",
-  "/admin/analytics": "Analytics",
+  "/admin/analytics": "Estadísticas",
   "/admin/calendario": "Calendario",
   "/admin/documentos": "Documentos",
   "/admin/soporte": "Soporte",
@@ -98,7 +98,7 @@ function SidebarNav({
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-[#0B1120]">
+    <div className="flex flex-col h-full bg-white dark:bg-[#041820]">
       {/* Logo + agency name */}
       <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-100 dark:border-white/[0.06]">
         {logoUrl ? (
@@ -112,8 +112,8 @@ function SidebarNav({
             className="h-9 w-9 rounded-xl flex items-center justify-center text-white font-bold text-sm"
             style={{
               background: primaryColor
-                ? `linear-gradient(135deg, ${primaryColor}, #4A8FE7)`
-                : "linear-gradient(135deg, #4A8FE7, #3B7DD8)",
+                ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
+                : "linear-gradient(135deg, #1CABB0, #178991)",
             }}
           >
             {clientName.charAt(0).toUpperCase()}
@@ -143,7 +143,7 @@ function SidebarNav({
               onClick={onNavigate}
               className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
                 active
-                  ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                  ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
                   : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
               }`}
             >
@@ -157,10 +157,10 @@ function SidebarNav({
       {/* CTA banner with ocean background */}
       <div className="p-4">
         <div className="relative rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500" />
+          <div className="absolute inset-0 bg-gradient-to-br from-drb-turquoise-600 via-drb-turquoise-500 to-drb-lime-500" />
           <div className="absolute inset-0 opacity-20 bg-[url('/images/sidebar-cta-bg.svg')] bg-cover bg-center" />
           <div className="relative p-4 text-white">
-            <Sparkles className="w-5 h-5 mb-2 text-blue-200" />
+            <Sparkles className="w-5 h-5 mb-2 text-drb-turquoise-200" />
             <p className="text-sm font-semibold">Mejora tu experiencia</p>
             <p className="text-xs text-white/70 mt-1">
               Desbloquea todas las funciones premium.
@@ -176,7 +176,7 @@ function SidebarNav({
       </div>
 
       {/* Logout */}
-      <div className="px-3 pb-4">
+      <div className="px-3 pb-2">
         <a
           href="/admin/logout"
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
@@ -184,6 +184,18 @@ function SidebarNav({
           <LogOut className="w-[18px] h-[18px] shrink-0" />
           Cerrar sesión
         </a>
+      </div>
+
+      {/* DRB Agency Branding */}
+      <div className="px-4 pb-4">
+        <div className="flex items-center gap-2 px-3 py-2">
+          <div className="w-5 h-5 rounded bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-[9px]">
+            D
+          </div>
+          <span className="text-[11px] text-gray-400 dark:text-white/30">
+            Powered by <span className="font-semibold text-gray-500 dark:text-white/50">DRB Agency</span>
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -210,9 +222,9 @@ const AdminShell = ({
   })?.[1] || "Panel";
 
   return (
-    <div className="min-h-screen bg-[#F0F3F8] dark:bg-[#0B1120]">
+    <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
       {/* Desktop sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#0B1120] border-r border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
+      <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#041820] border-r border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
         <SidebarNav
           items={navItems}
           pathname={pathname}
@@ -224,7 +236,7 @@ const AdminShell = ({
       </aside>
 
       {/* Header */}
-      <header className="sticky top-0 z-30 lg:ml-[260px] bg-white/80 dark:bg-[#0B1120]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
+      <header className="sticky top-0 z-30 lg:ml-[260px] bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
         <div className="flex items-center justify-between px-4 lg:px-8 h-16">
           <div className="flex items-center gap-4">
             {/* Mobile hamburger */}
@@ -234,7 +246,7 @@ const AdminShell = ({
                   <Menu className="w-5 h-5 text-gray-600 dark:text-white" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[260px] p-0 bg-white dark:bg-[#0B1120] border-r border-gray-200/80 dark:border-white/[0.06]">
+              <SheetContent side="left" className="w-[260px] p-0 bg-white dark:bg-[#041820] border-r border-gray-200/80 dark:border-white/[0.06]">
                 <SidebarNav
                   items={navItems}
                   pathname={pathname}
@@ -256,8 +268,8 @@ const AdminShell = ({
                   className="h-7 w-7 rounded-lg flex items-center justify-center text-white font-bold text-xs"
                   style={{
                     background: primaryColor
-                      ? `linear-gradient(135deg, ${primaryColor}, #4A8FE7)`
-                      : "linear-gradient(135deg, #4A8FE7, #3B7DD8)",
+                      ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
+                      : "linear-gradient(135deg, #1CABB0, #178991)",
                   }}
                 >
                   {clientName.charAt(0).toUpperCase()}
@@ -272,19 +284,13 @@ const AdminShell = ({
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Search bar (decorative) */}
-            <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-50 dark:bg-white/[0.04] border border-gray-200/80 dark:border-white/[0.06] w-64">
-              <Search className="w-4 h-4 text-gray-400 dark:text-white/30" />
-              <span className="text-sm text-gray-400 dark:text-white/30">Buscar...</span>
-            </div>
+            {/* Functional search bar */}
+            <SearchBar navItems={navItems} />
 
             <ThemeToggle />
 
-            {/* Notifications */}
-            <button className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
-              <Bell className="w-5 h-5 text-gray-500 dark:text-white/60" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
-            </button>
+            {/* Functional notifications */}
+            <NotificationBell />
 
             {/* User avatar + info */}
             <div className="hidden sm:flex items-center gap-3 pl-3 border-l border-gray-200/80 dark:border-white/[0.06]">
@@ -298,7 +304,7 @@ const AdminShell = ({
                   </div>
                 )}
               </div>
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-semibold text-sm">
                 {clientName.charAt(0).toUpperCase()}
               </div>
             </div>

@@ -74,7 +74,7 @@ export default function MessageThread({
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-3 ${
                   isClient
-                    ? "bg-blue-500 text-white rounded-br-md"
+                    ? "bg-drb-turquoise-500 text-white rounded-br-md"
                     : "bg-gray-100 dark:bg-white/[0.06] text-gray-900 dark:text-white/90 rounded-bl-md"
                 }`}
               >
@@ -95,7 +95,7 @@ export default function MessageThread({
 
               {/* Avatar (right for client) */}
               {isClient && (
-                <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-semibold shrink-0">
+                <div className="w-8 h-8 rounded-full bg-drb-turquoise-500 flex items-center justify-center text-white text-xs font-semibold shrink-0">
                   T
                 </div>
               )}
@@ -125,12 +125,12 @@ export default function MessageThread({
             placeholder={
               isClosed ? "Escribe para reabrir el ticket..." : "Escribe un mensaje..."
             }
-            className="flex-1 bg-white dark:bg-white/[0.06] border border-gray-200 dark:border-white/[0.1] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors"
+            className="flex-1 bg-white dark:bg-white/[0.06] border border-gray-200 dark:border-white/[0.1] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/30 focus:border-drb-turquoise-500 transition-colors"
           />
           <button
             type="submit"
             disabled={isPending || !input.trim()}
-            className="p-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white transition-colors disabled:opacity-40"
+            className="p-2.5 rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white transition-colors disabled:opacity-40"
           >
             {isPending ? (
               <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />

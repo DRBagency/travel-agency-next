@@ -20,7 +20,7 @@ export default async function AdminDocumentosPage() {
   const documents = await getDocuments(client.id);
 
   const documentTypes = [
-    { id: "presupuesto", name: "Presupuesto", icon: Receipt, color: "bg-blue-500" },
+    { id: "presupuesto", name: "Presupuesto", icon: Receipt, color: "bg-drb-turquoise-500" },
     { id: "contrato", name: "Contrato", icon: FileText, color: "bg-emerald-500" },
     { id: "factura", name: "Factura", icon: FileCheck, color: "bg-purple-500" },
   ];
@@ -126,7 +126,7 @@ export default async function AdminDocumentosPage() {
                     <td className="p-4">
                       <Link
                         href={`/admin/documentos/${doc.id}`}
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 text-sm"
+                        className="text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300 text-sm"
                       >
                         Ver
                       </Link>

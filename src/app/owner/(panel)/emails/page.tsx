@@ -171,8 +171,8 @@ export default async function OwnerEmailsPage() {
         </p>
 
         {/* Tokens disponibles */}
-        <div className="rounded-xl bg-sky-50 dark:bg-blue-500/10 border border-sky-200 dark:border-blue-500/20 p-4 mb-6">
-          <h3 className="text-sm font-semibold text-sky-700 dark:text-blue-300 mb-2">
+        <div className="rounded-xl bg-sky-50 dark:bg-drb-turquoise-500/10 border border-sky-200 dark:border-drb-turquoise-500/20 p-4 mb-6">
+          <h3 className="text-sm font-semibold text-sky-700 dark:text-drb-turquoise-300 mb-2">
             📝 Tokens disponibles:
           </h3>
           <div className="flex flex-wrap gap-2 text-xs">
@@ -195,7 +195,7 @@ export default async function OwnerEmailsPage() {
             ].map((token) => (
               <code
                 key={token}
-                className="px-2 py-1 rounded bg-sky-100 text-sky-700 dark:bg-blue-500/20 dark:text-blue-200"
+                className="px-2 py-1 rounded bg-sky-100 text-sky-700 dark:bg-drb-turquoise-500/20 dark:text-drb-turquoise-200"
               >
                 {token}
               </code>

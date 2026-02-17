@@ -97,8 +97,8 @@ export default async function AdminPage() {
           title="Reservas pagadas"
           value={numeroReservas}
           icon={<ShoppingBag className="w-5 h-5" />}
-          iconBg="bg-blue-50 dark:bg-blue-500/15"
-          iconColor="text-blue-600 dark:text-blue-400"
+          iconBg="bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15"
+          iconColor="text-drb-turquoise-600 dark:text-drb-turquoise-400"
           subtitle="Este periodo"
         />
         <KPICard
@@ -199,10 +199,10 @@ export default async function AdminPage() {
               {reservasSafe.slice(0, 5).map((r: any) => (
                 <div
                   key={r.id || r.created_at}
-                  className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-4 py-3 hover:bg-blue-50/50 dark:hover:bg-white/[0.05] transition-colors"
+                  className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-4 py-3 hover:bg-drb-turquoise-50/50 dark:hover:bg-white/[0.05] transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center text-blue-600 dark:text-blue-400 text-sm font-semibold">
+                    <div className="w-9 h-9 rounded-full bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-drb-turquoise-600 dark:text-drb-turquoise-400 text-sm font-semibold">
                       {(r.nombre || "R").charAt(0).toUpperCase()}
                     </div>
                     <div>

@@ -62,12 +62,12 @@ export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
         <AreaChart data={data}>
           <defs>
             <linearGradient id="gradientMRRComp" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10B981" stopOpacity={0.25} />
-              <stop offset="100%" stopColor="#10B981" stopOpacity={0} />
+              <stop offset="0%" stopColor="#1CABB0" stopOpacity={0.25} />
+              <stop offset="100%" stopColor="#1CABB0" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="gradientComisiones" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4A8FE7" stopOpacity={0.25} />
-              <stop offset="100%" stopColor="#4A8FE7" stopOpacity={0} />
+              <stop offset="0%" stopColor="#D4F24D" stopOpacity={0.25} />
+              <stop offset="100%" stopColor="#D4F24D" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
@@ -82,19 +82,19 @@ export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
           <Area
             type="monotone"
             dataKey="mrr"
-            stroke="#10B981"
+            stroke="#1CABB0"
             strokeWidth={2.5}
             fill="url(#gradientMRRComp)"
-            dot={{ r: 3, fill: "#10B981", strokeWidth: 2, stroke: "#fff" }}
+            dot={{ r: 3, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
             name="MRR"
           />
           <Area
             type="monotone"
             dataKey="comisiones"
-            stroke="#4A8FE7"
+            stroke="#D4F24D"
             strokeWidth={2.5}
             fill="url(#gradientComisiones)"
-            dot={{ r: 3, fill: "#4A8FE7", strokeWidth: 2, stroke: "#fff" }}
+            dot={{ r: 3, fill: "#D4F24D", strokeWidth: 2, stroke: "#fff" }}
             name="Comisiones"
           />
         </AreaChart>
@@ -129,8 +129,8 @@ export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
         <AreaChart data={chartData}>
           <defs>
             <linearGradient id="gradientActual" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10B981" stopOpacity={0.25} />
-              <stop offset="100%" stopColor="#10B981" stopOpacity={0} />
+              <stop offset="0%" stopColor="#1CABB0" stopOpacity={0.25} />
+              <stop offset="100%" stopColor="#1CABB0" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="gradientProyectado" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.15} />
@@ -153,10 +153,10 @@ export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
           <Area
             type="monotone"
             dataKey="actual"
-            stroke="#10B981"
+            stroke="#1CABB0"
             strokeWidth={2.5}
             fill="url(#gradientActual)"
-            dot={{ r: 4, fill: "#10B981", strokeWidth: 2, stroke: "#fff" }}
+            dot={{ r: 4, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
             name="MRR Actual"
             connectNulls={false}
           />

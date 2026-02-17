@@ -93,8 +93,8 @@ export default async function AdminDestinosPage({
       {/* Create form inside collapsible card */}
       <details className="panel-card group">
         <summary className="flex items-center gap-3 p-6 cursor-pointer list-none">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center">
-            <Plus className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
+            <Plus className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
           </div>
           <div>
             <h2 className="text-base font-semibold text-gray-900 dark:text-white">Nuevo destino</h2>

@@ -165,7 +165,7 @@ export default async function AdminOpinionsPage({
       <div className="space-y-4">
         {opinionesSafe.map((opinion) => {
           const initial = (opinion.nombre || "?").charAt(0).toUpperCase();
-          const colors = ["bg-blue-500", "bg-emerald-500", "bg-purple-500", "bg-amber-500", "bg-rose-500"];
+          const colors = ["bg-drb-turquoise-500", "bg-emerald-500", "bg-purple-500", "bg-amber-500", "bg-rose-500"];
           const colorIdx = opinion.nombre
             ? opinion.nombre.charCodeAt(0) % colors.length
             : 0;

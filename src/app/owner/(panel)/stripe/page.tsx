@@ -111,7 +111,7 @@ export default async function OwnerStripePage() {
             href={`https://dashboard.stripe.com/${mode === "TEST" ? "test/" : ""}dashboard`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300"
+            className="block text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
           >
             → Dashboard de Stripe {mode}
           </a>
@@ -119,7 +119,7 @@ export default async function OwnerStripePage() {
             href={`https://dashboard.stripe.com/${mode === "TEST" ? "test/" : ""}webhooks`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300"
+            className="block text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
           >
             → Configuración de Webhooks
           </a>
@@ -127,7 +127,7 @@ export default async function OwnerStripePage() {
             href={`https://dashboard.stripe.com/${mode === "TEST" ? "test/" : ""}subscriptions`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300"
+            className="block text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
           >
             → Suscripciones activas
           </a>
@@ -135,7 +135,7 @@ export default async function OwnerStripePage() {
             href={`https://dashboard.stripe.com/${mode === "TEST" ? "test/" : ""}connect/accounts/overview`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300"
+            className="block text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
           >
             → Cuentas de Connect (agencias)
           </a>

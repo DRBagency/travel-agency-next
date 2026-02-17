@@ -17,7 +17,7 @@ interface DashboardCardProps {
 }
 
 const iconColors = [
-  'text-blue-500 bg-blue-50 dark:bg-blue-500/15',
+  'text-drb-turquoise-500 bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15',
   'text-emerald-500 bg-emerald-50 dark:bg-emerald-500/15',
   'text-amber-500 bg-amber-50 dark:bg-amber-500/15',
   'text-purple-500 bg-purple-50 dark:bg-purple-500/15',
@@ -50,7 +50,7 @@ export default function DashboardCard({
           <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5">{subtitle}</p>
         )}
       </div>
-      <ChevronRight className="w-4 h-4 text-gray-300 dark:text-white/20 shrink-0 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" />
+      <ChevronRight className="w-4 h-4 text-gray-300 dark:text-white/20 shrink-0 group-hover:text-drb-turquoise-500 dark:group-hover:text-drb-turquoise-400 transition-colors" />
     </div>
   );
 

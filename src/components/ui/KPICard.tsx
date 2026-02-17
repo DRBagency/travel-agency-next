@@ -24,8 +24,8 @@ export default function KPICard({
   trend,
   trendLabel = "vs mes anterior",
   variant = "default",
-  iconColor = "text-blue-600 dark:text-blue-400",
-  iconBg = "bg-blue-50 dark:bg-blue-500/15",
+  iconColor = "text-drb-turquoise-600 dark:text-drb-turquoise-400",
+  iconBg = "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15",
 }: KPICardProps) {
   if (variant === "gradient") {
     return (

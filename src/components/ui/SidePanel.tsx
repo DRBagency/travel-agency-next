@@ -24,7 +24,7 @@ export default function SidePanel({ isOpen, onClose, title, children }: SidePane
       {/* Panel */}
       <div className={`
         fixed right-0 top-0 bottom-0 w-full md:w-2/3 lg:w-1/2 xl:w-2/5
-        bg-gradient-to-br from-gray-900 to-[#0B1120]
+        bg-gradient-to-br from-gray-900 to-[#041820]
         shadow-2xl z-50
         overflow-y-auto
         ${isOpen ? 'animate-slide-in-right' : 'animate-slide-out-right'}

@@ -14,8 +14,6 @@ import {
   Zap,
   Headphones,
   LogOut,
-  Search,
-  Bell,
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
@@ -26,6 +24,8 @@ import {
 } from "@/components/ui/sheet";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import PageTransition from "@/components/ui/PageTransition";
+import SearchBar from "@/components/ui/SearchBar";
+import NotificationBell from "@/components/ui/NotificationBell";
 
 interface OwnerShellProps {
   children: ReactNode;
@@ -72,10 +72,10 @@ function SidebarNav({
     href === "/owner" ? pathname === "/owner" : pathname.startsWith(href);
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-[#0B1120]">
+    <div className="flex flex-col h-full bg-white dark:bg-[#041820]">
       {/* Logo + DRB branding */}
       <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-100 dark:border-white/[0.06]">
-        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-sm">
           D
         </div>
         <div className="min-w-0">
@@ -100,7 +100,7 @@ function SidebarNav({
               onClick={onNavigate}
               className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
                 active
-                  ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                  ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
                   : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
               }`}
             >
@@ -114,10 +114,10 @@ function SidebarNav({
       {/* CTA banner */}
       <div className="p-4">
         <div className="relative rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500" />
+          <div className="absolute inset-0 bg-gradient-to-br from-drb-turquoise-600 via-drb-turquoise-500 to-drb-lime-500" />
           <div className="absolute inset-0 opacity-20 bg-[url('/images/sidebar-cta-bg.svg')] bg-cover bg-center" />
           <div className="relative p-4 text-white">
-            <Sparkles className="w-5 h-5 mb-2 text-blue-200" />
+            <Sparkles className="w-5 h-5 mb-2 text-drb-turquoise-200" />
             <p className="text-sm font-semibold">Potencia tu plataforma</p>
             <p className="text-xs text-white/70 mt-1">
               Nuevas funciones disponibles.
@@ -150,9 +150,9 @@ export default function OwnerShell({ children }: OwnerShellProps) {
   })?.[1] || "Panel Owner";
 
   return (
-    <div className="min-h-screen bg-[#F0F3F8] dark:bg-[#0B1120]">
+    <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
       {/* Desktop sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#0B1120] border-r border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
+      <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#041820] border-r border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
         <SidebarNav
           items={navItems}
           pathname={pathname}
@@ -160,7 +160,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
       </aside>
 
       {/* Header */}
-      <header className="sticky top-0 z-30 lg:ml-[260px] bg-white/80 dark:bg-[#0B1120]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
+      <header className="sticky top-0 z-30 lg:ml-[260px] bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
         <div className="flex items-center justify-between px-4 lg:px-8 h-16">
           <div className="flex items-center gap-4">
             {/* Mobile hamburger */}
@@ -170,7 +170,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
                   <Menu className="w-5 h-5 text-gray-600 dark:text-white" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[260px] p-0 bg-white dark:bg-[#0B1120] border-r border-gray-200/80 dark:border-white/[0.06]">
+              <SheetContent side="left" className="w-[260px] p-0 bg-white dark:bg-[#041820] border-r border-gray-200/80 dark:border-white/[0.06]">
                 <SidebarNav
                   items={navItems}
                   pathname={pathname}
@@ -181,7 +181,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
 
             {/* Branding (mobile only) */}
             <div className="flex items-center gap-2 lg:hidden">
-              <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-xs">
+              <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-xs">
                 D
               </div>
               <span className="font-display text-sm font-semibold text-gray-900 dark:text-white">
@@ -196,19 +196,13 @@ export default function OwnerShell({ children }: OwnerShellProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Search bar */}
-            <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-50 dark:bg-white/[0.04] border border-gray-200/80 dark:border-white/[0.06] w-64">
-              <Search className="w-4 h-4 text-gray-400 dark:text-white/30" />
-              <span className="text-sm text-gray-400 dark:text-white/30">Buscar...</span>
-            </div>
+            {/* Functional search bar */}
+            <SearchBar navItems={navItems} />
 
             <ThemeToggle />
 
-            {/* Notifications */}
-            <button className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
-              <Bell className="w-5 h-5 text-gray-500 dark:text-white/60" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
-            </button>
+            {/* Functional notifications */}
+            <NotificationBell />
 
             {/* User avatar */}
             <div className="flex items-center gap-3 pl-3 border-l border-gray-200/80 dark:border-white/[0.06]">
@@ -220,7 +214,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
                   Owner
                 </div>
               </div>
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-semibold text-sm">
                 D
               </div>
             </div>

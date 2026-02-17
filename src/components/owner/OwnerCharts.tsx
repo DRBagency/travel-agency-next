@@ -42,8 +42,8 @@ export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
         <AreaChart data={data}>
           <defs>
             <linearGradient id="gradientMRR" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10B981" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#10B981" stopOpacity={0} />
+              <stop offset="0%" stopColor="#1CABB0" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="#1CABB0" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
@@ -57,11 +57,11 @@ export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
           <Area
             type="monotone"
             dataKey="mrr"
-            stroke="#10B981"
+            stroke="#1CABB0"
             strokeWidth={2.5}
             fill="url(#gradientMRR)"
-            dot={{ r: 4, fill: "#10B981", strokeWidth: 2, stroke: "#fff" }}
-            activeDot={{ r: 6, fill: "#10B981" }}
+            dot={{ r: 4, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
+            activeDot={{ r: 6, fill: "#1CABB0" }}
             name="MRR (€)"
           />
         </AreaChart>
@@ -82,8 +82,8 @@ export function ClientesChart({ data }: { data: { month: string; clientes: numbe
         <AreaChart data={data}>
           <defs>
             <linearGradient id="gradientClientes" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4A8FE7" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#4A8FE7" stopOpacity={0} />
+              <stop offset="0%" stopColor="#D4F24D" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="#D4F24D" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
@@ -93,11 +93,11 @@ export function ClientesChart({ data }: { data: { month: string; clientes: numbe
           <Area
             type="monotone"
             dataKey="clientes"
-            stroke="#4A8FE7"
+            stroke="#D4F24D"
             strokeWidth={2.5}
             fill="url(#gradientClientes)"
-            dot={{ r: 4, fill: "#4A8FE7", strokeWidth: 2, stroke: "#fff" }}
-            activeDot={{ r: 6, fill: "#4A8FE7" }}
+            dot={{ r: 4, fill: "#D4F24D", strokeWidth: 2, stroke: "#fff" }}
+            activeDot={{ r: 6, fill: "#D4F24D" }}
             name="Clientes"
           />
         </AreaChart>

@@ -110,8 +110,8 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
           title="Reservas pagadas"
           value={numeroReservas}
           icon={<ShoppingBag className="w-5 h-5" />}
-          iconBg="bg-blue-50 dark:bg-blue-500/15"
-          iconColor="text-blue-600 dark:text-blue-400"
+          iconBg="bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15"
+          iconColor="text-drb-turquoise-600 dark:text-drb-turquoise-400"
         />
         <KPICard
           title="Ticket medio"
@@ -162,7 +162,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             <ExportPDFButton estado={estado} q={q} from={from} to={to} />
             <a
               href={`/api/admin/export?estado=${estado}&q=${q}&from=${from}&to=${to}`}
-              className="px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/25 font-semibold text-sm transition-colors"
+              className="px-4 py-2 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-100 dark:hover:bg-drb-turquoise-500/25 font-semibold text-sm transition-colors"
             >
               Exportar CSV
             </a>
@@ -197,7 +197,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-semibold shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-drb-turquoise-600 dark:text-drb-turquoise-400 text-xs font-semibold shrink-0">
                           {(r.nombre || "?").charAt(0).toUpperCase()}
                         </div>
                         <div>
@@ -207,7 +207,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                      <span className="text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400">
                         {r.destino}
                       </span>
                     </td>

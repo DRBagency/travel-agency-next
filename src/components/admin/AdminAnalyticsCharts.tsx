@@ -15,7 +15,7 @@ import {
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
 
-const CHART_COLORS = ['#4A8FE7', '#F59E0B', '#10B981', '#8B5CF6', '#EC4899'];
+const CHART_COLORS = ['#1CABB0', '#D4F24D', '#E91E63', '#8B5CF6', '#F59E0B'];
 
 function useChartStyles() {
   const { theme } = useTheme();
@@ -46,8 +46,8 @@ export function ReservasChart({ data }: { data: { month: string; reservas: numbe
         <AreaChart data={data}>
           <defs>
             <linearGradient id="gradientReservas" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4A8FE7" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#4A8FE7" stopOpacity={0} />
+              <stop offset="0%" stopColor="#1CABB0" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="#1CABB0" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
@@ -57,11 +57,11 @@ export function ReservasChart({ data }: { data: { month: string; reservas: numbe
           <Area
             type="monotone"
             dataKey="reservas"
-            stroke="#4A8FE7"
+            stroke="#1CABB0"
             strokeWidth={2.5}
             fill="url(#gradientReservas)"
-            dot={{ r: 4, fill: "#4A8FE7", strokeWidth: 2, stroke: "#fff" }}
-            activeDot={{ r: 6, fill: "#4A8FE7" }}
+            dot={{ r: 4, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
+            activeDot={{ r: 6, fill: "#1CABB0" }}
             name="Reservas"
           />
         </AreaChart>
@@ -80,8 +80,8 @@ export function IngresosChart({ data }: { data: { month: string; ingresos: numbe
         <AreaChart data={data}>
           <defs>
             <linearGradient id="gradientIngresos" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10B981" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#10B981" stopOpacity={0} />
+              <stop offset="0%" stopColor="#B8D63E" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="#B8D63E" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
@@ -94,11 +94,11 @@ export function IngresosChart({ data }: { data: { month: string; ingresos: numbe
           <Area
             type="monotone"
             dataKey="ingresos"
-            stroke="#10B981"
+            stroke="#B8D63E"
             strokeWidth={2.5}
             fill="url(#gradientIngresos)"
-            dot={{ r: 4, fill: "#10B981", strokeWidth: 2, stroke: "#fff" }}
-            activeDot={{ r: 6, fill: "#10B981" }}
+            dot={{ r: 4, fill: "#B8D63E", strokeWidth: 2, stroke: "#fff" }}
+            activeDot={{ r: 6, fill: "#B8D63E" }}
             name="Ingresos (€)"
           />
         </AreaChart>

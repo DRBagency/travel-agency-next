@@ -256,7 +256,7 @@ export default function DocumentFormClient({
           <button
             type="button"
             onClick={addItem}
-            className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors"
+            className="flex items-center gap-1 text-sm text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300 transition-colors"
           >
             <Plus className="w-4 h-4" /> Anadir fila
           </button>

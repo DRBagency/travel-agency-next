@@ -221,8 +221,8 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         onClick={() => toggleSection(sectionKey)}
         className="w-full flex items-center gap-3 text-left"
       >
-        <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center">
-          <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+        <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
+          <Icon className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
         </div>
         <div className="flex-1">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
@@ -705,8 +705,8 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       <section className="panel-card p-6 space-y-5">
         <div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center">
-              <Link2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
+              <Link2 className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
             </div>
             Secciones relacionadas
           </h2>
@@ -720,7 +720,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
             className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-blue-600 dark:group-hover:text-white transition-colors">
+              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
                 Destinos
               </span>
             </div>
@@ -734,7 +734,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
             className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-blue-600 dark:group-hover:text-white transition-colors">
+              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
                 Opiniones
               </span>
             </div>
@@ -748,7 +748,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
             className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-blue-600 dark:group-hover:text-white transition-colors">
+              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
                 Legales
               </span>
             </div>

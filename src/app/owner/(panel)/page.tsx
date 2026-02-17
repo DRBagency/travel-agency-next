@@ -37,8 +37,8 @@ export default async function OwnerDashboardPage() {
           title="Total de agencias"
           value={metrics.totalClientes}
           icon={<Building2 className="w-5 h-5" />}
-          iconBg="bg-blue-50 dark:bg-blue-500/15"
-          iconColor="text-blue-600 dark:text-blue-400"
+          iconBg="bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15"
+          iconColor="text-drb-turquoise-600 dark:text-drb-turquoise-400"
           subtitle={`${metrics.clientesConSuscripcion} con suscripción activa`}
         />
         <KPICard
@@ -152,7 +152,7 @@ export default async function OwnerDashboardPage() {
                   <tr key={cliente.id} className="table-row">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-semibold">
+                        <div className="w-8 h-8 rounded-full bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-drb-turquoise-600 dark:text-drb-turquoise-400 text-xs font-semibold">
                           {(cliente.nombre || "?").charAt(0).toUpperCase()}
                         </div>
                         <span className="font-medium text-gray-900 dark:text-white text-sm">{cliente.nombre}</span>

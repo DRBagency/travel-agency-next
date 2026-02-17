@@ -108,7 +108,7 @@ export default async function AdminSoportePage() {
                     <td className="px-6 py-4 text-gray-500 dark:text-white/50 text-sm font-mono">
                       <Link
                         href={`/admin/soporte/${ticket.id}`}
-                        className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        className="hover:text-drb-turquoise-600 dark:hover:text-drb-turquoise-400 transition-colors"
                       >
                         #{ticket.id.substring(0, 8)}
                       </Link>
@@ -116,7 +116,7 @@ export default async function AdminSoportePage() {
                     <td className="px-6 py-4">
                       <Link
                         href={`/admin/soporte/${ticket.id}`}
-                        className="font-medium text-sm text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        className="font-medium text-sm text-gray-900 dark:text-white hover:text-drb-turquoise-600 dark:hover:text-drb-turquoise-400 transition-colors"
                       >
                         {ticket.subject}
                       </Link>

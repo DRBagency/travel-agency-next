@@ -40,27 +40,6 @@ module.exports = {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
         },
         gold: "hsl(var(--gold))",
-        // Travelie palette
-        travelie: {
-          blue: {
-            50: '#EFF6FF',
-            100: '#DBEAFE',
-            200: '#BFDBFE',
-            300: '#93C5FD',
-            400: '#60A5FA',
-            500: '#4A8FE7',
-            600: '#3B7DD8',
-            700: '#2E6BC4',
-            800: '#1E4D8C',
-            900: '#1E3A5F',
-          },
-          gold: {
-            400: '#FBBF24',
-            500: '#E8A317',
-            600: '#D19A10',
-          },
-        },
-        // Keep backward compat
         drb: {
           turquoise: {
             50: '#E6F9FA',
@@ -98,7 +77,7 @@ module.exports = {
         'gradient-premium': 'linear-gradient(135deg, #1CABB0 0%, #D4F24D 100%)',
         'gradient-dark': 'linear-gradient(135deg, #072331 0%, #0C4551 100%)',
         'gradient-turquoise': 'linear-gradient(135deg, #0C4551 0%, #1CABB0 100%)',
-        'gradient-blue': 'linear-gradient(135deg, #4A8FE7 0%, #3B7DD8 100%)',
+        'gradient-blue': 'linear-gradient(135deg, #1CABB0 0%, #178991 100%)',
         'gradient-gold': 'linear-gradient(135deg, #FBBF24 0%, #E8A317 100%)',
         'gradient-emerald': 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
         'gradient-purple': 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
@@ -107,9 +86,11 @@ module.exports = {
         'premium': '0 10px 40px rgba(28, 171, 176, 0.15)',
         'premium-lg': '0 20px 60px rgba(28, 171, 176, 0.25)',
         'glow': '0 0 30px rgba(212, 242, 77, 0.4)',
-        'card': '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04)',
-        'card-hover': '0 4px 12px rgba(74,143,231,0.08), 0 8px 24px rgba(0,0,0,0.06)',
-        'blue-glow': '0 4px 16px rgba(74,143,231,0.3)',
+        'card': '0 2px 8px rgba(7,35,49,0.08)',
+        'card-hover': '0 4px 16px rgba(7,35,49,0.12)',
+        'blue-glow': '0 4px 16px rgba(28,171,176,0.3)',
+        'turquoise-glow': '0 4px 16px rgba(28,171,176,0.3)',
+        'btn': '0 2px 8px rgba(28,171,176,0.20)',
       },
       backdropBlur: {
         'xs': '2px',
