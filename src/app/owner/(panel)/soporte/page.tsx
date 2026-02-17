@@ -123,7 +123,7 @@ export default async function OwnerSoportePage() {
                               ? "badge-success"
                               : ticket.status === "in_progress"
                                 ? "badge-warning"
-                                : "bg-gray-100 text-gray-600 dark:bg-gray-500/20 dark:text-gray-300"
+                                : "bg-gray-100 text-gray-600 dark:bg-white/[0.06] dark:text-white/60"
                           }`}
                         >
                           {ticket.status}

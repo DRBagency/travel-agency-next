@@ -63,7 +63,7 @@ export default async function AdminLoginPage({
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4">
       <div className="w-full max-w-md rounded-3xl border border-gray-200 dark:border-white/15 bg-white dark:bg-white/10 shadow-card dark:shadow-none backdrop-blur-md p-8">
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-drb-turquoise-400 to-drb-lime-500" />
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600" />
           <div>
             <h1 className="font-display text-2xl font-bold text-gray-900 dark:text-white">
               Acceso al panel
@@ -110,7 +110,7 @@ export default async function AdminLoginPage({
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold py-3 transition-colors"
+            className="w-full rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 transition-colors"
           >
             Entrar
           </button>

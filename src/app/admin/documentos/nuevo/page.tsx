@@ -101,7 +101,7 @@ export default async function NuevoDocumentoPage({
           <DocumentFormClient documentType={documentType}>
             <SubmitButton
               successText="Documento creado"
-              className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
+              className="btn-primary"
             >
               Guardar {typeLabel}
             </SubmitButton>

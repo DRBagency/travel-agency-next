@@ -40,7 +40,7 @@ export default function ConnectStripeButton({
       type="button"
       onClick={handleConnect}
       disabled={loading || disabled}
-      className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold disabled:opacity-60 transition-colors"
+      className="btn-primary disabled:opacity-60"
     >
       {loading ? "Conectando..." : label}
     </button>

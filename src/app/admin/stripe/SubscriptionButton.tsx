@@ -29,7 +29,7 @@ export default function SubscriptionButton() {
       type="button"
       onClick={handleSubscribe}
       disabled={loading}
-      className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold disabled:opacity-60 transition-colors"
+      className="btn-primary disabled:opacity-60"
     >
       {loading ? "Redirigiendo..." : "Activar suscripción"}
     </button>

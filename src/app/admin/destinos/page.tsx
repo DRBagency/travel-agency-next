@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DestinoImageField from "./DestinoImageField";
+import { MapPin, Plus, Pencil, Trash2 } from "lucide-react";
 
 async function createDestino(formData: FormData) {
   "use server";
@@ -76,28 +77,35 @@ export default async function AdminDestinosPage({
     .eq("cliente_id", client.id)
     .order("created_at", { ascending: false });
 
+  const activeCount = destinos?.filter(d => d.activo).length ?? 0;
+
   return (
-      <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Destinos</h1>
-          <p className="text-gray-500 dark:text-white/60">
-            Crea y actualiza los destinos visibles en la web.
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Destinos</h1>
+          <p className="text-gray-400 dark:text-white/40">
+            {destinos?.length ?? 0} destinos · {activeCount} activos
           </p>
         </div>
+      </div>
 
-        {/* Create form */}
-        <section className="panel-card p-6 space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Nuevo destino</h2>
-            <p className="text-sm text-gray-500 dark:text-white/60">
-              Añade un destino con precio, descripción e imagen.
-            </p>
+      {/* Create form inside collapsible card */}
+      <details className="panel-card group">
+        <summary className="flex items-center gap-3 p-6 cursor-pointer list-none">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center">
+            <Plus className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           </div>
-
+          <div>
+            <h2 className="text-base font-semibold text-gray-900 dark:text-white">Nuevo destino</h2>
+            <p className="text-sm text-gray-400 dark:text-white/40">Click para añadir un nuevo destino</p>
+          </div>
+        </summary>
+        <div className="px-6 pb-6 border-t border-gray-100 dark:border-white/[0.06] pt-6">
           <form action={createDestino} className="grid gap-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="panel-label block mb-1">Nombre</label>
+                <label className="panel-label">Nombre</label>
                 <input
                   name="nombre"
                   className="panel-input w-full"
@@ -105,7 +113,7 @@ export default async function AdminDestinosPage({
                 />
               </div>
               <div>
-                <label className="panel-label block mb-1">Precio (€)</label>
+                <label className="panel-label">Precio (€)</label>
                 <input
                   name="precio"
                   type="number"
@@ -115,133 +123,125 @@ export default async function AdminDestinosPage({
                 />
               </div>
             </div>
-
             <div>
-              <label className="panel-label block mb-1">Descripción</label>
+              <label className="panel-label">Descripción</label>
               <textarea
                 name="descripcion"
-                className="panel-input w-full min-h-[110px]"
+                className="panel-input w-full min-h-[100px]"
                 placeholder="Descripción breve y atractiva del destino"
               />
             </div>
-
             <DestinoImageField />
-
-            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-white/70">
-              <input type="checkbox" name="activo" defaultChecked />
+            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">
+              <input type="checkbox" name="activo" defaultChecked className="rounded" />
               Publicar ahora
             </label>
-
             <div className="flex justify-end">
-              <SubmitButton
-                className="px-5 py-3 rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold transition-colors"
-              >
+              <SubmitButton className="btn-primary">
                 Guardar destino
               </SubmitButton>
             </div>
           </form>
-        </section>
+        </div>
+      </details>
 
-        {/* Destinations Grid */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Listado</h2>
+      {/* Destinations Visual Grid */}
+      {(!destinos || destinos.length === 0) && (
+        <div className="panel-card p-12 text-center">
+          <MapPin className="w-10 h-10 text-gray-300 dark:text-white/20 mx-auto mb-3" />
+          <p className="text-gray-400 dark:text-white/40">Todavía no hay destinos.</p>
+          <p className="text-sm text-gray-300 dark:text-white/20 mt-1">Añade tu primer destino arriba.</p>
+        </div>
+      )}
 
-          {(!destinos || destinos.length === 0) && (
-            <div className="panel-card p-6 text-gray-500 dark:text-white/70">
-              Todavía no hay destinos.
-            </div>
-          )}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {destinos?.map((destino) => (
+          <div
+            key={destino.id}
+            className="group panel-card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover"
+          >
+            {/* Image with overlay */}
+            <div className="relative h-52 bg-gray-100 dark:bg-white/[0.04] overflow-hidden">
+              {destino.imagen_url ? (
+                <img
+                  src={destino.imagen_url}
+                  alt={destino.nombre ?? ""}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <img
+                  src="/images/placeholder-destination.svg"
+                  alt="Sin imagen"
+                  className="w-full h-full object-cover"
+                />
+              )}
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {destinos?.map((destino) => (
-              <form
-                key={destino.id}
-                action={updateDestino}
-                className="panel-card overflow-hidden"
-              >
-                <input type="hidden" name="id" value={destino.id} />
-
-                {/* Image preview */}
-                {destino.imagen_url && (
-                  <div className="relative h-48 bg-gray-100 dark:bg-white/5">
-                    <img
-                      src={destino.imagen_url}
-                      alt={destino.nombre ?? ""}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-3 right-3">
-                      {destino.activo ? (
-                        <span className="badge-success">Activo</span>
-                      ) : (
-                        <span className="badge-danger">Inactivo</span>
-                      )}
-                    </div>
-                  </div>
+              {/* Status badge */}
+              <div className="absolute top-3 right-3">
+                {destino.activo ? (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500 text-white shadow-lg">
+                    Activo
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-800/70 text-white/80 backdrop-blur-sm">
+                    Inactivo
+                  </span>
                 )}
+              </div>
 
-                <div className="p-5 space-y-4">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="panel-label block mb-1">Nombre</label>
-                      <input
-                        name="nombre"
-                        defaultValue={destino.nombre ?? ""}
-                        className="panel-input w-full"
-                      />
-                    </div>
-                    <div>
-                      <label className="panel-label block mb-1">Precio (€)</label>
-                      <input
-                        name="precio"
-                        type="number"
-                        min={0}
-                        defaultValue={destino.precio ?? 0}
-                        className="panel-input w-full"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="panel-label block mb-1">Descripción</label>
-                    <textarea
-                      name="descripcion"
-                      defaultValue={destino.descripcion ?? ""}
-                      className="panel-input w-full min-h-[80px]"
-                    />
-                  </div>
-
-                  <DestinoImageField
-                    defaultValue={destino.imagen_url ?? ""}
-                    defaultQuery={destino.nombre ?? "travel destination"}
-                  />
-
-                  <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-white/70">
-                    <input
-                      type="checkbox"
-                      name="activo"
-                      defaultChecked={Boolean(destino.activo)}
-                    />
-                    Activo en la web
-                  </label>
-
-                  <div className="flex items-center justify-end gap-3 pt-2 border-t border-gray-100 dark:border-white/10">
-                    <SubmitButton
-                      className="px-4 py-2 rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold text-sm transition-colors"
-                    >
-                      Guardar
-                    </SubmitButton>
-                    <button
-                      formAction={deleteDestino}
-                      className="px-4 py-2 rounded-xl bg-red-50 dark:bg-red-500/20 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-500/30 hover:bg-red-100 dark:hover:bg-red-500/30 text-sm transition"
-                    >
-                      Eliminar
-                    </button>
-                  </div>
+              {/* Info overlaid on image */}
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <div className="flex items-center gap-1 text-white/70 text-xs mb-1">
+                  <MapPin className="w-3 h-3" />
+                  <span>Destino</span>
                 </div>
-              </form>
-            ))}
+                <h3 className="text-lg font-bold text-white">{destino.nombre || "Sin nombre"}</h3>
+                {destino.descripcion && (
+                  <p className="text-white/70 text-sm mt-1 line-clamp-2">{destino.descripcion}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Bottom info + actions */}
+            <div className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="text-lg font-bold text-gray-900 dark:text-white">
+                  {destino.precio ?? 0} €
+                </div>
+                <div className="flex items-center gap-2">
+                  <form action={updateDestino}>
+                    <input type="hidden" name="id" value={destino.id} />
+                    <input type="hidden" name="nombre" value={destino.nombre ?? ""} />
+                    <input type="hidden" name="descripcion" value={destino.descripcion ?? ""} />
+                    <input type="hidden" name="precio" value={destino.precio ?? 0} />
+                    <input type="hidden" name="imagen_url" value={destino.imagen_url ?? ""} />
+                    {destino.activo ? (
+                      <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-white/60 hover:bg-gray-200 dark:hover:bg-white/[0.1] transition-colors">
+                        Desactivar
+                      </SubmitButton>
+                    ) : (
+                      <>
+                        <input type="hidden" name="activo" value="on" />
+                        <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/25 transition-colors">
+                          Activar
+                        </SubmitButton>
+                      </>
+                    )}
+                  </form>
+                  <form action={deleteDestino}>
+                    <input type="hidden" name="id" value={destino.id} />
+                    <SubmitButton className="p-1.5 rounded-lg text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                      <Trash2 className="w-4 h-4" />
+                    </SubmitButton>
+                  </form>
+                </div>
+              </div>
+            </div>
           </div>
-        </section>
+        ))}
       </div>
+    </div>
   );
 }

@@ -24,13 +24,13 @@ export default function SidePanel({ isOpen, onClose, title, children }: SidePane
       {/* Panel */}
       <div className={`
         fixed right-0 top-0 bottom-0 w-full md:w-2/3 lg:w-1/2 xl:w-2/5
-        bg-gradient-to-br from-drb-turquoise-900 to-drb-turquoise-950
+        bg-gradient-to-br from-gray-900 to-[#0B1120]
         shadow-2xl z-50
         overflow-y-auto
         ${isOpen ? 'animate-slide-in-right' : 'animate-slide-out-right'}
       `}>
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-drb-turquoise-900/95 backdrop-blur-md border-b border-white/10 p-6 flex items-center justify-between">
+        <div className="sticky top-0 z-10 bg-gray-900/95 backdrop-blur-md border-b border-white/10 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-white">{title}</h2>
           <button
             onClick={onClose}

@@ -35,7 +35,7 @@ export default function NuevoClientePage() {
           <input name="hero_cta_text" className="w-full panel-input" />
         </div>
 
-        <button type="submit" className="px-5 py-2.5 rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold transition-colors">
+        <button type="submit" className="btn-primary">
           Crear agencia
         </button>
       </form>

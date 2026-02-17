@@ -112,7 +112,7 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
           defaultValue={to}
           className="panel-input"
         />
-        <button className="px-4 py-2 bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white rounded-xl font-bold transition-colors">
+        <button className="btn-primary">
           Filtrar
         </button>
         <div className="ml-auto flex gap-2">
@@ -136,9 +136,9 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
           <p className="text-sm text-gray-500 dark:text-white/60">Pagadas</p>
           <p className="text-2xl font-bold text-emerald-600 dark:text-green-400">{analytics.kpis.totalPagadas}</p>
         </div>
-        <div className="kpi-card border-drb-lime-200 dark:border-drb-lime-500/25">
+        <div className="kpi-card">
           <p className="text-sm text-gray-500 dark:text-white/60">Ingresos totales</p>
-          <p className="text-2xl font-bold text-drb-lime-600 dark:text-drb-lime-400">{analytics.kpis.totalIngresos.toLocaleString("es-ES")} EUR</p>
+          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{analytics.kpis.totalIngresos.toLocaleString("es-ES")} EUR</p>
         </div>
         <div className="kpi-card">
           <p className="text-sm text-gray-500 dark:text-white/60">Ticket medio</p>
@@ -178,7 +178,7 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
                     <td className="p-2 text-gray-900 dark:text-white">{m.month}</td>
                     <td className="p-2 text-right text-gray-500 dark:text-white/60">{m.reservas}</td>
                     <td className="p-2 text-right text-emerald-600 dark:text-green-400">{m.pagadas}</td>
-                    <td className="p-2 text-right text-drb-lime-600 dark:text-drb-lime-400">{m.ingresos.toLocaleString("es-ES")} EUR</td>
+                    <td className="p-2 text-right text-blue-600 dark:text-blue-400">{m.ingresos.toLocaleString("es-ES")} EUR</td>
                   </tr>
                 ))}
               </tbody>

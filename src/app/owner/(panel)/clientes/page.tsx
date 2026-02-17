@@ -12,7 +12,7 @@ export default async function OwnerClientesPage() {
         <h1 className="text-3xl font-bold">Clientes (Owner)</h1>
         <a
           href="/owner/clientes/nuevo"
-          className="px-4 py-2 rounded bg-white text-slate-950 font-semibold"
+          className="btn-primary"
         >
           Nueva agencia
         </a>

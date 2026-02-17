@@ -164,7 +164,7 @@ export default async function ClientePage({ params }: ClientePageProps) {
           <label className="text-sm text-gray-700 dark:text-white/70">Activo</label>
         </div>
 
-        <button type="submit" className="px-5 py-2.5 rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold transition-colors">
+        <button type="submit" className="btn-primary">
           Guardar cambios
         </button>
       </form>

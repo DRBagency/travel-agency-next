@@ -161,7 +161,7 @@ export default async function OwnerAutomatizacionesPage() {
           <div className="flex justify-end">
             <SubmitButton
               successText="Creada"
-              className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
+              className="btn-primary"
             >
               Crear automatizacion
             </SubmitButton>
@@ -191,7 +191,7 @@ export default async function OwnerAutomatizacionesPage() {
                       className={`px-2 py-1 rounded text-xs ${
                         auto.active
                           ? "badge-success"
-                          : "bg-gray-100 text-gray-600 dark:bg-gray-500/20 dark:text-gray-300"
+                          : "bg-gray-100 text-gray-600 dark:bg-white/[0.06] dark:text-white/60"
                       }`}
                     >
                       {auto.active ? "Activa" : "Inactiva"}

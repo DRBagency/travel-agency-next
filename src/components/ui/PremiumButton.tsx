@@ -20,9 +20,9 @@ export default function PremiumButton({
   const baseStyles = "font-semibold rounded-full transition-all duration-300 flex items-center justify-center gap-2";
 
   const variants = {
-    primary: "bg-drb-magenta-500 hover:bg-drb-magenta-600 text-white shadow-lg hover:shadow-xl hover:scale-105",
-    secondary: "bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white shadow-lg hover:shadow-xl hover:scale-105",
-    outline: "border-2 border-white/20 hover:border-drb-lime-500 text-white hover:bg-white/5"
+    primary: "bg-blue-500 hover:bg-blue-600 text-white shadow-lg hover:shadow-xl hover:scale-105",
+    secondary: "bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl hover:scale-105",
+    outline: "border-2 border-white/20 hover:border-blue-400 text-white hover:bg-white/5"
   };
 
   const sizes = {

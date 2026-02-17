@@ -1,10 +1,8 @@
 "use client";
 
 import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
   PieChart,
   Pie,
   Cell,
@@ -15,97 +13,150 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
 
-const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
+const CHART_COLORS = ['#4A8FE7', '#F59E0B', '#10B981', '#8B5CF6', '#EC4899'];
 
 function useChartStyles() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   return {
     tooltipStyle: {
-      backgroundColor: isDark ? "rgba(0,0,0,0.8)" : "#fff",
-      border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid #e5e7eb",
-      borderRadius: "8px",
+      backgroundColor: isDark ? "rgba(17,24,39,0.95)" : "#fff",
+      border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid #e5e7eb",
+      borderRadius: "12px",
       color: isDark ? "#fff" : "#111827",
+      padding: "10px 14px",
+      boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
     },
-    gridStroke: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)",
-    axisStroke: isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.4)",
+    gridStroke: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
+    axisStroke: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.3)",
     labelColor: isDark ? "#fff" : "#111827",
+    isDark,
   };
 }
 
 export function ReservasChart({ data }: { data: { month: string; reservas: number }[] }) {
   const styles = useChartStyles();
   return (
-    <div className="panel-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Reservas (últimos 6 meses)</h3>
-      <ResponsiveContainer width="100%" height={250}>
-        <BarChart data={data}>
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="panel-card p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Reservas</h3>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">Últimos 6 meses</p>
+      <ResponsiveContainer width="100%" height={280}>
+        <AreaChart data={data}>
+          <defs>
+            <linearGradient id="gradientReservas" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#4A8FE7" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="#4A8FE7" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
-          <XAxis dataKey="month" stroke={styles.axisStroke} />
-          <YAxis stroke={styles.axisStroke} />
+          <XAxis dataKey="month" stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
+          <YAxis stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
           <Tooltip contentStyle={styles.tooltipStyle} />
-          <Bar dataKey="reservas" fill="#3b82f6" name="Reservas" />
-        </BarChart>
+          <Area
+            type="monotone"
+            dataKey="reservas"
+            stroke="#4A8FE7"
+            strokeWidth={2.5}
+            fill="url(#gradientReservas)"
+            dot={{ r: 4, fill: "#4A8FE7", strokeWidth: 2, stroke: "#fff" }}
+            activeDot={{ r: 6, fill: "#4A8FE7" }}
+            name="Reservas"
+          />
+        </AreaChart>
       </ResponsiveContainer>
-    </div>
+    </motion.div>
   );
 }
 
 export function IngresosChart({ data }: { data: { month: string; ingresos: number }[] }) {
   const styles = useChartStyles();
   return (
-    <div className="panel-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Ingresos (últimos 6 meses)</h3>
-      <ResponsiveContainer width="100%" height={250}>
-        <LineChart data={data}>
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="panel-card p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Ingresos</h3>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">Últimos 6 meses</p>
+      <ResponsiveContainer width="100%" height={280}>
+        <AreaChart data={data}>
+          <defs>
+            <linearGradient id="gradientIngresos" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#10B981" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="#10B981" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
-          <XAxis dataKey="month" stroke={styles.axisStroke} />
-          <YAxis stroke={styles.axisStroke} />
-          <Tooltip contentStyle={styles.tooltipStyle} />
-          <Line type="monotone" dataKey="ingresos" stroke="#10b981" strokeWidth={2} name="Ingresos (€)" />
-        </LineChart>
+          <XAxis dataKey="month" stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
+          <YAxis stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
+          <Tooltip
+            contentStyle={styles.tooltipStyle}
+            formatter={(value) => `${Number(value).toLocaleString("es-ES")} €`}
+          />
+          <Area
+            type="monotone"
+            dataKey="ingresos"
+            stroke="#10B981"
+            strokeWidth={2.5}
+            fill="url(#gradientIngresos)"
+            dot={{ r: 4, fill: "#10B981", strokeWidth: 2, stroke: "#fff" }}
+            activeDot={{ r: 6, fill: "#10B981" }}
+            name="Ingresos (€)"
+          />
+        </AreaChart>
       </ResponsiveContainer>
-    </div>
+    </motion.div>
   );
 }
 
 export function DestinosChart({ data }: { data: { destino: string; value: number }[] }) {
   const styles = useChartStyles();
+  const total = data.reduce((sum, d) => sum + d.value, 0);
+
   return (
-    <div className="panel-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top 5 Destinos más vendidos</h3>
-      <div className="flex items-center justify-center">
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={({ destino, value, cx, cy, midAngle, outerRadius }: any) => {
-                const RADIAN = Math.PI / 180;
-                const radius = outerRadius + 25;
-                const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                return (
-                  <text x={x} y={y} fill={styles.labelColor} textAnchor={x > cx ? "start" : "end"} dominantBaseline="central" fontSize={12}>
-                    {`${destino} (${value})`}
-                  </text>
-                );
-              }}
-              outerRadius={100}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {data.map((_entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className="panel-card p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Top Destinos</h3>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">Por reservas</p>
+      <div className="flex items-center gap-6">
+        <div className="relative">
+          <ResponsiveContainer width={180} height={180}>
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={55}
+                outerRadius={80}
+                paddingAngle={3}
+                dataKey="value"
+              >
+                {data.map((_entry, index) => (
+                  <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip contentStyle={styles.tooltipStyle} />
+            </PieChart>
+          </ResponsiveContainer>
+          {/* Center label */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{total}</div>
+              <div className="text-xs text-gray-400 dark:text-white/40">Total</div>
+            </div>
+          </div>
+        </div>
+        {/* Legend */}
+        <div className="flex-1 space-y-2.5">
+          {data.map((item, index) => (
+            <div key={item.destino} className="flex items-center gap-2.5">
+              <div
+                className="w-3 h-3 rounded-full shrink-0"
+                style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+              />
+              <span className="text-sm text-gray-600 dark:text-white/70 flex-1 truncate">{item.destino}</span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">{item.value}</span>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -94,7 +94,7 @@ export default function UnsplashPicker({
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/20 rounded-2xl w-full max-w-3xl max-h-[80vh] flex flex-col shadow-2xl mx-4">
+      <div className="relative bg-white dark:bg-[#0B1120] border border-gray-200 dark:border-white/10 rounded-2xl w-full max-w-3xl max-h-[80vh] flex flex-col shadow-2xl mx-4">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-white/10">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">

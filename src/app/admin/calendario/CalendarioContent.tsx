@@ -103,7 +103,7 @@ function CustomDatePicker({
         onClick={() => setShowPicker(!showPicker)}
         className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] hover:border-gray-300 dark:hover:border-white/25 text-gray-900 dark:text-white text-left transition-all"
       >
-        <CalendarDays className="w-4 h-4 text-drb-lime-600 dark:text-drb-lime-400 shrink-0" />
+        <CalendarDays className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
         <span className="text-sm font-medium">{displayDate}</span>
       </button>
 
@@ -152,9 +152,9 @@ function CustomDatePicker({
                   className={`
                     h-9 w-full rounded-lg text-sm font-medium transition-all
                     ${isSelected
-                      ? "bg-drb-lime-500 text-drb-turquoise-900 font-bold shadow-lg shadow-drb-lime-500/20"
+                      ? "bg-blue-500 text-white font-bold shadow-lg shadow-blue-500/20"
                       : isToday
-                        ? "bg-gray-100 dark:bg-white/10 text-drb-lime-600 dark:text-drb-lime-400 ring-1 ring-drb-lime-400/30"
+                        ? "bg-gray-100 dark:bg-white/10 text-blue-600 dark:text-blue-400 ring-1 ring-blue-400/30"
                         : "text-gray-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white"
                     }
                   `}
@@ -197,7 +197,7 @@ function CustomTimePicker({
         {label}
       </label>
       <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12]">
-        <Clock className="w-4 h-4 text-drb-lime-600 dark:text-drb-lime-400 shrink-0" />
+        <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
         <select
           value={hours}
           onChange={(e) => setTime(Number(e.target.value), minutes)}
@@ -467,7 +467,7 @@ export default function CalendarioContent({
                 onChange={(e) => setFormTitle(e.target.value)}
                 placeholder="Reunion con cliente, vuelo a Madrid..."
                 autoFocus
-                className="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-lime-400/50 focus:ring-1 focus:ring-drb-lime-400/20 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/20 transition-all"
               />
             </div>
 
@@ -500,7 +500,7 @@ export default function CalendarioContent({
                 type="button"
                 onClick={() => setFormAllDay(!formAllDay)}
                 className={`relative w-11 h-6 rounded-full transition-colors ${
-                  formAllDay ? "bg-drb-lime-500" : "bg-gray-300 dark:bg-white/15"
+                  formAllDay ? "bg-blue-500" : "bg-gray-300 dark:bg-white/15"
                 }`}
               >
                 <div
@@ -541,7 +541,7 @@ export default function CalendarioContent({
                 onChange={(e) => setFormDescription(e.target.value)}
                 placeholder="Notas adicionales sobre el evento..."
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-lime-400/50 focus:ring-1 focus:ring-drb-lime-400/20 transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/20 transition-all resize-none"
               />
             </div>
           </div>
@@ -569,7 +569,7 @@ export default function CalendarioContent({
               <button
                 onClick={handleSaveEvent}
                 disabled={formSaving || !formTitle.trim()}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold text-sm disabled:opacity-40 transition-all shadow-lg shadow-drb-lime-500/20 hover:shadow-drb-lime-500/30"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm disabled:opacity-40 transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
               >
                 {editingEvent ? <Pencil className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                 {formSaving ? "Guardando..." : editingEvent ? "Actualizar" : "Crear evento"}
@@ -607,7 +607,7 @@ export default function CalendarioContent({
             <div className="flex gap-2.5">
               <button
                 onClick={() => openCreateModal()}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold text-sm transition-all shadow-lg shadow-drb-lime-500/20"
+                className="flex items-center gap-2 btn-primary text-sm shadow-lg shadow-blue-500/20"
               >
                 <Plus className="w-4 h-4" />
                 Nuevo evento
@@ -628,10 +628,10 @@ export default function CalendarioContent({
         <div className="panel-card p-5 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-24">
-              <div className="animate-spin rounded-full h-8 w-8 border-2 border-drb-lime-400 border-t-transparent" />
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-400 border-t-transparent" />
             </div>
           ) : (
-            <div className="fc-dark-theme">
+            <div className="fc-travelie-theme">
               <FullCalendar
                 ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -682,98 +682,6 @@ export default function CalendarioContent({
         </div>
 
         {renderModal()}
-
-        {/* FullCalendar dark theme styles */}
-        <style>{`
-          .fc-dark-theme .fc {
-            --fc-border-color: rgba(255,255,255,0.08);
-            --fc-button-bg-color: rgba(255,255,255,0.07);
-            --fc-button-border-color: rgba(255,255,255,0.12);
-            --fc-button-text-color: rgba(255,255,255,0.7);
-            --fc-button-hover-bg-color: rgba(255,255,255,0.12);
-            --fc-button-hover-border-color: rgba(255,255,255,0.2);
-            --fc-button-active-bg-color: #D4F24D;
-            --fc-button-active-border-color: #D4F24D;
-            --fc-today-bg-color: rgba(212,242,77,0.06);
-            --fc-event-bg-color: #D4F24D;
-            --fc-event-border-color: #D4F24D;
-            --fc-event-text-color: #0a2a2c;
-            --fc-page-bg-color: transparent;
-            --fc-neutral-bg-color: rgba(255,255,255,0.03);
-            --fc-list-event-hover-bg-color: rgba(255,255,255,0.08);
-            color: #fff;
-          }
-          .fc-dark-theme .fc .fc-button {
-            border-radius: 10px !important;
-            font-size: 0.8rem !important;
-            font-weight: 600 !important;
-            padding: 6px 14px !important;
-            transition: all 0.15s !important;
-          }
-          .fc-dark-theme .fc .fc-button-group {
-            gap: 2px;
-          }
-          .fc-dark-theme .fc .fc-button-active {
-            color: #0a2a2c !important;
-            font-weight: 700 !important;
-          }
-          .fc-dark-theme .fc .fc-col-header-cell-cushion {
-            color: rgba(255,255,255,0.4);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 10px 0;
-          }
-          .fc-dark-theme .fc .fc-daygrid-day-number {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.85rem;
-            font-weight: 500;
-            padding: 8px 10px;
-          }
-          .fc-dark-theme .fc .fc-daygrid-day:hover {
-            background: rgba(255,255,255,0.03);
-          }
-          .fc-dark-theme .fc .fc-timegrid-slot-label {
-            color: rgba(255,255,255,0.35);
-            font-size: 0.75rem;
-          }
-          .fc-dark-theme .fc .fc-toolbar-title {
-            color: #fff;
-            font-size: 1.15rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-          }
-          .fc-dark-theme .fc .fc-daygrid-event {
-            border-radius: 8px !important;
-            padding: 2px 8px !important;
-            font-size: 0.78rem !important;
-            font-weight: 600 !important;
-            cursor: pointer;
-            border: none !important;
-            margin: 1px 2px !important;
-          }
-          .fc-dark-theme .fc .fc-day-today {
-            background-color: rgba(212,242,77,0.06) !important;
-          }
-          .fc-dark-theme .fc .fc-day-today .fc-daygrid-day-number {
-            color: #D4F24D;
-            font-weight: 700;
-          }
-          .fc-dark-theme .fc td, .fc-dark-theme .fc th {
-            border-color: rgba(255,255,255,0.06) !important;
-          }
-          .fc-dark-theme .fc .fc-scrollgrid {
-            border-color: rgba(255,255,255,0.08) !important;
-          }
-          .fc-dark-theme .fc .fc-daygrid-day-frame {
-            min-height: 90px;
-          }
-          .fc-dark-theme .fc .fc-prev-button,
-          .fc-dark-theme .fc .fc-next-button {
-            padding: 6px 8px !important;
-          }
-        `}</style>
       </div>
     );
   }
@@ -791,7 +699,7 @@ export default function CalendarioContent({
       {/* Connect Google Calendar */}
       <div className="panel-card p-6 space-y-4">
         <div className="flex items-center gap-3">
-          <Calendar className="w-5 h-5 text-drb-lime-600 dark:text-drb-lime-400" />
+          <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           <h2 className="text-xl font-semibold">Google Calendar</h2>
         </div>
 
@@ -803,7 +711,7 @@ export default function CalendarioContent({
 
         <a
           href={`${apiBasePath}/oauth/start`}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-all shadow-lg shadow-drb-lime-500/20 hover:shadow-drb-lime-500/30"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-bold transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
         >
           <Link2 className="w-5 h-5" />
           Conectar Google Calendar

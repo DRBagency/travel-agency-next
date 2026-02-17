@@ -40,7 +40,7 @@ export default async function OwnerStripePage() {
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-sm text-gray-500 dark:text-white/60 mb-2">Secret Key</label>
-            <code className="block bg-gray-100 dark:bg-black/30 px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
+            <code className="block bg-gray-100 dark:bg-white/[0.06] px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
               {stripeConfig.secretKey}
             </code>
           </div>
@@ -55,19 +55,19 @@ export default async function OwnerStripePage() {
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-sm text-gray-500 dark:text-white/60 mb-2">Start (29€/mes)</label>
-            <code className="block bg-gray-100 dark:bg-black/30 px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
+            <code className="block bg-gray-100 dark:bg-white/[0.06] px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
               {stripeConfig.priceStart}
             </code>
           </div>
           <div>
             <label className="block text-sm text-gray-500 dark:text-white/60 mb-2">Grow (59€/mes)</label>
-            <code className="block bg-gray-100 dark:bg-black/30 px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
+            <code className="block bg-gray-100 dark:bg-white/[0.06] px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
               {stripeConfig.priceGrow}
             </code>
           </div>
           <div>
             <label className="block text-sm text-gray-500 dark:text-white/60 mb-2">Pro (99€/mes)</label>
-            <code className="block bg-gray-100 dark:bg-black/30 px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
+            <code className="block bg-gray-100 dark:bg-white/[0.06] px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
               {stripeConfig.pricePro}
             </code>
           </div>
@@ -82,7 +82,7 @@ export default async function OwnerStripePage() {
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-sm text-gray-500 dark:text-white/60 mb-2">Billing Webhook</label>
-            <code className="block bg-gray-100 dark:bg-black/30 px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
+            <code className="block bg-gray-100 dark:bg-white/[0.06] px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
               {stripeConfig.webhookBilling}
             </code>
             <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
@@ -91,7 +91,7 @@ export default async function OwnerStripePage() {
           </div>
           <div>
             <label className="block text-sm text-gray-500 dark:text-white/60 mb-2">Connect Webhook</label>
-            <code className="block bg-gray-100 dark:bg-black/30 px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
+            <code className="block bg-gray-100 dark:bg-white/[0.06] px-4 py-2 rounded text-sm text-gray-700 dark:text-white/80 font-mono">
               {stripeConfig.webhookConnect}
             </code>
             <p className="text-xs text-gray-400 dark:text-white/40 mt-1">

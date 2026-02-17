@@ -149,7 +149,7 @@ export default async function AdminLegalesPage({
 
             <div className="flex justify-end">
               <SubmitButton
-                className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
+                className="btn-primary"
               >
                 Guardar página
               </SubmitButton>
@@ -219,7 +219,7 @@ export default async function AdminLegalesPage({
 
               <div className="flex flex-wrap items-center justify-end gap-3">
                 <SubmitButton
-                  className="px-5 py-2 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
+                  className="btn-primary"
                 >
                   Guardar cambios
                 </SubmitButton>

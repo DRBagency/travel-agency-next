@@ -47,7 +47,7 @@ export default function ChangePlanForm({
       <button
         type="submit"
         disabled={loading}
-        className="px-5 py-2 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold disabled:opacity-60 transition-colors"
+        className="btn-primary disabled:opacity-60"
       >
         {loading ? "Actualizando..." : "Cambiar plan"}
       </button>

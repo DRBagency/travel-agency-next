@@ -1,6 +1,8 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import Link from "next/link";
+import KPICard from "@/components/ui/KPICard";
+import { MessageCircle, Clock, CheckCircle2, Plus } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -18,62 +20,70 @@ export default async function AdminSoportePage() {
   const client = await requireAdminClient();
   const tickets = await getTickets(client.id);
 
+  const open = tickets.filter((t) => t.status === "open").length;
+  const inProgress = tickets.filter((t) => t.status === "in_progress").length;
+  const closed = tickets.filter((t) => t.status === "closed").length;
+
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Soporte</h1>
-          <p className="text-gray-500 dark:text-white/60">Gestiona tus tickets de soporte</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Soporte</h1>
+          <p className="text-gray-400 dark:text-white/40">Gestiona tus tickets de soporte</p>
         </div>
         <Link
           href="/admin/soporte/nuevo"
-          className="px-4 py-2 bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold rounded-xl transition-colors"
+          className="btn-primary flex items-center gap-2"
         >
+          <Plus className="w-4 h-4" />
           Nuevo Ticket
         </Link>
       </div>
 
-      {/* Métricas rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="panel-card p-6">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">Tickets abiertos</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">
-            {tickets.filter((t) => t.status === "open").length}
-          </p>
-        </div>
-        <div className="panel-card p-6">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">En progreso</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">
-            {tickets.filter((t) => t.status === "in_progress").length}
-          </p>
-        </div>
-        <div className="panel-card p-6">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">Cerrados</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">
-            {tickets.filter((t) => t.status === "closed").length}
-          </p>
-        </div>
+      {/* KPI cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <KPICard
+          title="Tickets abiertos"
+          value={open}
+          icon={<MessageCircle className="w-5 h-5" />}
+          iconBg="bg-emerald-50 dark:bg-emerald-500/15"
+          iconColor="text-emerald-600 dark:text-emerald-400"
+        />
+        <KPICard
+          title="En progreso"
+          value={inProgress}
+          icon={<Clock className="w-5 h-5" />}
+          iconBg="bg-amber-50 dark:bg-amber-500/15"
+          iconColor="text-amber-600 dark:text-amber-400"
+        />
+        <KPICard
+          title="Cerrados"
+          value={closed}
+          icon={<CheckCircle2 className="w-5 h-5" />}
+          iconBg="bg-gray-100 dark:bg-white/[0.06]"
+          iconColor="text-gray-500 dark:text-white/50"
+        />
       </div>
 
-      {/* Lista de tickets */}
-      <div className="panel-card">
+      {/* Ticket list */}
+      <div className="panel-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100 dark:border-white/10">
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+              <tr className="border-b border-gray-100 dark:border-white/[0.06] bg-gray-50/80 dark:bg-white/[0.02]">
+                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
                   ID
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
                   Asunto
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
                   Prioridad
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
                   Estado
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
                   Fecha
                 </th>
               </tr>
@@ -83,8 +93,9 @@ export default async function AdminSoportePage() {
                 <tr>
                   <td
                     colSpan={5}
-                    className="p-8 text-center text-gray-400 dark:text-white/40"
+                    className="px-6 py-12 text-center text-gray-400 dark:text-white/40"
                   >
+                    <MessageCircle className="w-8 h-8 mx-auto mb-2 text-gray-300 dark:text-white/20" />
                     No hay tickets creados
                   </td>
                 </tr>
@@ -94,49 +105,49 @@ export default async function AdminSoportePage() {
                     key={ticket.id}
                     className="table-row"
                   >
-                    <td className="p-4 text-gray-500 dark:text-white/60 text-sm font-mono">
+                    <td className="px-6 py-4 text-gray-500 dark:text-white/50 text-sm font-mono">
                       <Link
                         href={`/admin/soporte/${ticket.id}`}
-                        className="hover:text-gray-900 dark:hover:text-white transition-colors"
+                        className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                       >
                         #{ticket.id.substring(0, 8)}
                       </Link>
                     </td>
-                    <td className="p-4 text-gray-900 dark:text-white">
+                    <td className="px-6 py-4">
                       <Link
                         href={`/admin/soporte/${ticket.id}`}
-                        className="hover:underline"
+                        className="font-medium text-sm text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                       >
                         {ticket.subject}
                       </Link>
                     </td>
-                    <td className="p-4">
+                    <td className="px-6 py-4">
                       <span
-                        className={`px-2 py-1 rounded text-xs ${
+                        className={
                           ticket.priority === "urgent"
                             ? "badge-danger"
                             : ticket.priority === "high"
-                              ? "bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-300 border border-orange-200 dark:border-orange-500/30"
+                              ? "badge-warning"
                               : "badge-info"
-                        }`}
+                        }
                       >
                         {ticket.priority}
                       </span>
                     </td>
-                    <td className="p-4">
+                    <td className="px-6 py-4">
                       <span
-                        className={`px-2 py-1 rounded text-xs ${
+                        className={
                           ticket.status === "open"
                             ? "badge-success"
                             : ticket.status === "in_progress"
                               ? "badge-warning"
-                              : "bg-gray-100 dark:bg-white/15 text-gray-500 dark:text-white/60 border border-gray-200 dark:border-white/20"
-                        }`}
+                              : "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-white/[0.06] text-gray-500 dark:text-white/50 border border-gray-200/60 dark:border-white/[0.08]"
+                        }
                       >
                         {ticket.status}
                       </span>
                     </td>
-                    <td className="p-4 text-gray-500 dark:text-white/60 text-sm">
+                    <td className="px-6 py-4 text-gray-400 dark:text-white/40 text-sm">
                       {new Date(ticket.created_at).toLocaleDateString("es-ES")}
                     </td>
                   </tr>

@@ -169,7 +169,7 @@ export default async function AdminEmailsPage({
                   formId={`email-form-${type.tipo}`}
                 />
                 <SubmitButton
-                  className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
+                  className="btn-primary"
                 >
                   Guardar plantilla
                 </SubmitButton>

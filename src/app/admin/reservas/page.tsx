@@ -3,7 +3,9 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/components/admin/SubmitButton";
 import ExportPDFButton from "@/components/admin/ExportPDFButton";
+import KPICard from "@/components/ui/KPICard";
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import { DollarSign, ShoppingBag, Ticket, Filter } from "lucide-react";
 
 async function updateEstado(formData: FormData) {
   "use server";
@@ -88,43 +90,52 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
       : 0;
 
   return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-            Reservas · {client.nombre}
-          </h1>
-          <p className="text-gray-500 dark:text-white/60">Dominio: {client.domain}</p>
-        </div>
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+          Reservas
+        </h1>
+        <p className="text-gray-400 dark:text-white/40">{client.nombre} · {client.domain}</p>
+      </div>
 
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="kpi-card">
-            <p className="text-sm text-gray-500 dark:text-white/60">Total facturado</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalFacturado} €</p>
-          </div>
-          <div className="kpi-card">
-            <p className="text-sm text-gray-500 dark:text-white/60">Reservas pagadas</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{numeroReservas}</p>
-          </div>
-          <div className="kpi-card">
-            <p className="text-sm text-gray-500 dark:text-white/60">Ticket medio</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{ticketMedio} €</p>
-          </div>
-        </div>
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <KPICard
+          title="Total facturado"
+          value={`${totalFacturado.toLocaleString("es-ES")} €`}
+          icon={<DollarSign className="w-5 h-5" />}
+          variant="gradient"
+        />
+        <KPICard
+          title="Reservas pagadas"
+          value={numeroReservas}
+          icon={<ShoppingBag className="w-5 h-5" />}
+          iconBg="bg-blue-50 dark:bg-blue-500/15"
+          iconColor="text-blue-600 dark:text-blue-400"
+        />
+        <KPICard
+          title="Ticket medio"
+          value={`${ticketMedio} €`}
+          icon={<Ticket className="w-5 h-5" />}
+          iconBg="bg-purple-50 dark:bg-purple-500/15"
+          iconColor="text-purple-600 dark:text-purple-400"
+        />
+      </div>
 
-        {/* Filters */}
-        <form method="get" className="flex flex-wrap gap-3">
+      {/* Filters */}
+      <div className="panel-card p-4">
+        <form method="get" className="flex flex-wrap items-center gap-3">
+          <Filter className="w-4 h-4 text-gray-400 dark:text-white/30" />
           <input
             name="q"
             defaultValue={q}
             placeholder="Buscar nombre o email"
-            className="panel-input"
+            className="panel-input text-sm"
           />
-
           <select
             name="estado"
             defaultValue={estado}
-            className="panel-input"
+            className="panel-input text-sm"
           >
             <option value="todos">Todos</option>
             <option value="pagado">Pagado</option>
@@ -132,119 +143,118 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             <option value="revisada">Revisada</option>
             <option value="cancelada">Cancelada</option>
           </select>
-
           <input
             type="date"
             name="from"
             defaultValue={from}
-            className="panel-input"
+            className="panel-input text-sm"
           />
-
           <input
             type="date"
             name="to"
             defaultValue={to}
-            className="panel-input"
+            className="panel-input text-sm"
           />
-
-          <button
-            className="px-4 py-2 bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white rounded-xl font-bold transition-colors"
-          >
+          <button className="btn-primary text-sm">
             Filtrar
           </button>
-
           <div className="ml-auto flex gap-2">
             <ExportPDFButton estado={estado} q={q} from={from} to={to} />
             <a
               href={`/api/admin/export?estado=${estado}&q=${q}&from=${from}&to=${to}`}
-              className="px-4 py-2 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-900 dark:text-white rounded-xl font-semibold transition-colors"
+              className="px-4 py-2 rounded-xl bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/25 font-semibold text-sm transition-colors"
             >
               Exportar CSV
             </a>
           </div>
         </form>
-
-        {/* Table */}
-        {reservasSafe.length === 0 ? (
-          <p className="text-gray-500 dark:text-white/70">No hay reservas.</p>
-        ) : (
-          <div className="panel-card overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 dark:bg-white/5">
-                  <tr>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-white/60">Fecha</th>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-white/60">Cliente</th>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-white/60">Destino</th>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-white/60">Personas</th>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-white/60">Precio</th>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-white/60">Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reservasSafe.map((r) => (
-                    <tr key={r.id} className="table-row">
-                      <td className="p-3 text-gray-900 dark:text-white">
-                        {new Date(r.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="p-3">
-                        <div className="font-semibold text-gray-900 dark:text-white">{r.nombre}</div>
-                        <div className="text-sm text-gray-500 dark:text-white/50">{r.email}</div>
-                      </td>
-                      <td className="p-3">
-                        <a
-                          href={`/admin/reserva/${r.id}`}
-                          className="underline font-semibold text-drb-turquoise-600 dark:text-drb-lime-400 hover:text-drb-turquoise-700 dark:hover:text-drb-lime-300"
-                        >
-                          {r.destino}
-                        </a>
-                      </td>
-                      <td className="p-3 text-gray-900 dark:text-white">{r.personas}</td>
-                      <td className="p-3 text-gray-900 dark:text-white">{r.precio} €</td>
-                      <td className="p-3">
-                        <div className="flex items-center gap-3">
-                          <span
-                            className={
-                              r.estado_pago === "pagado"
-                                ? "badge-success"
-                                : r.estado_pago === "pendiente"
-                                  ? "badge-warning"
-                                  : r.estado_pago === "revisada"
-                                    ? "badge-info"
-                                    : r.estado_pago === "cancelada"
-                                      ? "badge-danger"
-                                      : "badge-info"
-                            }
-                          >
-                            {r.estado_pago}
-                          </span>
-                          <form action={updateEstado} className="flex gap-2">
-                            <input type="hidden" name="id" value={r.id} />
-                            <select
-                              name="estado"
-                              defaultValue={r.estado_pago}
-                              className="panel-input text-sm py-1"
-                            >
-                              <option value="pagado">Pagado</option>
-                              <option value="pendiente">Pendiente</option>
-                              <option value="revisada">Revisada</option>
-                              <option value="cancelada">Cancelada</option>
-                            </select>
-                            <SubmitButton
-                              className="px-2 py-1 text-sm bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold rounded-lg transition-colors"
-                            >
-                              Guardar
-                            </SubmitButton>
-                          </form>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Table */}
+      {reservasSafe.length === 0 ? (
+        <div className="panel-card p-12 text-center">
+          <p className="text-gray-400 dark:text-white/40">No hay reservas.</p>
+        </div>
+      ) : (
+        <div className="panel-card overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-white/[0.06] bg-gray-50/80 dark:bg-white/[0.02]">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Fecha</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Cliente</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Destino</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Personas</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Precio</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reservasSafe.map((r) => (
+                  <tr key={r.id} className="table-row">
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-white/50">
+                      {new Date(r.created_at).toLocaleDateString("es-ES")}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-semibold shrink-0">
+                          {(r.nombre || "?").charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm text-gray-900 dark:text-white">{r.nombre}</div>
+                          <div className="text-xs text-gray-400 dark:text-white/40">{r.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                        {r.destino}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{r.personas}</td>
+                    <td className="px-6 py-4 text-sm font-semibold text-gray-900 dark:text-white">{r.precio} €</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={
+                            r.estado_pago === "pagado"
+                              ? "badge-success"
+                              : r.estado_pago === "pendiente"
+                                ? "badge-warning"
+                                : r.estado_pago === "revisada"
+                                  ? "badge-info"
+                                  : r.estado_pago === "cancelada"
+                                    ? "badge-danger"
+                                    : "badge-info"
+                          }
+                        >
+                          {r.estado_pago}
+                        </span>
+                        <form action={updateEstado} className="flex gap-1.5">
+                          <input type="hidden" name="id" value={r.id} />
+                          <select
+                            name="estado"
+                            defaultValue={r.estado_pago}
+                            className="panel-input text-xs py-1 px-2"
+                          >
+                            <option value="pagado">Pagado</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="revisada">Revisada</option>
+                            <option value="cancelada">Cancelada</option>
+                          </select>
+                          <SubmitButton className="px-2 py-1 text-xs btn-primary rounded-lg">
+                            OK
+                          </SubmitButton>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

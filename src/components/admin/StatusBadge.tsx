@@ -23,7 +23,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
   }
 
   return (
-    <span className={`${base} bg-gray-100 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300`}>
+    <span className={`${base} bg-gray-100 text-gray-700 dark:bg-white/[0.06] dark:text-white/60`}>
       {status || "—"}
     </span>
   );

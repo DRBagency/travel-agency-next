@@ -104,7 +104,7 @@ export default async function NuevoTicketPage() {
           <div className="flex items-center gap-3 pt-2">
             <SubmitButton
               successText="Ticket creado"
-              className="px-5 py-3 rounded-xl bg-drb-lime-500 hover:bg-drb-lime-400 text-drb-turquoise-900 font-bold transition-colors"
+              className="btn-primary"
             >
               Crear Ticket
             </SubmitButton>

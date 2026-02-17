@@ -20,9 +20,9 @@ export default async function AdminDocumentosPage() {
   const documents = await getDocuments(client.id);
 
   const documentTypes = [
-    { id: "presupuesto", name: "Presupuesto", icon: Receipt, color: "bg-drb-turquoise-500" },
-    { id: "contrato", name: "Contrato", icon: FileText, color: "bg-drb-lime-600" },
-    { id: "factura", name: "Factura", icon: FileCheck, color: "bg-drb-turquoise-600" },
+    { id: "presupuesto", name: "Presupuesto", icon: Receipt, color: "bg-blue-500" },
+    { id: "contrato", name: "Contrato", icon: FileText, color: "bg-emerald-500" },
+    { id: "factura", name: "Factura", icon: FileCheck, color: "bg-purple-500" },
   ];
 
   return (
