@@ -6,6 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowLeft, CreditCard, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
+import { ar } from "date-fns/locale";
+import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
+import type { Locale } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import {
   Popover,
@@ -44,6 +49,11 @@ const BookingModal = ({
   subscriptionActive,
   onClose,
 }: BookingModalProps) => {
+  const t = useTranslations('booking');
+  const locale = useLocale();
+  const dateFnsLocales: Record<string, Locale> = { es, en: enUS, ar };
+  const dateFnsLocale = dateFnsLocales[locale] || es;
+
   const [step, setStep] = useState(1);
   const [departureDate, setDepartureDate] = useState<Date | undefined>();
   const [returnDate, setReturnDate] = useState<Date | undefined>();
@@ -136,7 +146,7 @@ const BookingModal = ({
     if (data.url) {
       window.location.href = data.url;
     } else {
-      alert("Error al iniciar el pago");
+      alert(t('paymentError'));
     }
   };
 
@@ -170,14 +180,14 @@ const BookingModal = ({
             <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition"
+              className="absolute top-4 end-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition"
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="absolute bottom-4 left-6">
+            <div className="absolute bottom-4 start-6">
               <div className="flex items-center gap-2 text-sm text-white/70">
                 <MapPin className="w-4 h-4" />
-                Reserva directa
+                {t('directBooking')}
               </div>
               <h3 className="text-2xl font-bold">
                 {destination.nombre}
@@ -229,15 +239,15 @@ const BookingModal = ({
             {step === 1 && (
               <Popover>
                 <PopoverTrigger
-                  className={`w-full bg-slate-800 border p-3 rounded-xl text-left text-white placeholder:text-slate-400 ${
+                  className={`w-full bg-slate-800 border p-3 rounded-xl text-start text-white placeholder:text-slate-400 ${
                     showErrors && !departureDate
                       ? "border-red-500"
                       : "border-white/10"
                   } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950`}
                 >
                   {departureDate
-                    ? format(departureDate, "PPP", { locale: es })
-                    : "Selecciona fecha de salida"}
+                    ? format(departureDate, "PPP", { locale: dateFnsLocale })
+                    : t('selectDeparture')}
                 </PopoverTrigger>
                 <PopoverContent
                   className="bg-slate-950 border border-white/10 shadow-2xl text-white"
@@ -270,7 +280,7 @@ const BookingModal = ({
             {step === 2 && (
               <Popover>
                 <PopoverTrigger
-                  className={`w-full bg-slate-800 border p-3 rounded-xl text-left text-white placeholder:text-slate-400 ${
+                  className={`w-full bg-slate-800 border p-3 rounded-xl text-start text-white placeholder:text-slate-400 ${
                     showErrors &&
                     (!returnDate || !departureDate || returnDate <= departureDate)
                       ? "border-red-500"
@@ -278,8 +288,8 @@ const BookingModal = ({
                   } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950`}
                 >
                   {returnDate
-                    ? format(returnDate, "PPP", { locale: es })
-                    : "Selecciona fecha de regreso"}
+                    ? format(returnDate, "PPP", { locale: dateFnsLocale })
+                    : t('selectReturn')}
                 </PopoverTrigger>
                 <PopoverContent
                   className="bg-slate-950 border border-white/10 shadow-2xl text-white"
@@ -317,7 +327,7 @@ const BookingModal = ({
                   value={adults}
                   onChange={(e) => setAdults(Number(e.target.value))}
                   className="bg-slate-800 border border-white/10 p-3 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
-                  placeholder="Adultos"
+                  placeholder={t('adults')}
                 />
                 <input
                   type="number"
@@ -325,7 +335,7 @@ const BookingModal = ({
                   value={children}
                   onChange={(e) => setChildren(Number(e.target.value))}
                   className="bg-slate-800 border border-white/10 p-3 rounded-xl text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
-                  placeholder="Niños"
+                  placeholder={t('children')}
                 />
               </div>
             )}
@@ -338,7 +348,7 @@ const BookingModal = ({
                       ? "border-red-500"
                       : "border-white/10"
                   }`}
-                  placeholder="Nombre completo"
+                  placeholder={t('fullName')}
                   value={customer.name}
                   onChange={(e) =>
                     setCustomer({ ...customer, name: e.target.value })
@@ -350,7 +360,7 @@ const BookingModal = ({
                       ? "border-red-500"
                       : "border-white/10"
                   }`}
-                  placeholder="Email"
+                  placeholder={t('email')}
                   value={customer.email}
                   onChange={(e) =>
                     setCustomer({ ...customer, email: e.target.value })
@@ -362,7 +372,7 @@ const BookingModal = ({
                       ? "border-red-500"
                       : "border-white/10"
                   }`}
-                  placeholder="Teléfono"
+                  placeholder={t('phone')}
                   value={customer.phone}
                   onChange={(e) =>
                     setCustomer({ ...customer, phone: e.target.value })
@@ -371,30 +381,30 @@ const BookingModal = ({
 
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                   <div className="text-sm text-white/60 mb-2">
-                    Resumen
+                    {t('summary')}
                   </div>
                   <div className="flex items-center justify-between text-sm text-white/70">
-                    <span>Salida</span>
+                    <span>{t('departure')}</span>
                     <span>
                       {departureDate
-                        ? format(departureDate, "PPP", { locale: es })
+                        ? format(departureDate, "PPP", { locale: dateFnsLocale })
                         : "—"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm text-white/70">
-                    <span>Regreso</span>
+                    <span>{t('return')}</span>
                     <span>
                       {returnDate
-                        ? format(returnDate, "PPP", { locale: es })
+                        ? format(returnDate, "PPP", { locale: dateFnsLocale })
                         : "—"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm text-white/70">
-                    <span>Personas</span>
+                    <span>{t('persons')}</span>
                     <span>{persons}</span>
                   </div>
                   <div className="flex items-center justify-between font-semibold text-white">
-                    <span>Total</span>
+                    <span>{t('total')}</span>
                     <span>{totalPrice} €</span>
                   </div>
                 </div>
@@ -410,7 +420,7 @@ const BookingModal = ({
               className="flex items-center gap-2 text-white/60 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded-lg px-2 py-1"
             >
               <ArrowLeft className="w-4 h-4" />
-              Atrás
+              {t('back')}
             </button>
 
             {step < 4 ? (
@@ -434,18 +444,18 @@ const BookingModal = ({
                     : undefined
                 }
               >
-                Siguiente
+                {t('next')}
               </button>
             ) : (
               <div className="flex flex-col items-end gap-2">
                 {!subscriptionActive && (
                   <span className="text-sm text-amber-200">
-                    Tu suscripción no está activa.
+                    {t('subscriptionInactive')}
                   </span>
                 )}
                 {subscriptionActive && !paymentsEnabled && (
                   <span className="text-sm text-amber-200">
-                    Esta agencia aún no puede aceptar pagos.
+                    {t('paymentsNotEnabled')}
                   </span>
                 )}
                 <button
@@ -472,7 +482,7 @@ const BookingModal = ({
                   }
                 >
                   <CreditCard className="w-5 h-5" />
-                  Pagar · {totalPrice} €
+                  {t('pay')} · {totalPrice} €
                 </button>
               </div>
             )}

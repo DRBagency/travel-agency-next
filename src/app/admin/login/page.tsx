@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import { supabaseAdmin } from "@/lib/supabase-server";
+import { getTranslations } from 'next-intl/server';
 
 async function handleLogin(formData: FormData) {
   "use server";
@@ -58,6 +59,8 @@ export default async function AdminLoginPage({
   searchParams,
 }: AdminLoginPageProps) {
   const { error } = await searchParams;
+  const t = await getTranslations('auth.adminLogin');
+  const tc = await getTranslations('common');
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4">
@@ -66,10 +69,10 @@ export default async function AdminLoginPage({
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600" />
           <div>
             <h1 className="font-display text-2xl font-bold text-gray-900 dark:text-white">
-              Acceso al panel
+              {t('title')}
             </h1>
             <p className="text-gray-500 dark:text-white/60 text-sm">
-              Introduce tus credenciales para continuar.
+              {t('subtitle')}
             </p>
           </div>
         </div>
@@ -77,15 +80,15 @@ export default async function AdminLoginPage({
         {error && (
           <div className="mb-4 rounded-xl border border-red-200 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-200">
             {error === "client"
-              ? "No se encontró un cliente con este email."
-              : "Credenciales incorrectas. Inténtalo de nuevo."}
+              ? t('errorClient')
+              : t('errorAuth')}
           </div>
         )}
 
         <form action={handleLogin} className="space-y-4">
           <div>
             <label className="panel-label block mb-1">
-              Email
+              {tc('email')}
             </label>
             <input
               name="email"
@@ -97,7 +100,7 @@ export default async function AdminLoginPage({
           </div>
           <div>
             <label className="panel-label block mb-1">
-              Contraseña
+              {tc('password')}
             </label>
             <input
               name="password"
@@ -112,7 +115,7 @@ export default async function AdminLoginPage({
             type="submit"
             className="w-full rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold py-3 transition-colors"
           >
-            Entrar
+            {t('submit')}
           </button>
         </form>
       </div>

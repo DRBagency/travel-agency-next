@@ -2,6 +2,7 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import Link from "next/link";
 import { Receipt, FileText, FileCheck } from "lucide-react";
+import { getTranslations, getLocale } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
 
@@ -18,19 +19,22 @@ async function getDocuments(clienteId: string) {
 export default async function AdminDocumentosPage() {
   const client = await requireAdminClient();
   const documents = await getDocuments(client.id);
+  const t = await getTranslations('admin.documentos');
+  const tc = await getTranslations('common');
+  const locale = await getLocale();
 
   const documentTypes = [
-    { id: "presupuesto", name: "Presupuesto", icon: Receipt, color: "bg-drb-turquoise-500" },
-    { id: "contrato", name: "Contrato", icon: FileText, color: "bg-emerald-500" },
-    { id: "factura", name: "Factura", icon: FileCheck, color: "bg-purple-500" },
+    { id: "presupuesto", name: t('presupuesto'), icon: Receipt, color: "bg-drb-turquoise-500" },
+    { id: "contrato", name: t('contrato'), icon: FileText, color: "bg-emerald-500" },
+    { id: "factura", name: t('factura'), icon: FileCheck, color: "bg-purple-500" },
   ];
 
   return (
       <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Documentos</h1>
-          <p className="text-gray-500 dark:text-white/60">Crea y gestiona tus documentos</p>
+          <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
+          <p className="text-gray-500 dark:text-white/60">{t('subtitle')}</p>
         </div>
       </div>
 
@@ -50,9 +54,9 @@ export default async function AdminDocumentosPage() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Crear {type.name}
+                  {t('createType', { type: type.name })}
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-white/60">Nuevo documento</p>
+                <p className="text-sm text-gray-500 dark:text-white/60">{tc('newDocument')}</p>
               </div>
             </div>
           </Link>
@@ -63,27 +67,27 @@ export default async function AdminDocumentosPage() {
       <div className="panel-card overflow-hidden">
         <div className="p-6 border-b border-gray-100 dark:border-white/10">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Documentos recientes
+            {t('recentDocuments')}
           </h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100 dark:border-white/10">
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Tipo
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {tc('type')}
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Título
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {tc('title')}
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Estado
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {tc('status')}
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Fecha
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {tc('date')}
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Acciones
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {tc('actions')}
                 </th>
               </tr>
             </thead>
@@ -94,7 +98,7 @@ export default async function AdminDocumentosPage() {
                     colSpan={5}
                     className="p-8 text-center text-gray-400 dark:text-white/40"
                   >
-                    No hay documentos creados
+                    {t('noDocuments')}
                   </td>
                 </tr>
               ) : (
@@ -121,14 +125,14 @@ export default async function AdminDocumentosPage() {
                       </span>
                     </td>
                     <td className="p-4 text-gray-500 dark:text-white/60 text-sm">
-                      {new Date(doc.created_at).toLocaleDateString("es-ES")}
+                      {new Date(doc.created_at).toLocaleDateString(locale)}
                     </td>
                     <td className="p-4">
                       <Link
                         href={`/admin/documentos/${doc.id}`}
                         className="text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300 text-sm"
                       >
-                        Ver
+                        {tc('view')}
                       </Link>
                     </td>
                   </tr>

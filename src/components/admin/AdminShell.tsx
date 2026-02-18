@@ -3,6 +3,7 @@
 import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import {
   Menu,
   LayoutDashboard,
@@ -30,6 +31,7 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 import PageTransition from "@/components/ui/PageTransition";
 import SearchBar from "@/components/ui/SearchBar";
 import NotificationBell from "@/components/ui/NotificationBell";
+import LanguageSelector from "@/components/ui/LanguageSelector";
 
 interface AdminShellProps {
   clientName: string;
@@ -47,36 +49,6 @@ interface NavItem {
   icon: LucideIcon;
 }
 
-const navItems: NavItem[] = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Mi Web", href: "/admin/mi-web", icon: Globe },
-  { label: "Opiniones", href: "/admin/opiniones", icon: Star },
-  { label: "Destinos", href: "/admin/destinos", icon: MapPin },
-  { label: "Reservas", href: "/admin/reservas", icon: CalendarCheck },
-  { label: "Estadísticas", href: "/admin/analytics", icon: BarChart3 },
-  { label: "Calendario", href: "/admin/calendario", icon: Calendar },
-  { label: "Documentos", href: "/admin/documentos", icon: FileText },
-  { label: "Soporte", href: "/admin/soporte", icon: Headphones },
-  { label: "Stripe / Pagos", href: "/admin/stripe", icon: CreditCard },
-  { label: "Emails", href: "/admin/emails", icon: Mail },
-  { label: "Legales", href: "/admin/legales", icon: Scale },
-];
-
-const pageTitles: Record<string, string> = {
-  "/admin": "Dashboard",
-  "/admin/mi-web": "Mi Web",
-  "/admin/opiniones": "Opiniones",
-  "/admin/destinos": "Destinos",
-  "/admin/reservas": "Reservas",
-  "/admin/analytics": "Estadísticas",
-  "/admin/calendario": "Calendario",
-  "/admin/documentos": "Documentos",
-  "/admin/soporte": "Soporte",
-  "/admin/stripe": "Stripe / Pagos",
-  "/admin/emails": "Emails",
-  "/admin/legales": "Legales",
-};
-
 function SidebarNav({
   items,
   pathname,
@@ -85,6 +57,8 @@ function SidebarNav({
   logoUrl,
   primaryColor,
   plan,
+  t,
+  tc,
 }: {
   items: NavItem[];
   pathname: string;
@@ -93,6 +67,8 @@ function SidebarNav({
   logoUrl?: string | null;
   primaryColor?: string | null;
   plan?: string;
+  t: (key: string) => string;
+  tc: (key: string) => string;
 }) {
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
@@ -125,7 +101,7 @@ function SidebarNav({
           </div>
           {plan && (
             <div className="text-xs text-gray-400 dark:text-white/40">
-              Plan {plan}
+              {tc("plan")} {plan}
             </div>
           )}
         </div>
@@ -161,15 +137,15 @@ function SidebarNav({
           <div className="absolute inset-0 opacity-20 bg-[url('/images/sidebar-cta-bg.svg')] bg-cover bg-center" />
           <div className="relative p-4 text-white">
             <Sparkles className="w-5 h-5 mb-2 text-drb-turquoise-200" />
-            <p className="text-sm font-semibold">Mejora tu experiencia</p>
+            <p className="text-sm font-semibold">{tc("upgradeExperience")}</p>
             <p className="text-xs text-white/70 mt-1">
-              Desbloquea todas las funciones premium.
+              {tc("unlockPremium")}
             </p>
             <Link
               href="/admin/stripe"
               className="mt-3 inline-flex items-center text-xs font-semibold bg-white/20 hover:bg-white/30 rounded-lg px-3 py-1.5 transition-colors backdrop-blur-sm"
             >
-              Upgrade Now
+              {tc("upgradeNow")}
             </Link>
           </div>
         </div>
@@ -182,7 +158,7 @@ function SidebarNav({
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
         >
           <LogOut className="w-[18px] h-[18px] shrink-0" />
-          Cerrar sesión
+          {tc("logout")}
         </a>
       </div>
 
@@ -193,7 +169,7 @@ function SidebarNav({
             D
           </div>
           <span className="text-[11px] text-gray-400 dark:text-white/30">
-            Powered by <span className="font-semibold text-gray-500 dark:text-white/50">DRB Agency</span>
+            {tc("poweredBy")} <span className="font-semibold text-gray-500 dark:text-white/50">DRB Agency</span>
           </span>
         </div>
       </div>
@@ -212,6 +188,39 @@ const AdminShell = ({
 }: AdminShellProps) => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const t = useTranslations("admin");
+  const tc = useTranslations("common");
+  const locale = useLocale();
+
+  const navItems: NavItem[] = [
+    { label: t("nav.dashboard"), href: "/admin", icon: LayoutDashboard },
+    { label: t("nav.miWeb"), href: "/admin/mi-web", icon: Globe },
+    { label: t("nav.opiniones"), href: "/admin/opiniones", icon: Star },
+    { label: t("nav.destinos"), href: "/admin/destinos", icon: MapPin },
+    { label: t("nav.reservas"), href: "/admin/reservas", icon: CalendarCheck },
+    { label: t("nav.analytics"), href: "/admin/analytics", icon: BarChart3 },
+    { label: t("nav.calendario"), href: "/admin/calendario", icon: Calendar },
+    { label: t("nav.documentos"), href: "/admin/documentos", icon: FileText },
+    { label: t("nav.soporte"), href: "/admin/soporte", icon: Headphones },
+    { label: t("nav.stripe"), href: "/admin/stripe", icon: CreditCard },
+    { label: t("nav.emails"), href: "/admin/emails", icon: Mail },
+    { label: t("nav.legales"), href: "/admin/legales", icon: Scale },
+  ];
+
+  const pageTitles: Record<string, string> = {
+    "/admin": t("nav.dashboard"),
+    "/admin/mi-web": t("nav.miWeb"),
+    "/admin/opiniones": t("nav.opiniones"),
+    "/admin/destinos": t("nav.destinos"),
+    "/admin/reservas": t("nav.reservas"),
+    "/admin/analytics": t("nav.analytics"),
+    "/admin/calendario": t("nav.calendario"),
+    "/admin/documentos": t("nav.documentos"),
+    "/admin/soporte": t("nav.soporte"),
+    "/admin/stripe": t("nav.stripe"),
+    "/admin/emails": t("nav.emails"),
+    "/admin/legales": t("nav.legales"),
+  };
 
   const allowWhenInactive = pathname.startsWith("/admin/stripe");
 
@@ -219,12 +228,12 @@ const AdminShell = ({
   const pageTitle = Object.entries(pageTitles).find(([path]) => {
     if (path === "/admin") return pathname === "/admin";
     return pathname.startsWith(path);
-  })?.[1] || "Panel";
+  })?.[1] || tc("panel");
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
       {/* Desktop sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#041820] border-r border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
+      <aside className="fixed start-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
         <SidebarNav
           items={navItems}
           pathname={pathname}
@@ -232,11 +241,13 @@ const AdminShell = ({
           logoUrl={logoUrl}
           primaryColor={primaryColor}
           plan={plan}
+          t={t}
+          tc={tc}
         />
       </aside>
 
       {/* Header */}
-      <header className="sticky top-0 z-30 lg:ml-[260px] bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
+      <header className="sticky top-0 z-30 lg:ms-[260px] bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
         <div className="flex items-center justify-between px-4 lg:px-8 h-16">
           <div className="flex items-center gap-4">
             {/* Mobile hamburger */}
@@ -246,7 +257,7 @@ const AdminShell = ({
                   <Menu className="w-5 h-5 text-gray-600 dark:text-white" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[260px] p-0 bg-white dark:bg-[#041820] border-r border-gray-200/80 dark:border-white/[0.06]">
+              <SheetContent side={locale === "ar" ? "right" : "left"} className="w-[260px] p-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06]">
                 <SidebarNav
                   items={navItems}
                   pathname={pathname}
@@ -255,6 +266,8 @@ const AdminShell = ({
                   logoUrl={logoUrl}
                   primaryColor={primaryColor}
                   plan={plan}
+                  t={t}
+                  tc={tc}
                 />
               </SheetContent>
             </Sheet>
@@ -287,14 +300,16 @@ const AdminShell = ({
             {/* Functional search bar */}
             <SearchBar navItems={navItems} />
 
+            <LanguageSelector />
+
             <ThemeToggle />
 
             {/* Functional notifications */}
             <NotificationBell />
 
             {/* User avatar + info */}
-            <div className="hidden sm:flex items-center gap-3 pl-3 border-l border-gray-200/80 dark:border-white/[0.06]">
-              <div className="text-right hidden md:block">
+            <div className="hidden sm:flex items-center gap-3 ps-3 border-s border-gray-200/80 dark:border-white/[0.06]">
+              <div className="text-end hidden md:block">
                 <div className="text-sm font-medium text-gray-900 dark:text-white">
                   {clientName}
                 </div>
@@ -313,17 +328,17 @@ const AdminShell = ({
       </header>
 
       {/* Main content */}
-      <main className="lg:ml-[260px] px-4 lg:px-8 py-6">
+      <main className="lg:ms-[260px] px-4 lg:px-8 py-6">
         {subscriptionActive || allowWhenInactive ? (
           <PageTransition key={pathname}>{children}</PageTransition>
         ) : (
           <div className="space-y-4">
             <div className="panel-card p-6 border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-500/10">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Tu suscripción no está activa
+                {t("shell.subscriptionInactive")}
               </h2>
               <p className="text-sm text-gray-600 dark:text-white/70 mt-2">
-                Activa la suscripción para acceder a todas las funciones del panel.
+                {t("shell.subscriptionInactiveDesc")}
               </p>
             </div>
             <div className="flex justify-end">
@@ -331,7 +346,7 @@ const AdminShell = ({
                 href="/admin/stripe"
                 className="btn-primary px-6 py-3 rounded-xl"
               >
-                Activar suscripción
+                {t("shell.activateSubscription")}
               </a>
             </div>
           </div>

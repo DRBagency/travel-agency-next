@@ -1,6 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { getTranslations } from 'next-intl/server';
 import ConnectStripeButton from "./ConnectStripeButton";
 
 async function updateCliente(formData: FormData) {
@@ -37,6 +38,7 @@ async function updateCliente(formData: FormData) {
 async function connectStripe(formData: FormData) {
   "use server";
 
+  const t = await getTranslations('owner.clientes');
   const id = formData.get("id") as string;
 
   const host = (await headers()).get("host");
@@ -46,7 +48,7 @@ async function connectStripe(formData: FormData) {
     (host ? `http://${host}` : "");
 
   if (!rawBase) {
-    throw new Error("Base URL no configurada");
+    throw new Error(t('baseUrlError'));
   }
 
   const createUrl = rawBase.startsWith("http")
@@ -56,7 +58,7 @@ async function connectStripe(formData: FormData) {
   const data = await res.json();
 
   if (!res.ok || !data?.stripe_account_id) {
-    throw new Error("No se pudo crear la cuenta de Stripe");
+    throw new Error(t('stripeCreateError'));
   }
 
   await supabaseAdmin
@@ -72,6 +74,9 @@ interface ClientePageProps {
 }
 
 export default async function ClientePage({ params }: ClientePageProps) {
+  const t = await getTranslations('owner.clientes');
+  const tf = await getTranslations('owner.clientes.form');
+  const tc = await getTranslations('common');
   const { id } = await params;
 
   const { data: cliente } = await supabaseAdmin
@@ -83,20 +88,20 @@ export default async function ClientePage({ params }: ClientePageProps) {
   if (!cliente) {
     return (
       <div className="p-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Cliente no encontrado</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('clientNotFound')}</h1>
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Editar cliente</h1>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{t('editClient')}</h1>
 
       <form action={updateCliente} className="space-y-4 max-w-2xl">
         <input type="hidden" name="id" value={cliente.id} />
 
         <div>
-          <label className="panel-label block mb-1">Nombre</label>
+          <label className="panel-label block mb-1">{tc('name')}</label>
           <input
             name="nombre"
             defaultValue={cliente.nombre ?? ""}
@@ -104,7 +109,7 @@ export default async function ClientePage({ params }: ClientePageProps) {
           />
         </div>
         <div>
-          <label className="panel-label block mb-1">Domain</label>
+          <label className="panel-label block mb-1">{t('domain')}</label>
           <input
             name="domain"
             defaultValue={cliente.domain ?? ""}
@@ -112,7 +117,7 @@ export default async function ClientePage({ params }: ClientePageProps) {
           />
         </div>
         <div>
-          <label className="panel-label block mb-1">Primary Color</label>
+          <label className="panel-label block mb-1">{tf('primaryColor')}</label>
           <input
             name="primary_color"
             defaultValue={cliente.primary_color ?? ""}
@@ -120,7 +125,7 @@ export default async function ClientePage({ params }: ClientePageProps) {
           />
         </div>
         <div>
-          <label className="panel-label block mb-1">Hero Title</label>
+          <label className="panel-label block mb-1">{tf('heroTitle')}</label>
           <input
             name="hero_title"
             defaultValue={cliente.hero_title ?? ""}
@@ -128,7 +133,7 @@ export default async function ClientePage({ params }: ClientePageProps) {
           />
         </div>
         <div>
-          <label className="panel-label block mb-1">Hero Subtitle</label>
+          <label className="panel-label block mb-1">{tf('heroSubtitle')}</label>
           <textarea
             name="hero_subtitle"
             defaultValue={cliente.hero_subtitle ?? ""}
@@ -136,7 +141,7 @@ export default async function ClientePage({ params }: ClientePageProps) {
           />
         </div>
         <div>
-          <label className="panel-label block mb-1">Hero CTA Text</label>
+          <label className="panel-label block mb-1">{tf('heroCta')}</label>
           <input
             name="hero_cta_text"
             defaultValue={cliente.hero_cta_text ?? ""}
@@ -144,7 +149,7 @@ export default async function ClientePage({ params }: ClientePageProps) {
           />
         </div>
         <div>
-          <label className="panel-label block mb-1">Plan</label>
+          <label className="panel-label block mb-1">{tc('plan')}</label>
           <select
             name="plan"
             defaultValue={cliente.plan ?? "start"}
@@ -161,11 +166,11 @@ export default async function ClientePage({ params }: ClientePageProps) {
             name="activo"
             defaultChecked={Boolean(cliente.activo)}
           />
-          <label className="text-sm text-gray-700 dark:text-white/70">Activo</label>
+          <label className="text-sm text-gray-700 dark:text-white/70">{tc('active')}</label>
         </div>
 
         <button type="submit" className="btn-primary">
-          Guardar cambios
+          {tc('saveChanges')}
         </button>
       </form>
 

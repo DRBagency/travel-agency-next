@@ -6,6 +6,7 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 import SubmitButton from "@/components/admin/SubmitButton";
 import Link from "next/link";
 import DocumentFormClient from "../DocumentFormClient";
+import { getTranslations, getLocale } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
 
@@ -72,6 +73,9 @@ export default async function DocumentDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations('admin.documentos');
+  const tc = await getTranslations('common');
+  const locale = await getLocale();
   const client = await requireAdminClient();
   const { id } = await params;
 
@@ -95,10 +99,10 @@ export default async function DocumentDetailPage({
 
   const typeLabel =
     doc.document_type === "presupuesto"
-      ? "Presupuesto"
+      ? t('presupuesto')
       : doc.document_type === "contrato"
-        ? "Contrato"
-        : "Factura";
+        ? t('contrato')
+        : t('factura');
 
   const updateBound = updateDocument.bind(null, id);
   const deleteBound = deleteDocument.bind(null, id);
@@ -110,7 +114,7 @@ export default async function DocumentDetailPage({
           href="/admin/documentos"
           className="text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
-          &larr; Volver
+          &larr; {tc('back')}
         </Link>
       </div>
 
@@ -131,7 +135,7 @@ export default async function DocumentDetailPage({
               {doc.status}
             </span>
             <span className="text-gray-400 dark:text-white/40 text-sm">
-              {new Date(doc.created_at).toLocaleDateString("es-ES")}
+              {new Date(doc.created_at).toLocaleDateString(locale)}
             </span>
           </div>
         </div>
@@ -141,7 +145,7 @@ export default async function DocumentDetailPage({
             type="submit"
             className="badge-danger px-4 py-2 rounded-xl text-sm font-bold hover:bg-red-600/30 transition-colors"
           >
-            Eliminar documento
+            {t('deleteDocument')}
           </button>
         </form>
       </div>
@@ -161,10 +165,10 @@ export default async function DocumentDetailPage({
             }}
           >
             <SubmitButton
-              successText="Guardado"
+              successText={t('saved')}
               className="btn-primary"
             >
-              Guardar cambios
+              {tc('saveChanges')}
             </SubmitButton>
           </DocumentFormClient>
         </form>

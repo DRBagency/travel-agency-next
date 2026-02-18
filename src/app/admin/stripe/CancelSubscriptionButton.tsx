@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function CancelSubscriptionButton() {
+  const t = useTranslations('admin.stripe');
+  const tc = useTranslations('common');
   const [loading, setLoading] = useState(false);
 
   const handleCancel = async () => {
     if (loading) return;
 
-    const confirmed = window.confirm(
-      "¿Estás seguro de que deseas cancelar tu suscripción? Se cancelará al final del periodo actual."
-    );
+    const confirmed = window.confirm(t('confirmCancel'));
     if (!confirmed) return;
 
     setLoading(true);
@@ -21,15 +22,13 @@ export default function CancelSubscriptionButton() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Error al cancelar");
+        throw new Error(data.error || t('cancelError'));
       }
 
-      alert(
-        "Suscripción cancelada. Se mantendrá activa hasta el final del periodo de facturación."
-      );
+      alert(t('cancelSuccess'));
       window.location.reload();
     } catch (error: any) {
-      alert(error.message || "Error al cancelar la suscripción");
+      alert(error.message || t('cancelError'));
       console.error("❌ [CancelSubscriptionButton]", error);
     } finally {
       setLoading(false);
@@ -43,7 +42,7 @@ export default function CancelSubscriptionButton() {
       disabled={loading}
       className="px-4 py-2 rounded-xl border border-red-500/30 bg-red-500/10 text-red-300 text-sm font-semibold hover:bg-red-500/20 disabled:opacity-60 transition-colors"
     >
-      {loading ? "Cancelando..." : "Cancelar suscripción"}
+      {loading ? tc('cancelling') : t('cancelSubscription')}
     </button>
   );
 }

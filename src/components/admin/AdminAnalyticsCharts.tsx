@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
+import { useTranslations } from 'next-intl';
 
 const CHART_COLORS = ['#1CABB0', '#D4F24D', '#E91E63', '#8B5CF6', '#F59E0B'];
 
@@ -38,10 +39,11 @@ function useChartStyles() {
 
 export function ReservasChart({ data }: { data: { month: string; reservas: number }[] }) {
   const styles = useChartStyles();
+  const t = useTranslations('admin.analytics.charts');
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="panel-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Reservas</h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">Últimos 6 meses</p>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{t('bookings')}</h3>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <defs>
@@ -62,7 +64,7 @@ export function ReservasChart({ data }: { data: { month: string; reservas: numbe
             fill="url(#gradientReservas)"
             dot={{ r: 4, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
             activeDot={{ r: 6, fill: "#1CABB0" }}
-            name="Reservas"
+            name={t('bookings')}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -72,10 +74,11 @@ export function ReservasChart({ data }: { data: { month: string; reservas: numbe
 
 export function IngresosChart({ data }: { data: { month: string; ingresos: number }[] }) {
   const styles = useChartStyles();
+  const t = useTranslations('admin.analytics.charts');
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="panel-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Ingresos</h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">Últimos 6 meses</p>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{t('revenue')}</h3>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <defs>
@@ -89,7 +92,7 @@ export function IngresosChart({ data }: { data: { month: string; ingresos: numbe
           <YAxis stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
           <Tooltip
             contentStyle={styles.tooltipStyle}
-            formatter={(value) => `${Number(value).toLocaleString("es-ES")} €`}
+            formatter={(value) => `${Number(value).toLocaleString()} €`}
           />
           <Area
             type="monotone"
@@ -99,7 +102,7 @@ export function IngresosChart({ data }: { data: { month: string; ingresos: numbe
             fill="url(#gradientIngresos)"
             dot={{ r: 4, fill: "#B8D63E", strokeWidth: 2, stroke: "#fff" }}
             activeDot={{ r: 6, fill: "#B8D63E" }}
-            name="Ingresos (€)"
+            name={t('revenueEur')}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -109,12 +112,13 @@ export function IngresosChart({ data }: { data: { month: string; ingresos: numbe
 
 export function DestinosChart({ data }: { data: { destino: string; value: number }[] }) {
   const styles = useChartStyles();
+  const t = useTranslations('admin.analytics.charts');
   const total = data.reduce((sum, d) => sum + d.value, 0);
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className="panel-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Top Destinos</h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">Por reservas</p>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{t('topDestinations')}</h3>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('byBookings')}</p>
       <div className="flex items-center gap-6">
         <div className="relative">
           <ResponsiveContainer width={180} height={180}>
@@ -139,7 +143,7 @@ export function DestinosChart({ data }: { data: { destino: string; value: number
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-900 dark:text-white">{total}</div>
-              <div className="text-xs text-gray-400 dark:text-white/40">Total</div>
+              <div className="text-xs text-gray-400 dark:text-white/40">{t('total')}</div>
             </div>
           </div>
         </div>

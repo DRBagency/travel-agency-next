@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function SubscriptionButton() {
+  const t = useTranslations('admin.stripe');
+  const tc = useTranslations('common');
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {
@@ -14,11 +17,11 @@ export default function SubscriptionButton() {
       });
       const data = await res.json();
       if (!res.ok || !data?.url) {
-        throw new Error("No se pudo iniciar el checkout");
+        throw new Error(t('checkoutError'));
       }
       window.location.href = data.url;
     } catch {
-      alert("No se pudo iniciar la suscripción");
+      alert(t('checkoutError'));
     } finally {
       setLoading(false);
     }
@@ -31,7 +34,7 @@ export default function SubscriptionButton() {
       disabled={loading}
       className="btn-primary disabled:opacity-60"
     >
-      {loading ? "Redirigiendo..." : "Activar suscripción"}
+      {loading ? tc('redirecting') : t('activateSubscription')}
     </button>
   );
 }

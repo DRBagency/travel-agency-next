@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 export async function GET(req: Request) {
   const cookieStore = await cookies();
   const clienteId = cookieStore.get("cliente_id")?.value;
+  const locale = cookieStore.get("NEXT_LOCALE")?.value || "es";
   if (!clienteId) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
@@ -74,7 +75,7 @@ export async function GET(req: Request) {
   ];
 
   const rows = (reservas || []).map((r) => [
-    new Date(r.created_at).toLocaleString("es-ES"),
+    new Date(r.created_at).toLocaleString(locale),
     r.nombre,
     r.email,
     r.destino,

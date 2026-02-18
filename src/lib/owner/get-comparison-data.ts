@@ -1,6 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { subMonths, format, startOfMonth, endOfMonth } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS, ar } from "date-fns/locale";
+import type { Locale } from "date-fns";
+
+const dateFnsLocales: Record<string, Locale> = { es, en: enUS, ar };
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -26,7 +29,8 @@ export interface ProjectionPoint {
   tipo: "actual" | "proyectado";
 }
 
-export async function getComparisonData() {
+export async function getComparisonData(locale: string = 'es') {
+  const dfLocale = dateFnsLocales[locale] || es;
   try {
     const now = new Date();
 
@@ -34,7 +38,7 @@ export async function getComparisonData() {
     const months = Array.from({ length: 6 }, (_, i) => {
       const date = subMonths(now, 5 - i);
       return {
-        month: format(date, "MMM yy", { locale: es }),
+        month: format(date, "MMM yy", { locale: dfLocale }),
         start: startOfMonth(date).toISOString(),
         end: endOfMonth(date).toISOString(),
       };
@@ -98,7 +102,7 @@ export async function getComparisonData() {
       ...Array.from({ length: 3 }, (_, i) => {
         const futureDate = subMonths(now, -(i + 1));
         return {
-          month: format(futureDate, "MMM yy", { locale: es }),
+          month: format(futureDate, "MMM yy", { locale: dfLocale }),
           mrr: Math.max(0, Math.round(mrrValues[n - 1] + avgGrowth * (i + 1))),
           tipo: "proyectado" as const,
         };

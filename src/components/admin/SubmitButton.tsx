@@ -46,7 +46,7 @@ export default function SubmitButton({
         className={className}
         formAction={formAction}
       >
-        {pending && <Loader2 className="w-4 h-4 animate-spin inline mr-1.5" />}
+        {pending && <Loader2 className="w-4 h-4 animate-spin inline me-1.5" />}
         {children}
       </button>
     </>

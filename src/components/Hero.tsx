@@ -89,7 +89,7 @@ const Hero = ({
       />
 
       <div className="relative z-10 container mx-auto px-4">
-        <div className="max-w-3xl text-center md:text-left py-8 md:py-12">
+        <div className="max-w-3xl text-center md:text-start py-8 md:py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -187,7 +187,7 @@ const Hero = ({
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-2xl border p-4 text-left backdrop-blur"
+                className="rounded-2xl border p-4 text-start backdrop-blur"
                 style={{
                   borderColor: primaryColor
                     ? "color-mix(in srgb, " + primaryColor + " 35%, transparent)"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface ConnectStripeButtonProps {
   label: string;
@@ -11,6 +12,8 @@ export default function ConnectStripeButton({
   label,
   disabled,
 }: ConnectStripeButtonProps) {
+  const t = useTranslations('admin.stripe');
+  const tc = useTranslations('common');
   const [loading, setLoading] = useState(false);
 
   const handleConnect = async () => {
@@ -24,12 +27,12 @@ export default function ConnectStripeButton({
       const data = await res.json();
 
       if (!res.ok || !data?.url) {
-        throw new Error("No se pudo iniciar el onboarding");
+        throw new Error(t('onboardingError'));
       }
 
       window.location.href = data.url;
     } catch {
-      alert("No se pudo iniciar el onboarding de Stripe");
+      alert(t('onboardingError'));
     } finally {
       setLoading(false);
     }
@@ -42,7 +45,7 @@ export default function ConnectStripeButton({
       disabled={loading || disabled}
       className="btn-primary disabled:opacity-60"
     >
-      {loading ? "Conectando..." : label}
+      {loading ? tc('connecting') : label}
     </button>
   );
 }

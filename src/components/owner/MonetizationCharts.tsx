@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
+import { useTranslations } from 'next-intl';
 
 function useChartStyles() {
   const { theme } = useTheme();
@@ -50,13 +51,14 @@ interface ProjectionPoint {
 
 export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
   const styles = useChartStyles();
+  const t = useTranslations('owner.monetization.charts');
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="panel-card p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-        Comparativa mensual
+        {t('monthlyComparison')}
       </h3>
       <p className="text-sm text-gray-400 dark:text-white/40 mb-4">
-        MRR vs Comisiones (últimos 6 meses)
+        {t('mrrVsCommissions')}
       </p>
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
@@ -76,7 +78,7 @@ export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
           <Tooltip
             contentStyle={styles.tooltipStyle}
             labelStyle={styles.labelStyle}
-            formatter={(value) => `${Number(value).toLocaleString("es-ES")} EUR`}
+            formatter={(value) => `${Number(value).toLocaleString()} EUR`}
           />
           <Legend wrapperStyle={styles.legendStyle} />
           <Area
@@ -86,7 +88,7 @@ export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
             strokeWidth={2.5}
             fill="url(#gradientMRRComp)"
             dot={{ r: 3, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
-            name="MRR"
+            name={t('mrr')}
           />
           <Area
             type="monotone"
@@ -95,7 +97,7 @@ export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
             strokeWidth={2.5}
             fill="url(#gradientComisiones)"
             dot={{ r: 3, fill: "#D4F24D", strokeWidth: 2, stroke: "#fff" }}
-            name="Comisiones"
+            name={t('commissions')}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -105,6 +107,7 @@ export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
 
 export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
   const styles = useChartStyles();
+  const t = useTranslations('owner.monetization.charts');
 
   const chartData = data.map((d) => ({
     month: d.month,
@@ -120,10 +123,10 @@ export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="panel-card p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-        Proyección de ingresos (MRR)
+        {t('revenueProjection')}
       </h3>
       <p className="text-sm text-gray-400 dark:text-white/40 mb-4">
-        Basada en tendencia lineal de los últimos 6 meses
+        {t('basedOnTrend')}
       </p>
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={chartData}>
@@ -145,7 +148,7 @@ export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
             labelStyle={styles.labelStyle}
             formatter={(value) =>
               value !== undefined
-                ? `${Number(value).toLocaleString("es-ES")} EUR`
+                ? `${Number(value).toLocaleString()} EUR`
                 : "-"
             }
           />
@@ -157,7 +160,7 @@ export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
             strokeWidth={2.5}
             fill="url(#gradientActual)"
             dot={{ r: 4, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
-            name="MRR Actual"
+            name={t('mrrActual')}
             connectNulls={false}
           />
           <Area
@@ -168,7 +171,7 @@ export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
             strokeDasharray="6 4"
             fill="url(#gradientProyectado)"
             dot={{ r: 3, strokeDasharray: "0", fill: "#8B5CF6", strokeWidth: 2, stroke: "#fff" }}
-            name="Proyectado"
+            name={t('projected')}
             connectNulls
           />
           {lastActualIdx >= 0 && (
@@ -177,7 +180,7 @@ export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
               stroke={styles.refLineStroke}
               strokeDasharray="3 3"
               label={{
-                value: "Hoy",
+                value: t('today'),
                 position: "top",
                 fill: styles.refLabelFill,
                 fontSize: 11,

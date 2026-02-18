@@ -3,6 +3,7 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 import Link from "next/link";
 import KPICard from "@/components/ui/KPICard";
 import { MessageCircle, Clock, CheckCircle2, Plus } from "lucide-react";
+import { getTranslations, getLocale } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
 
@@ -19,45 +20,48 @@ async function getTickets(clienteId: string) {
 export default async function AdminSoportePage() {
   const client = await requireAdminClient();
   const tickets = await getTickets(client.id);
+  const t = await getTranslations('admin.soporte');
+  const tc = await getTranslations('common');
+  const locale = await getLocale();
 
-  const open = tickets.filter((t) => t.status === "open").length;
-  const inProgress = tickets.filter((t) => t.status === "in_progress").length;
-  const closed = tickets.filter((t) => t.status === "closed").length;
+  const open = tickets.filter((tk) => tk.status === "open").length;
+  const inProgress = tickets.filter((tk) => tk.status === "in_progress").length;
+  const closed = tickets.filter((tk) => tk.status === "closed").length;
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Soporte</h1>
-          <p className="text-gray-400 dark:text-white/40">Gestiona tus tickets de soporte</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
+          <p className="text-gray-400 dark:text-white/40">{t('subtitle')}</p>
         </div>
         <Link
           href="/admin/soporte/nuevo"
           className="btn-primary flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
-          Nuevo Ticket
+          {t('newTicket')}
         </Link>
       </div>
 
       {/* KPI cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KPICard
-          title="Tickets abiertos"
+          title={t('openTickets')}
           value={open}
           icon={<MessageCircle className="w-5 h-5" />}
           iconBg="bg-emerald-50 dark:bg-emerald-500/15"
           iconColor="text-emerald-600 dark:text-emerald-400"
         />
         <KPICard
-          title="En progreso"
+          title={t('inProgress')}
           value={inProgress}
           icon={<Clock className="w-5 h-5" />}
           iconBg="bg-amber-50 dark:bg-amber-500/15"
           iconColor="text-amber-600 dark:text-amber-400"
         />
         <KPICard
-          title="Cerrados"
+          title={t('closed')}
           value={closed}
           icon={<CheckCircle2 className="w-5 h-5" />}
           iconBg="bg-gray-100 dark:bg-white/[0.06]"
@@ -71,20 +75,20 @@ export default async function AdminSoportePage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100 dark:border-white/[0.06] bg-gray-50/80 dark:bg-white/[0.02]">
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
-                  ID
+                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
+                  {t('id')}
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
-                  Asunto
+                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
+                  {t('subject')}
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
-                  Prioridad
+                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
+                  {t('priority')}
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
-                  Estado
+                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
+                  {t('status')}
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
-                  Fecha
+                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
+                  {t('date')}
                 </th>
               </tr>
             </thead>
@@ -96,7 +100,7 @@ export default async function AdminSoportePage() {
                     className="px-6 py-12 text-center text-gray-400 dark:text-white/40"
                   >
                     <MessageCircle className="w-8 h-8 mx-auto mb-2 text-gray-300 dark:text-white/20" />
-                    No hay tickets creados
+                    {t('noTickets')}
                   </td>
                 </tr>
               ) : (
@@ -148,7 +152,7 @@ export default async function AdminSoportePage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-gray-400 dark:text-white/40 text-sm">
-                      {new Date(ticket.created_at).toLocaleDateString("es-ES")}
+                      {new Date(ticket.created_at).toLocaleDateString(locale)}
                     </td>
                   </tr>
                 ))

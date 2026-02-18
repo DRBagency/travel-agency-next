@@ -109,7 +109,7 @@ const Navbar = ({
                 >
                   {link.label}
                   <span
-                    className="absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
+                    className="absolute -bottom-1 start-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
                     style={{
                       backgroundColor: primaryColor || "currentColor",
                     }}
@@ -168,7 +168,7 @@ const Navbar = ({
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 bottom-0 w-80 bg-slate-950 border-l border-white/10 p-6"
+              className="absolute end-0 top-0 bottom-0 w-80 bg-slate-950 border-s border-white/10 p-6"
             >
               <div className="flex items-center justify-between mb-8">
                 <span className="font-display text-xl font-bold">

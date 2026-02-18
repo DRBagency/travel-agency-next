@@ -5,6 +5,7 @@ import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DestinoImageField from "./DestinoImageField";
 import { MapPin, Plus, Pencil, Trash2 } from "lucide-react";
+import { getTranslations } from 'next-intl/server';
 
 async function createDestino(formData: FormData) {
   "use server";
@@ -79,13 +80,16 @@ export default async function AdminDestinosPage({
 
   const activeCount = destinos?.filter(d => d.activo).length ?? 0;
 
+  const t = await getTranslations('admin.destinos');
+  const tc = await getTranslations('common');
+
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Destinos</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
           <p className="text-gray-400 dark:text-white/40">
-            {destinos?.length ?? 0} destinos · {activeCount} activos
+            {t('count', { total: destinos?.length ?? 0, active: activeCount })}
           </p>
         </div>
       </div>
@@ -97,48 +101,48 @@ export default async function AdminDestinosPage({
             <Plus className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white">Nuevo destino</h2>
-            <p className="text-sm text-gray-400 dark:text-white/40">Click para añadir un nuevo destino</p>
+            <h2 className="text-base font-semibold text-gray-900 dark:text-white">{t('newDestination')}</h2>
+            <p className="text-sm text-gray-400 dark:text-white/40">{t('clickToAdd')}</p>
           </div>
         </summary>
         <div className="px-6 pb-6 border-t border-gray-100 dark:border-white/[0.06] pt-6">
           <form action={createDestino} className="grid gap-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="panel-label">Nombre</label>
+                <label className="panel-label">{tc('name')}</label>
                 <input
                   name="nombre"
                   className="panel-input w-full"
-                  placeholder="Ej: Islas Canarias"
+                  placeholder={t('namePlaceholder')}
                 />
               </div>
               <div>
-                <label className="panel-label">Precio (€)</label>
+                <label className="panel-label">{t('priceLabel')}</label>
                 <input
                   name="precio"
                   type="number"
                   min={0}
                   className="panel-input w-full"
-                  placeholder="Ej: 799"
+                  placeholder={t('pricePlaceholder')}
                 />
               </div>
             </div>
             <div>
-              <label className="panel-label">Descripción</label>
+              <label className="panel-label">{tc('description')}</label>
               <textarea
                 name="descripcion"
                 className="panel-input w-full min-h-[100px]"
-                placeholder="Descripción breve y atractiva del destino"
+                placeholder={t('descriptionPlaceholder')}
               />
             </div>
             <DestinoImageField />
             <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">
               <input type="checkbox" name="activo" defaultChecked className="rounded" />
-              Publicar ahora
+              {tc('publishNow')}
             </label>
             <div className="flex justify-end">
               <SubmitButton className="btn-primary">
-                Guardar destino
+                {t('saveDestination')}
               </SubmitButton>
             </div>
           </form>
@@ -149,8 +153,8 @@ export default async function AdminDestinosPage({
       {(!destinos || destinos.length === 0) && (
         <div className="panel-card p-12 text-center">
           <MapPin className="w-10 h-10 text-gray-300 dark:text-white/20 mx-auto mb-3" />
-          <p className="text-gray-400 dark:text-white/40">Todavía no hay destinos.</p>
-          <p className="text-sm text-gray-300 dark:text-white/20 mt-1">Añade tu primer destino arriba.</p>
+          <p className="text-gray-400 dark:text-white/40">{t('noDestinations')}</p>
+          <p className="text-sm text-gray-300 dark:text-white/20 mt-1">{t('addFirstDestination')}</p>
         </div>
       )}
 
@@ -171,7 +175,7 @@ export default async function AdminDestinosPage({
               ) : (
                 <img
                   src="/images/placeholder-destination.svg"
-                  alt="Sin imagen"
+                  alt={t('noImage')}
                   className="w-full h-full object-cover"
                 />
               )}
@@ -179,14 +183,14 @@ export default async function AdminDestinosPage({
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
               {/* Status badge */}
-              <div className="absolute top-3 right-3">
+              <div className="absolute top-3 end-3">
                 {destino.activo ? (
                   <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500 text-white shadow-lg">
-                    Activo
+                    {tc('active')}
                   </span>
                 ) : (
                   <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-800/70 text-white/80 backdrop-blur-sm">
-                    Inactivo
+                    {tc('inactive')}
                   </span>
                 )}
               </div>
@@ -195,9 +199,9 @@ export default async function AdminDestinosPage({
               <div className="absolute bottom-0 left-0 right-0 p-4">
                 <div className="flex items-center gap-1 text-white/70 text-xs mb-1">
                   <MapPin className="w-3 h-3" />
-                  <span>Destino</span>
+                  <span>{t('destination')}</span>
                 </div>
-                <h3 className="text-lg font-bold text-white">{destino.nombre || "Sin nombre"}</h3>
+                <h3 className="text-lg font-bold text-white">{destino.nombre || t('noName')}</h3>
                 {destino.descripcion && (
                   <p className="text-white/70 text-sm mt-1 line-clamp-2">{destino.descripcion}</p>
                 )}
@@ -219,13 +223,13 @@ export default async function AdminDestinosPage({
                     <input type="hidden" name="imagen_url" value={destino.imagen_url ?? ""} />
                     {destino.activo ? (
                       <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-white/60 hover:bg-gray-200 dark:hover:bg-white/[0.1] transition-colors">
-                        Desactivar
+                        {tc('deactivate')}
                       </SubmitButton>
                     ) : (
                       <>
                         <input type="hidden" name="activo" value="on" />
                         <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/25 transition-colors">
-                          Activar
+                          {tc('activate')}
                         </SubmitButton>
                       </>
                     )}

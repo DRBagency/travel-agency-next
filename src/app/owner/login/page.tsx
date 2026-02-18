@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+import { getTranslations } from 'next-intl/server';
 
 function getAllowedOwnerEmail() {
   return (process.env.OWNER_EMAIL || "").trim().toLowerCase();
@@ -58,6 +59,8 @@ export default async function OwnerLoginPage({
   searchParams,
 }: OwnerLoginPageProps) {
   const { error } = await searchParams;
+  const t = await getTranslations('auth.ownerLogin');
+  const tc = await getTranslations('common');
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4">
@@ -66,10 +69,10 @@ export default async function OwnerLoginPage({
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600" />
           <div>
             <h1 className="font-display text-2xl font-bold text-gray-900 dark:text-white">
-              Acceso Owner
+              {t('title')}
             </h1>
             <p className="text-gray-500 dark:text-white/60 text-sm">
-              Inicia sesión para gestionar clientes.
+              {t('subtitle')}
             </p>
           </div>
         </div>
@@ -77,15 +80,15 @@ export default async function OwnerLoginPage({
         {error && (
           <div className="mb-4 rounded-xl border border-red-200 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-200">
             {error === "owner"
-              ? "Este email no tiene acceso de owner."
-              : "Credenciales incorrectas. Inténtalo de nuevo."}
+              ? t('errorOwner')
+              : t('errorAuth')}
           </div>
         )}
 
         <form action={handleOwnerLogin} className="space-y-4">
           <div>
             <label className="panel-label block mb-1">
-              Email
+              {tc('email')}
             </label>
             <input
               name="email"
@@ -97,7 +100,7 @@ export default async function OwnerLoginPage({
           </div>
           <div>
             <label className="panel-label block mb-1">
-              Contraseña
+              {tc('password')}
             </label>
             <input
               name="password"
@@ -112,7 +115,7 @@ export default async function OwnerLoginPage({
             type="submit"
             className="w-full rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold py-3 transition-colors"
           >
-            Entrar
+            {t('submit')}
           </button>
         </form>
       </div>

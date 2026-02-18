@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { getTranslations, getLocale } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
 
@@ -18,36 +19,39 @@ async function getAllTickets() {
 
 export default async function OwnerSoportePage() {
   const tickets = await getAllTickets();
+  const t = await getTranslations('owner.soporte');
+  const tc = await getTranslations('common');
+  const locale = await getLocale();
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-2">Soporte</h1>
+      <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
       <p className="text-gray-500 dark:text-white/60 mb-8">
-        Gestiona todos los tickets de las agencias
+        {t('subtitle')}
       </p>
 
       {/* Métricas */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="kpi-card">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">Total tickets</p>
+          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">{t('totalTickets')}</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">{tickets.length}</p>
         </div>
         <div className="kpi-card">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">Abiertos</p>
+          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">{t('open')}</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
-            {tickets.filter((t) => t.status === "open").length}
+            {tickets.filter((tk) => tk.status === "open").length}
           </p>
         </div>
         <div className="kpi-card">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">En progreso</p>
+          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">{t('inProgress')}</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
-            {tickets.filter((t) => t.status === "in_progress").length}
+            {tickets.filter((tk) => tk.status === "in_progress").length}
           </p>
         </div>
         <div className="kpi-card">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">Urgentes</p>
+          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">{t('urgent')}</p>
           <p className="text-3xl font-bold text-red-600 dark:text-red-400">
-            {tickets.filter((t) => t.priority === "urgent").length}
+            {tickets.filter((tk) => tk.priority === "urgent").length}
           </p>
         </div>
       </div>
@@ -58,23 +62,23 @@ export default async function OwnerSoportePage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100 dark:border-white/10">
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
                   ID
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Agencia
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {t('agency')}
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Asunto
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {t('subject')}
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Prioridad
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {t('priority')}
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Estado
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {t('status')}
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  Fecha
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
+                  {t('date')}
                 </th>
               </tr>
             </thead>
@@ -85,7 +89,7 @@ export default async function OwnerSoportePage() {
                     colSpan={6}
                     className="p-8 text-center text-gray-400 dark:text-white/40"
                   >
-                    No hay tickets
+                    {t('noTickets')}
                   </td>
                 </tr>
               ) : (
@@ -131,7 +135,7 @@ export default async function OwnerSoportePage() {
                       </td>
                       <td className="p-4 text-gray-500 dark:text-white/60 text-sm">
                         {new Date(ticket.created_at).toLocaleDateString(
-                          "es-ES"
+                          locale
                         )}
                       </td>
                     </tr>

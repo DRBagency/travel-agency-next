@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Trash2, Plus } from "lucide-react";
+import { useTranslations } from 'next-intl';
 
 interface Item {
   description: string;
@@ -37,6 +38,8 @@ export default function DocumentFormClient({
   defaultValues,
   children,
 }: DocumentFormClientProps) {
+  const t = useTranslations('admin.documentos.form');
+  const td = useTranslations('admin.documentos');
   const [items, setItems] = useState<Item[]>(
     defaultValues?.items?.length ? defaultValues.items : [{ ...emptyItem }]
   );
@@ -78,10 +81,10 @@ export default function DocumentFormClient({
 
   const typeLabel =
     documentType === "presupuesto"
-      ? "Presupuesto"
+      ? td('presupuesto')
       : documentType === "contrato"
-        ? "Contrato"
-        : "Factura";
+        ? td('contrato')
+        : td('factura');
 
   async function handleGeneratePDF() {
     const { jsPDF } = await import("jspdf");
@@ -200,18 +203,18 @@ export default function DocumentFormClient({
 
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="panel-label">Titulo</label>
+          <label className="panel-label">{t('titleLabel')}</label>
           <input
             name="title"
             required
             defaultValue={defaultValues?.title || ""}
-            placeholder={`${typeLabel} - Nombre del proyecto`}
+            placeholder={t('titlePlaceholder', { type: typeLabel })}
             className="panel-input"
           />
         </div>
         <div>
           <label className="panel-label">
-            Fecha de validez
+            {t('validityDate')}
           </label>
           <input
             name="validity_date"
@@ -225,25 +228,25 @@ export default function DocumentFormClient({
       <div className="grid md:grid-cols-2 gap-4">
         <div>
           <label className="panel-label">
-            Nombre del cliente
+            {t('clientName')}
           </label>
           <input
             name="client_name"
             required
             defaultValue={defaultValues?.client_name || ""}
-            placeholder="Nombre completo"
+            placeholder={t('clientNamePlaceholder')}
             className="panel-input"
           />
         </div>
         <div>
           <label className="panel-label">
-            Email del cliente
+            {t('clientEmail')}
           </label>
           <input
             name="client_email"
             type="email"
             defaultValue={defaultValues?.client_email || ""}
-            placeholder="email@ejemplo.com"
+            placeholder={t('clientEmailPlaceholder')}
             className="panel-input"
           />
         </div>
@@ -252,13 +255,13 @@ export default function DocumentFormClient({
       {/* Items */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-sm text-gray-600 dark:text-white/70">Items / Conceptos</label>
+          <label className="text-sm text-gray-600 dark:text-white/70">{t('items')}</label>
           <button
             type="button"
             onClick={addItem}
             className="flex items-center gap-1 text-sm text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300 transition-colors"
           >
-            <Plus className="w-4 h-4" /> Anadir fila
+            <Plus className="w-4 h-4" /> {t('addRow')}
           </button>
         </div>
 
@@ -271,7 +274,7 @@ export default function DocumentFormClient({
               <div>
                 {i === 0 && (
                   <span className="text-xs text-gray-400 dark:text-white/40 block mb-1">
-                    Descripcion
+                    {t('descriptionCol')}
                   </span>
                 )}
                 <input
@@ -284,7 +287,7 @@ export default function DocumentFormClient({
               <div>
                 {i === 0 && (
                   <span className="text-xs text-gray-400 dark:text-white/40 block mb-1">
-                    Cant.
+                    {t('qtyCol')}
                   </span>
                 )}
                 <input
@@ -298,7 +301,7 @@ export default function DocumentFormClient({
               <div>
                 {i === 0 && (
                   <span className="text-xs text-gray-400 dark:text-white/40 block mb-1">
-                    Precio Ud.
+                    {t('unitPriceCol')}
                   </span>
                 )}
                 <input
@@ -313,7 +316,7 @@ export default function DocumentFormClient({
               <div>
                 {i === 0 && (
                   <span className="text-xs text-gray-400 dark:text-white/40 block mb-1">
-                    IVA %
+                    {t('vatCol')}
                   </span>
                 )}
                 <input
@@ -329,7 +332,7 @@ export default function DocumentFormClient({
                   type="button"
                   onClick={() => removeItem(i)}
                   className="p-2 text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 transition-colors"
-                  title="Eliminar fila"
+                  title={t('deleteRow')}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -342,35 +345,35 @@ export default function DocumentFormClient({
       {/* Totals */}
       <div className="bg-gray-50/50 dark:bg-white/5 rounded-xl p-4 border border-gray-100 dark:border-white/10">
         <div className="flex justify-between text-sm text-gray-500 dark:text-white/60 mb-1">
-          <span>Subtotal</span>
+          <span>{t('subtotal')}</span>
           <span>{subtotal.toFixed(2)} EUR</span>
         </div>
         <div className="flex justify-between text-sm text-gray-500 dark:text-white/60 mb-1">
-          <span>IVA</span>
+          <span>{t('vat')}</span>
           <span>{ivaTotal.toFixed(2)} EUR</span>
         </div>
         <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white border-t border-gray-100 dark:border-white/10 pt-2 mt-2">
-          <span>Total</span>
+          <span>{t('total')}</span>
           <span>{total.toFixed(2)} EUR</span>
         </div>
       </div>
 
       <div>
-        <label className="panel-label">Condiciones</label>
+        <label className="panel-label">{t('conditions')}</label>
         <textarea
           name="conditions"
           defaultValue={defaultValues?.conditions || ""}
-          placeholder="Condiciones de pago, cancelacion, etc."
+          placeholder={t('conditionsPlaceholder')}
           className="panel-input min-h-[80px]"
         />
       </div>
 
       <div>
-        <label className="panel-label">Notas</label>
+        <label className="panel-label">{t('notes')}</label>
         <textarea
           name="notes"
           defaultValue={defaultValues?.notes || ""}
-          placeholder="Notas adicionales..."
+          placeholder={t('notesPlaceholder')}
           className="panel-input min-h-[80px]"
         />
       </div>
@@ -383,7 +386,7 @@ export default function DocumentFormClient({
           onClick={handleGeneratePDF}
           className="px-5 py-3 rounded-xl bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-900 dark:text-white font-bold border border-gray-200 dark:border-white/20 transition-colors"
         >
-          Generar PDF
+          {t('generatePDF')}
         </button>
       </div>
     </>

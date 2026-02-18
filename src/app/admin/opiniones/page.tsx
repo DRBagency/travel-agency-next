@@ -6,6 +6,7 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 import StarRating from "@/components/ui/StarRating";
 import OpinionesClient from "./OpinionesClient";
 import { Star, Plus, MessageSquare } from "lucide-react";
+import { getTranslations, getLocale } from 'next-intl/server';
 
 async function createOpinion(formData: FormData) {
   "use server";
@@ -86,6 +87,10 @@ export default async function AdminOpinionsPage({
     : "0.0";
   const activeCount = opinionesSafe.filter(o => o.activo).length;
 
+  const t = await getTranslations('admin.opiniones');
+  const tc = await getTranslations('common');
+  const locale = await getLocale();
+
   // Rating distribution
   const distribution = [5, 4, 3, 2, 1].map(stars => ({
     stars,
@@ -98,9 +103,9 @@ export default async function AdminOpinionsPage({
   return (
     <div className="space-y-8 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Opiniones</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
         <p className="text-gray-400 dark:text-white/40">
-          {opinionesSafe.length} opiniones · {activeCount} publicadas
+          {t('count', { total: opinionesSafe.length, active: activeCount })}
         </p>
       </div>
 
@@ -112,14 +117,14 @@ export default async function AdminOpinionsPage({
             <div className="text-5xl font-bold text-gray-900 dark:text-white">{avgRating}</div>
             <div>
               <StarRating value={Math.round(Number(avgRating))} readonly size="lg" />
-              <p className="text-sm text-gray-400 dark:text-white/40 mt-1">{opinionesSafe.length} reviews</p>
+              <p className="text-sm text-gray-400 dark:text-white/40 mt-1">{opinionesSafe.length} {t('reviews')}</p>
             </div>
           </div>
           {/* Distribution bars */}
           <div className="flex-1 space-y-1.5">
             {distribution.map(({ stars, count, percent }) => (
               <div key={stars} className="flex items-center gap-3">
-                <span className="text-sm text-gray-500 dark:text-white/50 w-6 text-right">{stars}</span>
+                <span className="text-sm text-gray-500 dark:text-white/50 w-6 text-end">{stars}</span>
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                 <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-white/[0.06] overflow-hidden">
                   <div
@@ -141,8 +146,8 @@ export default async function AdminOpinionsPage({
             <Plus className="w-5 h-5 text-amber-600 dark:text-amber-400" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white">Nueva opinión</h2>
-            <p className="text-sm text-gray-400 dark:text-white/40">Click para añadir una nueva opinión</p>
+            <h2 className="text-base font-semibold text-gray-900 dark:text-white">{t('newReview')}</h2>
+            <p className="text-sm text-gray-400 dark:text-white/40">{t('clickToAdd')}</p>
           </div>
         </summary>
         <div className="px-6 pb-6 border-t border-gray-100 dark:border-white/[0.06] pt-6">
@@ -158,7 +163,7 @@ export default async function AdminOpinionsPage({
       {opinionesSafe.length === 0 && (
         <div className="panel-card p-12 text-center">
           <MessageSquare className="w-10 h-10 text-gray-300 dark:text-white/20 mx-auto mb-3" />
-          <p className="text-gray-400 dark:text-white/40">Todavía no hay opiniones.</p>
+          <p className="text-gray-400 dark:text-white/40">{t('noReviews')}</p>
         </div>
       )}
 
@@ -183,19 +188,19 @@ export default async function AdminOpinionsPage({
                   <div className="flex items-center justify-between gap-3 mb-1">
                     <div>
                       <span className="font-semibold text-gray-900 dark:text-white text-sm">
-                        {opinion.nombre || "Anónimo"}
+                        {opinion.nombre || t('anonymous')}
                       </span>
                       {opinion.ubicacion && (
-                        <span className="text-gray-400 dark:text-white/40 text-sm ml-2">
+                        <span className="text-gray-400 dark:text-white/40 text-sm ms-2">
                           · {opinion.ubicacion}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
                       {opinion.activo ? (
-                        <span className="badge-success">Publicada</span>
+                        <span className="badge-success">{t('published')}</span>
                       ) : (
-                        <span className="badge-warning">Borrador</span>
+                        <span className="badge-warning">{t('draft')}</span>
                       )}
                     </div>
                   </div>
@@ -204,7 +209,7 @@ export default async function AdminOpinionsPage({
                   <div className="flex items-center gap-3 mb-3">
                     <StarRating value={opinion.rating ?? 0} readonly size="sm" />
                     <span className="text-xs text-gray-400 dark:text-white/30">
-                      {new Date(opinion.created_at).toLocaleDateString("es-ES")}
+                      {new Date(opinion.created_at).toLocaleDateString(locale)}
                     </span>
                   </div>
 
@@ -225,13 +230,13 @@ export default async function AdminOpinionsPage({
                       <input type="hidden" name="rating" value={opinion.rating ?? 5} />
                       {opinion.activo ? (
                         <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-white/60 hover:bg-gray-200 dark:hover:bg-white/[0.1] transition-colors">
-                          Despublicar
+                          {tc('unpublish')}
                         </SubmitButton>
                       ) : (
                         <>
                           <input type="hidden" name="activo" value="on" />
                           <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/25 transition-colors">
-                            Publicar
+                            {tc('publish')}
                           </SubmitButton>
                         </>
                       )}
@@ -239,7 +244,7 @@ export default async function AdminOpinionsPage({
                     <form action={deleteOpinion}>
                       <input type="hidden" name="id" value={opinion.id} />
                       <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
-                        Eliminar
+                        {tc('delete')}
                       </SubmitButton>
                     </form>
                   </div>

@@ -46,7 +46,7 @@ export default function KPICard({
                 <span className={`text-xs font-semibold ${trend >= 0 ? "text-emerald-300" : "text-red-300"}`}>
                   {trend > 0 ? "+" : ""}{trend}%
                 </span>
-                <span className="text-xs text-white/50 ml-1">{trendLabel}</span>
+                <span className="text-xs text-white/50 ms-1">{trendLabel}</span>
               </div>
             )}
             {subtitle && !trend && (
@@ -81,7 +81,7 @@ export default function KPICard({
               <span className={`text-xs font-semibold ${trend >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
                 {trend > 0 ? "+" : ""}{trend}%
               </span>
-              <span className="text-xs text-gray-400 dark:text-white/40 ml-1">{trendLabel}</span>
+              <span className="text-xs text-gray-400 dark:text-white/40 ms-1">{trendLabel}</span>
             </div>
           )}
           {subtitle && trend === undefined && (

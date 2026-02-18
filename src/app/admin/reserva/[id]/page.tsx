@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import { getTranslations } from "next-intl/server";
 
 interface ReservaPageProps {
   params: Promise<{
@@ -14,6 +15,8 @@ interface ReservaPageProps {
 
 async function updateEstado(formData: FormData) {
   "use server";
+
+  const t = await getTranslations('admin.reserva');
 
   const clienteId = (await cookies()).get("cliente_id")?.value;
   if (!clienteId) return;
@@ -37,6 +40,9 @@ export default async function ReservaPage({
 }: ReservaPageProps) {
   const { id } = await params;
   await searchParams;
+
+  const t = await getTranslations('admin.reserva');
+  const tc = await getTranslations('common');
 
   const { data: reserva, error } = await supabaseAdmin
     .from("reservas")
@@ -66,7 +72,7 @@ export default async function ReservaPage({
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">
-              Reserva · {reserva.destino ?? "—"}
+              {t('bookingTitle')} · {reserva.destino ?? "—"}
             </h1>
             <p className="text-gray-500 dark:text-white/60">ID: {reserva.id}</p>
           </div>
@@ -81,7 +87,7 @@ export default async function ReservaPage({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4 border border-gray-100 dark:border-white/10 rounded-2xl p-6 bg-gray-50/50 dark:bg-white/5">
           <div>
-            <span className="text-gray-500 dark:text-white/60">Cliente</span>
+            <span className="text-gray-500 dark:text-white/60">{t('client')}</span>
             <p className="font-semibold">{reserva.nombre ?? "—"}</p>
             <p className="text-sm text-gray-400 dark:text-white/50">
               {reserva.email ?? "—"}
@@ -94,7 +100,7 @@ export default async function ReservaPage({
           </div>
 
           <div>
-            <span className="text-gray-500 dark:text-white/60">Fechas</span>
+            <span className="text-gray-500 dark:text-white/60">{t('dates')}</span>
             <p>
               {reserva.fecha_salida ?? "—"} →{" "}
               {reserva.fecha_regreso ?? "—"}
@@ -102,12 +108,12 @@ export default async function ReservaPage({
           </div>
 
           <div>
-            <span className="text-gray-500 dark:text-white/60">Personas</span>
+            <span className="text-gray-500 dark:text-white/60">{t('persons')}</span>
             <p>{reserva.personas ?? "—"}</p>
           </div>
 
           <div>
-            <span className="text-gray-500 dark:text-white/60">Precio</span>
+            <span className="text-gray-500 dark:text-white/60">{t('price')}</span>
             <p className="font-bold">{reserva.precio ?? "—"} €</p>
           </div>
         </div>
@@ -115,7 +121,7 @@ export default async function ReservaPage({
         <div className="space-y-4 border border-gray-100 dark:border-white/10 rounded-2xl p-6 bg-gray-50/50 dark:bg-white/5">
           <div>
             <span className="text-gray-500 dark:text-white/60">
-              Estado del pago
+              {t('paymentStatus')}
             </span>
             <form action={updateEstado} className="mt-2 flex gap-2">
               <input type="hidden" name="id" value={reserva.id} />
@@ -124,10 +130,10 @@ export default async function ReservaPage({
                 defaultValue={reserva.estado_pago ?? "pendiente"}
                 className="border rounded-xl px-2 py-1 bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white border-gray-200 dark:border-white/10"
               >
-                <option value="pagado">Pagado</option>
-                <option value="pendiente">Pendiente</option>
-                <option value="revisada">Revisada</option>
-                <option value="cancelada">Cancelada</option>
+                <option value="pagado">{t('paid')}</option>
+                <option value="pendiente">{t('pending')}</option>
+                <option value="revisada">{t('reviewed')}</option>
+                <option value="cancelada">{t('cancelled')}</option>
               </select>
               <button
                 type="submit"
@@ -138,20 +144,20 @@ export default async function ReservaPage({
                 }
                 style={brandStyle}
               >
-                Guardar
+                {t('save')}
               </button>
             </form>
           </div>
 
           <div>
-            <span className="text-gray-500 dark:text-white/60">Stripe ID</span>
+            <span className="text-gray-500 dark:text-white/60">{t('stripeId')}</span>
             <p className="text-sm break-all">
               {reserva.stripe_session_id ?? "—"}
             </p>
           </div>
 
           <div>
-            <span className="text-gray-500 dark:text-white/60">Creada</span>
+            <span className="text-gray-500 dark:text-white/60">{t('created')}</span>
             <p>
               {reserva.created_at
                 ? new Date(reserva.created_at).toLocaleString()
@@ -166,7 +172,7 @@ export default async function ReservaPage({
           href={`/admin/reservas`}
           className="text-gray-600 dark:text-white/70 underline hover:text-gray-900 dark:hover:text-white"
         >
-          ← Volver a reservas
+          {`← ${t('backToBookings')}`}
         </a>
         </div>
       </div>

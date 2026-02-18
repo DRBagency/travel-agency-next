@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Bell, MessageSquare, CalendarCheck, AlertCircle } from "lucide-react";
 
 interface Notification {
@@ -13,32 +14,34 @@ interface Notification {
   time: string;
 }
 
-const mockNotifications: Notification[] = [
-  {
-    id: "1",
-    type: "ticket",
-    title: "Nuevo ticket de soporte",
-    description: "Cliente solicita cambio de fechas",
-    href: "/admin/soporte",
-    time: "Hace 5 min",
-  },
-  {
-    id: "2",
-    type: "reserva",
-    title: "Nueva reserva recibida",
-    description: "Maldivas - Pack Premium",
-    href: "/admin/reservas",
-    time: "Hace 15 min",
-  },
-  {
-    id: "3",
-    type: "alerta",
-    title: "Documento pendiente",
-    description: "Factura #2024-031 sin enviar",
-    href: "/admin/documentos",
-    time: "Hace 1h",
-  },
-];
+function getMockNotifications(t: (key: string) => string): Notification[] {
+  return [
+    {
+      id: "1",
+      type: "ticket",
+      title: t('newTicket'),
+      description: t('ticketDesc'),
+      href: "/admin/soporte",
+      time: t('timeAgo5m'),
+    },
+    {
+      id: "2",
+      type: "reserva",
+      title: t('newBooking'),
+      description: t('bookingDesc'),
+      href: "/admin/reservas",
+      time: t('timeAgo15m'),
+    },
+    {
+      id: "3",
+      type: "alerta",
+      title: t('pendingDoc'),
+      description: t('docDesc'),
+      href: "/admin/documentos",
+      time: t('timeAgo1h'),
+    },
+  ];
+}
 
 const iconMap = {
   ticket: MessageSquare,
@@ -55,7 +58,8 @@ const colorMap = {
 export default function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const notifications = mockNotifications;
+  const t = useTranslations('notifications');
+  const notifications = getMockNotifications(t);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -75,24 +79,24 @@ export default function NotificationBell() {
       >
         <Bell className="w-5 h-5 text-gray-500 dark:text-white/60" />
         {notifications.length > 0 && (
-          <span className="absolute top-1 right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
+          <span className="absolute top-1 end-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
             {notifications.length}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-drb-turquoise-900 border border-gray-200 dark:border-white/[0.1] rounded-xl shadow-xl overflow-hidden z-50">
+        <div className="absolute end-0 top-full mt-2 w-80 bg-white dark:bg-drb-turquoise-900 border border-gray-200 dark:border-white/[0.1] rounded-xl shadow-xl overflow-hidden z-50">
           <div className="px-4 py-3 border-b border-gray-100 dark:border-white/[0.06]">
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-              Notificaciones
+              {t('title')}
             </h3>
           </div>
 
           {notifications.length === 0 ? (
             <div className="p-6 text-center">
               <p className="text-sm text-gray-400 dark:text-white/40">
-                Sin notificaciones
+                {t('empty')}
               </p>
             </div>
           ) : (

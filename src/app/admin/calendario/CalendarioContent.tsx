@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslations } from 'next-intl';
 import {
   Calendar,
   Link2,
@@ -19,16 +20,16 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
-// --- Event color options ---
-const EVENT_COLORS = [
-  { name: "Lima", bg: "#D4F24D", text: "#0a2a2c" },
-  { name: "Turquesa", bg: "#1CABB0", text: "#ffffff" },
-  { name: "Azul", bg: "#3B82F6", text: "#ffffff" },
-  { name: "Violeta", bg: "#8B5CF6", text: "#ffffff" },
-  { name: "Rosa", bg: "#EC4899", text: "#ffffff" },
-  { name: "Naranja", bg: "#F97316", text: "#ffffff" },
-  { name: "Rojo", bg: "#EF4444", text: "#ffffff" },
-  { name: "Verde", bg: "#22C55E", text: "#ffffff" },
+// --- Event color options (without translated names - names added inside component) ---
+const EVENT_COLOR_DATA = [
+  { key: "lime" as const, bg: "#D4F24D", text: "#0a2a2c" },
+  { key: "turquoise" as const, bg: "#1CABB0", text: "#ffffff" },
+  { key: "blue" as const, bg: "#3B82F6", text: "#ffffff" },
+  { key: "violet" as const, bg: "#8B5CF6", text: "#ffffff" },
+  { key: "pink" as const, bg: "#EC4899", text: "#ffffff" },
+  { key: "orange" as const, bg: "#F97316", text: "#ffffff" },
+  { key: "red" as const, bg: "#EF4444", text: "#ffffff" },
+  { key: "green" as const, bg: "#22C55E", text: "#ffffff" },
 ];
 
 // --- Custom date picker ---
@@ -36,10 +37,16 @@ function CustomDatePicker({
   value,
   onChange,
   label,
+  monthNames,
+  dayNames,
+  selectDateLabel,
 }: {
   value: string;
   onChange: (v: string) => void;
   label: string;
+  monthNames: string[];
+  dayNames: string[];
+  selectDateLabel: string;
 }) {
   const [showPicker, setShowPicker] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -63,12 +70,6 @@ function CustomDatePicker({
   const today = new Date();
   const selectedDate = value ? value.split("T")[0] : "";
 
-  const monthNames = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
-  ];
-  const dayNames = ["L", "M", "X", "J", "V", "S", "D"];
-
   const prevMonth = () => {
     if (viewMonth === 0) { setViewMonth(11); setViewYear(viewYear - 1); }
     else setViewMonth(viewMonth - 1);
@@ -87,8 +88,8 @@ function CustomDatePicker({
   };
 
   const displayDate = value
-    ? new Date(value).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })
-    : "Seleccionar fecha";
+    ? new Date(value).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })
+    : selectDateLabel;
 
   // Monday-start: shift firstDay (0=Sun -> 6, 1=Mon -> 0, etc.)
   const startOffset = firstDay === 0 ? 6 : firstDay - 1;
@@ -101,14 +102,14 @@ function CustomDatePicker({
       <button
         type="button"
         onClick={() => setShowPicker(!showPicker)}
-        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] hover:border-gray-300 dark:hover:border-white/25 text-gray-900 dark:text-white text-left transition-all"
+        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] hover:border-gray-300 dark:hover:border-white/25 text-gray-900 dark:text-white text-start transition-all"
       >
         <CalendarDays className="w-4 h-4 text-drb-turquoise-600 dark:text-drb-turquoise-400 shrink-0" />
         <span className="text-sm font-medium">{displayDate}</span>
       </button>
 
       {showPicker && (
-        <div className="absolute z-50 top-full mt-2 left-0 w-72 rounded-2xl bg-white dark:bg-[#0d3234] border border-gray-200 dark:border-white/15 shadow-2xl shadow-black/10 dark:shadow-black/40 p-4 animate-in fade-in slide-in-from-top-2">
+        <div className="absolute z-50 top-full mt-2 start-0 w-72 rounded-2xl bg-white dark:bg-[#0d3234] border border-gray-200 dark:border-white/15 shadow-2xl shadow-black/10 dark:shadow-black/40 p-4 animate-in fade-in slide-in-from-top-2">
           {/* Header */}
           <div className="flex items-center justify-between mb-3">
             <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors">
@@ -124,8 +125,8 @@ function CustomDatePicker({
 
           {/* Day names */}
           <div className="grid grid-cols-7 mb-1">
-            {dayNames.map((d) => (
-              <div key={d} className="text-center text-[10px] font-semibold text-gray-400 dark:text-white/30 uppercase py-1">
+            {dayNames.map((d, i) => (
+              <div key={`${d}-${i}`} className="text-center text-[10px] font-semibold text-gray-400 dark:text-white/30 uppercase py-1">
                 {d}
               </div>
             ))}
@@ -201,7 +202,7 @@ function CustomTimePicker({
         <select
           value={hours}
           onChange={(e) => setTime(Number(e.target.value), minutes)}
-          className="bg-transparent text-gray-900 dark:text-white text-sm font-medium appearance-none cursor-pointer outline-none pr-1"
+          className="bg-transparent text-gray-900 dark:text-white text-sm font-medium appearance-none cursor-pointer outline-none pe-1"
         >
           {hourOptions.map((h) => (
             <option key={h} value={h} className="bg-white dark:bg-[#0d3234] text-gray-900 dark:text-white">
@@ -252,6 +253,19 @@ export default function CalendarioContent({
   googleCalendarUrl,
   apiBasePath = "/api/admin/calendar",
 }: CalendarioContentProps) {
+  const t = useTranslations('admin.calendario');
+  const tc = useTranslations('common');
+
+  // Build translated EVENT_COLORS
+  const EVENT_COLORS = EVENT_COLOR_DATA.map((c) => ({
+    ...c,
+    name: t(`colors.${c.key}`),
+  }));
+
+  // Build translated month names and day abbreviations for date picker
+  const monthNames = Array.from({ length: 12 }, (_, i) => t(`months.${i}`));
+  const dayNames = Array.from({ length: 7 }, (_, i) => t(`dayAbbreviations.${i}`));
+
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -264,7 +278,7 @@ export default function CalendarioContent({
   const [formEnd, setFormEnd] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [formAllDay, setFormAllDay] = useState(false);
-  const [formColor, setFormColor] = useState(EVENT_COLORS[0].bg);
+  const [formColor, setFormColor] = useState(EVENT_COLOR_DATA[0].bg);
   const [formSaving, setFormSaving] = useState(false);
 
   // Embed URL fallback state
@@ -302,7 +316,7 @@ export default function CalendarioContent({
     setFormEnd(startStr || new Date().toISOString().slice(0, 16));
     setFormDescription("");
     setFormAllDay(false);
-    setFormColor(EVENT_COLORS[0].bg);
+    setFormColor(EVENT_COLOR_DATA[0].bg);
     setModalOpen(true);
   };
 
@@ -313,7 +327,7 @@ export default function CalendarioContent({
     setFormEnd(event.end?.slice(0, 16) || event.start?.slice(0, 16) || "");
     setFormDescription(event.description || "");
     setFormAllDay(event.allDay || false);
-    setFormColor(event.color || EVENT_COLORS[0].bg);
+    setFormColor(event.color || EVENT_COLOR_DATA[0].bg);
     setModalOpen(true);
   };
 
@@ -355,14 +369,14 @@ export default function CalendarioContent({
       setModalOpen(false);
       fetchEvents();
     } catch {
-      alert("Error al guardar el evento");
+      alert(t('errorSaving'));
     } finally {
       setFormSaving(false);
     }
   };
 
   const handleDeleteEvent = async (eventId: string) => {
-    if (!confirm("¿Eliminar este evento?")) return;
+    if (!confirm(t('confirmDelete'))) return;
 
     try {
       const res = await fetch(`${apiBasePath}/events?id=${eventId}`, {
@@ -373,12 +387,12 @@ export default function CalendarioContent({
         setModalOpen(false);
       }
     } catch {
-      alert("Error al eliminar el evento");
+      alert(t('errorDeleting'));
     }
   };
 
   const handleDisconnect = async () => {
-    if (!confirm("¿Desconectar Google Calendar? Los eventos locales no se verán afectados.")) return;
+    if (!confirm(t('confirmDisconnect'))) return;
     setDisconnecting(true);
 
     try {
@@ -389,7 +403,7 @@ export default function CalendarioContent({
         window.location.reload();
       }
     } catch {
-      alert("Error al desconectar");
+      alert(t('errorDisconnecting'));
     } finally {
       setDisconnecting(false);
     }
@@ -410,7 +424,7 @@ export default function CalendarioContent({
         setTimeout(() => setSavedUrl(false), 3000);
       }
     } catch {
-      alert("Error al guardar la URL");
+      alert(t('errorSavingUrl'));
     } finally {
       setSavingUrl(false);
     }
@@ -439,10 +453,10 @@ export default function CalendarioContent({
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                  {editingEvent ? "Editar evento" : "Nuevo evento"}
+                  {editingEvent ? t('editEvent') : t('newEvent')}
                 </h3>
                 <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5">
-                  {editingEvent ? "Modifica los detalles del evento" : "Crea un nuevo evento en tu calendario"}
+                  {editingEvent ? t('editEventSub') : t('newEventSub')}
                 </p>
               </div>
               <button
@@ -459,13 +473,13 @@ export default function CalendarioContent({
             {/* Title */}
             <div>
               <label className="block text-xs font-medium text-gray-400 dark:text-white/50 uppercase tracking-wider mb-1.5">
-                Titulo
+                {t('eventTitle')}
               </label>
               <input
                 type="text"
                 value={formTitle}
                 onChange={(e) => setFormTitle(e.target.value)}
-                placeholder="Reunion con cliente, vuelo a Madrid..."
+                placeholder={t('eventTitlePlaceholder')}
                 autoFocus
                 className="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-turquoise-400/50 focus:ring-1 focus:ring-drb-turquoise-400/20 transition-all"
               />
@@ -474,7 +488,7 @@ export default function CalendarioContent({
             {/* Color picker */}
             <div>
               <label className="block text-xs font-medium text-gray-400 dark:text-white/50 uppercase tracking-wider mb-2">
-                Color
+                {t('color')}
               </label>
               <div className="flex gap-2">
                 {EVENT_COLORS.map((c) => (
@@ -509,24 +523,24 @@ export default function CalendarioContent({
                   }`}
                 />
               </button>
-              <span className="text-sm text-gray-500 dark:text-white/60">Todo el dia</span>
+              <span className="text-sm text-gray-500 dark:text-white/60">{t('allDay')}</span>
             </div>
 
             {/* Date & time */}
             {formAllDay ? (
               <div className="grid grid-cols-2 gap-4">
-                <CustomDatePicker value={formStart} onChange={setFormStart} label="Fecha inicio" />
-                <CustomDatePicker value={formEnd} onChange={setFormEnd} label="Fecha fin" />
+                <CustomDatePicker value={formStart} onChange={setFormStart} label={t('startDate')} monthNames={monthNames} dayNames={dayNames} selectDateLabel={t('selectDate')} />
+                <CustomDatePicker value={formEnd} onChange={setFormEnd} label={t('endDate')} monthNames={monthNames} dayNames={dayNames} selectDateLabel={t('selectDate')} />
               </div>
             ) : (
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-4">
-                  <CustomDatePicker value={formStart} onChange={setFormStart} label="Fecha inicio" />
-                  <CustomTimePicker value={formStart} onChange={setFormStart} label="Hora inicio" />
+                  <CustomDatePicker value={formStart} onChange={setFormStart} label={t('startDate')} monthNames={monthNames} dayNames={dayNames} selectDateLabel={t('selectDate')} />
+                  <CustomTimePicker value={formStart} onChange={setFormStart} label={t('startTime')} />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <CustomDatePicker value={formEnd} onChange={setFormEnd} label="Fecha fin" />
-                  <CustomTimePicker value={formEnd} onChange={setFormEnd} label="Hora fin" />
+                  <CustomDatePicker value={formEnd} onChange={setFormEnd} label={t('endDate')} monthNames={monthNames} dayNames={dayNames} selectDateLabel={t('selectDate')} />
+                  <CustomTimePicker value={formEnd} onChange={setFormEnd} label={t('endTime')} />
                 </div>
               </div>
             )}
@@ -534,12 +548,12 @@ export default function CalendarioContent({
             {/* Description */}
             <div>
               <label className="block text-xs font-medium text-gray-400 dark:text-white/50 uppercase tracking-wider mb-1.5">
-                Descripcion
+                {t('eventDescription')}
               </label>
               <textarea
                 value={formDescription}
                 onChange={(e) => setFormDescription(e.target.value)}
-                placeholder="Notas adicionales sobre el evento..."
+                placeholder={t('eventDescPlaceholder')}
                 rows={3}
                 className="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-white/[0.07] border border-gray-200 dark:border-white/[0.12] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 text-sm font-medium focus:outline-none focus:border-drb-turquoise-400/50 focus:ring-1 focus:ring-drb-turquoise-400/20 transition-all resize-none"
               />
@@ -554,7 +568,7 @@ export default function CalendarioContent({
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-600 dark:text-red-400 hover:bg-red-500/10 border border-red-500/20 hover:border-red-500/30 transition-all text-sm font-medium"
               >
                 <Trash2 className="w-4 h-4" />
-                Eliminar
+                {tc('delete')}
               </button>
             ) : (
               <div />
@@ -564,7 +578,7 @@ export default function CalendarioContent({
                 onClick={() => setModalOpen(false)}
                 className="px-5 py-2.5 rounded-xl text-gray-400 dark:text-white/50 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-all text-sm font-medium"
               >
-                Cancelar
+                {tc('cancel')}
               </button>
               <button
                 onClick={handleSaveEvent}
@@ -572,7 +586,7 @@ export default function CalendarioContent({
                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold text-sm disabled:opacity-40 transition-all shadow-lg shadow-drb-turquoise-500/20 hover:shadow-drb-turquoise-500/30"
               >
                 {editingEvent ? <Pencil className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-                {formSaving ? "Guardando..." : editingEvent ? "Actualizar" : "Crear evento"}
+                {formSaving ? t('saving') : editingEvent ? t('updateEvent') : t('createEvent')}
               </button>
             </div>
           </div>
@@ -586,9 +600,9 @@ export default function CalendarioContent({
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Calendario</h1>
+          <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
           <p className="text-gray-500 dark:text-white/60">
-            Gestiona tus eventos directamente desde Google Calendar.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -598,7 +612,7 @@ export default function CalendarioContent({
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-green-400 shadow-lg shadow-green-400/50" />
               <span className="text-sm text-gray-500 dark:text-white/60">
-                Conectado como{" "}
+                {t('connectedAs')}{" "}
                 <span className="font-semibold text-gray-900 dark:text-white">
                   {googleCalendarEmail}
                 </span>
@@ -610,7 +624,7 @@ export default function CalendarioContent({
                 className="flex items-center gap-2 btn-primary text-sm shadow-lg shadow-drb-turquoise-500/20"
               >
                 <Plus className="w-4 h-4" />
-                Nuevo evento
+                {t('newEvent')}
               </button>
               <button
                 onClick={handleDisconnect}
@@ -618,7 +632,7 @@ export default function CalendarioContent({
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-gray-400 dark:text-white/40 hover:text-red-600 dark:hover:text-red-400 hover:border-red-400/30 hover:bg-red-400/5 transition-all text-sm disabled:opacity-50"
               >
                 <Link2Off className="w-4 h-4" />
-                {disconnecting ? "..." : "Desconectar"}
+                {disconnecting ? "..." : t('disconnect')}
               </button>
             </div>
           </div>
@@ -643,10 +657,10 @@ export default function CalendarioContent({
                 }}
                 locale="es"
                 buttonText={{
-                  today: "Hoy",
-                  month: "Mes",
-                  week: "Semana",
-                  day: "Dia",
+                  today: t('today'),
+                  month: t('month'),
+                  week: t('week'),
+                  day: t('day'),
                 }}
                 events={events.map((e) => ({
                   id: e.id,
@@ -654,9 +668,9 @@ export default function CalendarioContent({
                   start: e.start,
                   end: e.end,
                   allDay: e.allDay,
-                  backgroundColor: e.color || EVENT_COLORS[0].bg,
-                  borderColor: e.color || EVENT_COLORS[0].bg,
-                  textColor: EVENT_COLORS.find((c) => c.bg === e.color)?.text || EVENT_COLORS[0].text,
+                  backgroundColor: e.color || EVENT_COLOR_DATA[0].bg,
+                  borderColor: e.color || EVENT_COLOR_DATA[0].bg,
+                  textColor: EVENT_COLOR_DATA.find((c) => c.bg === e.color)?.text || EVENT_COLOR_DATA[0].text,
                   extendedProps: {
                     description: e.description,
                     source: e.source,
@@ -690,9 +704,9 @@ export default function CalendarioContent({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold mb-2">Calendario</h1>
+        <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
         <p className="text-gray-500 dark:text-white/60">
-          Conecta tu Google Calendar para gestionar citas y eventos.
+          {t('subtitle')}
         </p>
       </div>
 
@@ -700,13 +714,11 @@ export default function CalendarioContent({
       <div className="panel-card p-6 space-y-4">
         <div className="flex items-center gap-3">
           <Calendar className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
-          <h2 className="text-xl font-semibold">Google Calendar</h2>
+          <h2 className="text-xl font-semibold">{t('googleCalendar')}</h2>
         </div>
 
         <p className="text-gray-500 dark:text-white/60 text-sm leading-relaxed">
-          Conecta tu cuenta de Google para crear, editar y eliminar eventos
-          directamente desde este panel. Los cambios se sincronizaran
-          automaticamente con tu Google Calendar.
+          {t('googleCalendarDesc')}
         </p>
 
         <a
@@ -714,7 +726,7 @@ export default function CalendarioContent({
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold transition-all shadow-lg shadow-drb-turquoise-500/20 hover:shadow-drb-turquoise-500/30"
         >
           <Link2 className="w-5 h-5" />
-          Conectar Google Calendar
+          {t('connectGoogle')}
         </a>
       </div>
 
@@ -723,13 +735,13 @@ export default function CalendarioContent({
         <div className="flex items-center gap-3">
           <Calendar className="w-5 h-5 text-gray-400 dark:text-white/30" />
           <h2 className="text-base font-semibold text-gray-400 dark:text-white/50">
-            Alternativa: Calendario embebido (solo lectura)
+            {t('embedAlternative')}
           </h2>
         </div>
 
         <div className="space-y-3">
           <label className="block text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">
-            URL de embed de Google Calendar
+            {t('embedUrlLabel')}
           </label>
           <div className="flex gap-3">
             <input
@@ -744,7 +756,7 @@ export default function CalendarioContent({
               disabled={savingUrl}
               className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-white/[0.07] hover:bg-gray-200 dark:hover:bg-white/[0.12] border border-gray-200 dark:border-white/[0.12] text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white font-medium text-sm disabled:opacity-60 transition-all whitespace-nowrap"
             >
-              {savingUrl ? "..." : savedUrl ? "Guardado" : "Guardar"}
+              {savingUrl ? "..." : savedUrl ? t('saved') : tc('save')}
             </button>
           </div>
         </div>
@@ -757,7 +769,7 @@ export default function CalendarioContent({
             src={embedUrl.trim()}
             className="w-full border-0"
             style={{ height: "600px" }}
-            title="Google Calendar"
+            title={t('googleCalendar')}
           />
         </div>
       )}

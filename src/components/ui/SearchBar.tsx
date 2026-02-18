@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -21,6 +22,7 @@ export default function SearchBar({ navItems }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const tc = useTranslations('common');
 
   const results = query.trim()
     ? navItems.filter((item) =>
@@ -67,7 +69,7 @@ export default function SearchBar({ navItems }: SearchBarProps) {
           }}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Buscar..."
+          placeholder={tc('search')}
           className="w-full bg-transparent text-sm text-gray-700 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none"
         />
       </div>
@@ -80,7 +82,7 @@ export default function SearchBar({ navItems }: SearchBarProps) {
               <button
                 key={item.href}
                 onClick={() => handleSelect(item.href)}
-                className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-white/80 hover:bg-drb-turquoise-50 dark:hover:bg-white/[0.06] transition-colors"
+                className="flex items-center gap-3 w-full px-4 py-2.5 text-start text-sm text-gray-700 dark:text-white/80 hover:bg-drb-turquoise-50 dark:hover:bg-white/[0.06] transition-colors"
               >
                 <Icon className="w-4 h-4 text-drb-turquoise-500 shrink-0" />
                 {item.label}
@@ -93,7 +95,7 @@ export default function SearchBar({ navItems }: SearchBarProps) {
       {isOpen && query.trim() && results.length === 0 && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-drb-turquoise-900 border border-gray-200 dark:border-white/[0.1] rounded-xl shadow-lg z-50 p-3">
           <p className="text-sm text-gray-400 dark:text-white/40 text-center">
-            Sin resultados
+            {tc('noResults')}
           </p>
         </div>
       )}

@@ -5,6 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import SubmitButton from "@/components/admin/SubmitButton";
 import Link from "next/link";
+import { getTranslations } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +47,8 @@ async function createTicket(formData: FormData) {
 
 export default async function NuevoTicketPage() {
   await requireAdminClient();
+  const t = await getTranslations('admin.soporte.nuevo');
+  const tc = await getTranslations('common');
 
   return (
     <div>
@@ -54,59 +57,59 @@ export default async function NuevoTicketPage() {
           href="/admin/soporte"
           className="text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
-          &larr; Volver
+          &larr; {tc('back')}
         </Link>
         <div>
-          <h1 className="text-3xl font-bold mb-1">Nuevo Ticket</h1>
-          <p className="text-gray-500 dark:text-white/60">Describe tu problema o consulta</p>
+          <h1 className="text-3xl font-bold mb-1">{t('title')}</h1>
+          <p className="text-gray-500 dark:text-white/60">{t('subtitle')}</p>
         </div>
       </div>
 
       <div className="panel-card p-6">
         <form action={createTicket} className="grid gap-4">
           <div>
-            <label className="panel-label">Asunto</label>
+            <label className="panel-label">{t('subjectLabel')}</label>
             <input
               name="subject"
               required
-              placeholder="Resumen breve del problema"
+              placeholder={t('subjectPlaceholder')}
               className="panel-input"
             />
           </div>
 
           <div>
             <label className="panel-label">
-              Descripcion
+              {t('descriptionLabel')}
             </label>
             <textarea
               name="description"
               required
-              placeholder="Describe tu problema con el mayor detalle posible..."
+              placeholder={t('descriptionPlaceholder')}
               className="panel-input min-h-[150px]"
             />
           </div>
 
           <div>
             <label className="panel-label">
-              Prioridad
+              {t('priorityLabel')}
             </label>
             <select
               name="priority"
               defaultValue="normal"
               className="panel-input"
             >
-              <option value="normal">Normal</option>
-              <option value="high">Alta</option>
-              <option value="urgent">Urgente</option>
+              <option value="normal">{t('priorityNormal')}</option>
+              <option value="high">{t('priorityHigh')}</option>
+              <option value="urgent">{t('priorityUrgent')}</option>
             </select>
           </div>
 
           <div className="flex items-center gap-3 pt-2">
             <SubmitButton
-              successText="Ticket creado"
+              successText={t('success')}
               className="btn-primary"
             >
-              Crear Ticket
+              {t('submit')}
             </SubmitButton>
           </div>
         </form>

@@ -6,6 +6,7 @@ import ExportPDFButton from "@/components/admin/ExportPDFButton";
 import KPICard from "@/components/ui/KPICard";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import { DollarSign, ShoppingBag, Ticket, Filter } from "lucide-react";
+import { getTranslations, getLocale } from 'next-intl/server';
 
 async function updateEstado(formData: FormData) {
   "use server";
@@ -43,6 +44,9 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
   } = await searchParams;
 
   const client = await requireAdminClient();
+  const t = await getTranslations('admin.reservas');
+  const tc = await getTranslations('common');
+  const locale = await getLocale();
 
   let query = supabaseAdmin
     .from("reservas")
@@ -93,7 +97,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
     <div className="space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-          Reservas
+          {t('title')}
         </h1>
         <p className="text-gray-400 dark:text-white/40">{client.nombre} · {client.domain}</p>
       </div>
@@ -101,20 +105,20 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KPICard
-          title="Total facturado"
-          value={`${totalFacturado.toLocaleString("es-ES")} €`}
+          title={t('totalBilled')}
+          value={`${totalFacturado.toLocaleString(locale)} €`}
           icon={<DollarSign className="w-5 h-5" />}
           variant="gradient"
         />
         <KPICard
-          title="Reservas pagadas"
+          title={t('paidBookings')}
           value={numeroReservas}
           icon={<ShoppingBag className="w-5 h-5" />}
           iconBg="bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15"
           iconColor="text-drb-turquoise-600 dark:text-drb-turquoise-400"
         />
         <KPICard
-          title="Ticket medio"
+          title={t('avgTicket')}
           value={`${ticketMedio} €`}
           icon={<Ticket className="w-5 h-5" />}
           iconBg="bg-purple-50 dark:bg-purple-500/15"
@@ -129,7 +133,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
           <input
             name="q"
             defaultValue={q}
-            placeholder="Buscar nombre o email"
+            placeholder={t('searchPlaceholder')}
             className="panel-input text-sm"
           />
           <select
@@ -137,11 +141,11 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             defaultValue={estado}
             className="panel-input text-sm"
           >
-            <option value="todos">Todos</option>
-            <option value="pagado">Pagado</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="revisada">Revisada</option>
-            <option value="cancelada">Cancelada</option>
+            <option value="todos">{tc('all')}</option>
+            <option value="pagado">{t('paid')}</option>
+            <option value="pendiente">{t('pending')}</option>
+            <option value="revisada">{t('reviewed')}</option>
+            <option value="cancelada">{t('cancelled')}</option>
           </select>
           <input
             type="date"
@@ -156,7 +160,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             className="panel-input text-sm"
           />
           <button className="btn-primary text-sm">
-            Filtrar
+            {tc('filter')}
           </button>
           <div className="ml-auto flex gap-2">
             <ExportPDFButton estado={estado} q={q} from={from} to={to} />
@@ -164,7 +168,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
               href={`/api/admin/export?estado=${estado}&q=${q}&from=${from}&to=${to}`}
               className="px-4 py-2 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-100 dark:hover:bg-drb-turquoise-500/25 font-semibold text-sm transition-colors"
             >
-              Exportar CSV
+              {tc('exportCSV')}
             </a>
           </div>
         </form>
@@ -173,7 +177,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
       {/* Table */}
       {reservasSafe.length === 0 ? (
         <div className="panel-card p-12 text-center">
-          <p className="text-gray-400 dark:text-white/40">No hay reservas.</p>
+          <p className="text-gray-400 dark:text-white/40">{t('noBookings')}</p>
         </div>
       ) : (
         <div className="panel-card overflow-hidden">
@@ -181,19 +185,19 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-white/[0.06] bg-gray-50/80 dark:bg-white/[0.02]">
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Fecha</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Cliente</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Destino</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Personas</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Precio</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">Estado</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('date')}</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('client')}</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('destination')}</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('people')}</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('price')}</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('status')}</th>
                 </tr>
               </thead>
               <tbody>
                 {reservasSafe.map((r) => (
                   <tr key={r.id} className="table-row">
                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-white/50">
-                      {new Date(r.created_at).toLocaleDateString("es-ES")}
+                      {new Date(r.created_at).toLocaleDateString(locale)}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -237,10 +241,10 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                             defaultValue={r.estado_pago}
                             className="panel-input text-xs py-1 px-2"
                           >
-                            <option value="pagado">Pagado</option>
-                            <option value="pendiente">Pendiente</option>
-                            <option value="revisada">Revisada</option>
-                            <option value="cancelada">Cancelada</option>
+                            <option value="pagado">{t('paid')}</option>
+                            <option value="pendiente">{t('pending')}</option>
+                            <option value="revisada">{t('reviewed')}</option>
+                            <option value="cancelada">{t('cancelled')}</option>
                           </select>
                           <SubmitButton className="px-2 py-1 text-xs btn-primary rounded-lg">
                             OK

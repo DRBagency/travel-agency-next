@@ -3,6 +3,7 @@
 import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import {
   Menu,
   LayoutDashboard,
@@ -26,6 +27,7 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 import PageTransition from "@/components/ui/PageTransition";
 import SearchBar from "@/components/ui/SearchBar";
 import NotificationBell from "@/components/ui/NotificationBell";
+import LanguageSelector from "@/components/ui/LanguageSelector";
 
 interface OwnerShellProps {
   children: ReactNode;
@@ -37,36 +39,18 @@ interface NavItem {
   icon: LucideIcon;
 }
 
-const navItems: NavItem[] = [
-  { label: "Dashboard", href: "/owner", icon: LayoutDashboard },
-  { label: "Clientes", href: "/owner/clientes", icon: Users },
-  { label: "Calendario", href: "/owner/calendario", icon: Calendar },
-  { label: "Emails", href: "/owner/emails", icon: Mail },
-  { label: "Monetización", href: "/owner/monetizacion", icon: TrendingUp },
-  { label: "Stripe", href: "/owner/stripe", icon: CreditCard },
-  { label: "Automatización", href: "/owner/automatizaciones", icon: Zap },
-  { label: "Soporte", href: "/owner/soporte", icon: Headphones },
-];
-
-const pageTitles: Record<string, string> = {
-  "/owner": "Dashboard",
-  "/owner/clientes": "Clientes",
-  "/owner/calendario": "Calendario",
-  "/owner/emails": "Emails",
-  "/owner/monetizacion": "Monetización",
-  "/owner/stripe": "Stripe",
-  "/owner/automatizaciones": "Automatización",
-  "/owner/soporte": "Soporte",
-};
-
 function SidebarNav({
   items,
   pathname,
   onNavigate,
+  t,
+  tc,
 }: {
   items: NavItem[];
   pathname: string;
   onNavigate?: () => void;
+  t: (key: string) => string;
+  tc: (key: string) => string;
 }) {
   const isActive = (href: string) =>
     href === "/owner" ? pathname === "/owner" : pathname.startsWith(href);
@@ -83,7 +67,7 @@ function SidebarNav({
             DRB Agency
           </div>
           <div className="text-xs text-gray-400 dark:text-white/40">
-            Panel Owner
+            {t("panelOwner")}
           </div>
         </div>
       </div>
@@ -118,9 +102,9 @@ function SidebarNav({
           <div className="absolute inset-0 opacity-20 bg-[url('/images/sidebar-cta-bg.svg')] bg-cover bg-center" />
           <div className="relative p-4 text-white">
             <Sparkles className="w-5 h-5 mb-2 text-drb-turquoise-200" />
-            <p className="text-sm font-semibold">Potencia tu plataforma</p>
+            <p className="text-sm font-semibold">{tc("boostPlatform")}</p>
             <p className="text-xs text-white/70 mt-1">
-              Nuevas funciones disponibles.
+              {tc("newFeaturesAvailable")}
             </p>
           </div>
         </div>
@@ -133,7 +117,7 @@ function SidebarNav({
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
         >
           <LogOut className="w-[18px] h-[18px] shrink-0" />
-          Cerrar sesión
+          {tc("logout")}
         </a>
       </div>
     </div>
@@ -143,24 +127,51 @@ function SidebarNav({
 export default function OwnerShell({ children }: OwnerShellProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const t = useTranslations("owner");
+  const tc = useTranslations("common");
+  const locale = useLocale();
+
+  const navItems: NavItem[] = [
+    { label: t("nav.dashboard"), href: "/owner", icon: LayoutDashboard },
+    { label: t("nav.clientes"), href: "/owner/clientes", icon: Users },
+    { label: t("nav.calendario"), href: "/owner/calendario", icon: Calendar },
+    { label: t("nav.emails"), href: "/owner/emails", icon: Mail },
+    { label: t("nav.monetizacion"), href: "/owner/monetizacion", icon: TrendingUp },
+    { label: t("nav.stripe"), href: "/owner/stripe", icon: CreditCard },
+    { label: t("nav.automatizaciones"), href: "/owner/automatizaciones", icon: Zap },
+    { label: t("nav.soporte"), href: "/owner/soporte", icon: Headphones },
+  ];
+
+  const pageTitles: Record<string, string> = {
+    "/owner": t("nav.dashboard"),
+    "/owner/clientes": t("nav.clientes"),
+    "/owner/calendario": t("nav.calendario"),
+    "/owner/emails": t("nav.emails"),
+    "/owner/monetizacion": t("nav.monetizacion"),
+    "/owner/stripe": t("nav.stripe"),
+    "/owner/automatizaciones": t("nav.automatizaciones"),
+    "/owner/soporte": t("nav.soporte"),
+  };
 
   const pageTitle = Object.entries(pageTitles).find(([path]) => {
     if (path === "/owner") return pathname === "/owner";
     return pathname.startsWith(path);
-  })?.[1] || "Panel Owner";
+  })?.[1] || t("panelOwner");
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
       {/* Desktop sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#041820] border-r border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
+      <aside className="fixed start-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
         <SidebarNav
           items={navItems}
           pathname={pathname}
+          t={t}
+          tc={tc}
         />
       </aside>
 
       {/* Header */}
-      <header className="sticky top-0 z-30 lg:ml-[260px] bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
+      <header className="sticky top-0 z-30 lg:ms-[260px] bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
         <div className="flex items-center justify-between px-4 lg:px-8 h-16">
           <div className="flex items-center gap-4">
             {/* Mobile hamburger */}
@@ -170,11 +181,13 @@ export default function OwnerShell({ children }: OwnerShellProps) {
                   <Menu className="w-5 h-5 text-gray-600 dark:text-white" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[260px] p-0 bg-white dark:bg-[#041820] border-r border-gray-200/80 dark:border-white/[0.06]">
+              <SheetContent side={locale === "ar" ? "right" : "left"} className="w-[260px] p-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06]">
                 <SidebarNav
                   items={navItems}
                   pathname={pathname}
                   onNavigate={() => setMobileOpen(false)}
+                  t={t}
+                  tc={tc}
                 />
               </SheetContent>
             </Sheet>
@@ -199,14 +212,16 @@ export default function OwnerShell({ children }: OwnerShellProps) {
             {/* Functional search bar */}
             <SearchBar navItems={navItems} />
 
+            <LanguageSelector />
+
             <ThemeToggle />
 
             {/* Functional notifications */}
             <NotificationBell />
 
             {/* User avatar */}
-            <div className="flex items-center gap-3 pl-3 border-l border-gray-200/80 dark:border-white/[0.06]">
-              <div className="text-right hidden md:block">
+            <div className="flex items-center gap-3 ps-3 border-s border-gray-200/80 dark:border-white/[0.06]">
+              <div className="text-end hidden md:block">
                 <div className="text-sm font-medium text-gray-900 dark:text-white">
                   DRB Agency
                 </div>
@@ -223,7 +238,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
       </header>
 
       {/* Main content */}
-      <main className="lg:ml-[260px] px-4 lg:px-8 py-6">
+      <main className="lg:ms-[260px] px-4 lg:px-8 py-6">
         <PageTransition key={pathname}>{children}</PageTransition>
       </main>
     </div>

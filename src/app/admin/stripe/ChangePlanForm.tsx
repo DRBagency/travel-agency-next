@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface ChangePlanFormProps {
   currentPlan: string;
@@ -9,6 +10,8 @@ interface ChangePlanFormProps {
 export default function ChangePlanForm({
   currentPlan,
 }: ChangePlanFormProps) {
+  const t = useTranslations('admin.stripe');
+  const tc = useTranslations('common');
   const [plan, setPlan] = useState(currentPlan);
   const [loading, setLoading] = useState(false);
 
@@ -23,11 +26,11 @@ export default function ChangePlanForm({
         body: JSON.stringify({ plan }),
       });
       if (!res.ok) {
-        throw new Error("No se pudo cambiar el plan");
+        throw new Error(t('changePlanError'));
       }
       window.location.reload();
     } catch {
-      alert("No se pudo cambiar el plan");
+      alert(t('changePlanError'));
     } finally {
       setLoading(false);
     }
@@ -49,7 +52,7 @@ export default function ChangePlanForm({
         disabled={loading}
         className="btn-primary disabled:opacity-60"
       >
-        {loading ? "Actualizando..." : "Cambiar plan"}
+        {loading ? tc('updating') : t('changePlanBtn')}
       </button>
     </form>
   );

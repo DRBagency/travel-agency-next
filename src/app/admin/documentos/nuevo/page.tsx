@@ -6,6 +6,7 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 import SubmitButton from "@/components/admin/SubmitButton";
 import Link from "next/link";
 import DocumentFormClient from "../DocumentFormClient";
+import { getTranslations } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +69,8 @@ export default async function NuevoDocumentoPage({
 }: {
   searchParams: Promise<{ tipo?: string }>;
 }) {
+  const t = await getTranslations('admin.documentos');
+  const tc = await getTranslations('common');
   await requireAdminClient();
   const { tipo } = await searchParams;
 
@@ -75,10 +78,10 @@ export default async function NuevoDocumentoPage({
 
   const typeLabel =
     documentType === "presupuesto"
-      ? "Presupuesto"
+      ? t('presupuesto')
       : documentType === "contrato"
-        ? "Contrato"
-        : "Factura";
+        ? t('contrato')
+        : t('factura');
 
   return (
     <div>
@@ -87,11 +90,11 @@ export default async function NuevoDocumentoPage({
           href="/admin/documentos"
           className="text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
-          &larr; Volver
+          &larr; {tc('back')}
         </Link>
         <div>
-          <h1 className="text-3xl font-bold mb-1">Crear {typeLabel}</h1>
-          <p className="text-gray-500 dark:text-white/60">Rellena los datos del documento</p>
+          <h1 className="text-3xl font-bold mb-1">{t('createType', { type: typeLabel })}</h1>
+          <p className="text-gray-500 dark:text-white/60">{t('fillData')}</p>
         </div>
       </div>
 
@@ -100,10 +103,10 @@ export default async function NuevoDocumentoPage({
           <input type="hidden" name="document_type" value={documentType} />
           <DocumentFormClient documentType={documentType}>
             <SubmitButton
-              successText="Documento creado"
+              successText={t('docCreated')}
               className="btn-primary"
             >
-              Guardar {typeLabel}
+              {t('saveType', { type: typeLabel })}
             </SubmitButton>
           </DocumentFormClient>
         </form>

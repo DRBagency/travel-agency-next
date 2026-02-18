@@ -1,19 +1,23 @@
 import { createClient } from "@supabase/supabase-js";
 import { subMonths, format, startOfMonth, endOfMonth } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS, ar } from "date-fns/locale";
+import type { Locale } from "date-fns";
+
+const dateFnsLocales: Record<string, Locale> = { es, en: enUS, ar };
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function getChartData() {
+export async function getChartData(locale: string = 'es') {
+  const dfLocale = dateFnsLocales[locale] || es;
   try {
     // Últimos 6 meses
     const months = Array.from({ length: 6 }, (_, i) => {
       const date = subMonths(new Date(), 5 - i);
       return {
-        month: format(date, "MMM", { locale: es }),
+        month: format(date, "MMM", { locale: dfLocale }),
         start: startOfMonth(date).toISOString(),
         end: endOfMonth(date).toISOString(),
       };

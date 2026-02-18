@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
+import { getTranslations, getLocale } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
 
@@ -51,22 +52,25 @@ async function deleteAutomation(formData: FormData) {
   revalidatePath("/owner/automatizaciones");
 }
 
-const TRIGGER_TYPES = [
-  { value: "days_before_expiry", label: "Dias antes del vencimiento" },
-  { value: "days_inactive", label: "Dias sin actividad" },
-  { value: "new_client", label: "Cliente nuevo registrado" },
-  { value: "reservation_created", label: "Nueva reserva creada" },
-  { value: "subscription_cancelled", label: "Suscripcion cancelada" },
-];
-
-const ACTION_TYPES = [
-  { value: "send_email", label: "Enviar email" },
-  { value: "send_email_series", label: "Serie de emails" },
-  { value: "create_task", label: "Crear tarea" },
-  { value: "notify_owner", label: "Notificar al owner" },
-];
-
 export default async function OwnerAutomatizacionesPage() {
+  const t = await getTranslations('owner.automatizaciones');
+  const tc = await getTranslations('common');
+  const locale = await getLocale();
+
+  const TRIGGER_TYPES = [
+    { value: "days_before_expiry", label: t('triggerDaysBeforeExpiry') },
+    { value: "days_inactive", label: t('triggerDaysInactive') },
+    { value: "new_client", label: t('triggerNewClient') },
+    { value: "reservation_created", label: t('triggerReservationCreated') },
+    { value: "subscription_cancelled", label: t('triggerSubscriptionCancelled') },
+  ];
+
+  const ACTION_TYPES = [
+    { value: "send_email", label: t('actionSendEmail') },
+    { value: "send_email_series", label: t('actionSendEmailSeries') },
+    { value: "create_task", label: t('actionCreateTask') },
+    { value: "notify_owner", label: t('actionNotifyOwner') },
+  ];
   const { data: automations } = await supabaseAdmin
     .from("automations")
     .select("*")
@@ -85,48 +89,48 @@ export default async function OwnerAutomatizacionesPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Automatizaciones</h1>
+          <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
           <p className="text-gray-500 dark:text-white/60">
-            Configura flujos automaticos para tu plataforma
+            {t('subtitle')}
           </p>
         </div>
       </div>
 
       {/* Create form */}
       <div className="panel-card p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4">Nueva automatizacion</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('newAutomation')}</h2>
         <form action={createAutomation} className="grid gap-4">
           <div>
-            <label className="panel-label block mb-1">Nombre</label>
+            <label className="panel-label block mb-1">{tc('name')}</label>
             <input
               name="name"
               required
-              placeholder="Ej: Recordatorio de pago"
+              placeholder={t('namePlaceholder')}
               className="w-full panel-input"
             />
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="panel-label block mb-1">Trigger</label>
+              <label className="panel-label block mb-1">{t('trigger')}</label>
               <select
                 name="trigger_type"
                 required
                 className="w-full panel-input"
               >
-                <option value="">Seleccionar...</option>
-                {TRIGGER_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
+                <option value="">{tc('select')}</option>
+                {TRIGGER_TYPES.map((tr) => (
+                  <option key={tr.value} value={tr.value}>{tr.label}</option>
                 ))}
               </select>
             </div>
             <div>
               <label className="panel-label block mb-1">
-                Valor del trigger
+                {t('triggerValue')}
               </label>
               <input
                 name="trigger_value"
-                placeholder="Ej: 3 (dias)"
+                placeholder={t('triggerValuePlaceholder')}
                 className="w-full panel-input"
               />
             </div>
@@ -134,13 +138,13 @@ export default async function OwnerAutomatizacionesPage() {
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="panel-label block mb-1">Accion</label>
+              <label className="panel-label block mb-1">{t('action')}</label>
               <select
                 name="action_type"
                 required
                 className="w-full panel-input"
               >
-                <option value="">Seleccionar...</option>
+                <option value="">{tc('select')}</option>
                 {ACTION_TYPES.map((a) => (
                   <option key={a.value} value={a.value}>{a.label}</option>
                 ))}
@@ -148,11 +152,11 @@ export default async function OwnerAutomatizacionesPage() {
             </div>
             <div>
               <label className="panel-label block mb-1">
-                Detalle de la accion
+                {t('actionDetail')}
               </label>
               <input
                 name="action_value"
-                placeholder="Ej: template_recordatorio"
+                placeholder={t('actionDetailPlaceholder')}
                 className="w-full panel-input"
               />
             </div>
@@ -160,10 +164,10 @@ export default async function OwnerAutomatizacionesPage() {
 
           <div className="flex justify-end">
             <SubmitButton
-              successText="Creada"
+              successText={tc('created')}
               className="btn-primary"
             >
-              Crear automatizacion
+              {t('createAutomation')}
             </SubmitButton>
           </div>
         </form>
@@ -173,7 +177,7 @@ export default async function OwnerAutomatizacionesPage() {
       <div className="space-y-4 mb-8">
         {items.length === 0 ? (
           <div className="panel-card p-8 text-center text-gray-400 dark:text-white/40">
-            No hay automatizaciones creadas
+            {t('noAutomations')}
           </div>
         ) : (
           items.map((auto) => (
@@ -194,26 +198,26 @@ export default async function OwnerAutomatizacionesPage() {
                           : "bg-gray-100 text-gray-600 dark:bg-white/[0.06] dark:text-white/60"
                       }`}
                     >
-                      {auto.active ? "Activa" : "Inactiva"}
+                      {auto.active ? tc('active') : tc('inactive')}
                     </span>
                   </div>
                   <div className="flex gap-6 text-sm flex-wrap">
                     <div>
-                      <span className="text-gray-400 dark:text-white/40">Trigger:</span>{" "}
+                      <span className="text-gray-400 dark:text-white/40">{t('trigger')}:</span>{" "}
                       <span className="text-gray-700 dark:text-white/80">
-                        {TRIGGER_TYPES.find((t) => t.value === auto.trigger_type)?.label || auto.trigger_type}
+                        {TRIGGER_TYPES.find((tr) => tr.value === auto.trigger_type)?.label || auto.trigger_type}
                         {auto.trigger_config?.value ? ` (${auto.trigger_config.value})` : ""}
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-400 dark:text-white/40">Accion:</span>{" "}
+                      <span className="text-gray-400 dark:text-white/40">{t('action')}:</span>{" "}
                       <span className="text-gray-700 dark:text-white/80">
                         {ACTION_TYPES.find((a) => a.value === auto.action_type)?.label || auto.action_type}
                         {auto.action_config?.value ? ` (${auto.action_config.value})` : ""}
                       </span>
                     </div>
                     <div className="text-gray-300 dark:text-white/30 text-xs">
-                      Creada: {new Date(auto.created_at).toLocaleDateString("es-ES")}
+                      {tc('created')}: {new Date(auto.created_at).toLocaleDateString(locale)}
                     </div>
                   </div>
                 </div>
@@ -229,7 +233,7 @@ export default async function OwnerAutomatizacionesPage() {
                           : "text-emerald-600 dark:text-green-400 hover:text-emerald-500 dark:hover:text-green-300 hover:bg-emerald-50 dark:hover:bg-green-500/10"
                       }`}
                     >
-                      {auto.active ? "Desactivar" : "Activar"}
+                      {auto.active ? tc('deactivate') : tc('activate')}
                     </button>
                   </form>
                   <form action={deleteAutomation}>
@@ -238,7 +242,7 @@ export default async function OwnerAutomatizacionesPage() {
                       type="submit"
                       className="px-3 py-1 text-sm text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
                     >
-                      Eliminar
+                      {tc('delete')}
                     </button>
                   </form>
                 </div>
@@ -252,27 +256,27 @@ export default async function OwnerAutomatizacionesPage() {
       <div className="panel-card">
         <div className="p-6 border-b border-gray-100 dark:border-white/10">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Ultimas ejecuciones
+            {t('recentExecutions')}
           </h2>
           <p className="text-sm text-gray-400 dark:text-white/40 mt-1">
-            Historial de las ultimas 20 ejecuciones
+            {t('executionsHistory')}
           </p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100 dark:border-white/10">
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">Automatizacion</th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">Estado</th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">Error</th>
-                <th className="text-left p-4 text-sm font-medium text-gray-500 dark:text-white/60">Fecha</th>
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">{t('automation')}</th>
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">{tc('status')}</th>
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">{tc('error')}</th>
+                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">{tc('date')}</th>
               </tr>
             </thead>
             <tbody>
               {executions.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="p-8 text-center text-gray-400 dark:text-white/40">
-                    No hay ejecuciones registradas
+                    {t('noExecutions')}
                   </td>
                 </tr>
               ) : (
@@ -298,7 +302,7 @@ export default async function OwnerAutomatizacionesPage() {
                       {exec.error_message || "—"}
                     </td>
                     <td className="p-4 text-gray-500 dark:text-white/60 text-sm">
-                      {new Date(exec.executed_at).toLocaleString("es-ES")}
+                      {new Date(exec.executed_at).toLocaleString(locale)}
                     </td>
                   </tr>
                 ))

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import { getTranslations } from 'next-intl/server';
 
 async function createLegal(formData: FormData) {
   "use server";
@@ -73,6 +74,9 @@ export default async function AdminLegalesPage({
 }: AdminLegalesPageProps) {
   await searchParams;
 
+  const t = await getTranslations('admin.legales');
+  const tc = await getTranslations('common');
+
   const client = await requireAdminClient();
 
   const { data: legales } = await supabaseAdmin
@@ -88,20 +92,20 @@ export default async function AdminLegalesPage({
   return (
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold mb-1">Legales</h1>
+          <h1 className="text-3xl font-bold mb-1">{t('title')}</h1>
           <p className="text-gray-500 dark:text-white/60">
-            Gestiona páginas legales que se muestran en /legal/[slug].
+            {t('subtitle')}
           </p>
           <p className="text-gray-400 dark:text-white/50 text-sm mt-2">
-            Nota: solo las páginas con "Activa en la web" aparecen en el footer.
+            {t('note')}
           </p>
         </div>
 
         <section className="panel-card p-6 space-y-6">
           <div>
-            <h2 className="text-xl font-semibold">Nueva página legal</h2>
+            <h2 className="text-xl font-semibold">{t('newPage')}</h2>
             <p className="text-sm text-gray-500 dark:text-white/60">
-              El contenido acepta HTML (se renderiza tal cual).
+              {t('contentNote')}
             </p>
           </div>
 
@@ -111,29 +115,29 @@ export default async function AdminLegalesPage({
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label">
-                  Título
+                  {t('titleLabel')}
                 </label>
                 <input
                   name="titulo"
                   className="panel-input"
-                  placeholder="Ej: Política de privacidad"
+                  placeholder={t('titlePlaceholder')}
                 />
               </div>
               <div>
                 <label className="panel-label">
-                  Slug
+                  {t('slug')}
                 </label>
                 <input
                   name="slug"
                   className="panel-input"
-                  placeholder="privacidad"
+                  placeholder={t('slugPlaceholder')}
                 />
               </div>
             </div>
 
             <div>
               <label className="panel-label">
-                Contenido (HTML)
+                {t('contentLabel')}
               </label>
               <textarea
                 name="contenido"
@@ -144,25 +148,25 @@ export default async function AdminLegalesPage({
 
             <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
               <input type="checkbox" name="activo" defaultChecked />
-              Publicar ahora
+              {tc('publishNow')}
             </label>
 
             <div className="flex justify-end">
               <SubmitButton
                 className="btn-primary"
               >
-                Guardar página
+                {t('savePage')}
               </SubmitButton>
             </div>
           </form>
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Listado</h2>
+          <h2 className="text-xl font-semibold">{t('list')}</h2>
 
           {(!legales || legales.length === 0) && (
             <div className="panel-card p-6 text-gray-600 dark:text-white/70">
-              Todavía no hay páginas legales.
+              {t('noPages')}
             </div>
           )}
 
@@ -177,7 +181,7 @@ export default async function AdminLegalesPage({
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="panel-label">
-                    Título
+                    {t('titleLabel')}
                   </label>
                   <input
                     name="titulo"
@@ -187,7 +191,7 @@ export default async function AdminLegalesPage({
                 </div>
                 <div>
                   <label className="panel-label">
-                    Slug
+                    {t('slug')}
                   </label>
                   <input
                     name="slug"
@@ -199,7 +203,7 @@ export default async function AdminLegalesPage({
 
               <div>
                 <label className="panel-label">
-                  Contenido (HTML)
+                  {t('contentLabel')}
                 </label>
                 <textarea
                   name="contenido"
@@ -214,20 +218,20 @@ export default async function AdminLegalesPage({
                   name="activo"
                   defaultChecked={Boolean(item.activo)}
                 />
-                Activa en la web
+                {t('activeOnWeb')}
               </label>
 
               <div className="flex flex-wrap items-center justify-end gap-3">
                 <SubmitButton
                   className="btn-primary"
                 >
-                  Guardar cambios
+                  {tc('saveChanges')}
                 </SubmitButton>
                 <button
                   formAction={deleteLegal}
                   className="badge-danger px-5 py-2 rounded-xl hover:bg-red-500/30 transition"
                 >
-                  Eliminar
+                  {tc('delete')}
                 </button>
               </div>
             </form>

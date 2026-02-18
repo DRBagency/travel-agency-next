@@ -111,13 +111,13 @@ export default function UnsplashPicker({
         {/* Search */}
         <div className="p-4 border-b border-gray-100 dark:border-white/10">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               value={query}
               onChange={(e) => handleInputChange(e.target.value)}
               placeholder="Buscar fotos... ej: playa, montaña, ciudad"
-              className="w-full pl-10 pr-4 py-2.5 panel-input"
+              className="w-full ps-10 pe-4 py-2.5 panel-input"
               autoFocus
             />
           </div>

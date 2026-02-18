@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import { Send, Paperclip } from "lucide-react";
 
 interface Message {
@@ -21,6 +22,8 @@ export default function MessageThread({
   ticketStatus,
   addMessageAction,
 }: MessageThreadProps) {
+  const t = useTranslations('admin.soporte.thread');
+  const locale = useLocale();
   const bottomRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -84,7 +87,7 @@ export default function MessageThread({
                     isClient ? "text-white/50" : "text-gray-400 dark:text-white/25"
                   }`}
                 >
-                  {new Date(msg.created_at).toLocaleString("es-ES", {
+                  {new Date(msg.created_at).toLocaleString(locale, {
                     day: "2-digit",
                     month: "2-digit",
                     hour: "2-digit",
@@ -109,7 +112,7 @@ export default function MessageThread({
       <div className="border-t border-gray-100 dark:border-white/[0.06] p-4 bg-gray-50/50 dark:bg-white/[0.02]">
         {isClosed && (
           <p className="text-center text-gray-400 dark:text-white/30 text-xs mb-3">
-            Este ticket está cerrado. Envía un mensaje para reabrirlo.
+            {t('ticketClosed')}
           </p>
         )}
         <form onSubmit={handleSubmit} className="flex items-center gap-2">
@@ -123,7 +126,7 @@ export default function MessageThread({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={
-              isClosed ? "Escribe para reabrir el ticket..." : "Escribe un mensaje..."
+              isClosed ? t('reopenPlaceholder') : t('messagePlaceholder')
             }
             className="flex-1 bg-white dark:bg-white/[0.06] border border-gray-200 dark:border-white/[0.1] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/30 focus:border-drb-turquoise-500 transition-colors"
           />

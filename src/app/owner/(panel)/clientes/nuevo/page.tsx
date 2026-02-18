@@ -1,13 +1,18 @@
 import { createCliente } from "./actions";
+import { getTranslations } from 'next-intl/server';
 
-export default function NuevoClientePage() {
+export default async function NuevoClientePage() {
+  const t = await getTranslations('owner.clientes');
+  const tf = await getTranslations('owner.clientes.form');
+  const tc = await getTranslations('common');
+
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Nueva agencia</h1>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{t('newAgency')}</h1>
 
       <form action={createCliente} className="space-y-4 max-w-2xl">
         <div>
-          <label className="panel-label block mb-1">Nombre</label>
+          <label className="panel-label block mb-1">{tc('name')}</label>
           <input name="nombre" className="w-full panel-input" required />
         </div>
         <div>
@@ -15,28 +20,28 @@ export default function NuevoClientePage() {
           <input name="slug" className="w-full panel-input" required />
         </div>
         <div>
-          <label className="panel-label block mb-1">Domain</label>
+          <label className="panel-label block mb-1">{t('domain')}</label>
           <input name="domain" className="w-full panel-input" required />
         </div>
         <div>
-          <label className="panel-label block mb-1">Primary Color</label>
+          <label className="panel-label block mb-1">{tf('primaryColor')}</label>
           <input name="primary_color" className="w-full panel-input" />
         </div>
         <div>
-          <label className="panel-label block mb-1">Hero Title</label>
+          <label className="panel-label block mb-1">{tf('heroTitle')}</label>
           <input name="hero_title" className="w-full panel-input" />
         </div>
         <div>
-          <label className="panel-label block mb-1">Hero Subtitle</label>
+          <label className="panel-label block mb-1">{tf('heroSubtitle')}</label>
           <textarea name="hero_subtitle" className="w-full panel-input" />
         </div>
         <div>
-          <label className="panel-label block mb-1">Hero CTA Text</label>
+          <label className="panel-label block mb-1">{tf('heroCta')}</label>
           <input name="hero_cta_text" className="w-full panel-input" />
         </div>
 
         <button type="submit" className="btn-primary">
-          Crear agencia
+          {t('createAgency')}
         </button>
       </form>
     </div>

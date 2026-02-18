@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import { getTranslations, getLocale } from "next-intl/server";
 import Link from "next/link";
 import MessageThread from "./MessageThread";
 
@@ -35,6 +36,8 @@ async function addMessage(ticketId: string, formData: FormData) {
 
   // Reopen if closed
   if (ticket.status === "closed") {
+    const t = await getTranslations('admin.soporte.detail');
+
     await supabaseAdmin
       .from("support_tickets")
       .update({ status: "open", closed_at: null })
@@ -43,7 +46,7 @@ async function addMessage(ticketId: string, formData: FormData) {
     await supabaseAdmin.from("ticket_messages").insert({
       ticket_id: ticketId,
       sender_type: "system",
-      message: "Ticket reabierto por el cliente",
+      message: t('reopenedByClient'),
     });
   }
 
@@ -72,11 +75,12 @@ async function updateTicketStatus(ticketId: string, formData: FormData) {
     .eq("id", ticketId)
     .eq("cliente_id", clientId);
 
-  const statusLabel = newStatus === "closed" ? "cerrado" : "reabierto";
+  const t = await getTranslations('admin.soporte.detail');
+  const statusLabel = newStatus === "closed" ? t('closedStatus') : t('reopenedStatus');
   await supabaseAdmin.from("ticket_messages").insert({
     ticket_id: ticketId,
     sender_type: "system",
-    message: `Ticket ${statusLabel} por el cliente`,
+    message: t('statusChangedByClient', { status: statusLabel }),
   });
 
   revalidatePath(`/admin/soporte/${ticketId}`);
@@ -87,6 +91,9 @@ export default async function TicketDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations('admin.soporte.detail');
+  const tc = await getTranslations('common');
+  const locale = await getLocale();
   const client = await requireAdminClient();
   const { id } = await params;
 
@@ -118,7 +125,7 @@ export default async function TicketDetailPage({
           href="/admin/soporte"
           className="text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
-          &larr; Volver
+          &larr; {tc('back')}
         </Link>
       </div>
 
@@ -152,7 +159,7 @@ export default async function TicketDetailPage({
               {ticket.priority}
             </span>
             <span className="text-gray-400 dark:text-white/40 text-sm">
-              {new Date(ticket.created_at).toLocaleDateString("es-ES")}
+              {new Date(ticket.created_at).toLocaleDateString(locale)}
             </span>
           </div>
         </div>
@@ -171,7 +178,7 @@ export default async function TicketDetailPage({
                 : "bg-red-100 dark:bg-red-600/20 text-red-600 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-600/30 border border-red-200 dark:border-red-500/30"
             }`}
           >
-            {isClosed ? "Reabrir ticket" : "Cerrar ticket"}
+            {isClosed ? t('reopenTicket') : t('closeTicket')}
           </button>
         </form>
       </div>

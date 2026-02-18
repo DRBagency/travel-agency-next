@@ -132,7 +132,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             </p>
 
             {summary.length > 0 && (
-              <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 text-left">
+              <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 text-start">
                 <h2 className="text-lg font-semibold mb-4">
                   Resumen de tu reserva
                 </h2>

@@ -4,6 +4,7 @@ import DashboardCard from "@/components/ui/DashboardCard";
 import KPICard from "@/components/ui/KPICard";
 import { ReservasChart, IngresosChart } from "@/components/admin/AdminAnalyticsCharts";
 import { subMonths, format, startOfMonth, endOfMonth } from "date-fns";
+import { getTranslations, getLocale } from 'next-intl/server';
 import {
   Globe,
   MapPin,
@@ -23,6 +24,10 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const client = await requireAdminClient();
+  const t = await getTranslations('admin.dashboard');
+  const tc = await getTranslations('common');
+  const tn = await getTranslations('admin.nav');
+  const locale = await getLocale();
 
   /* Métricas de reservas */
   const { data: reservas } = await supabaseAdmin
@@ -67,8 +72,8 @@ export default async function AdminPage() {
     });
   }
 
-  const greeting = `Hola, ${client.nombre}!`;
-  const dateStr = new Date().toLocaleDateString("es-ES", {
+  const greeting = t('greeting', { name: client.nombre });
+  const dateStr = new Date().toLocaleDateString(locale, {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -86,36 +91,36 @@ export default async function AdminPage() {
       {/* 4 KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
-          title="Total facturado"
-          value={`${totalFacturado.toLocaleString("es-ES")} €`}
+          title={t('totalBilled')}
+          value={`${totalFacturado.toLocaleString(locale)} €`}
           icon={<DollarSign className="w-5 h-5" />}
           iconBg="bg-emerald-50 dark:bg-emerald-500/15"
           iconColor="text-emerald-600 dark:text-emerald-400"
-          subtitle="Reservas pagadas"
+          subtitle={t('paidBookingsSub')}
         />
         <KPICard
-          title="Reservas pagadas"
+          title={t('paidBookings')}
           value={numeroReservas}
           icon={<ShoppingBag className="w-5 h-5" />}
           iconBg="bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15"
           iconColor="text-drb-turquoise-600 dark:text-drb-turquoise-400"
-          subtitle="Este periodo"
+          subtitle={t('thisPeriod')}
         />
         <KPICard
-          title="Ticket medio"
+          title={t('avgTicket')}
           value={`${ticketMedio} €`}
           icon={<Ticket className="w-5 h-5" />}
           iconBg="bg-purple-50 dark:bg-purple-500/15"
           iconColor="text-purple-600 dark:text-purple-400"
-          subtitle="Por reserva"
+          subtitle={t('perBooking')}
         />
         <KPICard
-          title="Destinos activos"
+          title={t('activeDestinations')}
           value={destinosActivos ?? 0}
           icon={<Map className="w-5 h-5" />}
           iconBg="bg-amber-50 dark:bg-amber-500/15"
           iconColor="text-amber-600 dark:text-amber-400"
-          subtitle="Publicados en web"
+          subtitle={t('publishedOnWeb')}
         />
       </div>
 
@@ -127,54 +132,54 @@ export default async function AdminPage() {
 
       {/* Navigation Cards */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Gestiona tu agencia</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('manageAgency')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           <DashboardCard
             icon={<Globe className="w-5 h-5" />}
-            title="Contenido Web"
-            subtitle="Hero, stats, textos"
+            title={t('webContent')}
+            subtitle={t('webContentSub')}
             href="/admin/mi-web"
           />
           <DashboardCard
             icon={<MapPin className="w-5 h-5" />}
-            title="Destinos"
-            subtitle="Crear y editar"
+            title={t('destinations')}
+            subtitle={t('destinationsSub')}
             href="/admin/destinos"
           />
           <DashboardCard
             icon={<CalendarCheck className="w-5 h-5" />}
-            title="Reservas"
-            subtitle="Ver y filtrar"
+            title={t('bookings')}
+            subtitle={t('bookingsSub')}
             href="/admin/reservas"
           />
           <DashboardCard
             icon={<Star className="w-5 h-5" />}
-            title="Opiniones"
-            subtitle="Moderar reviews"
+            title={t('reviews')}
+            subtitle={t('reviewsSub')}
             href="/admin/opiniones"
           />
           <DashboardCard
             icon={<Mail className="w-5 h-5" />}
-            title="Emails"
-            subtitle="Templates automáticos"
+            title={tn('emails')}
+            subtitle={t('emailsSub')}
             href="/admin/emails"
           />
           <DashboardCard
             icon={<FileText className="w-5 h-5" />}
-            title="Páginas Legales"
-            subtitle="Privacidad, términos"
+            title={t('legalPages')}
+            subtitle={t('legalPagesSub')}
             href="/admin/legales"
           />
           <DashboardCard
             icon={<CreditCard className="w-5 h-5" />}
-            title="Stripe / Pagos"
-            subtitle="Suscripción y cobros"
+            title={tn('stripe')}
+            subtitle={t('stripeSub')}
             href="/admin/stripe"
           />
           <DashboardCard
             icon={<BarChart3 className="w-5 h-5" />}
-            title="Estadísticas"
-            subtitle="Métricas y gráficas"
+            title={tn('analytics')}
+            subtitle={t('statisticsSub')}
             href="/admin/analytics"
           />
         </div>
@@ -183,17 +188,17 @@ export default async function AdminPage() {
       {/* Últimas reservas */}
       <div className="panel-card">
         <div className="flex items-center justify-between p-6 pb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Últimas reservas</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{t('latestBookings')}</h2>
           <a
             href="/admin/reservas"
             className="btn-primary text-xs px-4 py-2"
           >
-            Ver todas
+            {tc('viewAll')}
           </a>
         </div>
         <div className="px-6 pb-6">
           {reservasSafe.length === 0 ? (
-            <p className="text-gray-400 dark:text-white/40 py-4">No hay reservas todavía.</p>
+            <p className="text-gray-400 dark:text-white/40 py-4">{t('noBookingsYet')}</p>
           ) : (
             <div className="space-y-2">
               {reservasSafe.slice(0, 5).map((r: any) => (
@@ -206,9 +211,9 @@ export default async function AdminPage() {
                       {(r.nombre || "R").charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <div className="font-medium text-sm text-gray-900 dark:text-white">{r.nombre || "Reserva"}</div>
+                      <div className="font-medium text-sm text-gray-900 dark:text-white">{r.nombre || t('booking')}</div>
                       <div className="text-xs text-gray-400 dark:text-white/40">
-                        {r.destino || "—"} · {new Date(r.created_at).toLocaleDateString("es-ES")}
+                        {r.destino || "—"} · {new Date(r.created_at).toLocaleDateString(locale)}
                       </div>
                     </div>
                   </div>

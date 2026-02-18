@@ -1,6 +1,8 @@
 import "./globals.css";
-import { Manrope, Sora } from "next/font/google";
+import { Manrope, Sora, Noto_Sans_Arabic } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -12,21 +14,38 @@ const sora = Sora({
   variable: "--font-display",
 });
 
-export default function RootLayout({
+const notoArabic = Noto_Sans_Arabic({
+  subsets: ["arabic"],
+  variable: "--font-arabic",
+  weight: ["400", "500", "600", "700"],
+});
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className={`${manrope.variable} ${sora.variable}`}>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      suppressHydrationWarning
+    >
+      <body
+        className={`${manrope.variable} ${sora.variable} ${notoArabic.variable}`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>

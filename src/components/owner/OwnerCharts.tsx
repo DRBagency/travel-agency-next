@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
+import { useTranslations } from 'next-intl';
 
 function useChartStyles() {
   const { theme } = useTheme();
@@ -32,12 +33,13 @@ function useChartStyles() {
 
 export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
   const styles = useChartStyles();
+  const t = useTranslations('owner.charts');
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="panel-card p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-        Crecimiento MRR
+        {t('mrrGrowth')}
       </h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">Últimos 6 meses</p>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <defs>
@@ -52,7 +54,7 @@ export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
           <Tooltip
             contentStyle={styles.tooltipStyle}
             labelStyle={styles.labelStyle}
-            formatter={(value) => `${Number(value).toLocaleString("es-ES")} €`}
+            formatter={(value) => `${Number(value).toLocaleString()} €`}
           />
           <Area
             type="monotone"
@@ -62,7 +64,7 @@ export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
             fill="url(#gradientMRR)"
             dot={{ r: 4, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
             activeDot={{ r: 6, fill: "#1CABB0" }}
-            name="MRR (€)"
+            name={t('mrrEur')}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -72,12 +74,13 @@ export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
 
 export function ClientesChart({ data }: { data: { month: string; clientes: number }[] }) {
   const styles = useChartStyles();
+  const t = useTranslations('owner.charts');
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className="panel-card p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-        Clientes nuevos
+        {t('newClients')}
       </h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">Últimos 6 meses</p>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <defs>
@@ -98,7 +101,7 @@ export function ClientesChart({ data }: { data: { month: string; clientes: numbe
             fill="url(#gradientClientes)"
             dot={{ r: 4, fill: "#D4F24D", strokeWidth: 2, stroke: "#fff" }}
             activeDot={{ r: 6, fill: "#D4F24D" }}
-            name="Clientes"
+            name={t('clients')}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -108,12 +111,13 @@ export function ClientesChart({ data }: { data: { month: string; clientes: numbe
 
 export function ReservasOwnerChart({ data }: { data: { month: string; reservas: number }[] }) {
   const styles = useChartStyles();
+  const t = useTranslations('owner.charts');
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="panel-card p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-        Reservas plataforma
+        {t('platformBookings')}
       </h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">Últimos 6 meses</p>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <defs>
@@ -134,7 +138,7 @@ export function ReservasOwnerChart({ data }: { data: { month: string; reservas: 
             fill="url(#gradientReservasOwner)"
             dot={{ r: 4, fill: "#F59E0B", strokeWidth: 2, stroke: "#fff" }}
             activeDot={{ r: 6, fill: "#F59E0B" }}
-            name="Reservas"
+            name={t('bookings')}
           />
         </AreaChart>
       </ResponsiveContainer>

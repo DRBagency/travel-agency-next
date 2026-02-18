@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   ChevronDown,
   ChevronRight,
@@ -74,6 +75,9 @@ interface SaveState {
 }
 
 export default function MiWebContent({ client, counts }: MiWebContentProps) {
+  const t = useTranslations('admin.miWeb');
+  const tc = useTranslations('common');
+
   const [fields, setFields] = useState({
     logo_url: client.logo_url ?? "",
     primary_color: client.primary_color ?? "#1CABB0",
@@ -148,7 +152,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Error al guardar");
+      if (!res.ok) throw new Error(data.error || t("errorSaving"));
 
       setSaveStates((prev) => ({
         ...prev,
@@ -166,7 +170,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         [section]: {
           loading: false,
           success: false,
-          error: err instanceof Error ? err.message : "Error",
+          error: err instanceof Error ? err.message : tc("error"),
         },
       }));
     }
@@ -189,7 +193,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         )}
         {state.success && (
           <span className="flex items-center gap-1 text-sm text-emerald-600 dark:text-green-400">
-            <Check className="w-4 h-4" /> Guardado
+            <Check className="w-4 h-4" /> {tc("success")}
           </span>
         )}
         <button
@@ -198,7 +202,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
           className="btn-primary disabled:opacity-50 flex items-center gap-2"
         >
           {state.loading && <Loader2 className="w-4 h-4 animate-spin" />}
-          Guardar
+          {tc("save")}
         </button>
       </div>
     );
@@ -219,7 +223,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
     return (
       <button
         onClick={() => toggleSection(sectionKey)}
-        className="w-full flex items-center gap-3 text-left"
+        className="w-full flex items-center gap-3 text-start"
       >
         <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
           <Icon className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
@@ -242,10 +246,9 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Mi Web</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{t("title")}</h1>
           <p className="text-gray-500 dark:text-white/60">
-            Construye y personaliza tu pagina web. Todo lo que edites aqui se
-            refleja en tu landing page al instante.
+            {t("subtitle")}
           </p>
         </div>
         <a
@@ -255,7 +258,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/20 hover:bg-gray-50 dark:hover:bg-white/10 text-sm font-medium text-gray-700 dark:text-white transition-colors shrink-0"
         >
           <ExternalLink className="w-4 h-4" />
-          Ver mi web
+          {t("viewMyWeb")}
         </a>
       </div>
 
@@ -264,14 +267,14 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         <SectionHeader
           sectionKey="marca"
           icon={Palette}
-          title="Marca y Estilo"
-          subtitle="Logo, color principal y nombre de tu agencia"
+          title={t("brandStyle")}
+          subtitle={t("brandStyleSub")}
         />
         {openSections.has("marca") && (
           <div className="space-y-4 pt-2">
             <div>
               <label className="panel-label block mb-1">
-                Nombre de la agencia
+                {t("agencyName")}
               </label>
               <input
                 value={client.nombre}
@@ -279,13 +282,13 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                 className="w-full rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 px-3 py-2 text-gray-400 dark:text-white/50 cursor-not-allowed"
               />
               <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
-                Solo lectura. Se modifica desde el panel del owner.
+                {t("readOnly")}
               </p>
             </div>
 
             <div>
               <label className="panel-label block mb-1">
-                Logo (URL)
+                {t("logoUrl")}
               </label>
               <input
                 value={fields.logo_url}
@@ -306,7 +309,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
 
             <div>
               <label className="panel-label block mb-1">
-                Color principal
+                {t("primaryColor")}
               </label>
               <div className="flex items-center gap-3">
                 <input
@@ -338,63 +341,63 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         <SectionHeader
           sectionKey="hero"
           icon={Image}
-          title="Hero (portada)"
-          subtitle="Titulo, subtitulo, boton CTA e imagen de portada"
+          title={t("hero")}
+          subtitle={t("heroSub")}
         />
         {openSections.has("hero") && (
           <div className="space-y-4 pt-2">
             <div>
               <label className="panel-label block mb-1">
-                Titulo principal
+                {t("heroTitle")}
               </label>
               <input
                 value={fields.hero_title}
                 onChange={(e) => updateField("hero_title", e.target.value)}
                 className="panel-input w-full"
-                placeholder="Ej: Viaja a tu ritmo con una agencia premium"
+                placeholder={t("heroTitlePlaceholder")}
               />
             </div>
 
             <div>
               <label className="panel-label block mb-1">
-                Subtitulo
+                {t("heroSubtitle")}
               </label>
               <textarea
                 value={fields.hero_subtitle}
                 onChange={(e) => updateField("hero_subtitle", e.target.value)}
                 className="panel-input w-full min-h-[100px]"
-                placeholder="Describe el valor principal de la agencia"
+                placeholder={t("heroSubtitlePlaceholder")}
               />
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label block mb-1">
-                  CTA - Texto
+                  {t("ctaText")}
                 </label>
                 <input
                   value={fields.hero_cta_text}
                   onChange={(e) => updateField("hero_cta_text", e.target.value)}
                   className="panel-input w-full"
-                  placeholder="Ej: Reservar ahora"
+                  placeholder={t("ctaTextPlaceholder")}
                 />
               </div>
               <div>
                 <label className="panel-label block mb-1">
-                  CTA - Link
+                  {t("ctaLink")}
                 </label>
                 <input
                   value={fields.hero_cta_link}
                   onChange={(e) => updateField("hero_cta_link", e.target.value)}
                   className="panel-input w-full"
-                  placeholder="https://"
+                  placeholder={t("ctaLinkPlaceholder")}
                 />
               </div>
             </div>
 
             <div>
               <label className="panel-label block mb-1">
-                Imagen del hero (URL)
+                {t("heroImage")}
               </label>
               <div className="flex gap-2">
                 <input
@@ -409,7 +412,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                   type="button"
                   onClick={() => openUnsplash("hero_image_url", "travel")}
                   className="px-3 py-2 rounded-xl border border-gray-200 dark:border-white/20 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors shrink-0"
-                  title="Buscar en Unsplash"
+                  title={t("searchUnsplash")}
                 >
                   <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/70" />
                 </button>
@@ -441,15 +444,15 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         <SectionHeader
           sectionKey="stats"
           icon={BarChart3}
-          title="Estadisticas"
-          subtitle="Metricas que se muestran en Hero y Nosotros"
+          title={t("stats")}
+          subtitle={t("statsSub")}
         />
         {openSections.has("stats") && (
           <div className="space-y-4 pt-2">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label block mb-1">
-                  Anos de experiencia
+                  {t("yearsExperience")}
                 </label>
                 <input
                   value={fields.stats_years}
@@ -460,7 +463,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
               </div>
               <div>
                 <label className="panel-label block mb-1">
-                  Destinos
+                  {t("destinations")}
                 </label>
                 <input
                   value={fields.stats_destinations}
@@ -473,7 +476,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
               </div>
               <div>
                 <label className="panel-label block mb-1">
-                  Viajeros
+                  {t("travelers")}
                 </label>
                 <input
                   value={fields.stats_travelers}
@@ -486,7 +489,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
               </div>
               <div>
                 <label className="panel-label block mb-1">
-                  Rating
+                  {t("ratingLabel")}
                 </label>
                 <input
                   value={fields.stats_rating}
@@ -512,42 +515,42 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         <SectionHeader
           sectionKey="about"
           icon={Users}
-          title="Sobre nosotros"
-          subtitle="Texto principal y descripcion de la agencia"
+          title={t("aboutUs")}
+          subtitle={t("aboutUsSub")}
         />
         {openSections.has("about") && (
           <div className="space-y-4 pt-2">
             <div>
               <label className="panel-label block mb-1">
-                Titulo
+                {t("aboutTitle")}
               </label>
               <input
                 value={fields.about_title}
                 onChange={(e) => updateField("about_title", e.target.value)}
                 className="panel-input w-full"
-                placeholder="Ej: Tu agencia de viajes de confianza"
+                placeholder={t("aboutTitlePlaceholder")}
               />
             </div>
             <div>
               <label className="panel-label block mb-1">
-                Texto 1
+                {t("aboutText")}
               </label>
               <textarea
                 value={fields.about_text_1}
                 onChange={(e) => updateField("about_text_1", e.target.value)}
                 className="panel-input w-full min-h-[100px]"
-                placeholder="Describe la experiencia y propuesta de valor"
+                placeholder={t("aboutTextPlaceholder")}
               />
             </div>
             <div>
               <label className="panel-label block mb-1">
-                Texto 2
+                {t("aboutVision")}
               </label>
               <textarea
                 value={fields.about_text_2}
                 onChange={(e) => updateField("about_text_2", e.target.value)}
                 className="panel-input w-full min-h-[100px]"
-                placeholder="Anade confianza, proceso, equipo o garantias"
+                placeholder={t("aboutVisionPlaceholder")}
               />
             </div>
 
@@ -565,15 +568,15 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         <SectionHeader
           sectionKey="contact"
           icon={Phone}
-          title="Contacto"
-          subtitle="Datos de contacto que se muestran en la web"
+          title={t("contact")}
+          subtitle={t("contactSub")}
         />
         {openSections.has("contact") && (
           <div className="space-y-4 pt-2">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label block mb-1">
-                  Email
+                  {tc("email")}
                 </label>
                 <input
                   value={fields.contact_email}
@@ -586,7 +589,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
               </div>
               <div>
                 <label className="panel-label block mb-1">
-                  Telefono
+                  {t("phone")}
                 </label>
                 <input
                   value={fields.contact_phone}
@@ -600,7 +603,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
             </div>
             <div>
               <label className="panel-label block mb-1">
-                Direccion
+                {t("address")}
               </label>
               <textarea
                 value={fields.contact_address}
@@ -626,8 +629,8 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         <SectionHeader
           sectionKey="social"
           icon={Share2}
-          title="Redes sociales"
-          subtitle="Enlaces a tus perfiles sociales"
+          title={t("socialMedia")}
+          subtitle={t("socialMediaSub")}
         />
         {openSections.has("social") && (
           <div className="space-y-4 pt-2">
@@ -679,20 +682,20 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
         <SectionHeader
           sectionKey="footer"
           icon={FileText}
-          title="Footer"
-          subtitle="Texto del pie de pagina"
+          title={t("footer")}
+          subtitle={t("footerSub")}
         />
         {openSections.has("footer") && (
           <div className="space-y-4 pt-2">
             <div>
               <label className="panel-label block mb-1">
-                Texto del footer
+                {t("footerTextLabel")}
               </label>
               <textarea
                 value={fields.footer_text}
                 onChange={(e) => updateField("footer_text", e.target.value)}
                 className="panel-input w-full min-h-[100px]"
-                placeholder="Ej: © 2026 Tu Agencia. Todos los derechos reservados."
+                placeholder={t("footerTextPlaceholder")}
               />
             </div>
 
@@ -708,10 +711,10 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
             <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
               <Link2 className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
             </div>
-            Secciones relacionadas
+            {t("relatedSections")}
           </h2>
           <p className="text-sm text-gray-400 dark:text-white/50 mt-1">
-            Estas secciones se gestionan desde sus paginas propias
+            {t("relatedSectionsSub")}
           </p>
         </div>
         <div className="grid sm:grid-cols-3 gap-4">
@@ -721,12 +724,11 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
           >
             <div className="flex items-center gap-2 mb-1">
               <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
-                Destinos
+                {t("destinationsSection")}
               </span>
             </div>
             <p className="text-sm text-gray-400 dark:text-white/50">
-              {counts.destinos} destino{counts.destinos !== 1 ? "s" : ""} activo
-              {counts.destinos !== 1 ? "s" : ""}
+              {counts.destinos} {t("published")}
             </p>
           </a>
           <a
@@ -735,12 +737,11 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
           >
             <div className="flex items-center gap-2 mb-1">
               <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
-                Opiniones
+                {t("reviewsSection")}
               </span>
             </div>
             <p className="text-sm text-gray-400 dark:text-white/50">
-              {counts.opiniones} opinion{counts.opiniones !== 1 ? "es" : ""}{" "}
-              publicada{counts.opiniones !== 1 ? "s" : ""}
+              {counts.opiniones} {t("publishedF")}
             </p>
           </a>
           <a
@@ -749,12 +750,11 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
           >
             <div className="flex items-center gap-2 mb-1">
               <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
-                Legales
+                {t("legalSection")}
               </span>
             </div>
             <p className="text-sm text-gray-400 dark:text-white/50">
-              {counts.legales} pagina{counts.legales !== 1 ? "s" : ""} legal
-              {counts.legales !== 1 ? "es" : ""}
+              {counts.legales} {t("pages")}
             </p>
           </a>
         </div>

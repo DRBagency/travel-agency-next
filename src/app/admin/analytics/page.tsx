@@ -1,13 +1,17 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import { subMonths, format, startOfMonth, endOfMonth } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS, ar } from "date-fns/locale";
+import type { Locale } from "date-fns";
 import {
   ReservasChart,
   IngresosChart,
   DestinosChart,
 } from "@/components/admin/AdminAnalyticsCharts";
 import ExportPDFButton from "@/components/admin/ExportPDFButton";
+import { getTranslations, getLocale } from 'next-intl/server';
+
+const dateFnsLocales: Record<string, Locale> = { es, en: enUS, ar };
 
 export const dynamic = "force-dynamic";
 
@@ -15,12 +19,13 @@ interface AnalyticsPageProps {
   searchParams: Promise<{ from?: string; to?: string }>;
 }
 
-async function getClientAnalytics(clienteId: string, fromDate?: string, toDate?: string) {
+async function getClientAnalytics(clienteId: string, fromDate?: string, toDate?: string, locale: string = 'es') {
+  const dfLocale = dateFnsLocales[locale] || es;
   const monthCount = 6;
   const months = Array.from({ length: monthCount }, (_, i) => {
     const date = subMonths(new Date(), monthCount - 1 - i);
     return {
-      month: format(date, "MMM yy", { locale: es }),
+      month: format(date, "MMM yy", { locale: dfLocale }),
       start: startOfMonth(date).toISOString(),
       end: endOfMonth(date).toISOString(),
     };
@@ -84,16 +89,19 @@ async function getClientAnalytics(clienteId: string, fromDate?: string, toDate?:
 
 export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPageProps) {
   const client = await requireAdminClient();
+  const t = await getTranslations('admin.analytics');
+  const tc = await getTranslations('common');
+  const currentLocale = await getLocale();
   const { from = "", to = "" } = await searchParams;
-  const analytics = await getClientAnalytics(client.id, from || undefined, to || undefined);
+  const analytics = await getClientAnalytics(client.id, from || undefined, to || undefined, currentLocale);
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">Analytics</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
           <p className="text-gray-500 dark:text-white/60">
-            Metricas y estadisticas de tu agencia (ultimos 6 meses)
+            {t('subtitle')}
           </p>
         </div>
       </div>
@@ -113,7 +121,7 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
           className="panel-input"
         />
         <button className="btn-primary">
-          Filtrar
+          {tc('filter')}
         </button>
         <div className="ml-auto flex gap-2">
           <ExportPDFButton estado="todos" q="" from={from} to={to} />
@@ -121,7 +129,7 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
             href={`/api/admin/export?estado=todos&q=&from=${from}&to=${to}`}
             className="px-4 py-2 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-900 dark:text-white rounded-xl font-semibold transition-colors"
           >
-            Exportar CSV
+            {tc('exportCSV')}
           </a>
         </div>
       </form>
@@ -129,23 +137,23 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
         <div className="kpi-card">
-          <p className="text-sm text-gray-500 dark:text-white/60">Total reservas</p>
+          <p className="text-sm text-gray-500 dark:text-white/60">{t('totalBookings')}</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">{analytics.kpis.totalReservas}</p>
         </div>
         <div className="kpi-card">
-          <p className="text-sm text-gray-500 dark:text-white/60">Pagadas</p>
+          <p className="text-sm text-gray-500 dark:text-white/60">{t('paid')}</p>
           <p className="text-2xl font-bold text-emerald-600 dark:text-green-400">{analytics.kpis.totalPagadas}</p>
         </div>
         <div className="kpi-card">
-          <p className="text-sm text-gray-500 dark:text-white/60">Ingresos totales</p>
-          <p className="text-2xl font-bold text-drb-turquoise-600 dark:text-drb-turquoise-400">{analytics.kpis.totalIngresos.toLocaleString("es-ES")} EUR</p>
+          <p className="text-sm text-gray-500 dark:text-white/60">{t('totalRevenue')}</p>
+          <p className="text-2xl font-bold text-drb-turquoise-600 dark:text-drb-turquoise-400">{analytics.kpis.totalIngresos.toLocaleString(currentLocale)} EUR</p>
         </div>
         <div className="kpi-card">
-          <p className="text-sm text-gray-500 dark:text-white/60">Ticket medio</p>
+          <p className="text-sm text-gray-500 dark:text-white/60">{t('avgTicket')}</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">{analytics.kpis.ticketMedio} EUR</p>
         </div>
         <div className="kpi-card">
-          <p className="text-sm text-gray-500 dark:text-white/60">Tasa conversion</p>
+          <p className="text-sm text-gray-500 dark:text-white/60">{t('conversionRate')}</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">{analytics.kpis.conversionRate}%</p>
         </div>
       </div>
@@ -161,24 +169,24 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
         <DestinosChart data={analytics.topDestinos} />
 
         <div className="panel-card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Desglose mensual</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('monthlyBreakdown')}</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-white/10">
-                  <th className="text-left p-2 text-gray-500 dark:text-white/60">Mes</th>
-                  <th className="text-right p-2 text-gray-500 dark:text-white/60">Reservas</th>
-                  <th className="text-right p-2 text-gray-500 dark:text-white/60">Pagadas</th>
-                  <th className="text-right p-2 text-gray-500 dark:text-white/60">Ingresos</th>
+                  <th className="text-start p-2 text-gray-500 dark:text-white/60">{t('month')}</th>
+                  <th className="text-end p-2 text-gray-500 dark:text-white/60">{t('bookings')}</th>
+                  <th className="text-end p-2 text-gray-500 dark:text-white/60">{t('paid')}</th>
+                  <th className="text-end p-2 text-gray-500 dark:text-white/60">{t('revenue')}</th>
                 </tr>
               </thead>
               <tbody>
                 {analytics.reservasPorMes.map((m) => (
                   <tr key={m.month} className="table-row">
                     <td className="p-2 text-gray-900 dark:text-white">{m.month}</td>
-                    <td className="p-2 text-right text-gray-500 dark:text-white/60">{m.reservas}</td>
-                    <td className="p-2 text-right text-emerald-600 dark:text-green-400">{m.pagadas}</td>
-                    <td className="p-2 text-right text-drb-turquoise-600 dark:text-drb-turquoise-400">{m.ingresos.toLocaleString("es-ES")} EUR</td>
+                    <td className="p-2 text-end text-gray-500 dark:text-white/60">{m.reservas}</td>
+                    <td className="p-2 text-end text-emerald-600 dark:text-green-400">{m.pagadas}</td>
+                    <td className="p-2 text-end text-drb-turquoise-600 dark:text-drb-turquoise-400">{m.ingresos.toLocaleString(currentLocale)} EUR</td>
                   </tr>
                 ))}
               </tbody>

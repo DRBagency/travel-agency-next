@@ -4,11 +4,15 @@ import SubscriptionButton from "./SubscriptionButton";
 import CancelSubscriptionButton from "./CancelSubscriptionButton";
 import ReactivateSubscriptionButton from "./ReactivateSubscriptionButton";
 import ChangePlanForm from "./ChangePlanForm";
+import { getTranslations, getLocale } from 'next-intl/server';
 
 type StripeStatus = "none" | "pending" | "active";
 
 export default async function AdminStripePage() {
   const client = await requireAdminClient();
+  const t = await getTranslations('admin.stripe');
+  const tc = await getTranslations('common');
+  const locale = await getLocale();
 
   let stripeStatus: StripeStatus = "none";
 
@@ -22,10 +26,10 @@ export default async function AdminStripePage() {
 
   const statusLabel =
     stripeStatus === "none"
-      ? "No conectado"
+      ? t('notConnected')
       : stripeStatus === "pending"
-        ? "En proceso"
-        : "Conectado";
+        ? t('inProcess')
+        : t('connected');
 
   const statusStyle =
     stripeStatus === "none"
@@ -35,7 +39,7 @@ export default async function AdminStripePage() {
         : "border-emerald-500/30 text-emerald-600 dark:text-emerald-300 bg-emerald-500/10";
 
   const buttonLabel =
-    stripeStatus === "none" ? "Conectar Stripe" : "Completar verificación";
+    stripeStatus === "none" ? t('connectStripe') : t('completeVerification');
 
   const planKey = (client.plan || "start").toString().toLowerCase();
   const planMeta: Record<string, { label: string; price: string; fee: string }> = {
@@ -50,7 +54,7 @@ export default async function AdminStripePage() {
     new Date(client.subscription_cancel_at) > new Date();
 
   const cancelAtFormatted = isCanceling
-    ? new Date(client.subscription_cancel_at).toLocaleDateString("es-ES", {
+    ? new Date(client.subscription_cancel_at).toLocaleDateString(locale, {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -60,18 +64,18 @@ export default async function AdminStripePage() {
   return (
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold mb-1">Stripe / Pagos</h1>
+          <h1 className="text-3xl font-bold mb-1">{t('title')}</h1>
           <p className="text-gray-500 dark:text-white/60">
-            Revisa el estado de Stripe y completa la configuración de cobros.
+            {t('subtitle')}
           </p>
         </div>
 
         <section className="panel-card p-6 space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-semibold">Estado de Stripe</h2>
+              <h2 className="text-xl font-semibold">{t('stripeStatus')}</h2>
               <p className="text-sm text-gray-500 dark:text-white/60">
-                Conecta o finaliza la verificación para cobrar con tarjeta.
+                {t('stripeStatusDesc')}
               </p>
             </div>
             <span
@@ -82,7 +86,7 @@ export default async function AdminStripePage() {
           </div>
 
           <div className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50/50 dark:bg-white/10 p-4">
-            <div className="text-sm text-gray-500 dark:text-white/60 mb-1">Stripe Account ID</div>
+            <div className="text-sm text-gray-500 dark:text-white/60 mb-1">{t('stripeAccountId')}</div>
             <div className="text-sm break-all text-gray-700 dark:text-white/80">
               {client.stripe_account_id ?? "—"}
             </div>
@@ -100,27 +104,27 @@ export default async function AdminStripePage() {
 
         <section className="panel-card p-6 space-y-4">
           <div>
-            <h2 className="text-xl font-semibold">Suscripción al software</h2>
+            <h2 className="text-xl font-semibold">{t('subscription')}</h2>
             <p className="text-sm text-gray-500 dark:text-white/60">
-              Tu plan y condiciones actuales de facturación.
+              {t('subscriptionDesc')}
             </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50/50 dark:bg-white/10 p-4">
-              <div className="text-sm text-gray-500 dark:text-white/60 mb-1">Plan actual</div>
+              <div className="text-sm text-gray-500 dark:text-white/60 mb-1">{t('currentPlan')}</div>
               <div className="text-lg font-semibold text-gray-900 dark:text-white">
                 {planInfo.label}
               </div>
             </div>
             <div className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50/50 dark:bg-white/10 p-4">
-              <div className="text-sm text-gray-500 dark:text-white/60 mb-1">Precio mensual</div>
+              <div className="text-sm text-gray-500 dark:text-white/60 mb-1">{t('monthlyPrice')}</div>
               <div className="text-lg font-semibold text-gray-900 dark:text-white">
                 {planInfo.price}
               </div>
             </div>
             <div className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50/50 dark:bg-white/10 p-4">
-              <div className="text-sm text-gray-500 dark:text-white/60 mb-1">Tarifa por reserva</div>
+              <div className="text-sm text-gray-500 dark:text-white/60 mb-1">{t('bookingFee')}</div>
               <div className="text-lg font-semibold text-gray-900 dark:text-white">
                 {planInfo.fee}
               </div>
@@ -131,14 +135,11 @@ export default async function AdminStripePage() {
             <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-sm font-semibold text-amber-600 dark:text-amber-300">
-                  Cancelación programada
+                  {t('scheduledCancellation')}
                 </span>
               </div>
               <p className="text-sm text-gray-600 dark:text-white/70">
-                Tu suscripción se cancelará el{" "}
-                <strong className="text-gray-900 dark:text-white">{cancelAtFormatted}</strong>.
-                Hasta entonces, mantendrás acceso completo a todas las
-                funcionalidades.
+                {t('cancelAt', { date: cancelAtFormatted ?? '' })}
               </p>
               <div className="flex justify-end">
                 <ReactivateSubscriptionButton />
@@ -149,7 +150,7 @@ export default async function AdminStripePage() {
               {client.stripe_subscription_id ? (
                 <>
                   <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-600 dark:text-emerald-300">
-                    Suscripción activa
+                    {t('activeSubscription')}
                   </span>
                   <CancelSubscriptionButton />
                 </>
@@ -163,9 +164,9 @@ export default async function AdminStripePage() {
         {client.stripe_subscription_id && !isCanceling && (
           <section className="panel-card p-6 space-y-4">
             <div>
-              <h2 className="text-xl font-semibold">Cambiar plan</h2>
+              <h2 className="text-xl font-semibold">{t('changePlan')}</h2>
               <p className="text-sm text-gray-500 dark:text-white/60">
-                Actualiza tu plan y la tarifa aplicada.
+                {t('changePlanDesc')}
               </p>
             </div>
 
@@ -176,11 +177,11 @@ export default async function AdminStripePage() {
         )}
 
         <section className="panel-card p-6 space-y-3">
-          <h2 className="text-xl font-semibold">Tarifa de la plataforma</h2>
+          <h2 className="text-xl font-semibold">{t('platformFee')}</h2>
           <p className="text-sm text-gray-600 dark:text-white/70">
-            La tarifa y la suscripción dependen del plan contratado:
+            {t('platformFeeDesc')}
           </p>
-          <ul className="text-sm text-gray-500 dark:text-white/60 list-disc pl-5 space-y-1">
+          <ul className="text-sm text-gray-500 dark:text-white/60 list-disc ps-5 space-y-1">
             <li>Start → 29 € + 5 %</li>
             <li>Grow → 59 € + 3 %</li>
             <li>Pro → 99 € + 1 %</li>

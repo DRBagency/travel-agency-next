@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 17 Febrero 2026
+> **Última actualización:** 18 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -51,6 +51,7 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **React:** 19.2.3
 - **Styling:** Tailwind CSS
 - **UI Components:** shadcn/ui
+- **i18n:** next-intl (cookie-based, sin prefijo URL)
 - **Charts:** Recharts
 - **Calendar:** FullCalendar
 - **Icons:** Lucide React
@@ -95,14 +96,22 @@ travel-agency-next/
 │   │   ├── legal/             # Páginas legales dinámicas
 │   │   └── [otros]
 │   ├── components/
-│   │   ├── ui/               # shadcn/ui
-│   │   └── admin/            # Componentes admin
+│   │   ├── ui/               # shadcn/ui + LanguageSelector
+│   │   ├── admin/            # Componentes admin
+│   │   └── owner/            # Componentes owner (charts)
+│   ├── i18n/
+│   │   └── request.ts        # Config next-intl (cookie NEXT_LOCALE)
 │   ├── lib/
 │   │   ├── emails/           # Sistema de emails
 │   │   ├── billing/          # Funciones de billing
 │   │   ├── owner/            # Funciones del owner
-│   │   └── supabase/         # Clients de Supabase
+│   │   ├── supabase/         # Clients de Supabase
+│   │   └── set-locale.ts     # Server action cambio idioma
 │   └── middleware.ts
+├── messages/
+│   ├── es.json                # Español (fuente de verdad, ~780 keys)
+│   ├── en.json                # English
+│   └── ar.json                # العربية (Arabic)
 ├── public/
 ├── supabase/migrations/
 ├── docs/                      # Documentación extendida
@@ -120,6 +129,9 @@ travel-agency-next/
 - **Constantes:** UPPER_SNAKE_CASE (`PLAN_PRICES`)
 - `export const dynamic = "force-dynamic"` para páginas con datos en tiempo real
 - Server Actions en el mismo archivo cuando son específicos de la página
+- **i18n Server Components:** `const t = await getTranslations('namespace');` (from `next-intl/server`)
+- **i18n Client Components:** `const t = useTranslations('namespace');` (from `next-intl`)
+- **CSS RTL:** Usar propiedades lógicas (`text-start`, `ms-`, `ps-`, `start-0`, `end-0`, `border-s`, `border-e`). NUNCA `text-left`, `ml-`, `pl-`, `left-`, `right-` en código nuevo
 
 ---
 
@@ -142,6 +154,14 @@ HTML + tokens en Supabase, renderizado en servidor. Editables sin redeploy.
 
 ### Cookies Personalizadas
 Sistema custom de cookies para auth de admin y owner (no NextAuth).
+
+### Multi-idioma (next-intl)
+- **Routing:** Cookie-based (`NEXT_LOCALE`), sin prefijo URL. URLs limpias: `/admin/*`, no `/es/admin/*`
+- **Idiomas:** ES (default), EN, AR (con RTL)
+- **Archivos:** `messages/es.json`, `messages/en.json`, `messages/ar.json` (~780 keys cada uno)
+- **RTL:** `<html dir={locale === 'ar' ? 'rtl' : 'ltr'}>`, fuente Noto Sans Arabic, CSS logical properties
+- **Selector:** `<LanguageSelector />` en header de AdminShell y OwnerShell
+- **Fechas:** `toLocaleDateString(locale)` con locale dinámico, date-fns con locale map
 
 ---
 
@@ -229,9 +249,15 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ Analytics avanzado con KPIs, filtros de fecha, tabla mensual y exports CSV/PDF
 - ✅ Automatizaciones funcionales (CRUD + logs de ejecuciones)
 
-### 🔄 Futuro (Fase 3):
-- Rediseño UX/UI premium (Turquesa #1CABB0 + Lima #D4F24D)
-- Multi-idioma (ES/EN/AR) con next-intl + tabla `translations`
+### ✅ Fase 3 completada:
+- ✅ Multi-idioma completo (ES/EN/AR) con next-intl — 780+ keys traducidos
+- ✅ LanguageSelector en header de ambos paneles
+- ✅ RTL support para Árabe (CSS logical properties, fuente Noto Sans Arabic)
+- ✅ Formateo de fechas/números locale-aware en todas las páginas
+- ✅ Todas las páginas admin + owner + landing traducidas
+
+### 🔄 Futuro (Fase 4):
+- Rediseño UX/UI premium (animaciones, micro-interacciones, feel premium)
 - Versión móvil optimizada
 
 ### 🚫 No implementado (Roadmap futuro):
@@ -274,16 +300,50 @@ git push origin main
 
 ---
 
-## MULTI-IDIOMA (PREPARACIÓN)
+## MULTI-IDIOMA (IMPLEMENTADO)
 
-**Idiomas objetivo:** ES (principal), EN (internacional), AR (mercado objetivo)
+**Idiomas:** ES (default), EN (internacional), AR (mercado MENA, con RTL)
 
-**Plan de implementación:**
-- next-intl (recomendado)
-- Tabla `translations` en Supabase (table_name, record_id, field_name, language, value)
-- Archivos `/locales/es.json`, `/locales/en.json`, `/locales/ar.json`
-- Middleware para auto-detección de idioma
-- Componente `<LanguageSelector />`
+### Arquitectura:
+- **next-intl** con cookie `NEXT_LOCALE` (sin prefijo URL)
+- `src/i18n/request.ts` — config de locale
+- `messages/{es,en,ar}.json` — ~780 keys organizados por dominio
+- `src/lib/set-locale.ts` — server action para cambiar idioma
+- `src/components/ui/LanguageSelector.tsx` — dropdown con banderas
+
+### Estructura de keys:
+```json
+{
+  "common": { "save", "cancel", "delete", ... },
+  "auth": { "adminLogin": { ... }, "ownerLogin": { ... } },
+  "admin": { "nav", "dashboard", "destinos", "reservas", "stripe", ... },
+  "owner": { "nav", "dashboard", "clientes", "monetization", ... },
+  "notifications": { ... },
+  "booking": { ... }
+}
+```
+
+### Patrones de uso:
+```tsx
+// Server Component
+import { getTranslations, getLocale } from 'next-intl/server';
+const t = await getTranslations('admin.destinos');
+const locale = await getLocale();
+
+// Client Component
+import { useTranslations, useLocale } from 'next-intl';
+const t = useTranslations('admin.destinos');
+const locale = useLocale();
+
+// Interpolación
+t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
+```
+
+### RTL Support:
+- `<html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>`
+- CSS logical properties en TODO el código (text-start, ms-, ps-, start-0, end-0, border-s, border-e)
+- Fuente: Noto Sans Arabic para `[dir="rtl"]`
+- SheetContent side flip: `side={locale === "ar" ? "right" : "left"}`
 
 ---
 
