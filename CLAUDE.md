@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 18 Febrero 2026
+> **Última actualización:** 19 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -54,6 +54,8 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **i18n:** next-intl (cookie-based, sin prefijo URL)
 - **Charts:** Recharts
 - **Calendar:** FullCalendar
+- **Animations:** Framer Motion (framer-motion@12.29.2) + Lottie (lottie-react)
+- **Rive:** @rive-app/react-canvas (interactive login animations)
 - **Icons:** Lucide React
 - **AI:** Anthropic Claude API (@anthropic-ai/sdk) — itineraries, recommendations, chatbot config
 
@@ -166,6 +168,8 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - **RTL:** `<html dir={locale === 'ar' ? 'rtl' : 'ltr'}>`, fuente Noto Sans Arabic, CSS logical properties
 - **Selector:** `<LanguageSelector />` en header de AdminShell y OwnerShell
 - **Fechas:** `toLocaleDateString(locale)` con locale dinámico, date-fns con locale map
+- **Landing i18n:** Per-client locale override via `preferred_language` column in `clientes` table. `page.tsx` loads locale-specific messages and wraps `HomeClient` with nested `NextIntlClientProvider`. Configurable in `/admin/mi-web` (marca section)
+- **Landing namespace:** `landing.*` keys (navbar, hero, destinations, testimonials, about, contact, footer, chatbot) — 80+ keys per locale
 
 ---
 
@@ -280,6 +284,16 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **Cross-cutting**: RTL logical properties in ALL custom components (0 violations), loading.tsx skeletons for admin/owner
 - ✅ **Login Premium**: Rive animation full-screen + glassmorphism form + logo + welcome message en admin y owner login
 
+### ✅ Fase 5 completada (Landing Page Premium + i18n):
+- ✅ **Hero Premium**: Animated floating orbs, conic-gradient rotating background, grid pattern overlay, animated stat counters (IntersectionObserver + rAF), shimmer text glow, pulsing CTA (animate-pulse-glow), staggered badge entrance, scroll indicator
+- ✅ **Testimonials Marquee**: Infinite horizontal scroll with two rows scrolling opposite directions, CSS mask fade edges, dynamic speed via CSS variable
+- ✅ **DestinationsGrid Premium**: Staggered card entrance with custom framer-motion variants, hover lift with glow, image zoom on hover, animated reserve button
+- ✅ **About Premium**: Animated stat counters, 6 feature icon cards with hover rotate, floating background orbs
+- ✅ **Contact Premium**: Hover animations on contact items, success CheckCircle animation, glow button effect
+- ✅ **Footer Premium**: Gradient accent line, social links with hover glow + scale, "Powered by DRB Agency", motion animations
+- ✅ **Landing i18n**: Per-client language via `preferred_language` column in `clientes` table, nested NextIntlClientProvider, 80+ keys in `landing.*` namespace (ES/EN/AR), RTL `dir` wrapper, configurable from `/admin/mi-web`
+- ✅ **Dropdown Contrast Fix**: CSS rules for `<option>` elements in dark mode (white-on-white text bug)
+
 ### 🚫 No implementado (Roadmap futuro):
 CRM, marketing automation, gestión equipo, app nativa, API pública, white-label, multi-moneda, pagos offline
 
@@ -338,6 +352,7 @@ git push origin main
   "auth": { "adminLogin": { ... }, "ownerLogin": { ... } },
   "admin": { "nav", "dashboard", "destinos", "reservas", "stripe", ... },
   "owner": { "nav", "dashboard", "clientes", "monetization", ... },
+  "landing": { "navbar", "hero", "destinations", "testimonials", "about", "contact", "footer", "chatbot" },
   "notifications": { ... },
   "booking": { ... }
 }
@@ -374,6 +389,7 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 ### Colores DRB:
 - Turquesa primario: `drb-turquoise` (50-950 scale, base #1CABB0)
 - Lima acento: `drb-lime` (#D4F24D)
+- Magenta acento: `drb-magenta` (#E91E63)
 - Dark mode con `dark:` prefix en todo el código
 
 ### Componentes Design System (`src/components/ui/`):
@@ -383,7 +399,7 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 | `KPICard` | Client | Card con animated counter, icon, accent color |
 | `ConfirmDialog` | Client | Modal confirmación con variants (danger/warning) |
 | `DeleteWithConfirm` | Client | Wrapper de ConfirmDialog para server actions |
-| `EmptyState` | Server | Estado vacío con icon, title, description, action |
+| `EmptyState` | Client | Estado vacío con icon, title, description, action + framer-motion entrance |
 | `AnimatedSection` | Client | Viewport-triggered animation (framer-motion) |
 | `DashboardCard` | Server | Card de navegación con icon + hover |
 
@@ -398,6 +414,21 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 - **Table rows:** `table-row` class with hover
 - **Loading:** `loading.tsx` with `animate-pulse` skeletons
 - **Delete actions:** Always use `DeleteWithConfirm` component
+
+### Animations (tailwind.config.js):
+- `animate-float`, `animate-float-slow`, `animate-float-slower` — floating background orbs
+- `animate-pulse-glow` — pulsing glow effect for CTAs
+- `animate-shimmer` — shimmer text/gradient effect
+- `animate-marquee`, `animate-marquee-reverse` — infinite horizontal scroll (testimonials)
+- `animate-gradient-shift` — moving gradient backgrounds
+- `animate-spin-slow` — slow rotation (decorative elements)
+
+### CSS Utility Classes (globals.css):
+- `.shimmer-text` — animated gradient text shimmer
+- `.gradient-border` — animated gradient border with mask-composite
+- `.hero-glow-btn` — hover glow pseudo-element for buttons
+- `.marquee-mask` — fade edge mask for marquee containers
+- `.text-glow` — text shadow glow effect
 
 ### Shadows (tailwind.config.js):
 - `shadow-100` to `shadow-500` (progressive elevation)
