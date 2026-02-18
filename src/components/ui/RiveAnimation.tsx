@@ -22,7 +22,7 @@ export default function RiveAnimation({
   });
 
   return (
-    <div className={className}>
+    <div className={className} style={{ backgroundColor: "#4BA8C9" }}>
       <RiveComponent />
     </div>
   );
