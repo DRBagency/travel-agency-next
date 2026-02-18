@@ -66,7 +66,7 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **Database:** PostgreSQL (Supabase)
 - **ORM:** Supabase Client (@supabase/supabase-js 2.93.2)
 - **Migrations:** Supabase CLI (SQL manual)
-- **RLS:** Habilitado en TODAS las 14 tablas (verificado 18 Feb 2026)
+- **RLS:** Habilitado en TODAS las 16 tablas (verificado 18 Feb 2026)
 - **Service Role:** `supabaseAdmin` para operaciones del servidor (service_role bypasses RLS)
 - **Anon Key:** Solo usado client-side para Supabase Auth login + lectura pública destinos activos
 
@@ -98,9 +98,11 @@ travel-agency-next/
 │   │   ├── legal/             # Páginas legales dinámicas
 │   │   └── [otros]
 │   ├── components/
-│   │   ├── ui/               # shadcn/ui + DataTable, KPICard, ConfirmDialog, EmptyState, DeleteWithConfirm, AnimatedSection
-│   │   ├── admin/            # Componentes admin (charts, dashboard, AI)
-│   │   └── owner/            # Componentes owner (charts)
+│   │   ├── ui/               # shadcn/ui + DataTable, KPICard, ConfirmDialog, EmptyState, DeleteWithConfirm, AnimatedSection, RiveAnimation
+│   │   ├── ai/               # AI components (ItineraryGenerator, ChatbotConfig, AIDescriptionButton, AIEmailGenerator, AIPricingSuggestion, FreeChat, AIRecommendations, AIInsightsCard)
+│   │   ├── admin/            # Componentes admin (charts, dashboard)
+│   │   ├── owner/            # Componentes owner (charts, LatestAgenciesTable, ExecutionLogsTable)
+│   │   └── ChatbotWidget.tsx # Widget flotante público para chatbot AI
 │   ├── i18n/
 │   │   └── request.ts        # Config next-intl (cookie NEXT_LOCALE)
 │   ├── lib/
@@ -111,7 +113,7 @@ travel-agency-next/
 │   │   └── set-locale.ts     # Server action cambio idioma
 │   └── middleware.ts
 ├── messages/
-│   ├── es.json                # Español (fuente de verdad, ~780 keys)
+│   ├── es.json                # Español (fuente de verdad, ~1000 keys)
 │   ├── en.json                # English
 │   └── ar.json                # العربية (Arabic)
 ├── public/
@@ -160,7 +162,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ### Multi-idioma (next-intl)
 - **Routing:** Cookie-based (`NEXT_LOCALE`), sin prefijo URL. URLs limpias: `/admin/*`, no `/es/admin/*`
 - **Idiomas:** ES (default), EN, AR (con RTL)
-- **Archivos:** `messages/es.json`, `messages/en.json`, `messages/ar.json` (~780 keys cada uno)
+- **Archivos:** `messages/es.json`, `messages/en.json`, `messages/ar.json` (~1000 keys cada uno)
 - **RTL:** `<html dir={locale === 'ar' ? 'rtl' : 'ltr'}>`, fuente Noto Sans Arabic, CSS logical properties
 - **Selector:** `<LanguageSelector />` en header de AdminShell y OwnerShell
 - **Fechas:** `toLocaleDateString(locale)` con locale dinámico, date-fns con locale map
@@ -187,13 +189,19 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ### Tablas con UI parcial (⚠️):
 | Tabla | Estado |
 |-------|--------|
-| `reservas` | Solo lectura en `/admin/reservas` |
+| `reservas` | Lectura + cambio estado inline en `/admin/reservas` (ReservasTable con DataTable) |
 
 ### Tablas con CRUD en Owner (✅):
 | Tabla | Panel | Ruta |
 |-------|-------|------|
 | `automations` | Owner | `/owner/automatizaciones` (crear, activar/desactivar, eliminar) |
-| `automation_executions` | Owner | `/owner/automatizaciones` (tabla de logs) |
+| `automation_executions` | Owner | `/owner/automatizaciones` (ExecutionLogsTable con DataTable) |
+
+### Tablas AI (✅):
+| Tabla | Panel | Ruta |
+|-------|-------|------|
+| `ai_chatbot_config` | Admin | `/admin/ai/chatbot` (configurar chatbot público) |
+| `ai_itinerarios` | Admin | `/admin/ai/itinerarios` (guardar itinerarios generados) |
 
 ### CHECKLIST AL AÑADIR TABLA NUEVA:
 1. Crear migración SQL en `supabase/migrations/`
@@ -210,25 +218,26 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ## ESTADO ACTUAL DE FEATURES
 
 ### ✅ Panel OWNER completado:
-- Dashboard con métricas (clientes, MRR, reservas, comisiones) + 3 gráficas (MRR, clientes, reservas)
-- Gestión de clientes (CRUD + auto-creación templates + tabbed detail: Info/Destinos/Reservas/AI)
+- Dashboard con métricas (5 KPIs: clientes, MRR, reservas, comisiones, ticket medio) + 5 gráficas (MRR, clientes, reservas, RevenueBreakdownChart, TopDestinosChart) + LatestAgenciesTable
+- Gestión de clientes (CRUD + auto-creación templates + tabbed detail: Info/Destinos/Reservas/AI con AIRecommendations)
 - Emails de billing (3 templates + preview en modal) — fully i18n
-- Monetización (MRR, desglose por planes, top comisiones con DataTable, KPICards)
+- Monetización (MRR, desglose por planes, top comisiones con CommissionsTable DataTable, KPICards, ComparisonChart, ProjectionChart)
 - Configuración Stripe (modo, keys, price IDs, webhooks)
-- Automatizaciones (CRUD + logs de ejecuciones + DeleteWithConfirm)
-- Soporte (tickets de clientes con DataTable)
+- Automatizaciones (CRUD + ExecutionLogsTable con DataTable + DeleteWithConfirm)
+- Soporte (tickets de clientes con SoporteTable DataTable)
 
 ### ✅ Panel CLIENTE completado:
-- Contenido web (hero, nosotros, contacto)
-- Destinos (CRUD + imágenes + activo/inactivo + visual card grid + DeleteWithConfirm)
-- Reservas (visualización + filtrado + export CSV/PDF + KPICards)
+- Contenido web (hero, nosotros, contacto + AIDescriptionButton en campos de texto)
+- Destinos (CRUD + imágenes + activo/inactivo + visual card grid + DeleteWithConfirm + DestinoDescriptionField AI + DestinoPriceFieldWithAI)
+- Reservas (ReservasTable DataTable con inline StatusCell + filtrado + export CSV/PDF + 3 KPICards + timeline visual en detalle)
 - Opiniones (CRUD + rating + moderación + star distribution chart + DeleteWithConfirm)
-- Emails (2 templates: reserva_cliente, reserva_agencia + preview en modal)
-- Páginas legales (CRUD + editor HTML + DeleteWithConfirm)
-- Stripe/Pagos (Connect onboarding, suscripción, cambio plan, cancelar, reactivar)
+- Emails (2 templates: reserva_cliente, reserva_agencia + preview en modal + EmailBodyWithAI)
+- Páginas legales (CRUD collapsible + editor HTML + DeleteWithConfirm)
+- Stripe/Pagos (StripeTabs: Connect/Suscripción/Tarifas + onboarding + cambio plan + cancelar + reactivar)
 - Documentos (presupuestos, contratos, facturas — crear, editar, eliminar, generar PDF con jsPDF + DataTable + DeleteWithConfirm)
 - Soporte (tickets con chat — crear, ver detalle, enviar mensajes, cerrar/reabrir)
 - Analytics (KPIs, charts, filtros de fecha, tabla mensual, exports CSV/PDF)
+- AI (Generador itinerarios + PDF export + Chatbot config + Asistente libre + Dashboard AI card)
 
 ### ✅ Sistema de Emails:
 - Emails de reservas (cliente + agencia, templates editables, tokens, branding)
@@ -254,19 +263,22 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ Automatizaciones funcionales (CRUD + logs de ejecuciones)
 
 ### ✅ Fase 3 completada:
-- ✅ Multi-idioma completo (ES/EN/AR) con next-intl — 800+ keys traducidos
+- ✅ Multi-idioma completo (ES/EN/AR) con next-intl — 1000+ keys traducidos
 - ✅ LanguageSelector en header de ambos paneles
 - ✅ RTL support para Árabe (CSS logical properties, fuente Noto Sans Arabic)
 - ✅ Formateo de fechas/números locale-aware en todas las páginas
 - ✅ Todas las páginas admin + owner + landing traducidas
 
 ### ✅ Fase 4 completada (AI + Design System + UX Upgrade):
-- ✅ **AI Features** (Anthropic Claude API): Generador de itinerarios, recomendaciones AI para agencias, configuración de chatbot AI
+- ✅ **AI Features** (Anthropic Claude API): Generador de itinerarios con PDF export, recomendaciones AI, configuración chatbot, chatbot público, asistente libre, AI inline helpers (descripción, pricing, emails, mi-web)
+- ✅ **AI Database**: ai_chatbot_config + ai_itinerarios tables con RLS
+- ✅ **ChatbotWidget**: Widget flotante público con rate limiting, contexto de agencia, FAQs
 - ✅ **Design System**: DataTable (search/sort/pagination), KPICard (animated counters), ConfirmDialog, EmptyState, AnimatedSection, DeleteWithConfirm
 - ✅ **Tailwind Premium**: Custom shadows (100-500), glassmorphism, premium border-radius
-- ✅ **Owner Panel Upgrade**: ClienteTabs (4 tabs), CommissionsTable, DataTable en clientes/soporte, fully i18n emails
-- ✅ **Admin Panel Upgrade**: Consistent animate-fade-in + text-2xl headers across ALL pages, DocumentosTable
-- ✅ **Cross-cutting**: RTL logical properties in ALL shadcn/ui + custom components (45+ fixes), loading.tsx skeletons for admin/owner
+- ✅ **Owner Panel Upgrade**: 5 KPIs, 5 charts (MRR, clientes, reservas, RevenueBreakdown, TopDestinos), LatestAgenciesTable, ClienteTabs (4 tabs), CommissionsTable, ExecutionLogsTable, DataTable everywhere
+- ✅ **Admin Panel Upgrade**: ReservasTable con inline StatusCell, StripeTabs (3 tabs), legales collapsible, status timeline en detalle reserva, DestinosChart en dashboard, AI quick access card, animate-fade-in + headers en ALL pages
+- ✅ **Cross-cutting**: RTL logical properties in ALL custom components (0 violations), loading.tsx skeletons for admin/owner
+- ✅ **Login Premium**: Rive animation full-screen + glassmorphism form + logo + welcome message en admin y owner login
 
 ### 🚫 No implementado (Roadmap futuro):
 CRM, marketing automation, gestión equipo, app nativa, API pública, white-label, multi-moneda, pagos offline
@@ -315,7 +327,7 @@ git push origin main
 ### Arquitectura:
 - **next-intl** con cookie `NEXT_LOCALE` (sin prefijo URL)
 - `src/i18n/request.ts` — config de locale
-- `messages/{es,en,ar}.json` — ~780 keys organizados por dominio
+- `messages/{es,en,ar}.json` — ~1000 keys organizados por dominio
 - `src/lib/set-locale.ts` — server action para cambiar idioma
 - `src/components/ui/LanguageSelector.tsx` — dropdown con banderas
 

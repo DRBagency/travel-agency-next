@@ -121,7 +121,7 @@ export default async function AdminAnalyticsPage({ searchParams }: AnalyticsPage
         <button className="btn-primary">
           {tc('filter')}
         </button>
-        <div className="ml-auto flex gap-2">
+        <div className="ms-auto flex gap-2">
           <ExportPDFButton estado="todos" q="" from={from} to={to} />
           <a
             href={`/api/admin/export?estado=todos&q=&from=${from}&to=${to}`}

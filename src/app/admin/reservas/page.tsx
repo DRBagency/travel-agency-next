@@ -162,7 +162,7 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
           <button className="btn-primary text-sm">
             {tc('filter')}
           </button>
-          <div className="ml-auto flex gap-2">
+          <div className="ms-auto flex gap-2">
             <ExportPDFButton estado={estado} q={q} from={from} to={to} />
             <a
               href={`/api/admin/export?estado=${estado}&q=${q}&from=${from}&to=${to}`}
