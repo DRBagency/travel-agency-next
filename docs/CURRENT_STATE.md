@@ -1,168 +1,168 @@
 # Estado Actual del Proyecto
 
-> **Última actualización:** 10 Febrero 2026
-> **Estado:** Funcional en producción - Mejora continua activa
+> **Ultima actualizacion:** 18 Febrero 2026
+> **Estado:** Produccion activa - Fase 4 completada (AI + Design System + UX Upgrade)
 
-## ✅ FUNCIONALIDADES COMPLETADAS
+## FUNCIONALIDADES COMPLETADAS
 
-### 🏢 Panel OWNER (/owner)
+### Panel OWNER (/owner)
 
 #### Dashboard (`/owner`)
-- ✅ Métricas principales (clientes, MRR, reservas, comisiones)
-- ✅ Últimos 5 clientes registrados
-- ✅ Gráficas de crecimiento (MRR y clientes últimos 6 meses)
+- Metricas principales (clientes, MRR, reservas, comisiones) con KPICards animados
+- 3 graficas (MRR, clientes por plan, reservas ultimos 6 meses)
+- Premium greeting con fecha locale-aware
 
-#### Gestión de Clientes (`/owner/clientes`)
-- ✅ Lista completa de agencias
-- ✅ Crear nueva agencia
-- ✅ Editar agencias existentes
-- ✅ Ver estado de Stripe y suscripciones
-- ✅ Auto-creación de templates por defecto
+#### Gestion de Clientes (`/owner/clientes`)
+- DataTable con search, sort, pagination
+- Crear nueva agencia (`/owner/clientes/nuevo`)
+- Detalle con ClienteTabs: Info | Destinos | Reservas | AI
+- Auto-creacion de templates por defecto
+- Estado Stripe y suscripciones visibles
 
 #### Emails de Billing (`/owner/emails`)
-- ✅ Configuración global (logo, email from, footer)
-- ✅ Edición de 3 templates: bienvenida, cambio plan, cancelación
-- ✅ Tokens dinámicos documentados
-- ✅ Preview NO implementado (pendiente mejora)
+- Configuracion global (logo, email from, footer)
+- 3 templates: bienvenida, cambio plan, cancelacion
+- Tokens dinamicos documentados
+- Preview en modal iframe
+- Fully i18n (ES/EN/AR)
 
-#### Monetización (`/owner/monetizacion`)
-- ✅ MRR total con desglose visual
-- ✅ Desglose por planes (Start/Grow/Pro)
-- ✅ Top 10 comisiones por cliente este mes
-- ⚠️ Comparativa mensual (pendiente)
-- ⚠️ Proyección de ingresos (pendiente)
+#### Monetizacion (`/owner/monetizacion`)
+- 3 KPICards (MRR, comisiones total, count planes)
+- Desglose por planes (Start/Grow/Pro)
+- CommissionsTable con DataTable (top agencias)
 
-#### Configuración Stripe (`/owner/stripe`)
-- ✅ Modo actual (TEST/LIVE)
-- ✅ API Keys visibles
-- ✅ Price IDs de los 3 planes
-- ✅ Webhook secrets
-- ✅ Enlaces directos a Stripe Dashboard
+#### Soporte (`/owner/soporte`)
+- DataTable con tickets de todas las agencias
+- KPI cards (open, in_progress, closed)
 
-### 👤 Panel CLIENTE (/admin)
+#### Automatizaciones (`/owner/automatizaciones`)
+- CRUD completo con DeleteWithConfirm
+- Logs de ejecuciones
+- Activar/desactivar automations
 
-#### Contenido Web (`/admin/contenido`)
-- ✅ Edición de hero section
-- ✅ Edición de sección nosotros
-- ✅ Edición de contacto
-- ⚠️ Preview en tiempo real (pendiente)
+#### Calendario (`/owner/calendario`)
+- Google Calendar integration (shared CalendarioContent component)
+
+#### Configuracion Stripe (`/owner/stripe`)
+- Modo actual (TEST/LIVE), API Keys, Price IDs
+- Webhook secrets, enlaces a Stripe Dashboard
+
+### Panel CLIENTE (/admin)
+
+#### Dashboard (`/admin`)
+- 4 KPICards animados (facturado, reservas, ticket medio, destinos activos)
+- 3 charts (reservas, ingresos, proyeccion revenue)
+- Navigation cards a todas las secciones
+- Ultimas reservas
+
+#### Contenido Web (`/admin/mi-web`)
+- Editor completo: hero, nosotros, contacto, redes sociales, footer
+- Color picker, logo upload, Unsplash image picker
 
 #### Destinos (`/admin/destinos`)
-- ✅ CRUD completo
-- ✅ Gestión de imágenes
-- ✅ Estado activo/inactivo
+- Visual card grid con imagenes, hover effects, gradient overlays
+- CRUD completo + DeleteWithConfirm
+- Activar/desactivar
 
 #### Reservas (`/admin/reservas`)
-- ✅ Visualización de reservas
-- ✅ Filtrado por estado
-- ⚠️ Edición manual (solo lectura)
-- ⚠️ Export a Excel/PDF (pendiente)
+- KPICards (facturado, pagadas, ticket medio)
+- Filtros (estado, busqueda, fecha)
+- Export CSV + PDF
+- Detalle de reserva (`/admin/reserva/[id]`)
 
 #### Opiniones (`/admin/opiniones`)
-- ✅ CRUD completo
-- ✅ Rating de estrellas
-- ✅ Moderación (activo/inactivo)
+- Star rating distribution chart
+- Visual review cards con avatars
+- CRUD + publish/unpublish + DeleteWithConfirm
 
 #### Emails (`/admin/emails`)
-- ✅ Edición de template reserva_cliente
-- ✅ Edición de template reserva_agencia
-- ✅ Tokens dinámicos
-- ⚠️ Preview (pendiente)
-- ⚠️ Testing de envío (pendiente)
+- 2 templates: reserva_cliente, reserva_agencia
+- Preview en modal iframe
+- Tokens dinamicos
 
-#### Páginas Legales (`/admin/legales`)
-- ✅ CRUD completo (aviso legal, privacidad, cookies)
-- ✅ Editor de contenido HTML
+#### Paginas Legales (`/admin/legales`)
+- CRUD completo con editor HTML
+- DeleteWithConfirm
 
-#### Stripe / Pagos (`/admin/stripe`)
-- ✅ Estado de Stripe Connect
-- ✅ Onboarding de Stripe
-- ✅ Plan actual y precio
-- ✅ Activar suscripción
-- ✅ Cambiar plan
-- ✅ Cancelar suscripción
-- ✅ Reactivar suscripción
-- ✅ Estado visual de cancelación programada
+#### Documentos (`/admin/documentos`)
+- 3 tipos: presupuesto, contrato, factura
+- DocumentosTable con DataTable
+- Crear, editar, eliminar + PDF generation (jsPDF)
+- DeleteWithConfirm en detalle
 
-### 📧 Sistema de Emails
+#### Soporte (`/admin/soporte`)
+- Tickets con KPI cards
+- Crear ticket, ver detalle, chat en tiempo real
+- Cerrar/reabrir tickets
 
-#### Emails de Reservas (Cliente → Cliente final)
-- ✅ Email al cliente tras reservar
-- ✅ Email a la agencia tras reservar
-- ✅ Templates editables desde /admin/emails
-- ✅ Tokens dinámicos funcionando
-- ✅ Branding personalizado por agencia
+#### Analytics (`/admin/analytics`)
+- 5 KPIs, filtros de fecha
+- Charts: reservas, ingresos, destinos top
+- Tabla mensual desglosada
+- Export CSV + PDF
 
-#### Emails de Billing (DRB → Agencia)
-- ✅ Email de bienvenida (al activar suscripción)
-- ✅ Email de cambio de plan
-- ✅ Email de cancelación
-- ✅ Templates editables desde /owner/emails
-- ✅ Dominio verificado (contact@drb.agency)
-- ✅ Logo personalizado
-- ✅ Tokens dinámicos funcionando
+#### Calendario (`/admin/calendario`)
+- Google Calendar integration
+- Crear/editar/eliminar eventos
 
-### 💳 Sistema de Pagos
+#### Stripe/Pagos (`/admin/stripe`)
+- Connect onboarding, estado, verificacion
+- Suscripcion: activar, cambiar plan, cancelar, reactivar
+- Fee breakdown por plan
 
-#### Stripe Connect (Reservas)
-- ✅ Onboarding de agencias
-- ✅ Cobro de reservas
-- ✅ Comisión automática a DRB
-- ✅ Webhook funcionando
-- ✅ Detección de estado de cuenta
+### AI Features (`/api/ai`)
+- Generador de itinerarios con Claude API
+- Recomendaciones AI para agencias (en ClienteTabs)
+- Configuracion de chatbot AI
 
-#### Stripe Billing (Suscripciones SaaS)
-- ✅ 3 planes (Start/Grow/Pro)
-- ✅ Checkout de suscripción
-- ✅ Cambio de plan
-- ✅ Cancelación (al final del periodo)
-- ✅ Reactivación
-- ✅ Webhook funcionando
-- ✅ Guardado de customer_id y subscription_id
+### Design System
+- **DataTable**: Client component - search, sort, pagination, CSV export, empty state
+- **KPICard**: Animated counter, icon, accent colors, gradient variant
+- **ConfirmDialog**: Modal con variants (danger/warning), spinner pending state
+- **DeleteWithConfirm**: Wrapper para server actions con confirmacion
+- **EmptyState**: Icon, title, description, action slot
+- **AnimatedSection**: framer-motion viewport-triggered (up/down/left/right)
+- **DashboardCard**: Navigation card con icon + hover
 
-### 🗄️ Base de Datos
+### Cross-cutting
+- **i18n**: 800+ keys en ES/EN/AR con next-intl
+- **RTL**: CSS logical properties en TODOS los componentes (shadcn + custom)
+- **Loading**: Skeleton loading.tsx para admin y owner
+- **Animations**: animate-fade-in en TODAS las paginas
+- **Headers**: Consistente text-2xl + text-gray-400 en todas las paginas
 
-**Tablas con UI completa:**
-- ✅ `clientes` - /owner/clientes
-- ✅ `platform_settings` - /owner/emails
-- ✅ `billing_email_templates` - /owner/emails
-- ✅ `email_templates` - /admin/emails
-- ✅ `destinos` - /admin/destinos
-- ✅ `opiniones` - /admin/opiniones
-- ✅ `paginas_legales` - /admin/legales
+### Sistema de Emails
+- Emails de reservas (cliente + agencia, templates editables, tokens, branding)
+- Emails de billing (bienvenida, cambio plan, cancelacion, dominio verificado)
+- Preview en modal para ambos paneles
 
-**Tablas con UI parcial:**
-- ⚠️ `reservas` - Solo lectura
-- 🔄 `calendar_events` - En desarrollo
-- 🔄 `documents` - En desarrollo
-- 🔄 `support_tickets` - En desarrollo
-- 🔄 `ticket_messages` - En desarrollo
-- 🔄 `automations` - Sin UI funcional
+### Sistema de Pagos
+- Stripe Connect (onboarding, cobro reservas, comision automatica, webhook)
+- Stripe Billing (3 planes, checkout, cambio, cancelacion, reactivacion, webhook)
 
-## 🔄 EN DESARROLLO ACTIVO
+### Base de Datos - Tablas con UI completa
+- `clientes` - /owner/clientes (CRUD + tabs + AI)
+- `platform_settings` - /owner/emails
+- `billing_email_templates` - /owner/emails
+- `email_templates` - /admin/emails
+- `destinos` - /admin/destinos
+- `opiniones` - /admin/opiniones
+- `paginas_legales` - /admin/legales
+- `calendar_events` - /admin/calendario + /owner/calendario
+- `documents` - /admin/documentos (CRUD + PDF)
+- `support_tickets` - /admin/soporte + /owner/soporte
+- `ticket_messages` - /admin/soporte/[id]
+- `automations` - /owner/automatizaciones (CRUD)
+- `automation_executions` - /owner/automatizaciones (logs)
+- `reservas` - /admin/reservas (read + status update)
 
-### Fase 1 (Ahora):
-- 📊 Gráficas avanzadas en ambos paneles
-- 📅 Calendario completo con Google Calendar
-- 📄 Generador de documentos (presupuestos, contratos, facturas)
-
-### Fase 2 (Próximo):
-- 💬 Sistema de tickets completo con chat
-- 📈 Analytics avanzado con filtros y exports
-- 🤖 Automatizaciones funcionales
-
-### Fase 3 (Después):
-- 🎨 Rediseño UX/UI premium
-- 🌍 Multi-idioma (ES/EN/AR)
-- 📱 Versión móvil optimizada
-
-## 🚫 NO IMPLEMENTADO (Roadmap futuro)
+## NO IMPLEMENTADO (Roadmap futuro)
 
 - CRM de clientes finales
 - Marketing automation
-- Gestión de equipo/empleados
-- App móvil nativa
-- API pública para integraciones
+- Gestion de equipo/empleados
+- App movil nativa
+- API publica para integraciones
 - White-label personalizado
 - Multi-moneda
 - Pagos offline

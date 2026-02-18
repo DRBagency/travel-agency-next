@@ -50,11 +50,12 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **Framework:** Next.js 16.1.6 (App Router)
 - **React:** 19.2.3
 - **Styling:** Tailwind CSS
-- **UI Components:** shadcn/ui
+- **UI Components:** shadcn/ui + custom design system (DataTable, KPICard, ConfirmDialog, EmptyState)
 - **i18n:** next-intl (cookie-based, sin prefijo URL)
 - **Charts:** Recharts
 - **Calendar:** FullCalendar
 - **Icons:** Lucide React
+- **AI:** Anthropic Claude API (@anthropic-ai/sdk) — itineraries, recommendations, chatbot config
 
 ### Backend
 - **Runtime:** Node.js (Edge Runtime selectivo)
@@ -97,8 +98,8 @@ travel-agency-next/
 │   │   ├── legal/             # Páginas legales dinámicas
 │   │   └── [otros]
 │   ├── components/
-│   │   ├── ui/               # shadcn/ui + LanguageSelector
-│   │   ├── admin/            # Componentes admin
+│   │   ├── ui/               # shadcn/ui + DataTable, KPICard, ConfirmDialog, EmptyState, DeleteWithConfirm, AnimatedSection
+│   │   ├── admin/            # Componentes admin (charts, dashboard, AI)
 │   │   └── owner/            # Componentes owner (charts)
 │   ├── i18n/
 │   │   └── request.ts        # Config next-intl (cookie NEXT_LOCALE)
@@ -210,22 +211,24 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 
 ### ✅ Panel OWNER completado:
 - Dashboard con métricas (clientes, MRR, reservas, comisiones) + 3 gráficas (MRR, clientes, reservas)
-- Gestión de clientes (CRUD + auto-creación templates)
-- Emails de billing (3 templates + preview en modal)
-- Monetización (MRR, desglose por planes, top comisiones, comparativa mensual, proyección ingresos)
+- Gestión de clientes (CRUD + auto-creación templates + tabbed detail: Info/Destinos/Reservas/AI)
+- Emails de billing (3 templates + preview en modal) — fully i18n
+- Monetización (MRR, desglose por planes, top comisiones con DataTable, KPICards)
 - Configuración Stripe (modo, keys, price IDs, webhooks)
-- Automatizaciones (CRUD + logs de ejecuciones)
+- Automatizaciones (CRUD + logs de ejecuciones + DeleteWithConfirm)
+- Soporte (tickets de clientes con DataTable)
 
 ### ✅ Panel CLIENTE completado:
 - Contenido web (hero, nosotros, contacto)
-- Destinos (CRUD + imágenes + activo/inactivo)
-- Reservas (visualización + filtrado + export CSV/PDF)
-- Opiniones (CRUD + rating + moderación)
+- Destinos (CRUD + imágenes + activo/inactivo + visual card grid + DeleteWithConfirm)
+- Reservas (visualización + filtrado + export CSV/PDF + KPICards)
+- Opiniones (CRUD + rating + moderación + star distribution chart + DeleteWithConfirm)
 - Emails (2 templates: reserva_cliente, reserva_agencia + preview en modal)
-- Páginas legales (CRUD + editor HTML)
+- Páginas legales (CRUD + editor HTML + DeleteWithConfirm)
 - Stripe/Pagos (Connect onboarding, suscripción, cambio plan, cancelar, reactivar)
-- Documentos (presupuestos, contratos, facturas — crear, editar, eliminar, generar PDF con jsPDF)
+- Documentos (presupuestos, contratos, facturas — crear, editar, eliminar, generar PDF con jsPDF + DataTable + DeleteWithConfirm)
 - Soporte (tickets con chat — crear, ver detalle, enviar mensajes, cerrar/reabrir)
+- Analytics (KPIs, charts, filtros de fecha, tabla mensual, exports CSV/PDF)
 
 ### ✅ Sistema de Emails:
 - Emails de reservas (cliente + agencia, templates editables, tokens, branding)
@@ -251,15 +254,19 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ Automatizaciones funcionales (CRUD + logs de ejecuciones)
 
 ### ✅ Fase 3 completada:
-- ✅ Multi-idioma completo (ES/EN/AR) con next-intl — 780+ keys traducidos
+- ✅ Multi-idioma completo (ES/EN/AR) con next-intl — 800+ keys traducidos
 - ✅ LanguageSelector en header de ambos paneles
 - ✅ RTL support para Árabe (CSS logical properties, fuente Noto Sans Arabic)
 - ✅ Formateo de fechas/números locale-aware en todas las páginas
 - ✅ Todas las páginas admin + owner + landing traducidas
 
-### 🔄 Futuro (Fase 4):
-- Rediseño UX/UI premium (animaciones, micro-interacciones, feel premium)
-- Versión móvil optimizada
+### ✅ Fase 4 completada (AI + Design System + UX Upgrade):
+- ✅ **AI Features** (Anthropic Claude API): Generador de itinerarios, recomendaciones AI para agencias, configuración de chatbot AI
+- ✅ **Design System**: DataTable (search/sort/pagination), KPICard (animated counters), ConfirmDialog, EmptyState, AnimatedSection, DeleteWithConfirm
+- ✅ **Tailwind Premium**: Custom shadows (100-500), glassmorphism, premium border-radius
+- ✅ **Owner Panel Upgrade**: ClienteTabs (4 tabs), CommissionsTable, DataTable en clientes/soporte, fully i18n emails
+- ✅ **Admin Panel Upgrade**: Consistent animate-fade-in + text-2xl headers across ALL pages, DocumentosTable
+- ✅ **Cross-cutting**: RTL logical properties in ALL shadcn/ui + custom components (45+ fixes), loading.tsx skeletons for admin/owner
 
 ### 🚫 No implementado (Roadmap futuro):
 CRM, marketing automation, gestión equipo, app nativa, API pública, white-label, multi-moneda, pagos offline
@@ -348,13 +355,41 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 
 ---
 
-## DISEÑO (ROADMAP VISUAL)
+## DESIGN SYSTEM
 
-**Estado actual:** Templates básicos funcionales
-**Próximo rediseño:**
-- Colores: Turquesa (#1CABB0) + Lima (#D4F24D)
-- Más ancho, más espacio, menos saturación
-- Gradientes, animaciones, hover effects, micro-interacciones
+**Estado actual:** Premium design implementado con design system propio.
+
+### Colores DRB:
+- Turquesa primario: `drb-turquoise` (50-950 scale, base #1CABB0)
+- Lima acento: `drb-lime` (#D4F24D)
+- Dark mode con `dark:` prefix en todo el código
+
+### Componentes Design System (`src/components/ui/`):
+| Componente | Tipo | Uso |
+|------------|------|-----|
+| `DataTable` | Client | Tabla con search, sort, pagination, export CSV |
+| `KPICard` | Client | Card con animated counter, icon, accent color |
+| `ConfirmDialog` | Client | Modal confirmación con variants (danger/warning) |
+| `DeleteWithConfirm` | Client | Wrapper de ConfirmDialog para server actions |
+| `EmptyState` | Server | Estado vacío con icon, title, description, action |
+| `AnimatedSection` | Client | Viewport-triggered animation (framer-motion) |
+| `DashboardCard` | Server | Card de navegación con icon + hover |
+
+### Patrones UI:
+- **Wrapper pages:** `<div className="space-y-{6,8} animate-fade-in">`
+- **Headers:** `<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">`
+- **Subtitles:** `<p className="text-gray-400 dark:text-white/40">`
+- **Cards:** `panel-card` class (border, rounded, dark mode)
+- **Inputs:** `panel-input` class
+- **Badges:** `badge-success`, `badge-warning`, `badge-danger`, `badge-info`
+- **Buttons:** `btn-primary` class
+- **Table rows:** `table-row` class with hover
+- **Loading:** `loading.tsx` with `animate-pulse` skeletons
+- **Delete actions:** Always use `DeleteWithConfirm` component
+
+### Shadows (tailwind.config.js):
+- `shadow-100` to `shadow-500` (progressive elevation)
+- `shadow-card-hover` for card hover state
 
 ---
 
