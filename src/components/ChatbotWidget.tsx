@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Loader2, Bot } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Message {
   role: "user" | "assistant";
@@ -21,6 +22,7 @@ export default function ChatbotWidget({
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const t = useTranslations("landing.chatbot");
   const [available, setAvailable] = useState<boolean | null>(null);
   const [botName, setBotName] = useState("Asistente");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -79,7 +81,7 @@ export default function ChatbotWidget({
         ...prev,
         {
           role: "assistant",
-          content: "Lo siento, ha ocurrido un error. Inténtalo de nuevo.",
+          content: t("error"),
         },
       ]);
     } finally {
@@ -129,7 +131,7 @@ export default function ChatbotWidget({
                   style={{ color: primaryColor }}
                 />
                 <p className="text-sm text-gray-400 dark:text-white/40">
-                  ¡Hola! ¿En qué puedo ayudarte?
+                  {t("greeting")}
                 </p>
               </div>
             )}
@@ -181,7 +183,7 @@ export default function ChatbotWidget({
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Escribe tu mensaje..."
+                placeholder={t("placeholder")}
                 className="flex-1 rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 px-3 py-2 text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 outline-none focus:border-gray-300 dark:focus:border-white/30"
                 disabled={loading}
               />

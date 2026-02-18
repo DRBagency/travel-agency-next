@@ -251,6 +251,59 @@ html {
     background: rgba(255, 255, 255, 0.05);
   }
 
+  /* ─── Landing premium effects ─── */
+  .shimmer-text {
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+  }
+
+  .gradient-border {
+    position: relative;
+    background: transparent;
+  }
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, #1CABB0, #D4F24D, #1CABB0);
+    background-size: 300% 300%;
+    animation: gradientShift 4s ease infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .hero-glow-btn {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-glow-btn::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(28,171,176,0.6), rgba(212,242,77,0.4));
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+    filter: blur(12px);
+  }
+  .hero-glow-btn:hover::after {
+    opacity: 1;
+  }
+
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 40px rgba(28,171,176,0.3), 0 0 80px rgba(28,171,176,0.15);
+  }
+
   /* ─── Badge with dot indicator ─── */
   .badge-dot-success::before,
   .badge-dot-warning::before,

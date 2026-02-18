@@ -57,6 +57,7 @@ export default async function MiWebPage() {
           facebook_url: client.facebook_url,
           tiktok_url: client.tiktok_url,
           footer_text: client.footer_text,
+          preferred_language: client.preferred_language,
         }}
         counts={counts}
       />

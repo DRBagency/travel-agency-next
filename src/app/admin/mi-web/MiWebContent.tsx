@@ -47,6 +47,7 @@ interface ClientData {
   facebook_url: string | null;
   tiktok_url: string | null;
   footer_text: string | null;
+  preferred_language: string | null;
 }
 
 interface Counts {
@@ -101,6 +102,7 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
     facebook_url: client.facebook_url ?? "",
     tiktok_url: client.tiktok_url ?? "",
     footer_text: client.footer_text ?? "",
+    preferred_language: client.preferred_language ?? "es",
   });
 
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(
@@ -332,7 +334,25 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
               </div>
             </div>
 
-            {renderSaveButton("marca", ["logo_url", "primary_color"])}
+            <div>
+              <label className="panel-label block mb-1">
+                {t("landingLanguage")}
+              </label>
+              <select
+                value={fields.preferred_language}
+                onChange={(e) => updateField("preferred_language", e.target.value)}
+                className="panel-input w-full max-w-xs"
+              >
+                <option value="es">Español</option>
+                <option value="en">English</option>
+                <option value="ar">العربية (Arabic)</option>
+              </select>
+              <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
+                {t("landingLanguageHint")}
+              </p>
+            </div>
+
+            {renderSaveButton("marca", ["logo_url", "primary_color", "preferred_language"])}
           </div>
         )}
       </section>

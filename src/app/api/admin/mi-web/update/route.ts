@@ -25,6 +25,7 @@ const ALLOWED_FIELDS = new Set([
   "facebook_url",
   "tiktok_url",
   "footer_text",
+  "preferred_language",
 ]);
 
 export async function POST(req: NextRequest) {

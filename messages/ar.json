@@ -466,6 +466,8 @@
       "readOnly": "للقراءة فقط. يتم تعديله من لوحة المالك.",
       "logoUrl": "الشعار (رابط)",
       "primaryColor": "اللون الرئيسي",
+      "landingLanguage": "لغة الصفحة الرئيسية",
+      "landingLanguageHint": "اللغة التي تُعرض بها النصوص الثابتة في صفحتك العامة (الأزرار، الأقسام، إلخ.)",
       "hero": "البطل (الغلاف)",
       "heroSub": "العنوان، العنوان الفرعي، زر CTA والخلفية",
       "heroTitle": "العنوان الرئيسي",
@@ -996,6 +998,88 @@
       "title": "توصيات الذكاء الاصطناعي",
       "refresh": "تحديث",
       "errorGeneric": "خطأ في إنشاء التوصيات"
+    }
+  },
+  "landing": {
+    "navbar": {
+      "destinations": "الوجهات",
+      "reviews": "التقييمات",
+      "about": "من نحن",
+      "contact": "اتصل بنا"
+    },
+    "hero": {
+      "badgeSafe": "حجز آمن",
+      "badgeInstant": "دفع فوري",
+      "badgeSupport": "دعم ٢٤/٧",
+      "viewDestinations": "عرض الوجهات",
+      "statsYears": "سنوات",
+      "statsDestinations": "وجهات",
+      "statsTravelers": "مسافرين",
+      "statsRating": "التقييم"
+    },
+    "destinations": {
+      "badge": "وجهات مميزة",
+      "title": "اعثر على",
+      "titleHighlight": "مغامرتك القادمة",
+      "subtitle": "مجموعة مختارة من الوجهات بتجارب متميزة ومدفوعات آمنة وخدمة مخصصة.",
+      "from": "من",
+      "reserve": "احجز الآن",
+      "loading": "جارٍ تحميل الوجهات...",
+      "empty": "لا توجد وجهات نشطة متاحة",
+      "noImage": "لا توجد صورة"
+    },
+    "testimonials": {
+      "badge": "تقييمات حقيقية",
+      "title": "ماذا يقول",
+      "titleHighlight": "مسافرونا",
+      "subtitle": "آلاف العملاء وثقوا بنا لقضاء إجازاتهم."
+    },
+    "about": {
+      "badge": "من نحن",
+      "defaultTitle": "تعرف على",
+      "defaultTitleHighlight": "فريقنا",
+      "featureSafe": "حجوزات آمنة ١٠٠٪",
+      "featureExclusive": "وجهات حصرية",
+      "featurePersonal": "خدمة مخصصة",
+      "featureQuality": "جودة مضمونة",
+      "featureExpert": "فريق خبراء",
+      "featureFast": "عملية سريعة",
+      "statsYears": "سنوات الخبرة",
+      "statsDestinations": "وجهات فريدة",
+      "statsTravelers": "مسافرون سعداء",
+      "statsRating": "متوسط التقييم"
+    },
+    "contact": {
+      "badge": "اتصل بنا",
+      "title": "هل لديك أي",
+      "titleHighlight": "أسئلة",
+      "subtitle": "نحن هنا لمساعدتك. أرسل لنا رسالة وسنرد عليك في أقرب وقت.",
+      "infoTitle": "معلومات الاتصال",
+      "emailLabel": "البريد الإلكتروني",
+      "phoneLabel": "الهاتف",
+      "addressLabel": "العنوان",
+      "helpTitle": "هل تحتاج مساعدة في حجزك؟",
+      "helpText": "للاستفسار عن الحجوزات الحالية، قم بتسجيل الدخول أو تواصل مع فريق خدمة العملاء.",
+      "successMessage": "تم إرسال الرسالة بنجاح. سنتواصل معك قريبًا.",
+      "nameLabel": "الاسم الكامل",
+      "namePlaceholder": "اسمك",
+      "emailPlaceholder": "بريدك@الإلكتروني.com",
+      "messageLabel": "الرسالة",
+      "messagePlaceholder": "كيف يمكننا مساعدتك؟",
+      "sending": "جارٍ الإرسال...",
+      "send": "إرسال الرسالة"
+    },
+    "footer": {
+      "navigation": "التنقل",
+      "legal": "قانوني",
+      "rights": "جميع الحقوق محفوظة.",
+      "poweredBy": "مدعوم بواسطة"
+    },
+    "chatbot": {
+      "greeting": "مرحبًا! كيف يمكنني مساعدتك؟",
+      "error": "عذرًا، حدث خطأ. يرجى المحاولة مرة أخرى.",
+      "placeholder": "اكتب رسالتك...",
+      "title": "المساعد الافتراضي"
     }
   }
 }

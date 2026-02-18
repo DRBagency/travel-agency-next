@@ -466,6 +466,8 @@
       "readOnly": "Solo lectura. Se modifica desde el panel del owner.",
       "logoUrl": "Logo (URL)",
       "primaryColor": "Color principal",
+      "landingLanguage": "Idioma de la landing",
+      "landingLanguageHint": "Idioma en el que se muestran los textos fijos de tu landing pública (botones, secciones, etc.)",
       "hero": "Hero (portada)",
       "heroSub": "Título, subtítulo, botón CTA y fondo",
       "heroTitle": "Título principal",
@@ -996,6 +998,88 @@
       "title": "Recomendaciones IA",
       "refresh": "Actualizar",
       "errorGeneric": "Error al generar recomendaciones"
+    }
+  },
+  "landing": {
+    "navbar": {
+      "destinations": "Destinos",
+      "reviews": "Opiniones",
+      "about": "Nosotros",
+      "contact": "Contacto"
+    },
+    "hero": {
+      "badgeSafe": "Reserva segura",
+      "badgeInstant": "Pago instantáneo",
+      "badgeSupport": "Soporte 24/7",
+      "viewDestinations": "Ver destinos",
+      "statsYears": "Años",
+      "statsDestinations": "Destinos",
+      "statsTravelers": "Viajeros",
+      "statsRating": "Rating"
+    },
+    "destinations": {
+      "badge": "Destinos destacados",
+      "title": "Encuentra tu próxima",
+      "titleHighlight": "aventura",
+      "subtitle": "Selección curada de destinos con experiencias premium, pagos seguros y atención personalizada.",
+      "from": "Desde",
+      "reserve": "Reservar",
+      "loading": "Cargando destinos...",
+      "empty": "Este cliente no tiene destinos activos",
+      "noImage": "Sin imagen"
+    },
+    "testimonials": {
+      "badge": "Opiniones reales",
+      "title": "Lo que dicen nuestros",
+      "titleHighlight": "viajeros",
+      "subtitle": "Miles de clientes ya han confiado en nosotros para sus vacaciones."
+    },
+    "about": {
+      "badge": "Sobre nosotros",
+      "defaultTitle": "Conoce nuestro",
+      "defaultTitleHighlight": "equipo",
+      "featureSafe": "Reservas 100% seguras",
+      "featureExclusive": "Destinos exclusivos",
+      "featurePersonal": "Atención personalizada",
+      "featureQuality": "Calidad garantizada",
+      "featureExpert": "Equipo experto",
+      "featureFast": "Proceso rápido",
+      "statsYears": "Años de experiencia",
+      "statsDestinations": "Destinos únicos",
+      "statsTravelers": "Viajeros satisfechos",
+      "statsRating": "Valoración media"
+    },
+    "contact": {
+      "badge": "Contacto",
+      "title": "¿Tienes alguna",
+      "titleHighlight": "duda",
+      "subtitle": "Estamos aquí para ayudarte. Envíanos un mensaje y te responderemos lo antes posible.",
+      "infoTitle": "Información de contacto",
+      "emailLabel": "Email",
+      "phoneLabel": "Teléfono",
+      "addressLabel": "Dirección",
+      "helpTitle": "¿Necesitas ayuda con tu reserva?",
+      "helpText": "Para consultas sobre reservas existentes, accede a tu cuenta o contacta con nuestro equipo de atención al cliente.",
+      "successMessage": "Mensaje enviado correctamente. Te contactaremos pronto.",
+      "nameLabel": "Nombre completo",
+      "namePlaceholder": "Tu nombre",
+      "emailPlaceholder": "tu@email.com",
+      "messageLabel": "Mensaje",
+      "messagePlaceholder": "¿En qué podemos ayudarte?",
+      "sending": "Enviando...",
+      "send": "Enviar mensaje"
+    },
+    "footer": {
+      "navigation": "Navegación",
+      "legal": "Legal",
+      "rights": "Todos los derechos reservados.",
+      "poweredBy": "Powered by"
+    },
+    "chatbot": {
+      "greeting": "¡Hola! ¿En qué puedo ayudarte?",
+      "error": "Lo siento, ha ocurrido un error. Inténtalo de nuevo.",
+      "placeholder": "Escribe tu mensaje...",
+      "title": "Asistente Virtual"
     }
   }
 }

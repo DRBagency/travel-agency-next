@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Plane } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface NavbarProps {
   clientName: string;
@@ -14,13 +15,6 @@ interface NavbarProps {
   ctaLink?: string | null;
 }
 
-const navLinks = [
-  { href: "#destinos", label: "Destinos" },
-  { href: "#opiniones", label: "Opiniones" },
-  { href: "#nosotros", label: "Nosotros" },
-  { href: "#contacto", label: "Contacto" },
-];
-
 const Navbar = ({
   clientName,
   logoUrl,
@@ -28,6 +22,13 @@ const Navbar = ({
   ctaText,
   ctaLink,
 }: NavbarProps) => {
+  const t = useTranslations("landing.navbar");
+  const navLinks = [
+    { href: "#destinos", label: t("destinations") },
+    { href: "#opiniones", label: t("reviews") },
+    { href: "#nosotros", label: t("about") },
+    { href: "#contacto", label: t("contact") },
+  ];
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
