@@ -142,6 +142,19 @@ html {
     @apply w-full bg-drb-turquoise-50 dark:bg-white/[0.06] border border-drb-turquoise-200 dark:border-white/[0.1] rounded-xl px-4 py-2.5 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/30 focus:border-drb-turquoise-500 transition-colors;
   }
 
+  /* Fix select/option contrast in dark mode */
+  select.panel-input option,
+  .dark select option,
+  select option {
+    background-color: white;
+    color: #111827;
+  }
+  .dark select.panel-input option,
+  .dark select option {
+    background-color: #0f2d3a;
+    color: #e5e7eb;
+  }
+
   .panel-label {
     @apply text-sm font-medium text-gray-700 dark:text-white/80 block mb-1;
   }
