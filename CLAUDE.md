@@ -65,8 +65,9 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **Database:** PostgreSQL (Supabase)
 - **ORM:** Supabase Client (@supabase/supabase-js 2.93.2)
 - **Migrations:** Supabase CLI (SQL manual)
-- **RLS:** Habilitado en TODAS las tablas
-- **Service Role:** `supabaseAdmin` para operaciones del servidor
+- **RLS:** Habilitado en TODAS las 14 tablas (verificado 18 Feb 2026)
+- **Service Role:** `supabaseAdmin` para operaciones del servidor (service_role bypasses RLS)
+- **Anon Key:** Solo usado client-side para Supabase Auth login + lectura pública destinos activos
 
 ### Pagos
 - **Stripe Connect:** Reservas (agencia → cliente final). Webhook: `/api/stripe/connect/webhook`
