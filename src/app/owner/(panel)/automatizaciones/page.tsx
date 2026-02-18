@@ -87,18 +87,18 @@ export default async function OwnerAutomatizacionesPage() {
   const executions = recentExecutions || [];
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
+    <div className="space-y-8 animate-fade-in">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
-          <p className="text-gray-500 dark:text-white/60">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
+          <p className="text-gray-400 dark:text-white/40">
             {t('subtitle')}
           </p>
         </div>
       </div>
 
       {/* Create form */}
-      <div className="panel-card p-6 mb-8">
+      <div className="panel-card p-6">
         <h2 className="text-xl font-semibold mb-4">{t('newAutomation')}</h2>
         <form action={createAutomation} className="grid gap-4">
           <div>
@@ -175,7 +175,7 @@ export default async function OwnerAutomatizacionesPage() {
       </div>
 
       {/* Automations list */}
-      <div className="space-y-4 mb-8">
+      <div className="space-y-4">
         {items.length === 0 ? (
           <div className="panel-card p-8 text-center text-gray-400 dark:text-white/40">
             {t('noAutomations')}

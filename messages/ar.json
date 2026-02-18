@@ -648,7 +648,18 @@
         "heroTitle": "عنوان البطل",
         "heroSubtitle": "العنوان الفرعي للبطل",
         "heroCta": "نص CTA للبطل"
-      }
+      },
+      "tabs": {
+        "info": "المعلومات",
+        "destinations": "الوجهات",
+        "bookings": "الحجوزات",
+        "ai": "الذكاء الاصطناعي"
+      },
+      "destinationsCount": "{count} وجهات",
+      "bookingsCount": "{count} حجوزات",
+      "noDestinations": "هذه الوكالة ليس لديها وجهات بعد",
+      "noBookings": "هذه الوكالة ليس لديها حجوزات بعد",
+      "revenue": "الإيرادات"
     },
     "monetizacion": {
       "title": "التسييل",

@@ -7,6 +7,7 @@ import {
   type BillingTemplateType,
 } from "@/lib/billing/settings";
 import EmailPreviewButton from "@/components/admin/EmailPreviewButton";
+import { getTranslations } from "next-intl/server";
 
 // ============================================================================
 // SERVER ACTIONS
@@ -47,12 +48,15 @@ async function updateBillingTemplateAction(formData: FormData) {
 // ============================================================================
 
 export default async function OwnerEmailsPage() {
+  const t = await getTranslations("owner.emails");
+  const tc = await getTranslations("common");
+
   const settings = await getPlatformSettings();
   const templates = await getAllBillingTemplates();
 
   const templatesByType = templates.reduce(
-    (acc, t) => {
-      acc[t.tipo] = t;
+    (acc, tmpl) => {
+      acc[tmpl.tipo] = tmpl;
       return acc;
     },
     {} as Record<string, any>
@@ -61,50 +65,41 @@ export default async function OwnerEmailsPage() {
   const templateTypes = [
     {
       tipo: "bienvenida" as const,
-      label: "🎉 Bienvenida",
-      description: "Email enviado cuando un cliente activa su suscripción",
+      label: t("welcome"),
+      description: t("welcomeDesc"),
     },
     {
       tipo: "cambio_plan" as const,
-      label: "🔄 Cambio de plan",
-      description: "Email enviado cuando un cliente cambia de plan",
+      label: t("planChange"),
+      description: t("planChangeDesc"),
     },
     {
       tipo: "cancelacion" as const,
-      label: "😢 Cancelación",
-      description: "Email enviado cuando un cliente cancela su suscripción",
+      label: t("cancellation"),
+      description: t("cancellationDesc"),
     },
   ];
 
   return (
-    <div className="space-y-8">
-      {/* ====================================
-          HEADER
-      ==================================== */}
+    <div className="space-y-8 animate-fade-in">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold mb-2">Emails de Billing</h1>
-        <p className="text-gray-500 dark:text-white/60">
-          Gestión global de plantillas de emails para eventos de facturación
-        </p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t("title")}</h1>
+        <p className="text-gray-400 dark:text-white/40">{t("subtitle")}</p>
       </div>
 
-      {/* ====================================
-          SECCIÓN 1: CONFIGURACIÓN GLOBAL
-      ==================================== */}
+      {/* Global config */}
       <div className="panel-card p-6">
-        <h2 className="text-xl font-semibold mb-4">
-          Configuración Global de Billing
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+          {t("globalConfig")}
         </h2>
-        <p className="text-sm text-gray-500 dark:text-white/60 mb-6">
-          Esta configuración se aplica a todos los emails de billing (logo,
-          remitente, footer).
+        <p className="text-sm text-gray-400 dark:text-white/40 mb-6">
+          {t("globalConfigDesc")}
         </p>
 
         <form action={updatePlatformSettingsAction} className="space-y-4">
           <div>
-            <label className="panel-label block mb-1">
-              URL del Logo
-            </label>
+            <label className="panel-label block mb-1">{t("logoUrl")}</label>
             <input
               name="billing_logo_url"
               type="text"
@@ -112,15 +107,13 @@ export default async function OwnerEmailsPage() {
               placeholder="https://example.com/logo.png"
               className="w-full panel-input"
             />
-            <p className="text-xs text-gray-400 dark:text-white/50 mt-1">
-              Logo que aparecerá en el header de los emails de billing
+            <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
+              {t("logoUrlDesc")}
             </p>
           </div>
 
           <div>
-            <label className="panel-label block mb-1">
-              Email Remitente (From)
-            </label>
+            <label className="panel-label block mb-1">{t("emailFrom")}</label>
             <input
               name="billing_email_from"
               type="text"
@@ -128,52 +121,45 @@ export default async function OwnerEmailsPage() {
               placeholder='DRB Agency <billing@drb.agency>'
               className="w-full panel-input"
             />
-            <p className="text-xs text-gray-400 dark:text-white/50 mt-1">
-              Formato: &quot;Nombre &lt;email@dominio.com&gt;&quot; o solo
-              &quot;email@dominio.com&quot;
+            <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
+              {t("emailFromDesc")}
             </p>
           </div>
 
           <div>
-            <label className="panel-label block mb-1">
-              Texto del Footer
-            </label>
+            <label className="panel-label block mb-1">{t("footerText")}</label>
             <textarea
               name="billing_footer_text"
               defaultValue={settings?.billing_footer_text ?? ""}
-              placeholder="© 2026 DRB Agency. Todos los derechos reservados."
+              placeholder="© 2026 DRB Agency."
               className="w-full panel-input min-h-[80px]"
             />
-            <p className="text-xs text-gray-400 dark:text-white/50 mt-1">
-              Texto que aparecerá en el footer de todos los emails
+            <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
+              {t("footerTextDesc")}
             </p>
           </div>
 
           <div className="flex justify-end">
-            <button
-              type="submit"
-              className="btn-primary"
-            >
-              Guardar configuración
+            <button type="submit" className="btn-primary">
+              {t("saveConfig")}
             </button>
           </div>
         </form>
       </div>
 
-      {/* ====================================
-          SECCIÓN 2: TEMPLATES DE EMAILS
-      ==================================== */}
+      {/* Templates */}
       <div className="panel-card p-6">
-        <h2 className="text-xl font-semibold mb-4">Templates de Emails</h2>
-        <p className="text-sm text-gray-500 dark:text-white/60 mb-6">
-          Edita los templates de emails para eventos de billing. Puedes usar
-          tokens dinámicos.
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+          {t("templates")}
+        </h2>
+        <p className="text-sm text-gray-400 dark:text-white/40 mb-6">
+          {t("templatesDesc")}
         </p>
 
-        {/* Tokens disponibles */}
+        {/* Available tokens */}
         <div className="rounded-xl bg-sky-50 dark:bg-drb-turquoise-500/10 border border-sky-200 dark:border-drb-turquoise-500/20 p-4 mb-6">
           <h3 className="text-sm font-semibold text-sky-700 dark:text-drb-turquoise-300 mb-2">
-            📝 Tokens disponibles:
+            {t("availableTokens")}
           </h3>
           <div className="flex flex-wrap gap-2 text-xs">
             {[
@@ -203,8 +189,8 @@ export default async function OwnerEmailsPage() {
           </div>
         </div>
 
-        {/* Templates en accordions */}
-        <div className="space-y-6">
+        {/* Template accordions */}
+        <div className="space-y-4">
           {templateTypes.map((templateType) => {
             const template = templatesByType[templateType.tipo] || null;
 
@@ -214,27 +200,25 @@ export default async function OwnerEmailsPage() {
                 id={`billing-form-${templateType.tipo}`}
                 className="group panel-card overflow-hidden"
               >
-                <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-white/5 transition">
+                <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-colors">
                   <div>
-                    <div className="font-semibold text-lg">
+                    <div className="font-semibold text-gray-900 dark:text-white">
                       {templateType.label}
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-white/60">
+                    <div className="text-sm text-gray-400 dark:text-white/40">
                       {templateType.description}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     {template?.activo ? (
-                      <span className="badge-success px-3 py-1 text-xs font-semibold">
-                        Activo
-                      </span>
+                      <span className="badge-success">{tc("active")}</span>
                     ) : (
                       <span className="inline-flex items-center rounded-full bg-gray-100 text-gray-500 dark:bg-white/10 dark:text-white/50 px-3 py-1 text-xs font-semibold">
-                        Inactivo
+                        {tc("inactive")}
                       </span>
                     )}
                     <svg
-                      className="w-5 h-5 text-gray-400 dark:text-white/50 transition-transform group-open:rotate-180"
+                      className="w-5 h-5 text-gray-400 dark:text-white/40 transition-transform group-open:rotate-180"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -252,7 +236,7 @@ export default async function OwnerEmailsPage() {
                 <form
                   id={`billing-form-${templateType.tipo}`}
                   action={updateBillingTemplateAction}
-                  className="p-4 border-t border-gray-100 dark:border-white/10 space-y-4"
+                  className="p-4 border-t border-gray-100 dark:border-white/[0.06] space-y-4"
                 >
                   <input type="hidden" name="tipo" value={templateType.tipo} />
 
@@ -268,61 +252,48 @@ export default async function OwnerEmailsPage() {
                       htmlFor={`activo-${templateType.tipo}`}
                       className="panel-label"
                     >
-                      Activar este template
+                      {t("activateTemplate")}
                     </label>
                   </div>
 
                   <div>
-                    <label className="panel-label block mb-1">
-                      Asunto del Email
-                    </label>
+                    <label className="panel-label block mb-1">{t("emailSubject")}</label>
                     <input
                       name="subject"
                       type="text"
                       defaultValue={template?.subject ?? ""}
-                      placeholder="Ej: 🎉 ¡Bienvenido a {{planName}}!"
                       className="w-full panel-input"
                     />
                   </div>
 
                   <div>
-                    <label className="panel-label block mb-1">
-                      Cuerpo HTML
-                    </label>
+                    <label className="panel-label block mb-1">{t("htmlBody")}</label>
                     <textarea
                       name="html_body"
                       defaultValue={template?.html_body ?? ""}
-                      placeholder="<h1>Hola {{clientName}}</h1><p>Contenido del email...</p>"
                       className="w-full panel-input min-h-[300px] font-mono text-sm"
                     />
-                    <p className="text-xs text-gray-400 dark:text-white/50 mt-1">
-                      Escribe HTML y usa tokens como {`{{clientName}}`},{" "}
-                      {`{{planName}}`}, etc.
+                    <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
+                      {t("htmlBodyDesc")}
                     </p>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="panel-label block mb-1">
-                        CTA · Texto del Botón
-                      </label>
+                      <label className="panel-label block mb-1">{t("ctaText")}</label>
                       <input
                         name="cta_text"
                         type="text"
                         defaultValue={template?.cta_text ?? ""}
-                        placeholder="Ej: Ir a mi panel"
                         className="w-full panel-input"
                       />
                     </div>
                     <div>
-                      <label className="panel-label block mb-1">
-                        CTA · URL del Botón
-                      </label>
+                      <label className="panel-label block mb-1">{t("ctaUrl")}</label>
                       <input
                         name="cta_url"
                         type="text"
                         defaultValue={template?.cta_url ?? ""}
-                        placeholder="Ej: {{adminUrl}} o https://..."
                         className="w-full panel-input"
                       />
                     </div>
@@ -333,11 +304,8 @@ export default async function OwnerEmailsPage() {
                       apiUrl="/api/owner/email-preview"
                       formId={`billing-form-${templateType.tipo}`}
                     />
-                    <button
-                      type="submit"
-                      className="btn-primary"
-                    >
-                      Guardar template
+                    <button type="submit" className="btn-primary">
+                      {t("saveTemplate")}
                     </button>
                   </div>
                 </form>
@@ -347,29 +315,16 @@ export default async function OwnerEmailsPage() {
         </div>
       </div>
 
-      {/* ====================================
-          NOTA INFORMATIVA
-      ==================================== */}
+      {/* Info note */}
       <div className="rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 p-4">
         <h3 className="text-sm font-semibold text-amber-700 dark:text-amber-300 mb-2">
-          ℹ️ Información importante:
+          {t("importantInfo")}
         </h3>
         <ul className="text-sm text-amber-700/80 dark:text-amber-200/80 space-y-1">
-          <li>
-            • Los emails solo se enviarán si el template correspondiente está
-            <strong> activo</strong>
-          </li>
-          <li>
-            • Los tokens se reemplazan automáticamente al enviar el email
-          </li>
-          <li>
-            • Puedes usar HTML para dar formato al contenido (negrita, listas,
-            etc.)
-          </li>
-          <li>
-            • El logo y footer se aplicarán automáticamente desde la
-            configuración global
-          </li>
+          <li>• {t("infoItem1")}</li>
+          <li>• {t("infoItem2")}</li>
+          <li>• {t("infoItem3")}</li>
+          <li>• {t("infoItem4")}</li>
         </ul>
       </div>
     </div>

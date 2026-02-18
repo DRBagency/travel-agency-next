@@ -648,7 +648,18 @@
         "heroTitle": "Hero Title",
         "heroSubtitle": "Hero Subtitle",
         "heroCta": "Hero CTA Text"
-      }
+      },
+      "tabs": {
+        "info": "Information",
+        "destinations": "Destinations",
+        "bookings": "Bookings",
+        "ai": "Artificial Intelligence"
+      },
+      "destinationsCount": "{count} destinations",
+      "bookingsCount": "{count} bookings",
+      "noDestinations": "This agency has no destinations yet",
+      "noBookings": "This agency has no bookings yet",
+      "revenue": "Revenue"
     },
     "monetizacion": {
       "title": "Monetization",

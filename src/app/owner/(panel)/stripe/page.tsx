@@ -17,12 +17,14 @@ export default async function OwnerStripePage() {
   const mode = process.env.STRIPE_SECRET_KEY?.startsWith("sk_live") ? "LIVE" : "TEST";
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
-      <p className="text-gray-500 dark:text-white/60 mb-8">{t('subtitle')}</p>
+    <div className="space-y-8 animate-fade-in">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
+        <p className="text-gray-400 dark:text-white/40">{t('subtitle')}</p>
+      </div>
 
       {/* Modo actual */}
-      <div className={`${mode === "LIVE" ? "bg-emerald-50 dark:bg-green-500/20 border-emerald-200 dark:border-green-500/30" : "bg-amber-50 dark:bg-yellow-500/20 border-amber-200 dark:border-yellow-500/30"} backdrop-blur-sm rounded-lg p-6 border mb-8`}>
+      <div className={`${mode === "LIVE" ? "bg-emerald-50 dark:bg-green-500/20 border-emerald-200 dark:border-green-500/30" : "bg-amber-50 dark:bg-yellow-500/20 border-amber-200 dark:border-yellow-500/30"} backdrop-blur-sm rounded-lg p-6 border `}>
         <div className="flex items-center gap-3">
           <span className="text-3xl">{mode === "LIVE" ? "🟢" : "🟡"}</span>
           <div>
@@ -37,7 +39,7 @@ export default async function OwnerStripePage() {
       </div>
 
       {/* API Keys */}
-      <div className="panel-card mb-8">
+      <div className="panel-card ">
         <div className="p-6 border-b border-gray-100 dark:border-white/10">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('apiKeys')}</h2>
         </div>
@@ -52,7 +54,7 @@ export default async function OwnerStripePage() {
       </div>
 
       {/* Price IDs */}
-      <div className="panel-card mb-8">
+      <div className="panel-card ">
         <div className="p-6 border-b border-gray-100 dark:border-white/10">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('priceIds')}</h2>
         </div>
@@ -79,7 +81,7 @@ export default async function OwnerStripePage() {
       </div>
 
       {/* Webhook Secrets */}
-      <div className="panel-card mb-8">
+      <div className="panel-card ">
         <div className="p-6 border-b border-gray-100 dark:border-white/10">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('webhookSecrets')}</h2>
         </div>
