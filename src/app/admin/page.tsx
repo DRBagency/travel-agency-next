@@ -2,7 +2,7 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DashboardCard from "@/components/ui/DashboardCard";
 import KPICard from "@/components/ui/KPICard";
-import { ReservasChart, IngresosChart, RevenueProjectionChart } from "@/components/admin/AdminAnalyticsCharts";
+import { ReservasChart, IngresosChart, RevenueProjectionChart, DestinosChart } from "@/components/admin/AdminAnalyticsCharts";
 import {
   PremiumGreeting,
   StaggeredGrid,
@@ -24,6 +24,7 @@ import {
   ShoppingBag,
   Ticket,
   Map,
+  Sparkles,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -104,6 +105,17 @@ export default async function AdminPage() {
     });
   }
 
+  /* Top destinations by bookings */
+  const destinoCounts: Record<string, number> = {};
+  pagadas.forEach((r) => {
+    const name = r.destino || "Otro";
+    destinoCounts[name] = (destinoCounts[name] || 0) + 1;
+  });
+  const destinosChartData = Object.entries(destinoCounts)
+    .map(([destino, value]) => ({ destino, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5);
+
   const greeting = t('greeting', { name: client.nombre });
   const dateStr = new Date().toLocaleDateString(locale, {
     weekday: "long",
@@ -178,6 +190,13 @@ export default async function AdminPage() {
         <RevenueProjectionChart data={projectionData} />
       </div>
 
+      {/* Destinos Chart */}
+      {destinosChartData.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <DestinosChart data={destinosChartData} />
+        </div>
+      )}
+
       {/* Navigation Cards */}
       <div>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('manageAgency')}</h2>
@@ -229,6 +248,12 @@ export default async function AdminPage() {
             title={tn('analytics')}
             subtitle={t('statisticsSub')}
             href="/admin/analytics"
+          />
+          <DashboardCard
+            icon={<Sparkles className="w-5 h-5" />}
+            title={t('aiTools')}
+            subtitle={t('aiToolsSub')}
+            href="/admin/ai/itinerarios"
           />
         </div>
       </div>

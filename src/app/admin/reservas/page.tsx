@@ -1,10 +1,10 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import SubmitButton from "@/components/admin/SubmitButton";
 import ExportPDFButton from "@/components/admin/ExportPDFButton";
 import KPICard from "@/components/ui/KPICard";
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import ReservasTable from "./ReservasTable";
 import { DollarSign, ShoppingBag, Ticket, Filter } from "lucide-react";
 import { getTranslations, getLocale } from 'next-intl/server';
 
@@ -174,91 +174,13 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
         </form>
       </div>
 
-      {/* Table */}
-      {reservasSafe.length === 0 ? (
-        <div className="panel-card p-12 text-center">
-          <p className="text-gray-400 dark:text-white/40">{t('noBookings')}</p>
-        </div>
-      ) : (
-        <div className="panel-card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-100 dark:border-white/[0.06] bg-gray-50/80 dark:bg-white/[0.02]">
-                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('date')}</th>
-                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('client')}</th>
-                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('destination')}</th>
-                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('people')}</th>
-                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('price')}</th>
-                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('status')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reservasSafe.map((r) => (
-                  <tr key={r.id} className="table-row">
-                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-white/50">
-                      {new Date(r.created_at).toLocaleDateString(locale)}
-                    </td>
-                    <td className="px-6 py-4">
-                      <a href={`/admin/reserva/${r.id}`} className="flex items-center gap-3 group/link">
-                        <div className="w-8 h-8 rounded-full bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-drb-turquoise-600 dark:text-drb-turquoise-400 text-xs font-semibold shrink-0">
-                          {(r.nombre || "?").charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                          <div className="font-medium text-sm text-gray-900 dark:text-white group-hover/link:text-drb-turquoise-600 dark:group-hover/link:text-drb-turquoise-400 transition-colors">{r.nombre}</div>
-                          <div className="text-xs text-gray-400 dark:text-white/40">{r.email}</div>
-                        </div>
-                      </a>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400">
-                        {r.destino}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">{r.personas}</td>
-                    <td className="px-6 py-4 text-sm font-semibold text-gray-900 dark:text-white">{r.precio} €</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={
-                            r.estado_pago === "pagado"
-                              ? "badge-success"
-                              : r.estado_pago === "pendiente"
-                                ? "badge-warning"
-                                : r.estado_pago === "revisada"
-                                  ? "badge-info"
-                                  : r.estado_pago === "cancelada"
-                                    ? "badge-danger"
-                                    : "badge-info"
-                          }
-                        >
-                          {r.estado_pago}
-                        </span>
-                        <form action={updateEstado} className="flex gap-1.5">
-                          <input type="hidden" name="id" value={r.id} />
-                          <select
-                            name="estado"
-                            defaultValue={r.estado_pago}
-                            className="panel-input text-xs py-1 px-2"
-                          >
-                            <option value="pagado">{t('paid')}</option>
-                            <option value="pendiente">{t('pending')}</option>
-                            <option value="revisada">{t('reviewed')}</option>
-                            <option value="cancelada">{t('cancelled')}</option>
-                          </select>
-                          <SubmitButton className="px-2 py-1 text-xs btn-primary rounded-lg">
-                            OK
-                          </SubmitButton>
-                        </form>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+      {/* DataTable */}
+      <div className="panel-card overflow-hidden">
+        <ReservasTable
+          data={reservasSafe as any[]}
+          updateAction={updateEstado}
+        />
+      </div>
     </div>
   );
 }

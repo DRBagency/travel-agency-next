@@ -1,9 +1,9 @@
 import { getDashboardMetrics } from "@/lib/owner/get-dashboard-metrics";
 import { getChartData } from "@/lib/owner/get-chart-data";
-import { MRRChart, ClientesChart, ReservasOwnerChart } from "@/components/owner/OwnerCharts";
+import { MRRChart, ClientesChart, ReservasOwnerChart, RevenueBreakdownChart, TopDestinosChart } from "@/components/owner/OwnerCharts";
+import LatestAgenciesTable from "@/components/owner/LatestAgenciesTable";
 import DashboardCard from "@/components/ui/DashboardCard";
 import KPICard from "@/components/ui/KPICard";
-import Link from "next/link";
 import { getTranslations, getLocale } from "next-intl/server";
 import AIInsightsCard from "@/components/ai/AIInsightsCard";
 import {
@@ -17,6 +17,7 @@ import {
   DollarSign,
   ShoppingBag,
   Percent,
+  Receipt,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +39,7 @@ export default async function OwnerDashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <KPICard
           title={t('totalAgencies')}
           value={metrics.totalClientes}
@@ -70,13 +71,27 @@ export default async function OwnerDashboardPage() {
           iconColor="text-purple-600 dark:text-purple-400"
           subtitle={t('generatedByBookings')}
         />
+        <KPICard
+          title={t('avgTicket')}
+          value={`${metrics.ticketMedio.toFixed(0)} €`}
+          icon={<Receipt className="w-5 h-5" />}
+          iconBg="bg-emerald-50 dark:bg-emerald-500/15"
+          iconColor="text-emerald-600 dark:text-emerald-400"
+          subtitle={t('avgTicketSub')}
+        />
       </div>
 
-      {/* Charts */}
+      {/* Charts - Row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <MRRChart data={chartData.mrrPorMes} />
         <ClientesChart data={chartData.clientesPorMes} />
         <ReservasOwnerChart data={chartData.reservasPorMes} />
+      </div>
+
+      {/* Charts - Row 2 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <RevenueBreakdownChart data={metrics.planBreakdown} />
+        <TopDestinosChart data={metrics.topDestinos} />
       </div>
 
       {/* Navigation Cards */}
@@ -128,70 +143,7 @@ export default async function OwnerDashboardPage() {
       />
 
       {/* Recent Clients Table */}
-      <div className="panel-card">
-        <div className="p-6 pb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {t('latestAgencies')}
-          </h2>
-          <Link
-            href="/owner/clientes"
-            className="btn-primary text-xs px-4 py-2"
-          >
-            {tc('viewAll')}
-          </Link>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-100 dark:border-white/[0.06]">
-                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('nameCol')}</th>
-                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('domainCol')}</th>
-                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('planCol')}</th>
-                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('statusCol')}</th>
-                <th className="text-start px-6 py-3 text-xs font-medium text-gray-400 dark:text-white/40 uppercase tracking-wider">{t('registeredCol')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {metrics.ultimosClientes.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-400 dark:text-white/40">
-                    {t('noClients')}
-                  </td>
-                </tr>
-              ) : (
-                metrics.ultimosClientes.map((cliente: any) => (
-                  <tr key={cliente.id} className="table-row">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-drb-turquoise-600 dark:text-drb-turquoise-400 text-xs font-semibold">
-                          {(cliente.nombre || "?").charAt(0).toUpperCase()}
-                        </div>
-                        <span className="font-medium text-gray-900 dark:text-white text-sm">{cliente.nombre}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-500 dark:text-white/50 text-sm">{cliente.domain || "—"}</td>
-                    <td className="px-6 py-4">
-                      <span className="badge-info">
-                        {cliente.plan || tc('noPlan')}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      {cliente.stripe_subscription_id ? (
-                        <span className="badge-success">{t('activeStatus')}</span>
-                      ) : (
-                        <span className="badge-warning">{t('pendingStatus')}</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-gray-400 dark:text-white/40 text-sm">
-                      {new Date(cliente.created_at).toLocaleDateString(locale)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <LatestAgenciesTable data={metrics.ultimosClientes} />
     </div>
   );
 }

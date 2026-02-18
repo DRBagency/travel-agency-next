@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
 import EmailPreviewButton from "@/components/admin/EmailPreviewButton";
+import EmailBodyWithAI from "./EmailBodyWithAI";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import { getTranslations } from 'next-intl/server';
 
@@ -129,17 +130,12 @@ export default async function AdminEmailsPage({
                 />
               </div>
 
-              <div>
-                <label className="panel-label">
-                  {t('htmlBody')}
-                </label>
-                <textarea
-                  name="html_body"
-                  defaultValue={template?.html_body ?? ""}
-                  className="panel-input min-h-[200px]"
-                  placeholder="<h1>...</h1><p>...</p>"
-                />
-              </div>
+              <EmailBodyWithAI
+                defaultValue={template?.html_body ?? ""}
+                clienteId={client.id}
+                label={t('htmlBody')}
+                name="html_body"
+              />
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>

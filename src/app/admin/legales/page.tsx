@@ -102,65 +102,70 @@ export default async function AdminLegalesPage({
           </p>
         </div>
 
-        <section className="panel-card p-6 space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold">{t('newPage')}</h2>
-            <p className="text-sm text-gray-500 dark:text-white/60">
-              {t('contentNote')}
-            </p>
-          </div>
-
-          <form action={createLegal} className="grid gap-4">
-            <input type="hidden" name="client_id" value={client.id} />
-
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <label className="panel-label">
-                  {t('titleLabel')}
-                </label>
-                <input
-                  name="titulo"
-                  className="panel-input"
-                  placeholder={t('titlePlaceholder')}
-                />
-              </div>
-              <div>
-                <label className="panel-label">
-                  {t('slug')}
-                </label>
-                <input
-                  name="slug"
-                  className="panel-input"
-                  placeholder={t('slugPlaceholder')}
-                />
-              </div>
-            </div>
-
+        <details className="panel-card group">
+          <summary className="flex items-center justify-between p-6 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
             <div>
-              <label className="panel-label">
-                {t('contentLabel')}
+              <h2 className="text-xl font-semibold">{t('newPage')}</h2>
+              <p className="text-sm text-gray-500 dark:text-white/60">
+                {t('contentNote')}
+              </p>
+            </div>
+            <span className="text-2xl text-gray-400 dark:text-white/40 group-open:rotate-45 transition-transform">+</span>
+          </summary>
+
+          <div className="px-6 pb-6">
+            <form action={createLegal} className="grid gap-4">
+              <input type="hidden" name="client_id" value={client.id} />
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="panel-label">
+                    {t('titleLabel')}
+                  </label>
+                  <input
+                    name="titulo"
+                    className="panel-input"
+                    placeholder={t('titlePlaceholder')}
+                  />
+                </div>
+                <div>
+                  <label className="panel-label">
+                    {t('slug')}
+                  </label>
+                  <input
+                    name="slug"
+                    className="panel-input"
+                    placeholder={t('slugPlaceholder')}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="panel-label">
+                  {t('contentLabel')}
+                </label>
+                <textarea
+                  name="contenido"
+                  className="panel-input min-h-[160px]"
+                  placeholder="<h2>...</h2><p>...</p>"
+                />
+              </div>
+
+              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
+                <input type="checkbox" name="activo" defaultChecked />
+                {tc('publishNow')}
               </label>
-              <textarea
-                name="contenido"
-                className="panel-input min-h-[160px]"
-                placeholder="<h2>...</h2><p>...</p>"
-              />
-            </div>
 
-            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
-              <input type="checkbox" name="activo" defaultChecked />
-              {tc('publishNow')}
-            </label>
-
-            <div className="flex justify-end">
-              <SubmitButton
-                className="btn-primary"
-              >
-                {t('savePage')}
-              </SubmitButton>
-            </div>
-          </form>
-        </section>
+              <div className="flex justify-end">
+                <SubmitButton
+                  className="btn-primary"
+                >
+                  {t('savePage')}
+                </SubmitButton>
+              </div>
+            </form>
+          </div>
+        </details>
 
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">{t('list')}</h2>
@@ -172,77 +177,90 @@ export default async function AdminLegalesPage({
           )}
 
           {legales?.map((item) => (
-            <form
-              key={item.id}
-              action={updateLegal}
-              className="panel-card p-6 space-y-4"
-            >
-              <input type="hidden" name="id" value={item.id} />
+            <details key={item.id} className="panel-card group">
+              <summary className="flex items-center justify-between p-6 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {item.titulo || "—"}
+                  </h3>
+                  <span className={`px-2 py-0.5 rounded text-xs ${item.activo ? "badge-success" : "bg-gray-100 dark:bg-white/[0.06] text-gray-500 dark:text-white/50"}`}>
+                    {item.activo ? tc('active') : tc('inactive')}
+                  </span>
+                </div>
+                <span className="text-gray-400 dark:text-white/40 text-sm group-open:hidden">/{item.slug || "..."}</span>
+              </summary>
 
-              <div className="grid md:grid-cols-2 gap-4">
+              <form
+                action={updateLegal}
+                className="px-6 pb-6 space-y-4"
+              >
+                <input type="hidden" name="id" value={item.id} />
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="panel-label">
+                      {t('titleLabel')}
+                    </label>
+                    <input
+                      name="titulo"
+                      defaultValue={item.titulo ?? ""}
+                      className="panel-input"
+                    />
+                  </div>
+                  <div>
+                    <label className="panel-label">
+                      {t('slug')}
+                    </label>
+                    <input
+                      name="slug"
+                      defaultValue={item.slug ?? ""}
+                      className="panel-input"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className="panel-label">
-                    {t('titleLabel')}
+                    {t('contentLabel')}
                   </label>
-                  <input
-                    name="titulo"
-                    defaultValue={item.titulo ?? ""}
-                    className="panel-input"
+                  <textarea
+                    name="contenido"
+                    defaultValue={item.contenido ?? ""}
+                    className="panel-input min-h-[160px]"
                   />
                 </div>
-                <div>
-                  <label className="panel-label">
-                    {t('slug')}
-                  </label>
-                  <input
-                    name="slug"
-                    defaultValue={item.slug ?? ""}
-                    className="panel-input"
-                  />
-                </div>
-              </div>
 
-              <div>
-                <label className="panel-label">
-                  {t('contentLabel')}
+                <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
+                  <input
+                    type="checkbox"
+                    name="activo"
+                    defaultChecked={Boolean(item.activo)}
+                  />
+                  {t('activeOnWeb')}
                 </label>
-                <textarea
-                  name="contenido"
-                  defaultValue={item.contenido ?? ""}
-                  className="panel-input min-h-[160px]"
-                />
-              </div>
 
-              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
-                <input
-                  type="checkbox"
-                  name="activo"
-                  defaultChecked={Boolean(item.activo)}
-                />
-                {t('activeOnWeb')}
-              </label>
-
-              <div className="flex flex-wrap items-center justify-end gap-3">
-                <SubmitButton
-                  className="btn-primary"
-                >
-                  {tc('saveChanges')}
-                </SubmitButton>
-                <DeleteWithConfirm
-                  action={deleteLegal}
-                  hiddenFields={{ id: item.id }}
-                  title={tc('confirmDelete')}
-                  description={tc('confirmDeleteDesc')}
-                  confirmLabel={tc('delete')}
-                  cancelLabel={tc('cancel')}
-                  trigger={
-                    <button type="button" className="badge-danger px-5 py-2 rounded-xl hover:bg-red-500/30 transition">
-                      {tc('delete')}
-                    </button>
-                  }
-                />
-              </div>
-            </form>
+                <div className="flex flex-wrap items-center justify-end gap-3">
+                  <SubmitButton
+                    className="btn-primary"
+                  >
+                    {tc('saveChanges')}
+                  </SubmitButton>
+                  <DeleteWithConfirm
+                    action={deleteLegal}
+                    hiddenFields={{ id: item.id }}
+                    title={tc('confirmDelete')}
+                    description={tc('confirmDeleteDesc')}
+                    confirmLabel={tc('delete')}
+                    cancelLabel={tc('cancel')}
+                    trigger={
+                      <button type="button" className="badge-danger px-5 py-2 rounded-xl hover:bg-red-500/30 transition">
+                        {tc('delete')}
+                      </button>
+                    }
+                  />
+                </div>
+              </form>
+            </details>
           ))}
         </section>
       </div>

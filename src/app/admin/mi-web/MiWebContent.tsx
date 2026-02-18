@@ -20,6 +20,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import UnsplashPicker from "./UnsplashPicker";
+import AIDescriptionButton from "@/components/ai/AIDescriptionButton";
 
 interface ClientData {
   id: string;
@@ -359,9 +360,17 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
             </div>
 
             <div>
-              <label className="panel-label block mb-1">
-                {t("heroSubtitle")}
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="panel-label">
+                  {t("heroSubtitle")}
+                </label>
+                <AIDescriptionButton
+                  context={`hero subtitle for travel agency "${client.nombre}"`}
+                  fieldName="hero_subtitle"
+                  onAccept={(text) => updateField("hero_subtitle", text)}
+                  clienteId={client.id}
+                />
+              </div>
               <textarea
                 value={fields.hero_subtitle}
                 onChange={(e) => updateField("hero_subtitle", e.target.value)}
@@ -532,9 +541,17 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
               />
             </div>
             <div>
-              <label className="panel-label block mb-1">
-                {t("aboutText")}
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="panel-label">
+                  {t("aboutText")}
+                </label>
+                <AIDescriptionButton
+                  context={`about us section for travel agency "${client.nombre}"`}
+                  fieldName="about_text_1"
+                  onAccept={(text) => updateField("about_text_1", text)}
+                  clienteId={client.id}
+                />
+              </div>
               <textarea
                 value={fields.about_text_1}
                 onChange={(e) => updateField("about_text_1", e.target.value)}
@@ -543,9 +560,17 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
               />
             </div>
             <div>
-              <label className="panel-label block mb-1">
-                {t("aboutVision")}
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="panel-label">
+                  {t("aboutVision")}
+                </label>
+                <AIDescriptionButton
+                  context={`company vision statement for travel agency "${client.nombre}"`}
+                  fieldName="about_text_2"
+                  onAccept={(text) => updateField("about_text_2", text)}
+                  clienteId={client.id}
+                />
+              </div>
               <textarea
                 value={fields.about_text_2}
                 onChange={(e) => updateField("about_text_2", e.target.value)}

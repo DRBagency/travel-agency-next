@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
 import DeleteWithConfirm from "@/components/ui/DeleteWithConfirm";
+import ExecutionLogsTable from "@/components/owner/ExecutionLogsTable";
 import { getTranslations, getLocale } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
@@ -258,8 +259,8 @@ export default async function OwnerAutomatizacionesPage() {
       </div>
 
       {/* Execution logs */}
-      <div className="panel-card">
-        <div className="p-6 border-b border-gray-100 dark:border-white/10">
+      <div className="space-y-4">
+        <div>
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             {t('recentExecutions')}
           </h2>
@@ -267,53 +268,8 @@ export default async function OwnerAutomatizacionesPage() {
             {t('executionsHistory')}
           </p>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-100 dark:border-white/10">
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">{t('automation')}</th>
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">{tc('status')}</th>
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">{tc('error')}</th>
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">{tc('date')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {executions.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="p-8 text-center text-gray-400 dark:text-white/40">
-                    {t('noExecutions')}
-                  </td>
-                </tr>
-              ) : (
-                executions.map((exec) => (
-                  <tr key={exec.id} className="table-row">
-                    <td className="p-4 text-gray-900 dark:text-white">
-                      {(exec.automations as unknown as { name: string })?.name || "—"}
-                    </td>
-                    <td className="p-4">
-                      <span
-                        className={`px-2 py-1 rounded text-xs ${
-                          exec.status === "success"
-                            ? "badge-success"
-                            : exec.status === "error"
-                              ? "badge-danger"
-                              : "badge-warning"
-                        }`}
-                      >
-                        {exec.status}
-                      </span>
-                    </td>
-                    <td className="p-4 text-gray-400 dark:text-white/40 text-sm max-w-[200px] truncate">
-                      {exec.error_message || "—"}
-                    </td>
-                    <td className="p-4 text-gray-500 dark:text-white/60 text-sm">
-                      {new Date(exec.executed_at).toLocaleString(locale)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+        <div className="panel-card overflow-hidden">
+          <ExecutionLogsTable data={executions as any[]} />
         </div>
       </div>
     </div>

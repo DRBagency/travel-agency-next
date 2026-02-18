@@ -11,6 +11,7 @@ import Testimonials from "@/components/Testimonials";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import ChatbotWidget from "@/components/ChatbotWidget";
 
 export default function HomeClient({
   client,
@@ -94,6 +95,11 @@ export default function HomeClient({
         paymentsEnabled={client.stripe_charges_enabled === true}
         subscriptionActive={Boolean(client.stripe_subscription_id)}
         onClose={() => setSelectedDestination(null)}
+      />
+
+      <ChatbotWidget
+        clienteId={client.id}
+        primaryColor={client.primary_color}
       />
     </main>
   );

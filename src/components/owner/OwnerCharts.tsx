@@ -3,11 +3,17 @@
 import {
   AreaChart,
   Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
@@ -141,6 +147,125 @@ export function ReservasOwnerChart({ data }: { data: { month: string; reservas: 
             name={t('bookings')}
           />
         </AreaChart>
+      </ResponsiveContainer>
+    </motion.div>
+  );
+}
+
+const PLAN_COLORS: Record<string, string> = {
+  start: "#1CABB0",
+  grow: "#D4F24D",
+  pro: "#E91E63",
+  unknown: "#94a3b8",
+};
+
+export function RevenueBreakdownChart({
+  data,
+}: {
+  data: Record<string, { count: number; mrr: number }>;
+}) {
+  const styles = useChartStyles();
+  const t = useTranslations("owner.charts");
+
+  const chartData = Object.entries(data).map(([plan, vals]) => ({
+    name: plan.charAt(0).toUpperCase() + plan.slice(1),
+    value: vals.mrr,
+    count: vals.count,
+    plan,
+  }));
+
+  if (chartData.length === 0) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.25 }}
+      className="panel-card p-6"
+    >
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+        {t("revenueByPlan")}
+      </h3>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">
+        {t("mrrDistribution")}
+      </p>
+      <ResponsiveContainer width="100%" height={280}>
+        <PieChart>
+          <Pie
+            data={chartData}
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={100}
+            paddingAngle={4}
+            dataKey="value"
+            label={({ name, value }) => `${name}: ${value}€`}
+          >
+            {chartData.map((entry) => (
+              <Cell
+                key={entry.plan}
+                fill={PLAN_COLORS[entry.plan] || PLAN_COLORS.unknown}
+              />
+            ))}
+          </Pie>
+          <Tooltip
+            contentStyle={styles.tooltipStyle}
+            formatter={(value: any, _: any, props: any) => [
+              `${value}€ (${props.payload.count} ${t("agencies")})`,
+              props.payload.name,
+            ]}
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </motion.div>
+  );
+}
+
+export function TopDestinosChart({
+  data,
+}: {
+  data: { name: string; count: number }[];
+}) {
+  const styles = useChartStyles();
+  const t = useTranslations("owner.charts");
+
+  if (data.length === 0) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.3 }}
+      className="panel-card p-6"
+    >
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+        {t("topDestinations")}
+      </h3>
+      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">
+        {t("byBookings")}
+      </p>
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={data} layout="vertical">
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke={styles.gridStroke}
+            horizontal={false}
+          />
+          <XAxis type="number" stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
+          <YAxis
+            type="category"
+            dataKey="name"
+            stroke={styles.axisStroke}
+            tick={{ fontSize: 11 }}
+            width={120}
+          />
+          <Tooltip
+            contentStyle={styles.tooltipStyle}
+            labelStyle={styles.labelStyle}
+            formatter={(value: any) => [`${value}`, t("bookings")]}
+          />
+          <Bar dataKey="count" fill="#1CABB0" radius={[0, 6, 6, 0]} barSize={24} />
+        </BarChart>
       </ResponsiveContainer>
     </motion.div>
   );

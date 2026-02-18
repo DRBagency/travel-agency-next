@@ -84,6 +84,56 @@ export default async function ReservaPage({
           </span>
         </div>
 
+        {/* Status Timeline */}
+        <div className="panel-card p-6">
+          <div className="flex items-center justify-between">
+            {["pendiente", "revisada", "pagado"].map((step, idx) => {
+              const steps = ["pendiente", "revisada", "pagado"];
+              const currentIdx = steps.indexOf(reserva.estado_pago ?? "pendiente");
+              const isCancelled = reserva.estado_pago === "cancelada";
+              const isActive = !isCancelled && idx <= currentIdx;
+              const isCurrent = !isCancelled && step === reserva.estado_pago;
+
+              return (
+                <div key={step} className="flex items-center flex-1">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
+                        isCancelled
+                          ? "bg-red-100 dark:bg-red-500/15 text-red-500"
+                          : isActive
+                            ? "bg-drb-turquoise-500 text-white"
+                            : "bg-gray-100 dark:bg-white/10 text-gray-400 dark:text-white/30"
+                      } ${isCurrent ? "ring-4 ring-drb-turquoise-200 dark:ring-drb-turquoise-500/30" : ""}`}
+                    >
+                      {idx + 1}
+                    </div>
+                    <span className={`text-xs mt-2 font-medium ${
+                      isActive && !isCancelled
+                        ? "text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                        : "text-gray-400 dark:text-white/30"
+                    }`}>
+                      {step === "pendiente" ? t("pending") : step === "revisada" ? t("reviewed") : t("paid")}
+                    </span>
+                  </div>
+                  {idx < 2 && (
+                    <div className={`flex-1 h-0.5 mx-3 ${
+                      !isCancelled && idx < currentIdx
+                        ? "bg-drb-turquoise-500"
+                        : "bg-gray-200 dark:bg-white/10"
+                    }`} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {reserva.estado_pago === "cancelada" && (
+            <div className="mt-4 text-center">
+              <span className="badge-danger text-sm">{t("cancelled")}</span>
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4 border border-gray-100 dark:border-white/10 rounded-2xl p-6 bg-gray-50/50 dark:bg-white/5">
           <div>

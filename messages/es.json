@@ -145,6 +145,8 @@
       "legalPagesSub": "Privacidad, términos",
       "stripeSub": "Suscripción y cobros",
       "statisticsSub": "Métricas y gráficas",
+      "aiTools": "Inteligencia Artificial",
+      "aiToolsSub": "Itinerarios, chatbot y más",
       "latestBookings": "Últimas reservas",
       "noBookingsYet": "No hay reservas todavía.",
       "booking": "Reserva"
@@ -272,7 +274,10 @@
       "reactivateError": "Error al reactivar la suscripción",
       "onboardingError": "No se pudo iniciar el onboarding de Stripe",
       "checkoutError": "No se pudo iniciar la suscripción",
-      "changePlanError": "No se pudo cambiar el plan"
+      "changePlanError": "No se pudo cambiar el plan",
+      "tabConnect": "Conexión",
+      "tabSubscription": "Suscripción",
+      "tabPricing": "Tarifas"
     },
     "analytics": {
       "title": "Analytics",
@@ -607,6 +612,8 @@
       "bookingsProcessed": "Reservas procesadas",
       "commissionsThisMonth": "Comisiones este mes",
       "generatedByBookings": "Generadas por reservas",
+      "avgTicket": "Ticket medio",
+      "avgTicketSub": "Valor promedio por reserva",
       "quickAccess": "Acceso rápido",
       "clients": "Clientes",
       "manageAgencies": "Gestionar agencias",
@@ -693,7 +700,12 @@
       "platformBookings": "Reservas plataforma",
       "mrrEur": "MRR (€)",
       "clients": "Clientes",
-      "bookings": "Reservas"
+      "bookings": "Reservas",
+      "revenueByPlan": "Ingresos por plan",
+      "mrrDistribution": "Distribución del MRR por tipo de plan",
+      "agencies": "agencias",
+      "topDestinations": "Top destinos",
+      "byBookings": "Por número de reservas este mes"
     },
     "stripe": {
       "title": "Configuración de Stripe",
@@ -830,6 +842,7 @@
       "generating": "Generando itinerario...",
       "saveItinerary": "Guardar itinerario",
       "saved": "Guardado",
+      "downloadPdf": "Descargar PDF",
       "errorNoCountry": "Introduce un país o destino",
       "errorGeneric": "Error al generar el itinerario",
       "estimatedPrice": "Precio estimado",

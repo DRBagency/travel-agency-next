@@ -4,6 +4,8 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DestinoImageField from "./DestinoImageField";
+import DestinoDescriptionField from "./DestinoDescriptionField";
+import DestinoPriceFieldWithAI from "./DestinoPriceFieldWithAI";
 import DeleteWithConfirm from "@/components/ui/DeleteWithConfirm";
 import { MapPin, Plus, Pencil, Trash2 } from "lucide-react";
 import { getTranslations } from 'next-intl/server';
@@ -117,25 +119,17 @@ export default async function AdminDestinosPage({
                   placeholder={t('namePlaceholder')}
                 />
               </div>
-              <div>
-                <label className="panel-label">{t('priceLabel')}</label>
-                <input
-                  name="precio"
-                  type="number"
-                  min={0}
-                  className="panel-input w-full"
-                  placeholder={t('pricePlaceholder')}
-                />
-              </div>
-            </div>
-            <div>
-              <label className="panel-label">{tc('description')}</label>
-              <textarea
-                name="descripcion"
-                className="panel-input w-full min-h-[100px]"
-                placeholder={t('descriptionPlaceholder')}
+              <DestinoPriceFieldWithAI
+                clienteId={client.id}
+                label={t('priceLabel')}
+                placeholder={t('pricePlaceholder')}
               />
             </div>
+            <DestinoDescriptionField
+              clienteId={client.id}
+              label={tc('description')}
+              placeholder={t('descriptionPlaceholder')}
+            />
             <DestinoImageField />
             <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">
               <input type="checkbox" name="activo" defaultChecked className="rounded" />

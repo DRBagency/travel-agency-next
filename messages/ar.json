@@ -145,6 +145,8 @@
       "legalPagesSub": "الخصوصية، الشروط",
       "stripeSub": "الاشتراك والمدفوعات",
       "statisticsSub": "المقاييس والرسوم البيانية",
+      "aiTools": "الذكاء الاصطناعي",
+      "aiToolsSub": "مسارات الرحلات والمحادثة الآلية والمزيد",
       "latestBookings": "آخر الحجوزات",
       "noBookingsYet": "لا توجد حجوزات بعد.",
       "booking": "حجز"
@@ -305,7 +307,10 @@
       "reactivateError": "خطأ في إعادة تفعيل الاشتراك",
       "onboardingError": "تعذر بدء إعداد Stripe",
       "checkoutError": "تعذر بدء الاشتراك",
-      "changePlanError": "تعذر تغيير الخطة"
+      "changePlanError": "تعذر تغيير الخطة",
+      "tabConnect": "الاتصال",
+      "tabSubscription": "الاشتراك",
+      "tabPricing": "التسعير"
     },
     "analytics": {
       "title": "التحليلات",
@@ -607,6 +612,8 @@
       "bookingsProcessed": "الحجوزات المعالجة",
       "commissionsThisMonth": "عمولات هذا الشهر",
       "generatedByBookings": "ناتجة عن الحجوزات",
+      "avgTicket": "متوسط التذكرة",
+      "avgTicketSub": "متوسط قيمة الحجز",
       "quickAccess": "وصول سريع",
       "clients": "العملاء",
       "manageAgencies": "إدارة الوكالات",
@@ -693,7 +700,12 @@
       "platformBookings": "حجوزات المنصة",
       "mrrEur": "MRR (€)",
       "clients": "العملاء",
-      "bookings": "الحجوزات"
+      "bookings": "الحجوزات",
+      "revenueByPlan": "الإيرادات حسب الخطة",
+      "mrrDistribution": "توزيع MRR حسب نوع الخطة",
+      "agencies": "وكالات",
+      "topDestinations": "أفضل الوجهات",
+      "byBookings": "حسب عدد الحجوزات هذا الشهر"
     },
     "stripe": {
       "title": "إعدادات Stripe",
@@ -830,6 +842,7 @@
       "generating": "جارٍ إنشاء مسار الرحلة...",
       "saveItinerary": "حفظ مسار الرحلة",
       "saved": "تم الحفظ",
+      "downloadPdf": "تحميل PDF",
       "errorNoCountry": "أدخل بلدًا أو وجهة",
       "errorGeneric": "خطأ في إنشاء مسار الرحلة",
       "estimatedPrice": "السعر التقديري",

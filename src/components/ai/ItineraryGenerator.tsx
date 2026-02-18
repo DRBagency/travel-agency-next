@@ -171,6 +171,118 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
     }
   };
 
+  const downloadPDF = async () => {
+    if (!result) return;
+    const { default: jsPDF } = await import("jspdf");
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    let y = 20;
+
+    const addPage = () => {
+      doc.addPage();
+      y = 20;
+    };
+
+    const checkSpace = (needed: number) => {
+      if (y + needed > 270) addPage();
+    };
+
+    // Title
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${t("generate")} - ${form.pais}`, 14, y);
+    y += 10;
+
+    // Summary
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`${t("estimatedPrice")}: ${result.precio_total_estimado}`, 14, y);
+    y += 6;
+    doc.text(`${t("bestSeason")}: ${result.mejor_epoca}`, 14, y);
+    y += 6;
+    doc.text(`${t("weather")}: ${result.clima}`, 14, y);
+    y += 12;
+
+    // Days
+    for (const dia of result.dias) {
+      checkSpace(50);
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${t("dayLabel", { n: dia.dia })} - ${dia.titulo}`, 14, y);
+      y += 8;
+
+      const periods = [
+        { label: t("morning"), act: dia.actividades.manana },
+        { label: t("afternoon"), act: dia.actividades.tarde },
+        { label: t("night"), act: dia.actividades.noche },
+      ];
+
+      for (const { label, act } of periods) {
+        checkSpace(20);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${label}: ${act.titulo}`, 18, y);
+        y += 5;
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
+        const lines = doc.splitTextToSize(act.descripcion, pageWidth - 36);
+        doc.text(lines, 18, y);
+        y += lines.length * 4 + 2;
+        if (act.precio_estimado) {
+          doc.text(`~${act.precio_estimado} | ${act.duracion}`, 18, y);
+          y += 5;
+        }
+      }
+
+      if (dia.tip_local) {
+        checkSpace(12);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "italic");
+        const tipLines = doc.splitTextToSize(`Tip: ${dia.tip_local}`, pageWidth - 36);
+        doc.text(tipLines, 18, y);
+        y += tipLines.length * 4 + 4;
+      }
+
+      y += 4;
+    }
+
+    // Tips
+    if (result.tips_generales?.length) {
+      checkSpace(20);
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(t("generalTips"), 14, y);
+      y += 6;
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      for (const tip of result.tips_generales) {
+        checkSpace(8);
+        const lines = doc.splitTextToSize(`- ${tip}`, pageWidth - 28);
+        doc.text(lines, 18, y);
+        y += lines.length * 4 + 2;
+      }
+      y += 4;
+    }
+
+    // Packing list
+    if (result.que_llevar?.length) {
+      checkSpace(20);
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(t("whatToBring"), 14, y);
+      y += 6;
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      for (const item of result.que_llevar) {
+        checkSpace(6);
+        doc.text(`- ${item}`, 18, y);
+        y += 5;
+      }
+    }
+
+    doc.save(`itinerario-${form.pais.toLowerCase().replace(/\s+/g, "-")}.pdf`);
+  };
+
   const saveItinerary = async () => {
     if (!result) return;
     setSaving(true);
@@ -514,6 +626,13 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
                 <Save className="w-4 h-4" />
               )}
               {saved ? t("saved") : t("saveItinerary")}
+            </button>
+            <button
+              onClick={downloadPDF}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 dark:border-white/20 text-gray-700 dark:text-white/70 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors text-sm font-medium"
+            >
+              <Download className="w-4 h-4" />
+              {t("downloadPdf")}
             </button>
           </div>
         </div>
