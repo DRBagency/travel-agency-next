@@ -84,17 +84,17 @@ export default async function NuevoDocumentoPage({
         : t('factura');
 
   return (
-    <div>
-      <div className="flex items-center gap-4 mb-8">
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex items-center gap-4">
         <Link
           href="/admin/documentos"
-          className="text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className="text-gray-400 dark:text-white/40 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
           &larr; {tc('back')}
         </Link>
         <div>
-          <h1 className="text-3xl font-bold mb-1">{t('createType', { type: typeLabel })}</h1>
-          <p className="text-gray-500 dark:text-white/60">{t('fillData')}</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('createType', { type: typeLabel })}</h1>
+          <p className="text-gray-400 dark:text-white/40">{t('fillData')}</p>
         </div>
       </div>
 

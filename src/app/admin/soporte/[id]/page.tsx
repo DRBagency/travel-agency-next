@@ -118,20 +118,20 @@ export default async function TicketDetailPage({
   const isClosed = ticket.status === "closed";
 
   return (
-    <div>
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4">
         <Link
           href="/admin/soporte"
-          className="text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className="text-gray-400 dark:text-white/40 hover:text-gray-900 dark:hover:text-white transition-colors"
         >
           &larr; {tc('back')}
         </Link>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold mb-2">{ticket.subject}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{ticket.subject}</h1>
           <div className="flex items-center gap-3 flex-wrap">
             <span className="text-gray-400 dark:text-white/40 text-sm font-mono">
               #{ticket.id.substring(0, 8)}

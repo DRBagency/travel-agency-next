@@ -68,13 +68,13 @@ export default async function ReservaPage({
     : undefined;
 
   return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-fade-in">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
               {t('bookingTitle')} · {reserva.destino ?? "—"}
             </h1>
-            <p className="text-gray-500 dark:text-white/60">ID: {reserva.id}</p>
+            <p className="text-gray-400 dark:text-white/40">ID: {reserva.id}</p>
           </div>
           <span
             className="px-3 py-1 text-sm font-semibold rounded-full border"
