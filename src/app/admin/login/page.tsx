@@ -94,8 +94,9 @@ export default async function AdminLoginPage({
         />
         <h1 className="font-display text-4xl md:text-5xl font-bold text-white drop-shadow-2xl">
           {t('welcome')}{" "}
-          <span className="text-white font-extrabold" style={{ textShadow: "0 0 30px rgba(28,171,176,0.6), 0 2px 10px rgba(0,0,0,0.5)" }}>
-            {t('brand')}
+          <span className="relative font-extrabold">
+            <span className="absolute inset-0 text-white blur-sm" aria-hidden="true">{t('brand')}</span>
+            <span className="relative bg-gradient-to-r from-drb-turquoise-300 to-drb-lime-400 bg-clip-text text-transparent drop-shadow-lg">{t('brand')}</span>
           </span>
         </h1>
         <p className="mt-3 text-base md:text-lg text-white/80 drop-shadow-lg font-medium">
