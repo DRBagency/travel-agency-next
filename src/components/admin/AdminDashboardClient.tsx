@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import Link from "next/link";
 import {
   Calendar,
   CalendarCheck,
@@ -165,54 +166,94 @@ export function LatestBookings({
               const initial = (r.nombre || "R").charAt(0).toUpperCase();
               const gradient = getAvatarGradient(initial);
 
-              return (
+              const rowContent = (
                 <motion.div
                   key={r.id || r.created_at}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.05 * index }}
-                  className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-4 py-3.5 hover:bg-drb-turquoise-50/50 dark:hover:bg-white/[0.05] transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-sm font-semibold shadow-sm`}
+                  {r.id ? (
+                    <Link
+                      href={`/admin/reserva/${r.id}`}
+                      className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-4 py-3.5 hover:bg-drb-turquoise-50/50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer"
                     >
-                      {initial}
-                    </div>
-                    <div>
-                      <div className="font-medium text-sm text-gray-900 dark:text-white">
-                        {r.nombre || labels.booking}
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-10 h-10 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-sm font-semibold shadow-sm`}
+                        >
+                          {initial}
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm text-gray-900 dark:text-white hover:text-drb-turquoise-600 dark:hover:text-drb-turquoise-400 transition-colors">
+                            {r.nombre || labels.booking}
+                          </div>
+                          <div className="text-xs text-gray-400 dark:text-white/40">
+                            {r.destino || "—"} · {new Date(r.created_at).toLocaleDateString(locale)}
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-400 dark:text-white/40">
-                        {r.destino || "\u2014"} \u00B7{" "}
-                        {new Date(r.created_at).toLocaleDateString(locale)}
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                          {r.precio} €
+                        </span>
+                        <span
+                          className={
+                            r.estado_pago === "pagado"
+                              ? "badge-success badge-dot-success"
+                              : r.estado_pago === "pendiente"
+                                ? "badge-warning badge-dot-warning"
+                                : "badge-info badge-dot-info"
+                          }
+                        >
+                          {r.estado_pago === "pagado" && (
+                            <CheckCircle2 className="w-3 h-3 inline-block me-1" />
+                          )}
+                          {r.estado_pago === "pendiente" && (
+                            <Clock className="w-3 h-3 inline-block me-1" />
+                          )}
+                          {r.estado_pago}
+                        </span>
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-4 py-3.5">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-10 h-10 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-sm font-semibold shadow-sm`}
+                        >
+                          {initial}
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm text-gray-900 dark:text-white">
+                            {r.nombre || labels.booking}
+                          </div>
+                          <div className="text-xs text-gray-400 dark:text-white/40">
+                            {r.destino || "—"} · {new Date(r.created_at).toLocaleDateString(locale)}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                          {r.precio} €
+                        </span>
+                        <span
+                          className={
+                            r.estado_pago === "pagado"
+                              ? "badge-success badge-dot-success"
+                              : r.estado_pago === "pendiente"
+                                ? "badge-warning badge-dot-warning"
+                                : "badge-info badge-dot-info"
+                          }
+                        >
+                          {r.estado_pago}
+                        </span>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {r.precio} \u20AC
-                    </span>
-                    <span
-                      className={
-                        r.estado_pago === "pagado"
-                          ? "badge-success badge-dot-success"
-                          : r.estado_pago === "pendiente"
-                            ? "badge-warning badge-dot-warning"
-                            : "badge-info badge-dot-info"
-                      }
-                    >
-                      {r.estado_pago === "pagado" && (
-                        <CheckCircle2 className="w-3 h-3 inline-block me-1" />
-                      )}
-                      {r.estado_pago === "pendiente" && (
-                        <Clock className="w-3 h-3 inline-block me-1" />
-                      )}
-                      {r.estado_pago}
-                    </span>
-                  </div>
+                  )}
                 </motion.div>
               );
+              return rowContent;
             })}
           </div>
         )}

@@ -38,7 +38,7 @@ export default async function AdminPage() {
   /* Métricas de reservas */
   const { data: reservas } = await supabaseAdmin
     .from("reservas")
-    .select("precio, estado_pago, created_at, destino, nombre")
+    .select("id, precio, estado_pago, created_at, destino, nombre")
     .eq("cliente_id", client.id)
     .order("created_at", { ascending: false });
 
@@ -100,10 +100,10 @@ export default async function AdminPage() {
         <StaggeredItem>
           <KPICard
             title={t('totalBilled')}
-            value={`${totalFacturado.toLocaleString(locale)} \u20AC`}
+            value={`${totalFacturado.toLocaleString(locale)} €`}
             numericValue={totalFacturado}
             locale={locale}
-            valueSuffix="\u20AC"
+            valueSuffix="€"
             icon={<DollarSign className="w-5 h-5" />}
             accentColor="emerald"
             subtitle={t('paidBookingsSub')}
@@ -123,10 +123,10 @@ export default async function AdminPage() {
         <StaggeredItem>
           <KPICard
             title={t('avgTicket')}
-            value={`${ticketMedio} \u20AC`}
+            value={`${ticketMedio} €`}
             numericValue={ticketMedio}
             locale={locale}
-            valueSuffix="\u20AC"
+            valueSuffix="€"
             icon={<Ticket className="w-5 h-5" />}
             accentColor="purple"
             subtitle={t('perBooking')}

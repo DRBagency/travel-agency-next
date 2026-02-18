@@ -1,4 +1,3 @@
-import { getTranslations } from 'next-intl/server';
 import { revalidatePath } from "next/cache";
 import {
   getPlatformSettings,
@@ -48,14 +47,12 @@ async function updateBillingTemplateAction(formData: FormData) {
 // ============================================================================
 
 export default async function OwnerEmailsPage() {
-  const t = await getTranslations('owner.emails');
-  const tc = await getTranslations('common');
   const settings = await getPlatformSettings();
   const templates = await getAllBillingTemplates();
 
   const templatesByType = templates.reduce(
-    (acc, tmpl) => {
-      acc[tmpl.tipo] = tmpl;
+    (acc, t) => {
+      acc[t.tipo] = t;
       return acc;
     },
     {} as Record<string, any>
@@ -64,18 +61,18 @@ export default async function OwnerEmailsPage() {
   const templateTypes = [
     {
       tipo: "bienvenida" as const,
-      label: `🎉 ${t('welcome')}`,
-      description: t('welcomeDesc'),
+      label: "🎉 Bienvenida",
+      description: "Email enviado cuando un cliente activa su suscripción",
     },
     {
       tipo: "cambio_plan" as const,
-      label: `🔄 ${t('planChange')}`,
-      description: t('planChangeDesc'),
+      label: "🔄 Cambio de plan",
+      description: "Email enviado cuando un cliente cambia de plan",
     },
     {
       tipo: "cancelacion" as const,
-      label: `😢 ${t('cancellation')}`,
-      description: t('cancellationDesc'),
+      label: "😢 Cancelación",
+      description: "Email enviado cuando un cliente cancela su suscripción",
     },
   ];
 
@@ -85,9 +82,9 @@ export default async function OwnerEmailsPage() {
           HEADER
       ==================================== */}
       <div>
-        <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
+        <h1 className="text-3xl font-bold mb-2">Emails de Billing</h1>
         <p className="text-gray-500 dark:text-white/60">
-          {t('subtitle')}
+          Gestión global de plantillas de emails para eventos de facturación
         </p>
       </div>
 
@@ -96,16 +93,17 @@ export default async function OwnerEmailsPage() {
       ==================================== */}
       <div className="panel-card p-6">
         <h2 className="text-xl font-semibold mb-4">
-          {t('globalConfig')}
+          Configuración Global de Billing
         </h2>
         <p className="text-sm text-gray-500 dark:text-white/60 mb-6">
-          {t('globalConfigDesc')}
+          Esta configuración se aplica a todos los emails de billing (logo,
+          remitente, footer).
         </p>
 
         <form action={updatePlatformSettingsAction} className="space-y-4">
           <div>
             <label className="panel-label block mb-1">
-              {t('logoUrl')}
+              URL del Logo
             </label>
             <input
               name="billing_logo_url"
@@ -115,13 +113,13 @@ export default async function OwnerEmailsPage() {
               className="w-full panel-input"
             />
             <p className="text-xs text-gray-400 dark:text-white/50 mt-1">
-              {t('logoUrlDesc')}
+              Logo que aparecerá en el header de los emails de billing
             </p>
           </div>
 
           <div>
             <label className="panel-label block mb-1">
-              {t('emailFrom')}
+              Email Remitente (From)
             </label>
             <input
               name="billing_email_from"
@@ -131,13 +129,14 @@ export default async function OwnerEmailsPage() {
               className="w-full panel-input"
             />
             <p className="text-xs text-gray-400 dark:text-white/50 mt-1">
-              {t('emailFromDesc')}
+              Formato: &quot;Nombre &lt;email@dominio.com&gt;&quot; o solo
+              &quot;email@dominio.com&quot;
             </p>
           </div>
 
           <div>
             <label className="panel-label block mb-1">
-              {t('footerText')}
+              Texto del Footer
             </label>
             <textarea
               name="billing_footer_text"
@@ -146,7 +145,7 @@ export default async function OwnerEmailsPage() {
               className="w-full panel-input min-h-[80px]"
             />
             <p className="text-xs text-gray-400 dark:text-white/50 mt-1">
-              {t('footerTextDesc')}
+              Texto que aparecerá en el footer de todos los emails
             </p>
           </div>
 
@@ -155,7 +154,7 @@ export default async function OwnerEmailsPage() {
               type="submit"
               className="btn-primary"
             >
-              {t('saveConfig')}
+              Guardar configuración
             </button>
           </div>
         </form>
@@ -165,15 +164,16 @@ export default async function OwnerEmailsPage() {
           SECCIÓN 2: TEMPLATES DE EMAILS
       ==================================== */}
       <div className="panel-card p-6">
-        <h2 className="text-xl font-semibold mb-4">{t('templates')}</h2>
+        <h2 className="text-xl font-semibold mb-4">Templates de Emails</h2>
         <p className="text-sm text-gray-500 dark:text-white/60 mb-6">
-          {t('templatesDesc')}
+          Edita los templates de emails para eventos de billing. Puedes usar
+          tokens dinámicos.
         </p>
 
         {/* Tokens disponibles */}
         <div className="rounded-xl bg-sky-50 dark:bg-drb-turquoise-500/10 border border-sky-200 dark:border-drb-turquoise-500/20 p-4 mb-6">
           <h3 className="text-sm font-semibold text-sky-700 dark:text-drb-turquoise-300 mb-2">
-            📝 {t('availableTokens')}
+            📝 Tokens disponibles:
           </h3>
           <div className="flex flex-wrap gap-2 text-xs">
             {[
@@ -226,11 +226,11 @@ export default async function OwnerEmailsPage() {
                   <div className="flex items-center gap-3">
                     {template?.activo ? (
                       <span className="badge-success px-3 py-1 text-xs font-semibold">
-                        {tc('active')}
+                        Activo
                       </span>
                     ) : (
                       <span className="inline-flex items-center rounded-full bg-gray-100 text-gray-500 dark:bg-white/10 dark:text-white/50 px-3 py-1 text-xs font-semibold">
-                        {tc('inactive')}
+                        Inactivo
                       </span>
                     )}
                     <svg
@@ -268,13 +268,13 @@ export default async function OwnerEmailsPage() {
                       htmlFor={`activo-${templateType.tipo}`}
                       className="panel-label"
                     >
-                      {t('activateTemplate')}
+                      Activar este template
                     </label>
                   </div>
 
                   <div>
                     <label className="panel-label block mb-1">
-                      {t('emailSubject')}
+                      Asunto del Email
                     </label>
                     <input
                       name="subject"
@@ -287,7 +287,7 @@ export default async function OwnerEmailsPage() {
 
                   <div>
                     <label className="panel-label block mb-1">
-                      {t('htmlBody')}
+                      Cuerpo HTML
                     </label>
                     <textarea
                       name="html_body"
@@ -296,14 +296,15 @@ export default async function OwnerEmailsPage() {
                       className="w-full panel-input min-h-[300px] font-mono text-sm"
                     />
                     <p className="text-xs text-gray-400 dark:text-white/50 mt-1">
-                      {t('htmlBodyDesc')}
+                      Escribe HTML y usa tokens como {`{{clientName}}`},{" "}
+                      {`{{planName}}`}, etc.
                     </p>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="panel-label block mb-1">
-                        {t('ctaText')}
+                        CTA · Texto del Botón
                       </label>
                       <input
                         name="cta_text"
@@ -315,7 +316,7 @@ export default async function OwnerEmailsPage() {
                     </div>
                     <div>
                       <label className="panel-label block mb-1">
-                        {t('ctaUrl')}
+                        CTA · URL del Botón
                       </label>
                       <input
                         name="cta_url"
@@ -336,7 +337,7 @@ export default async function OwnerEmailsPage() {
                       type="submit"
                       className="btn-primary"
                     >
-                      {t('saveTemplate')}
+                      Guardar template
                     </button>
                   </div>
                 </form>
@@ -351,20 +352,23 @@ export default async function OwnerEmailsPage() {
       ==================================== */}
       <div className="rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 p-4">
         <h3 className="text-sm font-semibold text-amber-700 dark:text-amber-300 mb-2">
-          ℹ️ {t('importantInfo')}
+          ℹ️ Información importante:
         </h3>
         <ul className="text-sm text-amber-700/80 dark:text-amber-200/80 space-y-1">
           <li>
-            • {t('infoItem1')}
+            • Los emails solo se enviarán si el template correspondiente está
+            <strong> activo</strong>
           </li>
           <li>
-            • {t('infoItem2')}
+            • Los tokens se reemplazan automáticamente al enviar el email
           </li>
           <li>
-            • {t('infoItem3')}
+            • Puedes usar HTML para dar formato al contenido (negrita, listas,
+            etc.)
           </li>
           <li>
-            • {t('infoItem4')}
+            • El logo y footer se aplicarán automáticamente desde la
+            configuración global
           </li>
         </ul>
       </div>

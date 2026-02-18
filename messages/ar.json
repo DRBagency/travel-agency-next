@@ -65,7 +65,10 @@
       "emailPlaceholder": "email@agency.com",
       "submit": "دخول",
       "errorAuth": "بيانات اعتماد غير صحيحة. حاول مرة أخرى.",
-      "errorClient": "لم يتم العثور على عميل بهذا البريد الإلكتروني."
+      "errorClient": "لم يتم العثور على عميل بهذا البريد الإلكتروني.",
+      "welcome": "مرحبًا بك في",
+      "brand": "DRB Agency",
+      "tagline": "منصتك لإدارة السفر"
     },
     "ownerLogin": {
       "title": "وصول المالك",
@@ -73,7 +76,10 @@
       "emailPlaceholder": "owner@agency.com",
       "submit": "دخول",
       "errorAuth": "بيانات اعتماد غير صحيحة. حاول مرة أخرى.",
-      "errorOwner": "هذا البريد الإلكتروني لا يملك صلاحية المالك."
+      "errorOwner": "هذا البريد الإلكتروني لا يملك صلاحية المالك.",
+      "welcome": "مرحبًا بك في",
+      "brand": "DRB Agency",
+      "tagline": "منصتك لإدارة السفر"
     }
   },
   "notifications": {

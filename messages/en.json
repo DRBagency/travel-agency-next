@@ -65,7 +65,10 @@
       "emailPlaceholder": "email@agency.com",
       "submit": "Sign in",
       "errorAuth": "Invalid credentials. Please try again.",
-      "errorClient": "No client found with this email."
+      "errorClient": "No client found with this email.",
+      "welcome": "Welcome to",
+      "brand": "DRB Agency",
+      "tagline": "Your travel management platform"
     },
     "ownerLogin": {
       "title": "Owner Access",
@@ -73,7 +76,10 @@
       "emailPlaceholder": "owner@agency.com",
       "submit": "Sign in",
       "errorAuth": "Invalid credentials. Please try again.",
-      "errorOwner": "This email does not have owner access."
+      "errorOwner": "This email does not have owner access.",
+      "welcome": "Welcome to",
+      "brand": "DRB Agency",
+      "tagline": "Your travel management platform"
     }
   },
   "notifications": {

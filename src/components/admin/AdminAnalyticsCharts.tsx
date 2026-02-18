@@ -137,7 +137,7 @@ export function IngresosChart({ data }: { data: { month: string; ingresos: numbe
             <YAxis stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
             <Tooltip
               contentStyle={styles.tooltipStyle}
-              formatter={(value) => `${Number(value).toLocaleString()} \u20AC`}
+              formatter={(value) => `${Number(value).toLocaleString()} €`}
             />
             <Area
               type="monotone"

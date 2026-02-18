@@ -39,7 +39,7 @@ export default function DashboardCard({
   const gradient = iconGradients[colorIndex];
 
   const content = (
-    <div className="flex items-center gap-4">
+    <div className="relative flex items-center gap-4 pe-6">
       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${iconColor || gradient.bg} flex items-center justify-center shrink-0 shadow-md`}>
         <div className="text-white [&>svg]:w-5 [&>svg]:h-5">{icon}</div>
       </div>
@@ -49,7 +49,7 @@ export default function DashboardCard({
           <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5 truncate">{subtitle}</p>
         )}
       </div>
-      <ChevronRight className="w-4 h-4 text-gray-300 dark:text-white/20 shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 rtl:rotate-180" />
+      <ChevronRight className="absolute end-0 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 dark:text-white/20 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 rtl:rotate-180" />
     </div>
   );
 

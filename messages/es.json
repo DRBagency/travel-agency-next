@@ -65,7 +65,10 @@
       "emailPlaceholder": "email@agencia.com",
       "submit": "Entrar",
       "errorAuth": "Credenciales incorrectas. Inténtalo de nuevo.",
-      "errorClient": "No se encontró un cliente con este email."
+      "errorClient": "No se encontró un cliente con este email.",
+      "welcome": "Bienvenido a",
+      "brand": "DRB Agency",
+      "tagline": "Tu plataforma de gestión de viajes"
     },
     "ownerLogin": {
       "title": "Acceso Owner",
@@ -73,7 +76,10 @@
       "emailPlaceholder": "owner@agencia.com",
       "submit": "Entrar",
       "errorAuth": "Credenciales incorrectas. Inténtalo de nuevo.",
-      "errorOwner": "Este email no tiene acceso de owner."
+      "errorOwner": "Este email no tiene acceso de owner.",
+      "welcome": "Bienvenido a",
+      "brand": "DRB Agency",
+      "tagline": "Tu plataforma de gestión de viajes"
     }
   },
   "notifications": {

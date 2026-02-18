@@ -200,15 +200,15 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
                       {new Date(r.created_at).toLocaleDateString(locale)}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
+                      <a href={`/admin/reserva/${r.id}`} className="flex items-center gap-3 group/link">
                         <div className="w-8 h-8 rounded-full bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-drb-turquoise-600 dark:text-drb-turquoise-400 text-xs font-semibold shrink-0">
                           {(r.nombre || "?").charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <div className="font-medium text-sm text-gray-900 dark:text-white">{r.nombre}</div>
+                          <div className="font-medium text-sm text-gray-900 dark:text-white group-hover/link:text-drb-turquoise-600 dark:group-hover/link:text-drb-turquoise-400 transition-colors">{r.nombre}</div>
                           <div className="text-xs text-gray-400 dark:text-white/40">{r.email}</div>
                         </div>
-                      </div>
+                      </a>
                     </td>
                     <td className="px-6 py-4">
                       <span className="text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400">

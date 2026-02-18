@@ -51,7 +51,7 @@ interface ProjectionPoint {
 
 export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
   const styles = useChartStyles();
-  const t = useTranslations('owner.monetization.charts');
+  const t = useTranslations('owner.monetizacion.charts');
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="panel-card p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
@@ -107,7 +107,7 @@ export function ComparisonChart({ data }: { data: MonthlyComparison[] }) {
 
 export function ProjectionChart({ data }: { data: ProjectionPoint[] }) {
   const styles = useChartStyles();
-  const t = useTranslations('owner.monetization.charts');
+  const t = useTranslations('owner.monetizacion.charts');
 
   const chartData = data.map((d) => ({
     month: d.month,
