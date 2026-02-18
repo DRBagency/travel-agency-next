@@ -122,10 +122,20 @@ REGLAS:
 
     return NextResponse.json({ response: text });
   } catch (error: any) {
-    console.error("Chatbot error:", error);
+    console.error("Chatbot error:", error?.status, error?.message || error);
+
+    const status = error?.status || 500;
+    let userMessage = "Error processing request";
+
+    if (status === 400 && error?.message?.includes("credit balance")) {
+      userMessage = "AI credits exhausted. Contact the agency.";
+    } else if (error?.message) {
+      userMessage = error.message;
+    }
+
     return NextResponse.json(
-      { error: "Error processing request" },
-      { status: 500 }
+      { error: userMessage },
+      { status }
     );
   }
 }

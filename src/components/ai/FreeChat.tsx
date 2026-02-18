@@ -56,14 +56,14 @@ export default function FreeChat({ clienteId, agencyContext }: Props) {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed");
-
       const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed");
+
       setMessages((prev) => [...prev, { role: "assistant", content: json.result }]);
-    } catch {
+    } catch (e: any) {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: t("errorGeneric") },
+        { role: "assistant", content: `⚠️ ${e.message || t("errorGeneric")}` },
       ]);
     } finally {
       setLoading(false);

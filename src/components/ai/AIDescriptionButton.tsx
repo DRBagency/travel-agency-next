@@ -43,11 +43,11 @@ Idioma: ${lang === "es" ? "español" : lang === "en" ? "inglés" : "árabe"}`,
           clienteId,
         }),
       });
-      if (!res.ok) throw new Error();
       const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Error");
       setResult(json.result);
-    } catch {
-      setResult(t("errorGeneric"));
+    } catch (e: any) {
+      setResult(`⚠️ ${e.message || t("errorGeneric")}`);
     } finally {
       setLoading(false);
     }

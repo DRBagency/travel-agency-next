@@ -158,9 +158,9 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
         }),
       });
 
-      if (!res.ok) throw new Error("AI request failed");
-
       const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "AI request failed");
+
       const parsed = JSON.parse(json.result) as ItineraryResult;
       setResult(parsed);
       setExpandedDay(0);

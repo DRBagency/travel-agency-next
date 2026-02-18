@@ -155,6 +155,13 @@ Responde en español de forma concisa y profesional. Si te piden generar conteni
 
 export async function POST(req: NextRequest) {
   try {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      return NextResponse.json(
+        { error: "ANTHROPIC_API_KEY is not configured. Add it to your environment variables." },
+        { status: 503 }
+      );
+    }
+
     const body = await req.json();
     const { action, data, clienteId } = body as {
       action: AIAction;
@@ -201,10 +208,27 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error("[AI API Error]", error?.message || error);
+    console.error("[AI API Error]", error?.status, error?.message || error);
+
+    // Parse Anthropic API errors for user-friendly messages
+    const status = error?.status || 500;
+    let userMessage = "AI request failed";
+
+    if (status === 400 && error?.message?.includes("credit balance")) {
+      userMessage = "Anthropic API credits exhausted. Please add credits at console.anthropic.com";
+    } else if (status === 401) {
+      userMessage = "Invalid Anthropic API key. Check your ANTHROPIC_API_KEY.";
+    } else if (status === 429) {
+      userMessage = "Anthropic rate limit reached. Please wait a moment.";
+    } else if (status === 529 || status === 503) {
+      userMessage = "Anthropic API temporarily unavailable. Try again shortly.";
+    } else if (error?.message) {
+      userMessage = error.message;
+    }
+
     return NextResponse.json(
-      { error: error?.message || "AI request failed" },
-      { status: 500 }
+      { error: userMessage },
+      { status }
     );
   }
 }

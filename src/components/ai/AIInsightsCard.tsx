@@ -25,11 +25,11 @@ export default function AIInsightsCard({ metricsContext }: Props) {
           data: { prompt: `Analiza estas métricas de mi plataforma SaaS de agencias de viajes:\n\n${metricsContext}` },
         }),
       });
-      if (!res.ok) throw new Error();
       const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Error");
       setResult(json.result);
-    } catch {
-      setResult(t("errorGeneric"));
+    } catch (e: any) {
+      setResult(`⚠️ ${e.message || t("errorGeneric")}`);
     } finally {
       setLoading(false);
     }

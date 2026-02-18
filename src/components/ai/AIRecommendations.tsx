@@ -27,11 +27,11 @@ export default function AIRecommendations({ clientData }: Props) {
           },
         }),
       });
-      if (!res.ok) throw new Error();
       const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Error");
       setResult(json.result);
-    } catch {
-      setResult(t("errorGeneric"));
+    } catch (e: any) {
+      setResult(`⚠️ ${e.message || t("errorGeneric")}`);
     } finally {
       setLoading(false);
     }

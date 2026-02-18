@@ -42,11 +42,11 @@ El email debe ser profesional, atractivo y con estilos inline.`,
           clienteId,
         }),
       });
-      if (!res.ok) throw new Error();
       const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Error");
       setResult(json.result);
-    } catch {
-      setResult(`<p>${t("errorGeneric")}</p>`);
+    } catch (e: any) {
+      setResult(`<p style="color:red">⚠️ ${e.message || t("errorGeneric")}</p>`);
     } finally {
       setLoading(false);
     }

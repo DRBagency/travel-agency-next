@@ -25,10 +25,12 @@ export default function AIPricingSuggestion({ destinoName, currentPrice, cliente
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PricingResult | null>(null);
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
 
   const analyze = async () => {
     setLoading(true);
     setResult(null);
+    setError("");
     try {
       const res = await fetch("/api/ai", {
         method: "POST",
@@ -44,11 +46,11 @@ Sugiere un precio competitivo con justificación.`,
           clienteId,
         }),
       });
-      if (!res.ok) throw new Error();
       const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Error");
       setResult(JSON.parse(json.result));
-    } catch {
-      // silent
+    } catch (e: any) {
+      setError(e.message || t("errorGeneric"));
     } finally {
       setLoading(false);
     }
@@ -83,6 +85,12 @@ Sugiere un precio competitivo con justificación.`,
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <Loader2 className="w-4 h-4 animate-spin" />
           {t("analyzing")}
+        </div>
+      )}
+
+      {error && (
+        <div className="p-3 rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-sm text-red-600 dark:text-red-400">
+          {error}
         </div>
       )}
 
