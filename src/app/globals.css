@@ -241,6 +241,16 @@ html {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(245,158,11,0.15);
   }
 
+  /* ─── Glassmorphism ─── */
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .dark .glassmorphism {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
   /* ─── Badge with dot indicator ─── */
   .badge-dot-success::before,
   .badge-dot-warning::before,

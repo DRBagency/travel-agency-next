@@ -56,7 +56,10 @@
     "updating": "جارٍ التحديث...",
     "cancelling": "جارٍ الإلغاء...",
     "reactivating": "جارٍ إعادة التفعيل...",
-    "created": "تم الإنشاء"
+    "created": "تم الإنشاء",
+    "confirmDelete": "تأكيد الحذف",
+    "confirmDeleteDesc": "هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.",
+    "of": "من"
   },
   "auth": {
     "adminLogin": {

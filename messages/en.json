@@ -56,7 +56,10 @@
     "updating": "Updating...",
     "cancelling": "Cancelling...",
     "reactivating": "Reactivating...",
-    "created": "Created"
+    "created": "Created",
+    "confirmDelete": "Confirm deletion",
+    "confirmDeleteDesc": "Are you sure? This action cannot be undone.",
+    "of": "of"
   },
   "auth": {
     "adminLogin": {

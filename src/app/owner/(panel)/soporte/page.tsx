@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { getTranslations, getLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
+import SoporteTable from "./SoporteTable";
 
 export const dynamic = "force-dynamic";
 
@@ -20,18 +21,18 @@ async function getAllTickets() {
 export default async function OwnerSoportePage() {
   const tickets = await getAllTickets();
   const t = await getTranslations('owner.soporte');
-  const tc = await getTranslations('common');
-  const locale = await getLocale();
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
-      <p className="text-gray-500 dark:text-white/60 mb-8">
-        {t('subtitle')}
-      </p>
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
+        <p className="text-gray-400 dark:text-white/40">
+          {t('subtitle')}
+        </p>
+      </div>
 
-      {/* Métricas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      {/* Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="kpi-card">
           <p className="text-gray-500 dark:text-white/60 text-sm mb-1">{t('totalTickets')}</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">{tickets.length}</p>
@@ -56,96 +57,7 @@ export default async function OwnerSoportePage() {
         </div>
       </div>
 
-      {/* Lista de tickets */}
-      <div className="panel-card">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-100 dark:border-white/10">
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  ID
-                </th>
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  {t('agency')}
-                </th>
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  {t('subject')}
-                </th>
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  {t('priority')}
-                </th>
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  {t('status')}
-                </th>
-                <th className="text-start p-4 text-sm font-medium text-gray-500 dark:text-white/60">
-                  {t('date')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {tickets.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="p-8 text-center text-gray-400 dark:text-white/40"
-                  >
-                    {t('noTickets')}
-                  </td>
-                </tr>
-              ) : (
-                tickets.map((ticket) => {
-                  const cliente = ticket.clientes as unknown as { nombre: string } | null;
-                  return (
-                    <tr
-                      key={ticket.id}
-                      className="table-row"
-                    >
-                      <td className="p-4 text-gray-500 dark:text-white/60 text-sm font-mono">
-                        #{ticket.id.substring(0, 8)}
-                      </td>
-                      <td className="p-4 text-gray-900 dark:text-white">
-                        {cliente?.nombre}
-                      </td>
-                      <td className="p-4 text-gray-900 dark:text-white">{ticket.subject}</td>
-                      <td className="p-4">
-                        <span
-                          className={`px-2 py-1 rounded text-xs ${
-                            ticket.priority === "urgent"
-                              ? "badge-danger"
-                              : ticket.priority === "high"
-                                ? "badge-warning"
-                                : "badge-info"
-                          }`}
-                        >
-                          {ticket.priority}
-                        </span>
-                      </td>
-                      <td className="p-4">
-                        <span
-                          className={`px-2 py-1 rounded text-xs ${
-                            ticket.status === "open"
-                              ? "badge-success"
-                              : ticket.status === "in_progress"
-                                ? "badge-warning"
-                                : "bg-gray-100 text-gray-600 dark:bg-white/[0.06] dark:text-white/60"
-                          }`}
-                        >
-                          {ticket.status}
-                        </span>
-                      </td>
-                      <td className="p-4 text-gray-500 dark:text-white/60 text-sm">
-                        {new Date(ticket.created_at).toLocaleDateString(
-                          locale
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <SoporteTable tickets={tickets} />
     </div>
   );
 }

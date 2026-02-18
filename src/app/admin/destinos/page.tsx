@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DestinoImageField from "./DestinoImageField";
+import DeleteWithConfirm from "@/components/ui/DeleteWithConfirm";
 import { MapPin, Plus, Pencil, Trash2 } from "lucide-react";
 import { getTranslations } from 'next-intl/server';
 
@@ -234,12 +235,19 @@ export default async function AdminDestinosPage({
                       </>
                     )}
                   </form>
-                  <form action={deleteDestino}>
-                    <input type="hidden" name="id" value={destino.id} />
-                    <SubmitButton className="p-1.5 rounded-lg text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
-                      <Trash2 className="w-4 h-4" />
-                    </SubmitButton>
-                  </form>
+                  <DeleteWithConfirm
+                    action={deleteDestino}
+                    hiddenFields={{ id: destino.id }}
+                    title={tc('confirmDelete')}
+                    description={tc('confirmDeleteDesc')}
+                    confirmLabel={tc('delete')}
+                    cancelLabel={tc('cancel')}
+                    trigger={
+                      <button type="button" className="p-1.5 rounded-lg text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    }
+                  />
                 </div>
               </div>
             </div>

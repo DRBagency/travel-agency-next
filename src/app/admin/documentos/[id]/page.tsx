@@ -6,6 +6,7 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 import SubmitButton from "@/components/admin/SubmitButton";
 import Link from "next/link";
 import DocumentFormClient from "../DocumentFormClient";
+import DeleteWithConfirm from "@/components/ui/DeleteWithConfirm";
 import { getTranslations, getLocale } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
@@ -140,14 +141,18 @@ export default async function DocumentDetailPage({
           </div>
         </div>
 
-        <form action={deleteBound}>
-          <button
-            type="submit"
-            className="badge-danger px-4 py-2 rounded-xl text-sm font-bold hover:bg-red-600/30 transition-colors"
-          >
-            {t('deleteDocument')}
-          </button>
-        </form>
+        <DeleteWithConfirm
+          action={deleteBound}
+          title={tc('confirmDelete')}
+          description={tc('confirmDeleteDesc')}
+          confirmLabel={tc('delete')}
+          cancelLabel={tc('cancel')}
+          trigger={
+            <button type="button" className="badge-danger px-4 py-2 rounded-xl text-sm font-bold hover:bg-red-600/30 transition-colors">
+              {t('deleteDocument')}
+            </button>
+          }
+        />
       </div>
 
       <div className="panel-card p-6">

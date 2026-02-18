@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import DeleteWithConfirm from "@/components/ui/DeleteWithConfirm";
 import { getTranslations } from 'next-intl/server';
 
 async function createLegal(formData: FormData) {
@@ -227,12 +228,19 @@ export default async function AdminLegalesPage({
                 >
                   {tc('saveChanges')}
                 </SubmitButton>
-                <button
-                  formAction={deleteLegal}
-                  className="badge-danger px-5 py-2 rounded-xl hover:bg-red-500/30 transition"
-                >
-                  {tc('delete')}
-                </button>
+                <DeleteWithConfirm
+                  action={deleteLegal}
+                  hiddenFields={{ id: item.id }}
+                  title={tc('confirmDelete')}
+                  description={tc('confirmDeleteDesc')}
+                  confirmLabel={tc('delete')}
+                  cancelLabel={tc('cancel')}
+                  trigger={
+                    <button type="button" className="badge-danger px-5 py-2 rounded-xl hover:bg-red-500/30 transition">
+                      {tc('delete')}
+                    </button>
+                  }
+                />
               </div>
             </form>
           ))}

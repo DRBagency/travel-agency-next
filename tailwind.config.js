@@ -91,6 +91,14 @@ module.exports = {
         'blue-glow': '0 4px 16px rgba(28,171,176,0.3)',
         'turquoise-glow': '0 4px 16px rgba(28,171,176,0.3)',
         'btn': '0 2px 8px rgba(28,171,176,0.20)',
+        '100': '0px 1px 3px 0px rgba(16, 24, 40, 0.1), 0px 1px 2px 0px rgba(16, 24, 40, 0.06)',
+        '200': '0px 12px 16px -4px rgba(16, 24, 40, 0.1), 0px 4px 20px -2px rgba(16, 24, 40, 0.2)',
+        '300': '0px 2px 30px 0px rgba(0, 0, 0, 0.05)',
+        '400': '0px 2px 6px 0px rgba(13, 10, 44, 0.08)',
+        '500': '0px 12px 16px -4px rgba(16, 24, 40, 0.1)',
+      },
+      borderRadius: {
+        '20': '20px',
       },
       backdropBlur: {
         'xs': '2px',

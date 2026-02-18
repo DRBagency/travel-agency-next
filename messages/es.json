@@ -56,7 +56,10 @@
     "updating": "Actualizando...",
     "cancelling": "Cancelando...",
     "reactivating": "Reactivando...",
-    "created": "Creada"
+    "created": "Creada",
+    "confirmDelete": "Confirmar eliminación",
+    "confirmDeleteDesc": "¿Estás seguro? Esta acción no se puede deshacer.",
+    "of": "de"
   },
   "auth": {
     "adminLogin": {

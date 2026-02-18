@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
+import DeleteWithConfirm from "@/components/ui/DeleteWithConfirm";
 import { getTranslations, getLocale } from 'next-intl/server';
 
 export const dynamic = "force-dynamic";
@@ -236,15 +237,19 @@ export default async function OwnerAutomatizacionesPage() {
                       {auto.active ? tc('deactivate') : tc('activate')}
                     </button>
                   </form>
-                  <form action={deleteAutomation}>
-                    <input type="hidden" name="id" value={auto.id} />
-                    <button
-                      type="submit"
-                      className="px-3 py-1 text-sm text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
-                    >
-                      {tc('delete')}
-                    </button>
-                  </form>
+                  <DeleteWithConfirm
+                    action={deleteAutomation}
+                    hiddenFields={{ id: auto.id }}
+                    title={tc('confirmDelete')}
+                    description={tc('confirmDeleteDesc')}
+                    confirmLabel={tc('delete')}
+                    cancelLabel={tc('cancel')}
+                    trigger={
+                      <button type="button" className="px-3 py-1 text-sm text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors">
+                        {tc('delete')}
+                      </button>
+                    }
+                  />
                 </div>
               </div>
             </div>

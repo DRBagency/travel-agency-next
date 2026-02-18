@@ -5,6 +5,7 @@ import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import StarRating from "@/components/ui/StarRating";
 import OpinionesClient from "./OpinionesClient";
+import DeleteWithConfirm from "@/components/ui/DeleteWithConfirm";
 import { Star, Plus, MessageSquare } from "lucide-react";
 import { getTranslations, getLocale } from 'next-intl/server';
 
@@ -241,12 +242,19 @@ export default async function AdminOpinionsPage({
                         </>
                       )}
                     </form>
-                    <form action={deleteOpinion}>
-                      <input type="hidden" name="id" value={opinion.id} />
-                      <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
-                        {tc('delete')}
-                      </SubmitButton>
-                    </form>
+                    <DeleteWithConfirm
+                      action={deleteOpinion}
+                      hiddenFields={{ id: opinion.id }}
+                      title={tc('confirmDelete')}
+                      description={tc('confirmDeleteDesc')}
+                      confirmLabel={tc('delete')}
+                      cancelLabel={tc('cancel')}
+                      trigger={
+                        <button type="button" className="px-3 py-1.5 rounded-lg text-xs font-medium text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                          {tc('delete')}
+                        </button>
+                      }
+                    />
                   </div>
                 </div>
               </div>
