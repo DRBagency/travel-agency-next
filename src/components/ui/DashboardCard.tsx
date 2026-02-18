@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 
 interface DashboardCardProps {
   icon: ReactNode;
@@ -15,15 +16,15 @@ interface DashboardCardProps {
   iconColor?: string;
 }
 
-const iconColors = [
-  'text-drb-turquoise-500 bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15',
-  'text-emerald-500 bg-emerald-50 dark:bg-emerald-500/15',
-  'text-amber-500 bg-amber-50 dark:bg-amber-500/15',
-  'text-purple-500 bg-purple-50 dark:bg-purple-500/15',
-  'text-rose-500 bg-rose-50 dark:bg-rose-500/15',
-  'text-cyan-500 bg-cyan-50 dark:bg-cyan-500/15',
-  'text-orange-500 bg-orange-50 dark:bg-orange-500/15',
-  'text-indigo-500 bg-indigo-50 dark:bg-indigo-500/15',
+const iconGradients = [
+  { text: 'text-white', bg: 'from-drb-turquoise-500 to-drb-turquoise-600' },
+  { text: 'text-white', bg: 'from-emerald-500 to-emerald-600' },
+  { text: 'text-white', bg: 'from-amber-500 to-amber-600' },
+  { text: 'text-white', bg: 'from-purple-500 to-purple-600' },
+  { text: 'text-white', bg: 'from-rose-500 to-rose-600' },
+  { text: 'text-white', bg: 'from-cyan-500 to-cyan-600' },
+  { text: 'text-white', bg: 'from-orange-500 to-orange-600' },
+  { text: 'text-white', bg: 'from-indigo-500 to-indigo-600' },
 ];
 
 export default function DashboardCard({
@@ -34,25 +35,25 @@ export default function DashboardCard({
   onClick,
   iconColor,
 }: DashboardCardProps) {
-  // Generate stable color from title
-  const colorIndex = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % iconColors.length;
-  const colorClasses = iconColor || iconColors[colorIndex];
+  const colorIndex = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % iconGradients.length;
+  const gradient = iconGradients[colorIndex];
 
   const content = (
-    <div className="flex flex-col items-center text-center gap-3 py-2">
-      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${colorClasses}`}>
-        <div className="w-5 h-5">{icon}</div>
+    <div className="flex items-center gap-4">
+      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${iconColor || gradient.bg} flex items-center justify-center shrink-0 shadow-md`}>
+        <div className="text-white [&>svg]:w-5 [&>svg]:h-5">{icon}</div>
       </div>
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
         {subtitle && (
-          <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5">{subtitle}</p>
+          <p className="text-xs text-gray-400 dark:text-white/40 mt-0.5 truncate">{subtitle}</p>
         )}
       </div>
+      <ChevronRight className="w-4 h-4 text-gray-300 dark:text-white/20 shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 rtl:rotate-180" />
     </div>
   );
 
-  const cardClass = "group panel-card p-4 cursor-pointer";
+  const cardClass = "group panel-card p-4 cursor-pointer hover:border-drb-turquoise-400/50 dark:hover:border-drb-turquoise-500/40";
 
   if (href) {
     return (

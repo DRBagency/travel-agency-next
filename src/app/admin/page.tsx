@@ -3,6 +3,12 @@ import { requireAdminClient } from "@/lib/requireAdminClient";
 import DashboardCard from "@/components/ui/DashboardCard";
 import KPICard from "@/components/ui/KPICard";
 import { ReservasChart, IngresosChart } from "@/components/admin/AdminAnalyticsCharts";
+import {
+  PremiumGreeting,
+  StaggeredGrid,
+  StaggeredItem,
+  LatestBookings,
+} from "@/components/admin/AdminDashboardClient";
 import { subMonths, format, startOfMonth, endOfMonth } from "date-fns";
 import { getTranslations, getLocale } from 'next-intl/server';
 import {
@@ -81,48 +87,63 @@ export default async function AdminPage() {
   });
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8">
       {/* Greeting */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{greeting}</h1>
-        <p className="text-gray-400 dark:text-white/40 capitalize">{dateStr}</p>
-      </div>
+      <PremiumGreeting
+        greeting={greeting}
+        clientName={client.nombre}
+        dateStr={dateStr}
+      />
 
       {/* 4 KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard
-          title={t('totalBilled')}
-          value={`${totalFacturado.toLocaleString(locale)} €`}
-          icon={<DollarSign className="w-5 h-5" />}
-          iconBg="bg-emerald-50 dark:bg-emerald-500/15"
-          iconColor="text-emerald-600 dark:text-emerald-400"
-          subtitle={t('paidBookingsSub')}
-        />
-        <KPICard
-          title={t('paidBookings')}
-          value={numeroReservas}
-          icon={<ShoppingBag className="w-5 h-5" />}
-          iconBg="bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15"
-          iconColor="text-drb-turquoise-600 dark:text-drb-turquoise-400"
-          subtitle={t('thisPeriod')}
-        />
-        <KPICard
-          title={t('avgTicket')}
-          value={`${ticketMedio} €`}
-          icon={<Ticket className="w-5 h-5" />}
-          iconBg="bg-purple-50 dark:bg-purple-500/15"
-          iconColor="text-purple-600 dark:text-purple-400"
-          subtitle={t('perBooking')}
-        />
-        <KPICard
-          title={t('activeDestinations')}
-          value={destinosActivos ?? 0}
-          icon={<Map className="w-5 h-5" />}
-          iconBg="bg-amber-50 dark:bg-amber-500/15"
-          iconColor="text-amber-600 dark:text-amber-400"
-          subtitle={t('publishedOnWeb')}
-        />
-      </div>
+      <StaggeredGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StaggeredItem>
+          <KPICard
+            title={t('totalBilled')}
+            value={`${totalFacturado.toLocaleString(locale)} \u20AC`}
+            numericValue={totalFacturado}
+            locale={locale}
+            valueSuffix="\u20AC"
+            icon={<DollarSign className="w-5 h-5" />}
+            accentColor="emerald"
+            subtitle={t('paidBookingsSub')}
+          />
+        </StaggeredItem>
+        <StaggeredItem>
+          <KPICard
+            title={t('paidBookings')}
+            value={numeroReservas}
+            numericValue={numeroReservas}
+            locale={locale}
+            icon={<ShoppingBag className="w-5 h-5" />}
+            accentColor="turquoise"
+            subtitle={t('thisPeriod')}
+          />
+        </StaggeredItem>
+        <StaggeredItem>
+          <KPICard
+            title={t('avgTicket')}
+            value={`${ticketMedio} \u20AC`}
+            numericValue={ticketMedio}
+            locale={locale}
+            valueSuffix="\u20AC"
+            icon={<Ticket className="w-5 h-5" />}
+            accentColor="purple"
+            subtitle={t('perBooking')}
+          />
+        </StaggeredItem>
+        <StaggeredItem>
+          <KPICard
+            title={t('activeDestinations')}
+            value={destinosActivos ?? 0}
+            numericValue={destinosActivos ?? 0}
+            locale={locale}
+            icon={<Map className="w-5 h-5" />}
+            accentColor="amber"
+            subtitle={t('publishedOnWeb')}
+          />
+        </StaggeredItem>
+      </StaggeredGrid>
 
       {/* 2 Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -133,108 +154,86 @@ export default async function AdminPage() {
       {/* Navigation Cards */}
       <div>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('manageAgency')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <DashboardCard
-            icon={<Globe className="w-5 h-5" />}
-            title={t('webContent')}
-            subtitle={t('webContentSub')}
-            href="/admin/mi-web"
-          />
-          <DashboardCard
-            icon={<MapPin className="w-5 h-5" />}
-            title={t('destinations')}
-            subtitle={t('destinationsSub')}
-            href="/admin/destinos"
-          />
-          <DashboardCard
-            icon={<CalendarCheck className="w-5 h-5" />}
-            title={t('bookings')}
-            subtitle={t('bookingsSub')}
-            href="/admin/reservas"
-          />
-          <DashboardCard
-            icon={<Star className="w-5 h-5" />}
-            title={t('reviews')}
-            subtitle={t('reviewsSub')}
-            href="/admin/opiniones"
-          />
-          <DashboardCard
-            icon={<Mail className="w-5 h-5" />}
-            title={tn('emails')}
-            subtitle={t('emailsSub')}
-            href="/admin/emails"
-          />
-          <DashboardCard
-            icon={<FileText className="w-5 h-5" />}
-            title={t('legalPages')}
-            subtitle={t('legalPagesSub')}
-            href="/admin/legales"
-          />
-          <DashboardCard
-            icon={<CreditCard className="w-5 h-5" />}
-            title={tn('stripe')}
-            subtitle={t('stripeSub')}
-            href="/admin/stripe"
-          />
-          <DashboardCard
-            icon={<BarChart3 className="w-5 h-5" />}
-            title={tn('analytics')}
-            subtitle={t('statisticsSub')}
-            href="/admin/analytics"
-          />
-        </div>
+        <StaggeredGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <StaggeredItem>
+            <DashboardCard
+              icon={<Globe className="w-5 h-5" />}
+              title={t('webContent')}
+              subtitle={t('webContentSub')}
+              href="/admin/mi-web"
+            />
+          </StaggeredItem>
+          <StaggeredItem>
+            <DashboardCard
+              icon={<MapPin className="w-5 h-5" />}
+              title={t('destinations')}
+              subtitle={t('destinationsSub')}
+              href="/admin/destinos"
+            />
+          </StaggeredItem>
+          <StaggeredItem>
+            <DashboardCard
+              icon={<CalendarCheck className="w-5 h-5" />}
+              title={t('bookings')}
+              subtitle={t('bookingsSub')}
+              href="/admin/reservas"
+            />
+          </StaggeredItem>
+          <StaggeredItem>
+            <DashboardCard
+              icon={<Star className="w-5 h-5" />}
+              title={t('reviews')}
+              subtitle={t('reviewsSub')}
+              href="/admin/opiniones"
+            />
+          </StaggeredItem>
+          <StaggeredItem>
+            <DashboardCard
+              icon={<Mail className="w-5 h-5" />}
+              title={tn('emails')}
+              subtitle={t('emailsSub')}
+              href="/admin/emails"
+            />
+          </StaggeredItem>
+          <StaggeredItem>
+            <DashboardCard
+              icon={<FileText className="w-5 h-5" />}
+              title={t('legalPages')}
+              subtitle={t('legalPagesSub')}
+              href="/admin/legales"
+            />
+          </StaggeredItem>
+          <StaggeredItem>
+            <DashboardCard
+              icon={<CreditCard className="w-5 h-5" />}
+              title={tn('stripe')}
+              subtitle={t('stripeSub')}
+              href="/admin/stripe"
+            />
+          </StaggeredItem>
+          <StaggeredItem>
+            <DashboardCard
+              icon={<BarChart3 className="w-5 h-5" />}
+              title={tn('analytics')}
+              subtitle={t('statisticsSub')}
+              href="/admin/analytics"
+            />
+          </StaggeredItem>
+        </StaggeredGrid>
       </div>
 
       {/* Últimas reservas */}
-      <div className="panel-card">
-        <div className="flex items-center justify-between p-6 pb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{t('latestBookings')}</h2>
-          <a
-            href="/admin/reservas"
-            className="btn-primary text-xs px-4 py-2"
-          >
-            {tc('viewAll')}
-          </a>
-        </div>
-        <div className="px-6 pb-6">
-          {reservasSafe.length === 0 ? (
-            <p className="text-gray-400 dark:text-white/40 py-4">{t('noBookingsYet')}</p>
-          ) : (
-            <div className="space-y-2">
-              {reservasSafe.slice(0, 5).map((r: any) => (
-                <div
-                  key={r.id || r.created_at}
-                  className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-4 py-3 hover:bg-drb-turquoise-50/50 dark:hover:bg-white/[0.05] transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-drb-turquoise-600 dark:text-drb-turquoise-400 text-sm font-semibold">
-                      {(r.nombre || "R").charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <div className="font-medium text-sm text-gray-900 dark:text-white">{r.nombre || t('booking')}</div>
-                      <div className="text-xs text-gray-400 dark:text-white/40">
-                        {r.destino || "—"} · {new Date(r.created_at).toLocaleDateString(locale)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-gray-900 dark:text-white">{r.precio} €</span>
-                    <span className={
-                      r.estado_pago === "pagado"
-                        ? "badge-success"
-                        : r.estado_pago === "pendiente"
-                          ? "badge-warning"
-                          : "badge-info"
-                    }>
-                      {r.estado_pago}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      <LatestBookings
+        bookings={reservasSafe as any[]}
+        locale={locale}
+        labels={{
+          latestBookings: t('latestBookings'),
+          viewAll: tc('viewAll'),
+          noBookingsYet: t('noBookingsYet'),
+          booking: t('booking'),
+          count: reservasSafe.length,
+        }}
+      />
     </div>
   );
 }

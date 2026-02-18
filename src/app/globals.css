@@ -97,28 +97,35 @@ html {
 @layer components {
   /* ─── Panel utility classes (DRB Corporate) ─── */
   .panel-card {
-    @apply bg-white dark:bg-white/[0.06] border border-drb-turquoise-200/60 dark:border-drb-turquoise-800/40 rounded-2xl;
-    box-shadow: 0 2px 8px rgba(7,35,49,0.08);
+    @apply bg-white dark:bg-white/[0.06] border border-drb-turquoise-200/60 dark:border-drb-turquoise-800/40 rounded-2xl transition-all duration-200;
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 8px 24px rgba(7,35,49,0.08);
   }
   .panel-card:hover {
-    box-shadow: 0 4px 16px rgba(7,35,49,0.12);
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(7,35,49,0.14);
+    border-color: rgba(28,171,176,0.3);
   }
   .dark .panel-card {
-    box-shadow: 0 4px 20px rgba(28,171,176,0.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 8px 24px rgba(28,171,176,0.1);
+  }
+  .dark .panel-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(28,171,176,0.18);
+    border-color: rgba(28,171,176,0.4);
   }
 
   .kpi-card {
     @apply bg-white dark:bg-white/[0.06] border border-drb-turquoise-200/60 dark:border-drb-turquoise-800/40 rounded-2xl p-6 transition-all duration-200;
-    box-shadow: 0 2px 8px rgba(7,35,49,0.08);
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 8px 24px rgba(7,35,49,0.08);
   }
   .kpi-card:hover {
-    box-shadow: 0 4px 16px rgba(7,35,49,0.12);
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(7,35,49,0.14);
+    transform: scale(1.02);
   }
   .dark .kpi-card {
-    box-shadow: 0 4px 20px rgba(28,171,176,0.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 8px 24px rgba(28,171,176,0.12);
   }
   .dark .kpi-card:hover {
-    box-shadow: 0 4px 20px rgba(28,171,176,0.25);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(28,171,176,0.2);
+    transform: scale(1.02);
   }
 
   .kpi-card-gradient {
@@ -207,6 +214,45 @@ html {
   .btn-primary:hover {
     box-shadow: 0 4px 16px rgba(28,171,176,0.3);
   }
+
+  /* ─── Premium card glow effects ─── */
+  .card-glow-emerald:hover {
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(16,185,129,0.12);
+  }
+  .dark .card-glow-emerald:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(16,185,129,0.15);
+  }
+  .card-glow-turquoise:hover {
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(28,171,176,0.12);
+  }
+  .dark .card-glow-turquoise:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(28,171,176,0.15);
+  }
+  .card-glow-purple:hover {
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(139,92,246,0.12);
+  }
+  .dark .card-glow-purple:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(139,92,246,0.15);
+  }
+  .card-glow-amber:hover {
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(245,158,11,0.12);
+  }
+  .dark .card-glow-amber:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(245,158,11,0.15);
+  }
+
+  /* ─── Badge with dot indicator ─── */
+  .badge-dot-success::before,
+  .badge-dot-warning::before,
+  .badge-dot-danger::before,
+  .badge-dot-info::before {
+    content: "";
+    @apply w-1.5 h-1.5 rounded-full inline-block me-1.5 shrink-0;
+  }
+  .badge-dot-success::before { @apply bg-emerald-500; }
+  .badge-dot-warning::before { @apply bg-amber-500; }
+  .badge-dot-danger::before { @apply bg-red-500; }
+  .badge-dot-info::before { @apply bg-drb-turquoise-500; }
 
   /* ─── FullCalendar light + dark theme ─── */
   .fc-travelie-theme .fc {
