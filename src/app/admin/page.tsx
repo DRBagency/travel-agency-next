@@ -2,14 +2,14 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DashboardCard from "@/components/ui/DashboardCard";
 import KPICard from "@/components/ui/KPICard";
-import { ReservasChart, IngresosChart } from "@/components/admin/AdminAnalyticsCharts";
+import { ReservasChart, IngresosChart, RevenueProjectionChart } from "@/components/admin/AdminAnalyticsCharts";
 import {
   PremiumGreeting,
   StaggeredGrid,
   StaggeredItem,
   LatestBookings,
 } from "@/components/admin/AdminDashboardClient";
-import { subMonths, format, startOfMonth, endOfMonth } from "date-fns";
+import { subMonths, addMonths, format, startOfMonth, endOfMonth } from "date-fns";
 import { getTranslations, getLocale } from 'next-intl/server';
 import {
   Globe,
@@ -75,6 +75,32 @@ export default async function AdminPage() {
     ingresosChartData.push({
       month: label,
       ingresos: monthReservas.reduce((sum, r) => sum + Number(r.precio), 0),
+    });
+  }
+
+  /* Revenue projection — linear regression + 3 months forward */
+  const n = ingresosChartData.length;
+  const sumX = ingresosChartData.reduce((s, _, i) => s + i, 0);
+  const sumY = ingresosChartData.reduce((s, d) => s + d.ingresos, 0);
+  const sumXY = ingresosChartData.reduce((s, d, i) => s + i * d.ingresos, 0);
+  const sumX2 = ingresosChartData.reduce((s, _, i) => s + i * i, 0);
+  const denom = n * sumX2 - sumX * sumX;
+  const slope = denom !== 0 ? (n * sumXY - sumX * sumY) / denom : 0;
+  const intercept = (sumY - slope * sumX) / n;
+
+  const projectionData: { month: string; ingresos: number; tipo: "actual" | "proyectado" }[] = ingresosChartData.map((d) => ({
+    month: d.month,
+    ingresos: d.ingresos,
+    tipo: "actual" as const,
+  }));
+
+  for (let i = 1; i <= 3; i++) {
+    const futureMonth = format(addMonths(now, i), "MMM yy");
+    const projected = Math.max(0, Math.round(intercept + slope * (n - 1 + i)));
+    projectionData.push({
+      month: futureMonth,
+      ingresos: projected,
+      tipo: "proyectado" as const,
     });
   }
 
@@ -145,14 +171,17 @@ export default async function AdminPage() {
         </StaggeredItem>
       </StaggeredGrid>
 
-      {/* 2 Charts */}
+      {/* 2 Charts + Projection */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ReservasChart data={reservasChartData} />
         <IngresosChart data={ingresosChartData} />
       </div>
 
-      {/* Navigation Cards */}
-      <div>
+      {/* Revenue Projection */}
+      <RevenueProjectionChart data={projectionData} />
+
+      {/* Navigation Cards — wrapped in panel-card */}
+      <div className="panel-card p-6 overflow-visible">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('manageAgency')}</h2>
         <StaggeredGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           <StaggeredItem>

@@ -320,7 +320,12 @@
         "revenueEur": "الإيرادات (€)",
         "topDestinations": "أفضل الوجهات",
         "byBookings": "حسب الحجوزات",
-        "total": "الإجمالي"
+        "total": "الإجمالي",
+        "revenueProjection": "توقعات الإيرادات",
+        "basedOnTrend": "بناءً على اتجاه آخر 6 أشهر",
+        "actual": "فعلي",
+        "projected": "متوقع",
+        "today": "اليوم"
       }
     },
     "reserva": {

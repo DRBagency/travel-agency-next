@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getTranslations } from 'next-intl/server';
 import Image from "next/image";
 import RiveAnimation from "@/components/ui/RiveAnimation";
+import LanguageSelector from "@/components/ui/LanguageSelector";
 
 function getAllowedOwnerEmail() {
   return (process.env.OWNER_EMAIL || "").trim().toLowerCase();
@@ -65,57 +66,58 @@ export default async function OwnerLoginPage({
   const tc = await getTranslations('common');
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* Left panel — Rive animation */}
-      <div className="relative hidden lg:flex lg:w-1/2 items-center justify-center bg-gradient-to-br from-drb-turquoise-900 via-drb-turquoise-800 to-gray-950 overflow-hidden">
-        {/* Decorative blurred circles */}
-        <div className="absolute top-20 start-10 h-72 w-72 rounded-full bg-drb-turquoise-500/20 blur-3xl" />
-        <div className="absolute bottom-20 end-10 h-56 w-56 rounded-full bg-drb-lime-500/15 blur-3xl" />
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Full-screen Rive background */}
+      <RiveAnimation
+        className="absolute inset-0 w-full h-full"
+        fit="cover"
+      />
 
-        <RiveAnimation className="relative z-10 h-[420px] w-[420px]" />
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/40" />
+
+      {/* Language selector — top end */}
+      <div className="absolute top-4 end-4 z-20">
+        <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20">
+          <LanguageSelector />
+        </div>
       </div>
 
-      {/* Mobile animation — shows only on small screens */}
-      <div className="flex lg:hidden items-center justify-center bg-gradient-to-br from-drb-turquoise-900 via-drb-turquoise-800 to-gray-950 py-10">
-        <RiveAnimation className="h-48 w-48" />
+      {/* Welcome text — top center, in the "sky" */}
+      <div className="absolute top-8 inset-x-0 z-10 flex flex-col items-center text-center pointer-events-none">
+        <Image
+          src="/logo.png"
+          alt="DRB Agency"
+          width={48}
+          height={48}
+          className="mb-3 drop-shadow-lg"
+        />
+        <h1 className="font-display text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+          {t('welcome')}{" "}
+          <span className="bg-gradient-to-r from-drb-turquoise-400 to-drb-lime-400 bg-clip-text text-transparent">
+            {t('brand')}
+          </span>
+        </h1>
+        <p className="mt-2 text-sm md:text-base text-white/70 drop-shadow">
+          {t('tagline')}
+        </p>
       </div>
 
-      {/* Right panel — form */}
-      <div className="flex flex-1 items-center justify-center bg-gray-50 dark:bg-gray-950 px-6 py-12">
-        <div className="w-full max-w-md space-y-8">
-          {/* Logo + brand */}
-          <div className="flex flex-col items-center text-center">
-            <Image
-              src="/logo.png"
-              alt="DRB Agency"
-              width={56}
-              height={56}
-              className="mb-4"
-            />
-            <h1 className="font-display text-3xl font-bold text-gray-900 dark:text-white">
-              {t('welcome')}{" "}
-              <span className="bg-gradient-to-r from-drb-turquoise-500 to-drb-turquoise-400 bg-clip-text text-transparent">
-                {t('brand')}
-              </span>
-            </h1>
-            <p className="mt-1 text-sm text-gray-500 dark:text-white/60">
-              {t('tagline')}
-            </p>
-          </div>
-
-          {/* Card */}
-          <div className="rounded-3xl border border-gray-200 dark:border-white/15 bg-white dark:bg-white/10 shadow-card dark:shadow-none backdrop-blur-md p-8">
+      {/* Login form — right side overlay */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center lg:justify-end px-4 lg:pe-16 lg:ps-0">
+        <div className="w-full max-w-sm">
+          <div className="rounded-3xl border border-white/20 bg-black/40 backdrop-blur-xl p-8 shadow-2xl">
             <div className="mb-6">
-              <h2 className="font-display text-xl font-bold text-gray-900 dark:text-white">
+              <h2 className="font-display text-xl font-bold text-white">
                 {t('title')}
               </h2>
-              <p className="text-gray-500 dark:text-white/60 text-sm">
+              <p className="text-white/60 text-sm">
                 {t('subtitle')}
               </p>
             </div>
 
             {error && (
-              <div className="mb-4 rounded-xl border border-red-200 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-200">
+              <div className="mb-4 rounded-xl border border-red-400/40 bg-red-500/20 backdrop-blur px-4 py-3 text-sm text-red-200">
                 {error === "owner"
                   ? t('errorOwner')
                   : t('errorAuth')}
@@ -124,25 +126,25 @@ export default async function OwnerLoginPage({
 
             <form action={handleOwnerLogin} className="space-y-4">
               <div>
-                <label className="panel-label block mb-1">
+                <label className="block mb-1 text-sm font-medium text-white/80">
                   {tc('email')}
                 </label>
                 <input
                   name="email"
                   type="email"
-                  className="panel-input w-full"
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/50 focus:border-drb-turquoise-500 transition-colors"
                   placeholder={t('emailPlaceholder')}
                   required
                 />
               </div>
               <div>
-                <label className="panel-label block mb-1">
+                <label className="block mb-1 text-sm font-medium text-white/80">
                   {tc('password')}
                 </label>
                 <input
                   name="password"
                   type="password"
-                  className="panel-input w-full"
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/50 focus:border-drb-turquoise-500 transition-colors"
                   placeholder="••••••••"
                   required
                 />
@@ -150,7 +152,7 @@ export default async function OwnerLoginPage({
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold py-3 transition-colors"
+                className="w-full rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold py-3 transition-colors shadow-lg shadow-drb-turquoise-500/30"
               >
                 {t('submit')}
               </button>

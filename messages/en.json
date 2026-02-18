@@ -320,7 +320,12 @@
         "revenueEur": "Revenue (€)",
         "topDestinations": "Top Destinations",
         "byBookings": "By bookings",
-        "total": "Total"
+        "total": "Total",
+        "revenueProjection": "Revenue Projection",
+        "basedOnTrend": "Based on trend from the last 6 months",
+        "actual": "Actual",
+        "projected": "Projected",
+        "today": "Today"
       }
     },
     "reserva": {

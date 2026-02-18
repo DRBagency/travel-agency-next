@@ -287,7 +287,12 @@
         "revenueEur": "Ingresos (€)",
         "topDestinations": "Top Destinos",
         "byBookings": "Por reservas",
-        "total": "Total"
+        "total": "Total",
+        "revenueProjection": "Proyección de ingresos",
+        "basedOnTrend": "Basada en tendencia de los últimos 6 meses",
+        "actual": "Actual",
+        "projected": "Proyectado",
+        "today": "Hoy"
       }
     },
     "reserva": {

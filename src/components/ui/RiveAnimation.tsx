@@ -4,14 +4,19 @@ import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 
 interface RiveAnimationProps {
   className?: string;
+  fit?: "cover" | "contain";
 }
 
-export default function RiveAnimation({ className }: RiveAnimationProps) {
+export default function RiveAnimation({
+  className,
+  fit = "contain",
+}: RiveAnimationProps) {
   const { RiveComponent } = useRive({
     src: "/traveller.riv",
+    stateMachines: "State Machine 1",
     autoplay: true,
     layout: new Layout({
-      fit: Fit.Contain,
+      fit: fit === "cover" ? Fit.Cover : Fit.Contain,
       alignment: Alignment.Center,
     }),
   });
