@@ -7,8 +7,8 @@ export default async function NuevoClientePage() {
   const tc = await getTranslations('common');
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">{t('newAgency')}</h1>
+    <div className="space-y-6 animate-fade-in">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('newAgency')}</h1>
 
       <form action={createCliente} className="space-y-4 max-w-2xl">
         <div>

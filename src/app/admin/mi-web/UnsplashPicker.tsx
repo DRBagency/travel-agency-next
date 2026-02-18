@@ -164,7 +164,7 @@ export default function UnsplashPicker({
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
-                    <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute bottom-0 start-0 end-0 p-2 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                       <p className="text-[11px] text-white/80 truncate">
                         Foto de {photo.author} en Unsplash
                       </p>

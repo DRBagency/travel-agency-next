@@ -447,7 +447,7 @@ export default function CalendarioContent({
           {/* Header with color accent */}
           <div className="relative px-7 pt-6 pb-4">
             <div
-              className="absolute top-0 left-0 right-0 h-1"
+              className="absolute top-0 start-0 end-0 h-1"
               style={{ backgroundColor: formColor }}
             />
             <div className="flex items-center justify-between">
@@ -598,10 +598,10 @@ export default function CalendarioContent({
   // --- Connected view ---
   if (googleCalendarConnected) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-fade-in">
         <div>
-          <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
-          <p className="text-gray-500 dark:text-white/60">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
+          <p className="text-gray-400 dark:text-white/40">
             {t('subtitle')}
           </p>
         </div>
@@ -702,10 +702,10 @@ export default function CalendarioContent({
 
   // --- Not connected view ---
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
-        <p className="text-gray-500 dark:text-white/60">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
+        <p className="text-gray-400 dark:text-white/40">
           {t('subtitle')}
         </p>
       </div>

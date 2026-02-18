@@ -81,10 +81,10 @@ const Hero = ({
       )}
 
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/55 to-slate-950" />
-      <div className="absolute -top-24 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full blur-[140px]"
+      <div className="absolute -top-24 start-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full blur-[140px]"
         style={{ backgroundColor: primaryColor ? "color-mix(in srgb, " + primaryColor + " 40%, transparent)" : "rgba(56, 189, 248, 0.2)" }}
       />
-      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full blur-[120px]"
+      <div className="absolute bottom-0 end-0 h-72 w-72 rounded-full blur-[120px]"
         style={{ backgroundColor: primaryColor ? "color-mix(in srgb, " + primaryColor + " 35%, transparent)" : "rgba(14, 165, 233, 0.18)" }}
       />
 

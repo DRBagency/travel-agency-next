@@ -197,7 +197,7 @@ export default async function AdminDestinosPage({
               </div>
 
               {/* Info overlaid on image */}
-              <div className="absolute bottom-0 left-0 right-0 p-4">
+              <div className="absolute bottom-0 start-0 end-0 p-4">
                 <div className="flex items-center gap-1 text-white/70 text-xs mb-1">
                   <MapPin className="w-3 h-3" />
                   <span>{t('destination')}</span>

@@ -75,7 +75,7 @@ export default function SearchBar({ navItems }: SearchBarProps) {
       </div>
 
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-drb-turquoise-900 border border-gray-200 dark:border-white/[0.1] rounded-xl shadow-lg overflow-hidden z-50">
+        <div className="absolute top-full start-0 end-0 mt-1 bg-white dark:bg-drb-turquoise-900 border border-gray-200 dark:border-white/[0.1] rounded-xl shadow-lg overflow-hidden z-50">
           {results.map((item) => {
             const Icon = item.icon;
             return (
@@ -93,7 +93,7 @@ export default function SearchBar({ navItems }: SearchBarProps) {
       )}
 
       {isOpen && query.trim() && results.length === 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-drb-turquoise-900 border border-gray-200 dark:border-white/[0.1] rounded-xl shadow-lg z-50 p-3">
+        <div className="absolute top-full start-0 end-0 mt-1 bg-white dark:bg-drb-turquoise-900 border border-gray-200 dark:border-white/[0.1] rounded-xl shadow-lg z-50 p-3">
           <p className="text-sm text-gray-400 dark:text-white/40 text-center">
             {tc('noResults')}
           </p>

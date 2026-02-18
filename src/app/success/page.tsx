@@ -88,7 +88,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
     <div className="min-h-screen bg-slate-950 text-white relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900/70 to-slate-950" />
       <div
-        className="absolute -top-24 left-1/2 h-80 w-[36rem] -translate-x-1/2 rounded-full blur-[140px]"
+        className="absolute -top-24 start-1/2 h-80 w-[36rem] -translate-x-1/2 rounded-full blur-[140px]"
         style={{
           backgroundColor: `color-mix(in srgb, ${primaryColor} 28%, transparent)`,
         }}

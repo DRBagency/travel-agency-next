@@ -34,7 +34,7 @@ const Footer = ({
   return (
     <footer className="relative border-t border-white/10 bg-slate-950">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-20 left-1/3 h-64 w-64 rounded-full blur-[120px]"
+        <div className="absolute -top-20 start-1/3 h-64 w-64 rounded-full blur-[120px]"
           style={{
             backgroundColor: primaryColor
               ? "color-mix(in srgb, " + primaryColor + " 18%, transparent)"

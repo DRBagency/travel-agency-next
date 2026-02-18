@@ -34,7 +34,7 @@ const Contact = ({ primaryColor, email, phone, address }: ContactProps) => {
   return (
     <section id="contacto" className="py-24 md:py-28 lg:py-32 relative scroll-mt-24">
       {/* Background decoration */}
-      <div className="absolute top-1/2 left-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl -translate-y-1/2" />
+      <div className="absolute top-1/2 start-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl -translate-y-1/2" />
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}

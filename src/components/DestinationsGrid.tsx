@@ -57,7 +57,7 @@ const DestinationsGrid = ({
 
   return (
     <section id="destinos" className="py-24 md:py-28 lg:py-32 relative scroll-mt-24">
-      <div className="absolute -top-24 right-0 h-80 w-80 rounded-full bg-sky-500/15 blur-[120px]" />
+      <div className="absolute -top-24 end-0 h-80 w-80 rounded-full bg-sky-500/15 blur-[120px]" />
       <div className="container mx-auto px-4 relative z-10">
         <div className="mb-12 text-center">
           <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">

@@ -59,8 +59,8 @@ const Testimonials = ({ primaryColor, opinions }: TestimonialsProps) => {
   return (
     <section id="opiniones" className="py-24 md:py-28 lg:py-32 relative overflow-hidden scroll-mt-24">
       {/* Background decoration */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl" />
+      <div className="absolute top-0 start-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 end-1/4 w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}

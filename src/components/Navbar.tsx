@@ -71,7 +71,7 @@ const Navbar = ({
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         className={cn(
-          "sticky top-0 left-0 right-0 z-50 transition-all duration-300",
+          "sticky top-0 start-0 end-0 z-50 transition-all duration-300",
           isScrolled
             ? "bg-slate-950/85 backdrop-blur-xl border-b border-white/10 shadow-[0_10px_30px_rgba(2,6,23,0.55)]"
             : "bg-slate-950/60 backdrop-blur-md"
