@@ -75,8 +75,8 @@ function SidebarNav({
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#041820]">
-      {/* Logo + agency name */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-100 dark:border-white/[0.06]">
+      {/* Logo + agency name — h-16 matches header height for line alignment */}
+      <div className="flex items-center gap-3 px-6 h-16 border-b border-gray-200/80 dark:border-white/[0.06]">
         {logoUrl ? (
           <img
             src={logoUrl}

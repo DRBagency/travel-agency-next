@@ -73,11 +73,11 @@ export default async function AdminLoginPage({
         fit="cover"
       />
 
-      {/* Dark overlay for readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/40" />
+      {/* Dark overlay for readability — pointer-events-none so Rive receives mouse events */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/40 pointer-events-none" />
 
       {/* Language selector — top end */}
-      <div className="absolute top-4 end-4 z-20">
+      <div className="absolute top-4 end-4 z-20 pointer-events-auto">
         <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20">
           <LanguageSelector />
         </div>
@@ -88,24 +88,24 @@ export default async function AdminLoginPage({
         <Image
           src="/logo.png"
           alt="DRB Agency"
-          width={48}
-          height={48}
-          className="mb-3 drop-shadow-lg"
+          width={72}
+          height={72}
+          className="mb-4 drop-shadow-2xl"
         />
-        <h1 className="font-display text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+        <h1 className="font-display text-4xl md:text-5xl font-bold text-white drop-shadow-2xl">
           {t('welcome')}{" "}
-          <span className="bg-gradient-to-r from-drb-turquoise-400 to-drb-lime-400 bg-clip-text text-transparent">
+          <span className="text-white font-extrabold" style={{ textShadow: "0 0 30px rgba(28,171,176,0.6), 0 2px 10px rgba(0,0,0,0.5)" }}>
             {t('brand')}
           </span>
         </h1>
-        <p className="mt-2 text-sm md:text-base text-white/70 drop-shadow">
+        <p className="mt-3 text-base md:text-lg text-white/80 drop-shadow-lg font-medium">
           {t('tagline')}
         </p>
       </div>
 
-      {/* Login form — right side overlay */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center lg:justify-end px-4 lg:pe-16 lg:ps-0">
-        <div className="w-full max-w-sm">
+      {/* Login form — right side overlay, pointer-events-none on wrapper so Rive tracks mouse */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center lg:justify-end px-4 lg:pe-16 lg:ps-0 pointer-events-none">
+        <div className="w-full max-w-sm pointer-events-auto">
           <div className="rounded-3xl border border-white/20 bg-black/40 backdrop-blur-xl p-8 shadow-2xl">
             <div className="mb-6">
               <h2 className="font-display text-xl font-bold text-white">

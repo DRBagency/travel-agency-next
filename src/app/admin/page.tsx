@@ -171,84 +171,66 @@ export default async function AdminPage() {
         </StaggeredItem>
       </StaggeredGrid>
 
-      {/* 2 Charts + Projection */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* 3 Charts — same row like /owner */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <ReservasChart data={reservasChartData} />
         <IngresosChart data={ingresosChartData} />
+        <RevenueProjectionChart data={projectionData} />
       </div>
 
-      {/* Revenue Projection */}
-      <RevenueProjectionChart data={projectionData} />
-
-      {/* Navigation Cards — wrapped in panel-card */}
-      <div className="panel-card p-6 overflow-visible">
+      {/* Navigation Cards */}
+      <div>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('manageAgency')}</h2>
-        <StaggeredGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <StaggeredItem>
-            <DashboardCard
-              icon={<Globe className="w-5 h-5" />}
-              title={t('webContent')}
-              subtitle={t('webContentSub')}
-              href="/admin/mi-web"
-            />
-          </StaggeredItem>
-          <StaggeredItem>
-            <DashboardCard
-              icon={<MapPin className="w-5 h-5" />}
-              title={t('destinations')}
-              subtitle={t('destinationsSub')}
-              href="/admin/destinos"
-            />
-          </StaggeredItem>
-          <StaggeredItem>
-            <DashboardCard
-              icon={<CalendarCheck className="w-5 h-5" />}
-              title={t('bookings')}
-              subtitle={t('bookingsSub')}
-              href="/admin/reservas"
-            />
-          </StaggeredItem>
-          <StaggeredItem>
-            <DashboardCard
-              icon={<Star className="w-5 h-5" />}
-              title={t('reviews')}
-              subtitle={t('reviewsSub')}
-              href="/admin/opiniones"
-            />
-          </StaggeredItem>
-          <StaggeredItem>
-            <DashboardCard
-              icon={<Mail className="w-5 h-5" />}
-              title={tn('emails')}
-              subtitle={t('emailsSub')}
-              href="/admin/emails"
-            />
-          </StaggeredItem>
-          <StaggeredItem>
-            <DashboardCard
-              icon={<FileText className="w-5 h-5" />}
-              title={t('legalPages')}
-              subtitle={t('legalPagesSub')}
-              href="/admin/legales"
-            />
-          </StaggeredItem>
-          <StaggeredItem>
-            <DashboardCard
-              icon={<CreditCard className="w-5 h-5" />}
-              title={tn('stripe')}
-              subtitle={t('stripeSub')}
-              href="/admin/stripe"
-            />
-          </StaggeredItem>
-          <StaggeredItem>
-            <DashboardCard
-              icon={<BarChart3 className="w-5 h-5" />}
-              title={tn('analytics')}
-              subtitle={t('statisticsSub')}
-              href="/admin/analytics"
-            />
-          </StaggeredItem>
-        </StaggeredGrid>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <DashboardCard
+            icon={<Globe className="w-5 h-5" />}
+            title={t('webContent')}
+            subtitle={t('webContentSub')}
+            href="/admin/mi-web"
+          />
+          <DashboardCard
+            icon={<MapPin className="w-5 h-5" />}
+            title={t('destinations')}
+            subtitle={t('destinationsSub')}
+            href="/admin/destinos"
+          />
+          <DashboardCard
+            icon={<CalendarCheck className="w-5 h-5" />}
+            title={t('bookings')}
+            subtitle={t('bookingsSub')}
+            href="/admin/reservas"
+          />
+          <DashboardCard
+            icon={<Star className="w-5 h-5" />}
+            title={t('reviews')}
+            subtitle={t('reviewsSub')}
+            href="/admin/opiniones"
+          />
+          <DashboardCard
+            icon={<Mail className="w-5 h-5" />}
+            title={tn('emails')}
+            subtitle={t('emailsSub')}
+            href="/admin/emails"
+          />
+          <DashboardCard
+            icon={<FileText className="w-5 h-5" />}
+            title={t('legalPages')}
+            subtitle={t('legalPagesSub')}
+            href="/admin/legales"
+          />
+          <DashboardCard
+            icon={<CreditCard className="w-5 h-5" />}
+            title={tn('stripe')}
+            subtitle={t('stripeSub')}
+            href="/admin/stripe"
+          />
+          <DashboardCard
+            icon={<BarChart3 className="w-5 h-5" />}
+            title={tn('analytics')}
+            subtitle={t('statisticsSub')}
+            href="/admin/analytics"
+          />
+        </div>
       </div>
 
       {/* Últimas reservas */}
