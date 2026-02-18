@@ -108,7 +108,10 @@
       "soporte": "الدعم",
       "stripe": "Stripe / المدفوعات",
       "emails": "البريد الإلكتروني",
-      "legales": "القانونية"
+      "legales": "القانونية",
+      "aiItinerarios": "مسارات الرحلات بالذكاء الاصطناعي",
+      "aiChatbot": "روبوت المحادثة",
+      "aiAsistente": "المساعد الذكي"
     },
     "shell": {
       "subscriptionInactive": "اشتراكك غير نشط",
@@ -794,5 +797,178 @@
     "subscriptionInactive": "اشتراكك غير نشط.",
     "paymentsNotEnabled": "هذه الوكالة لا يمكنها قبول المدفوعات بعد.",
     "paymentError": "خطأ في بدء الدفع"
+  },
+  "ai": {
+    "itinerarios": {
+      "title": "مولد مسارات الرحلات بالذكاء الاصطناعي",
+      "subtitle": "أنشئ مسارات رحلات مفصلة لعملائك باستخدام الذكاء الاصطناعي",
+      "country": "البلد / الوجهة",
+      "countryPlaceholder": "مثال: اليابان، المالديف، إيطاليا...",
+      "duration": "المدة (أيام)",
+      "style": "نمط السفر",
+      "interests": "الاهتمامات",
+      "budget": "الميزانية",
+      "groupType": "نوع المجموعة",
+      "travelers": "المسافرون",
+      "notes": "ملاحظات إضافية",
+      "notesPlaceholder": "تفضيلات خاصة، قيود غذائية، تواريخ محددة...",
+      "generate": "إنشاء مسار الرحلة",
+      "generating": "جارٍ إنشاء مسار الرحلة...",
+      "saveItinerary": "حفظ مسار الرحلة",
+      "saved": "تم الحفظ",
+      "errorNoCountry": "أدخل بلدًا أو وجهة",
+      "errorGeneric": "خطأ في إنشاء مسار الرحلة",
+      "estimatedPrice": "السعر التقديري",
+      "bestSeason": "أفضل موسم",
+      "weather": "الطقس",
+      "dayLabel": "اليوم {n}",
+      "morning": "الصباح",
+      "afternoon": "بعد الظهر",
+      "night": "المساء",
+      "generalTips": "نصائح عامة",
+      "whatToBring": "ماذا تحضر",
+      "styles": {
+        "relax": "استرخاء",
+        "aventura": "مغامرة",
+        "cultural": "ثقافي",
+        "lujo": "فاخر",
+        "naturaleza": "طبيعة",
+        "ciudad": "مدينة"
+      },
+      "interestLabels": {
+        "gastronomia": "فن الطهي",
+        "historia": "التاريخ",
+        "playa": "الشاطئ",
+        "senderismo": "المشي لمسافات",
+        "museos": "المتاحف",
+        "compras": "التسوق",
+        "fotografia": "التصوير",
+        "vida_nocturna": "الحياة الليلية"
+      },
+      "budgets": {
+        "economico": "اقتصادي",
+        "medio": "متوسط",
+        "premium": "مميز",
+        "lujo": "فاخر"
+      },
+      "groups": {
+        "solo": "فردي",
+        "pareja": "زوجين",
+        "familia": "عائلة",
+        "amigos": "أصدقاء",
+        "negocios": "أعمال"
+      }
+    },
+    "chatbot": {
+      "title": "إعداد روبوت المحادثة",
+      "subtitle": "قم بإعداد المساعد الافتراضي لعملائك",
+      "generalConfig": "الإعدادات العامة",
+      "botName": "اسم الروبوت",
+      "botNamePlaceholder": "مثال: مساعد السفر",
+      "personality": "الشخصية",
+      "personalities": {
+        "formal": "رسمي",
+        "cercano": "ودود",
+        "entusiasta": "متحمس"
+      },
+      "agencyInfo": "معلومات الوكالة",
+      "agencyInfoPlaceholder": "صف وكالتك، الخدمات الرئيسية، المواعيد...",
+      "languages": "لغات الروبوت",
+      "active": "روبوت المحادثة نشط",
+      "availableDestinations": "الوجهات المتاحة",
+      "destinationsAutoLoaded": "يتم تحميل هذه الوجهات تلقائيًا من لوحة التحكم",
+      "faqs": "الأسئلة الشائعة",
+      "addFaq": "إضافة سؤال",
+      "noFaqs": "لا توجد أسئلة شائعة. أضف أسئلة لتحسين استجابات الروبوت.",
+      "faqQuestionPlaceholder": "سؤال العميل...",
+      "faqAnswerPlaceholder": "إجابة الروبوت...",
+      "saveConfig": "حفظ الإعدادات",
+      "saved": "تم حفظ الإعدادات"
+    },
+    "assistant": {
+      "title": "المساعد الذكي",
+      "subtitle": "اسأل ما تحتاجه عن وكالتك",
+      "emptyTitle": "كيف يمكنني مساعدتك؟",
+      "emptySubtitle": "اسألني عن الوجهات والتسويق والمحتوى والاستراتيجية أو أي شيء متعلق بوكالتك.",
+      "suggestion1": "ما الوجهات التي يجب أن أضيفها للصيف؟",
+      "suggestion2": "اكتب لي منشورًا على إنستغرام عن المالديف",
+      "suggestion3": "كيف يمكنني تحسين معدل التحويل؟",
+      "suggestion4": "أنشئ ميزانية لـ 4 أشخاص إلى تايلاند",
+      "inputPlaceholder": "اكتب رسالتك...",
+      "errorGeneric": "خطأ في معالجة رسالتك. حاول مرة أخرى."
+    },
+    "description": {
+      "generateWithAI": "إنشاء بالذكاء الاصطناعي",
+      "aiGenerator": "مولد الذكاء الاصطناعي",
+      "close": "إغلاق",
+      "generate": "إنشاء",
+      "useText": "استخدام هذا النص",
+      "regenerate": "إعادة الإنشاء",
+      "errorGeneric": "خطأ في الإنشاء",
+      "tones": {
+        "profesional": "مهني",
+        "inspirador": "ملهم",
+        "aventurero": "مغامر",
+        "romantico": "رومانسي",
+        "familiar": "عائلي"
+      },
+      "lengths": {
+        "corta": "قصير (50 كلمة)",
+        "media": "متوسط (100 كلمة)",
+        "larga": "طويل (200 كلمة)"
+      }
+    },
+    "pricing": {
+      "suggestPrice": "اقتراح سعر ذكي",
+      "pricingSuggestion": "اقتراح السعر بالذكاء الاصطناعي",
+      "close": "إغلاق",
+      "analyzing": "جارٍ تحليل السعر الأمثل...",
+      "suggested": "المقترح",
+      "range": "النطاق",
+      "highSeason": "الموسم العالي",
+      "lowSeason": "الموسم المنخفض"
+    },
+    "email": {
+      "generateWithAI": "إنشاء بريد بالذكاء الاصطناعي",
+      "aiEmailTitle": "مولد البريد الإلكتروني الذكي",
+      "close": "إغلاق",
+      "emailType": "نوع البريد",
+      "tone": "النبرة",
+      "recipientName": "اسم المستلم",
+      "namePlaceholder": "اسم العميل",
+      "destination": "الوجهة",
+      "destinationPlaceholder": "مثال: المالديف",
+      "generate": "إنشاء البريد",
+      "useEmail": "استخدام هذا البريد",
+      "regenerate": "إعادة الإنشاء",
+      "showPreview": "معاينة",
+      "showCode": "عرض الكود",
+      "errorGeneric": "خطأ في إنشاء البريد",
+      "types": {
+        "bienvenida": "ترحيب",
+        "confirmacion": "تأكيد",
+        "recordatorio": "تذكير",
+        "promocion": "عرض ترويجي",
+        "seguimiento": "متابعة"
+      },
+      "tones": {
+        "formal": "رسمي",
+        "cercano": "ودود",
+        "promocional": "ترويجي"
+      }
+    },
+    "insights": {
+      "title": "رؤى الذكاء الاصطناعي",
+      "generateReport": "إنشاء التحليل",
+      "generating": "جارٍ التحليل...",
+      "refresh": "تحديث",
+      "description": "أنشئ تحليلًا ذكيًا لمقاييسك مع توصيات قابلة للتنفيذ.",
+      "errorGeneric": "خطأ في إنشاء التحليل"
+    },
+    "recommendations": {
+      "title": "توصيات الذكاء الاصطناعي",
+      "refresh": "تحديث",
+      "errorGeneric": "خطأ في إنشاء التوصيات"
+    }
   }
 }

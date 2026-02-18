@@ -5,6 +5,7 @@ import DashboardCard from "@/components/ui/DashboardCard";
 import KPICard from "@/components/ui/KPICard";
 import Link from "next/link";
 import { getTranslations, getLocale } from "next-intl/server";
+import AIInsightsCard from "@/components/ai/AIInsightsCard";
 import {
   Users,
   Mail,
@@ -120,6 +121,11 @@ export default async function OwnerDashboardPage() {
           />
         </div>
       </div>
+
+      {/* AI Insights */}
+      <AIInsightsCard
+        metricsContext={`Total agencias: ${metrics.totalClientes}\nCon suscripción: ${metrics.clientesConSuscripcion}\nMRR: ${metrics.mrr}€\nReservas este mes: ${metrics.reservasMes}\nComisiones este mes: ${metrics.comisionesMes.toFixed(2)}€`}
+      />
 
       {/* Recent Clients Table */}
       <div className="panel-card">

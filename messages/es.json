@@ -108,7 +108,10 @@
       "soporte": "Soporte",
       "stripe": "Stripe / Pagos",
       "emails": "Emails",
-      "legales": "Legales"
+      "legales": "Legales",
+      "aiItinerarios": "Itinerarios IA",
+      "aiChatbot": "Chatbot IA",
+      "aiAsistente": "Asistente IA"
     },
     "shell": {
       "subscriptionInactive": "Tu suscripción no está activa",
@@ -794,5 +797,178 @@
     "subscriptionInactive": "Tu suscripción no está activa.",
     "paymentsNotEnabled": "Esta agencia aún no puede aceptar pagos.",
     "paymentError": "Error al iniciar el pago"
+  },
+  "ai": {
+    "itinerarios": {
+      "title": "Generador de Itinerarios IA",
+      "subtitle": "Crea itinerarios detallados para tus clientes con inteligencia artificial",
+      "country": "País / Destino",
+      "countryPlaceholder": "Ej: Japón, Maldivas, Italia...",
+      "duration": "Duración (días)",
+      "style": "Estilo de viaje",
+      "interests": "Intereses",
+      "budget": "Presupuesto",
+      "groupType": "Tipo de grupo",
+      "travelers": "Viajeros",
+      "notes": "Notas adicionales",
+      "notesPlaceholder": "Preferencias especiales, restricciones alimenticias, fechas específicas...",
+      "generate": "Generar itinerario",
+      "generating": "Generando itinerario...",
+      "saveItinerary": "Guardar itinerario",
+      "saved": "Guardado",
+      "errorNoCountry": "Introduce un país o destino",
+      "errorGeneric": "Error al generar el itinerario",
+      "estimatedPrice": "Precio estimado",
+      "bestSeason": "Mejor época",
+      "weather": "Clima",
+      "dayLabel": "Día {n}",
+      "morning": "Mañana",
+      "afternoon": "Tarde",
+      "night": "Noche",
+      "generalTips": "Tips generales",
+      "whatToBring": "Qué llevar",
+      "styles": {
+        "relax": "Relax",
+        "aventura": "Aventura",
+        "cultural": "Cultural",
+        "lujo": "Lujo",
+        "naturaleza": "Naturaleza",
+        "ciudad": "Ciudad"
+      },
+      "interestLabels": {
+        "gastronomia": "Gastronomía",
+        "historia": "Historia",
+        "playa": "Playa",
+        "senderismo": "Senderismo",
+        "museos": "Museos",
+        "compras": "Compras",
+        "fotografia": "Fotografía",
+        "vida_nocturna": "Vida nocturna"
+      },
+      "budgets": {
+        "economico": "Económico",
+        "medio": "Medio",
+        "premium": "Premium",
+        "lujo": "Lujo"
+      },
+      "groups": {
+        "solo": "Solo",
+        "pareja": "Pareja",
+        "familia": "Familia",
+        "amigos": "Amigos",
+        "negocios": "Negocios"
+      }
+    },
+    "chatbot": {
+      "title": "Configuración del Chatbot",
+      "subtitle": "Configura el asistente virtual para tus clientes finales",
+      "generalConfig": "Configuración general",
+      "botName": "Nombre del bot",
+      "botNamePlaceholder": "Ej: Asistente de Viajes España",
+      "personality": "Personalidad",
+      "personalities": {
+        "formal": "Formal",
+        "cercano": "Cercano",
+        "entusiasta": "Entusiasta"
+      },
+      "agencyInfo": "Información de la agencia",
+      "agencyInfoPlaceholder": "Describe tu agencia, servicios principales, horarios...",
+      "languages": "Idiomas del bot",
+      "active": "Chatbot activo",
+      "availableDestinations": "Destinos disponibles",
+      "destinationsAutoLoaded": "Estos destinos se cargan automáticamente de tu panel",
+      "faqs": "Preguntas frecuentes",
+      "addFaq": "Añadir FAQ",
+      "noFaqs": "No hay FAQs configuradas. Añade preguntas frecuentes para mejorar las respuestas del bot.",
+      "faqQuestionPlaceholder": "Pregunta del cliente...",
+      "faqAnswerPlaceholder": "Respuesta del bot...",
+      "saveConfig": "Guardar configuración",
+      "saved": "Configuración guardada"
+    },
+    "assistant": {
+      "title": "Asistente IA",
+      "subtitle": "Pregúntale lo que necesites sobre tu agencia",
+      "emptyTitle": "¿En qué puedo ayudarte?",
+      "emptySubtitle": "Pregúntame sobre destinos, marketing, contenido, estrategia o cualquier cosa relacionada con tu agencia.",
+      "suggestion1": "¿Qué destinos debería añadir para verano?",
+      "suggestion2": "Escríbeme un post para Instagram sobre Maldivas",
+      "suggestion3": "¿Cómo puedo mejorar mi tasa de conversión?",
+      "suggestion4": "Genera un presupuesto para 4 personas a Tailandia",
+      "inputPlaceholder": "Escribe tu mensaje...",
+      "errorGeneric": "Error al procesar tu mensaje. Inténtalo de nuevo."
+    },
+    "description": {
+      "generateWithAI": "Generar con IA",
+      "aiGenerator": "Generador IA",
+      "close": "Cerrar",
+      "generate": "Generar",
+      "useText": "Usar este texto",
+      "regenerate": "Regenerar",
+      "errorGeneric": "Error al generar",
+      "tones": {
+        "profesional": "Profesional",
+        "inspirador": "Inspirador",
+        "aventurero": "Aventurero",
+        "romantico": "Romántico",
+        "familiar": "Familiar"
+      },
+      "lengths": {
+        "corta": "Corta (50 palabras)",
+        "media": "Media (100 palabras)",
+        "larga": "Larga (200 palabras)"
+      }
+    },
+    "pricing": {
+      "suggestPrice": "Sugerir precio IA",
+      "pricingSuggestion": "Sugerencia de precio IA",
+      "close": "Cerrar",
+      "analyzing": "Analizando precio óptimo...",
+      "suggested": "Sugerido",
+      "range": "Rango",
+      "highSeason": "Temporada alta",
+      "lowSeason": "Temporada baja"
+    },
+    "email": {
+      "generateWithAI": "Generar email con IA",
+      "aiEmailTitle": "Generador de emails IA",
+      "close": "Cerrar",
+      "emailType": "Tipo de email",
+      "tone": "Tono",
+      "recipientName": "Nombre destinatario",
+      "namePlaceholder": "Nombre del cliente",
+      "destination": "Destino",
+      "destinationPlaceholder": "Ej: Maldivas",
+      "generate": "Generar email",
+      "useEmail": "Usar este email",
+      "regenerate": "Regenerar",
+      "showPreview": "Ver preview",
+      "showCode": "Ver código",
+      "errorGeneric": "Error al generar el email",
+      "types": {
+        "bienvenida": "Bienvenida",
+        "confirmacion": "Confirmación",
+        "recordatorio": "Recordatorio",
+        "promocion": "Promoción",
+        "seguimiento": "Seguimiento"
+      },
+      "tones": {
+        "formal": "Formal",
+        "cercano": "Cercano",
+        "promocional": "Promocional"
+      }
+    },
+    "insights": {
+      "title": "Insights IA",
+      "generateReport": "Generar análisis",
+      "generating": "Analizando...",
+      "refresh": "Actualizar",
+      "description": "Genera un análisis inteligente de tus métricas con recomendaciones accionables.",
+      "errorGeneric": "Error al generar el análisis"
+    },
+    "recommendations": {
+      "title": "Recomendaciones IA",
+      "refresh": "Actualizar",
+      "errorGeneric": "Error al generar recomendaciones"
+    }
   }
 }

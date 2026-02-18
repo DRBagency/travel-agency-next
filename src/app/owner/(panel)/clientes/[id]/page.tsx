@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { getTranslations } from 'next-intl/server';
 import ConnectStripeButton from "./ConnectStripeButton";
+import AIRecommendations from "@/components/ai/AIRecommendations";
 
 async function updateCliente(formData: FormData) {
   "use server";
@@ -84,6 +85,17 @@ export default async function ClientePage({ params }: ClientePageProps) {
     .select("*")
     .eq("id", id)
     .single();
+
+  // Load client's destinations and bookings for AI context
+  const { data: clientDestinos } = await supabaseAdmin
+    .from("destinos")
+    .select("nombre, precio, activo")
+    .eq("cliente_id", id);
+
+  const { data: clientReservas } = await supabaseAdmin
+    .from("reservas")
+    .select("id, precio, estado_pago")
+    .eq("cliente_id", id);
 
   if (!cliente) {
     return (
@@ -180,6 +192,21 @@ export default async function ClientePage({ params }: ClientePageProps) {
           <ConnectStripeButton />
         </form>
       )}
+
+      {/* AI Recommendations */}
+      <div className="mt-8">
+        <AIRecommendations
+          clientData={`Agencia: ${cliente.nombre || "Sin nombre"}
+Plan: ${cliente.plan || "Sin plan"}
+Dominio: ${cliente.domain || "Sin dominio"}
+Stripe: ${cliente.stripe_account_id ? "Conectado" : "No conectado"}
+Suscripción: ${cliente.stripe_subscription_id ? "Activa" : "Inactiva"}
+Destinos: ${(clientDestinos || []).map((d: any) => `${d.nombre} (${d.precio}€, ${d.activo ? "activo" : "inactivo"})`).join(", ") || "Ninguno"}
+Reservas totales: ${clientReservas?.length || 0}
+Reservas pagadas: ${clientReservas?.filter((r: any) => r.estado_pago === "pagado").length || 0}
+Ingresos: ${clientReservas?.filter((r: any) => r.estado_pago === "pagado").reduce((s: number, r: any) => s + Number(r.precio), 0) || 0}€`}
+        />
+      </div>
     </div>
   );
 }
