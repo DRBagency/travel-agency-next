@@ -152,30 +152,23 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Eden character — large, transparent bg via mix-blend-mode */}
-      <div className="flex flex-col items-center pt-3 pb-1 px-3">
+      {/* Eden character — sits on dark sky, vignette blends artboard edges */}
+      <div className="flex flex-col items-center pt-2 pb-0 px-3">
         <button
           type="button"
           onClick={fireWave}
-          className="cursor-pointer relative"
+          className="cursor-pointer"
           title="Say hi!"
         >
-          {/* Radial mask to blend Rive's dark artboard into the landscape bg */}
-          <div
-            className="relative w-[220px] h-[220px] eden-rive-wrapper"
-            style={{ background: "transparent" }}
-          >
-            <RiveComponent className="eden-rive-canvas" />
+          <div className="w-[220px] h-[220px] eden-rive-wrapper">
+            <RiveComponent />
           </div>
         </button>
 
-        {/* Name with gradient */}
-        <span className="text-xl font-bold bg-gradient-to-r from-drb-turquoise-400 to-drb-lime-400 bg-clip-text text-transparent -mt-2">
+        {/* Name with gradient — no subtitle */}
+        <span className="text-2xl font-bold bg-gradient-to-r from-drb-turquoise-300 to-drb-lime-400 bg-clip-text text-transparent -mt-3">
           Eden
         </span>
-        <p className="text-[11px] text-drb-turquoise-700/70 dark:text-drb-turquoise-300/60 mt-0.5">
-          {t("subtitle")}
-        </p>
       </div>
 
       {/* Messages area */}
@@ -187,7 +180,7 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
               <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0 shadow-sm">
                 <Bot className="w-3 h-3 text-white" />
               </div>
-              <div className="bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-sm rounded-2xl rounded-tl-sm px-3 py-2 text-xs text-drb-turquoise-800 dark:text-white/85 shadow-sm border border-white/40 dark:border-white/[0.06]">
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl rounded-tl-sm px-3 py-2 text-xs text-white/90 shadow-sm border border-white/20">
                 {t("welcome")}
               </div>
             </div>
@@ -198,7 +191,7 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
                 <button
                   key={i}
                   onClick={() => send(s)}
-                  className="px-3 py-1.5 rounded-full text-[11px] font-medium bg-white/60 dark:bg-drb-turquoise-900/50 backdrop-blur-sm border border-drb-turquoise-200/60 dark:border-drb-turquoise-500/20 text-drb-turquoise-700 dark:text-drb-turquoise-300 hover:bg-drb-turquoise-50 dark:hover:bg-drb-turquoise-500/20 hover:border-drb-turquoise-400 dark:hover:border-drb-turquoise-400/40 transition-all shadow-sm"
+                  className="px-3 py-1.5 rounded-full text-[11px] font-medium bg-white/15 backdrop-blur-sm border border-white/25 text-white/85 hover:bg-white/25 hover:border-white/40 transition-all shadow-sm"
                 >
                   {s}
                 </button>
@@ -220,8 +213,8 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
             <div
               className={`max-w-[85%] rounded-2xl px-3 py-2 text-xs shadow-sm ${
                 msg.role === "user"
-                  ? "bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 text-white rounded-tr-sm"
-                  : "bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-sm text-drb-turquoise-800 dark:text-white/85 rounded-tl-sm border border-white/40 dark:border-white/[0.06]"
+                  ? "bg-drb-turquoise-500/80 text-white rounded-tr-sm border border-drb-turquoise-400/30"
+                  : "bg-white/20 backdrop-blur-sm text-white/90 rounded-tl-sm border border-white/20"
               }`}
             >
               <div className="whitespace-pre-wrap break-words">
@@ -229,8 +222,8 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
               </div>
             </div>
             {msg.role === "user" && (
-              <div className="w-6 h-6 rounded-lg bg-white/50 dark:bg-white/10 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-sm">
-                <User className="w-3 h-3 text-drb-turquoise-600 dark:text-white/50" />
+              <div className="w-6 h-6 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-sm">
+                <User className="w-3 h-3 text-white/70" />
               </div>
             )}
           </div>
@@ -241,18 +234,18 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
             <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0 shadow-sm">
               <Bot className="w-3 h-3 text-white" />
             </div>
-            <div className="bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-sm rounded-2xl rounded-tl-sm px-3 py-2 shadow-sm border border-white/40 dark:border-white/[0.06]">
+            <div className="bg-white/20 backdrop-blur-sm rounded-2xl rounded-tl-sm px-3 py-2 shadow-sm border border-white/20">
               <div className="flex items-center gap-1">
                 <div
-                  className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-400 animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-300 animate-bounce"
                   style={{ animationDelay: "0ms" }}
                 />
                 <div
-                  className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-400 animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-300 animate-bounce"
                   style={{ animationDelay: "150ms" }}
                 />
                 <div
-                  className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-400 animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-300 animate-bounce"
                   style={{ animationDelay: "300ms" }}
                 />
               </div>
@@ -265,12 +258,12 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
       {/* Input — premium style */}
       <div className="p-3 pt-2">
-        <div className="flex gap-2 bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-sm rounded-full border border-white/50 dark:border-drb-turquoise-500/20 shadow-sm px-1 py-1">
+        <div className="flex gap-2 bg-white/15 backdrop-blur-sm rounded-full border border-white/25 shadow-sm px-1 py-1">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
-            className="flex-1 bg-transparent text-xs py-1.5 px-3 outline-none text-drb-turquoise-800 dark:text-white placeholder:text-drb-turquoise-400/60 dark:placeholder:text-drb-turquoise-400/40"
+            className="flex-1 bg-transparent text-xs py-1.5 px-3 outline-none text-white placeholder:text-white/40"
             placeholder={t("placeholder")}
             disabled={loading}
           />

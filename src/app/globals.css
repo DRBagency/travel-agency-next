@@ -464,24 +464,16 @@ html {
     padding: 6px 8px !important;
   }
 
-  /* ─── Eden Rive — hide artboard black background ─── */
+  /* ─── Eden Rive — blend dark artboard into dark sky ─── */
   .eden-rive-wrapper {
     position: relative;
-    overflow: hidden;
   }
-  .eden-rive-canvas,
-  .eden-rive-canvas > canvas {
-    mix-blend-mode: screen;
-  }
-  /* Radial mask: fade edges so any remaining dark border blends away */
+  /* Radial vignette: fades the square artboard edges into the sky behind */
   .eden-rive-wrapper::after {
     content: "";
     position: absolute;
-    inset: 0;
-    background: radial-gradient(circle, transparent 35%, var(--eden-bg, #E6F9FA) 72%);
+    inset: -4px;
+    background: radial-gradient(ellipse 70% 70% at center, transparent 40%, #0C4551 75%);
     pointer-events: none;
-  }
-  .dark .eden-rive-wrapper::after {
-    background: radial-gradient(circle, transparent 35%, var(--eden-bg-dark, #072331) 72%);
   }
 }

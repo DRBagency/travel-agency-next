@@ -114,10 +114,10 @@ export default function AdminRightColumn({
 
       {/* Content layer on top of landscape */}
       <div className="relative z-10 flex flex-col h-full">
-        {/* ── Profile card — glassmorphism ── */}
-        <div className="mx-3 mt-3 rounded-2xl bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-md border border-white/50 dark:border-white/[0.08] shadow-card p-4">
+        {/* ── Profile card — glassmorphism over dark sky ── */}
+        <div className="relative mx-3 mt-3 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 shadow-lg p-4">
           {/* Notification bell */}
-          <div className="absolute top-4 end-4 z-20">
+          <div className="absolute top-3 end-3 z-20">
             <NotificationBell clienteId={clienteId} />
           </div>
 
@@ -127,7 +127,7 @@ export default function AdminRightColumn({
               type="button"
               onClick={handleAvatarClick}
               disabled={uploading}
-              className="group relative w-16 h-16 rounded-full overflow-hidden mb-2.5 ring-2 ring-white/70 dark:ring-drb-turquoise-400/30 shadow-md transition-all hover:ring-drb-turquoise-400 hover:shadow-lg"
+              className="group relative w-16 h-16 rounded-full overflow-hidden mb-2.5 ring-2 ring-white/40 shadow-lg transition-all hover:ring-white/70 hover:shadow-xl"
             >
               {avatarDisplay ? (
                 <img
@@ -163,12 +163,12 @@ export default function AdminRightColumn({
               />
             </button>
 
-            {/* Name and email */}
-            <h3 className="text-sm font-semibold text-drb-turquoise-800 dark:text-white truncate max-w-full">
+            {/* Name and email — white text on dark sky */}
+            <h3 className="text-sm font-semibold text-white truncate max-w-full">
               {clientName}
             </h3>
             {clientEmail && (
-              <p className="text-[11px] text-drb-turquoise-600/60 dark:text-white/40 truncate max-w-full mt-0.5">
+              <p className="text-[11px] text-white/50 truncate max-w-full mt-0.5">
                 {clientEmail}
               </p>
             )}
@@ -177,7 +177,7 @@ export default function AdminRightColumn({
             <button
               type="button"
               onClick={() => setEditOpen(true)}
-              className="mt-2.5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium bg-white/60 dark:bg-drb-turquoise-500/15 backdrop-blur-sm border border-drb-turquoise-200/50 dark:border-drb-turquoise-500/20 text-drb-turquoise-600 dark:text-drb-turquoise-300 hover:bg-drb-turquoise-50 dark:hover:bg-drb-turquoise-500/25 hover:border-drb-turquoise-400/50 transition-all shadow-sm"
+              className="mt-2.5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium bg-white/15 backdrop-blur-sm border border-white/25 text-white/90 hover:bg-white/25 hover:border-white/40 transition-all shadow-sm"
             >
               {t("editProfile")}
             </button>
@@ -185,7 +185,7 @@ export default function AdminRightColumn({
         </div>
 
         {/* ── Eden Chat card — glassmorphism, fills remaining space ── */}
-        <div className="flex-1 min-h-0 flex flex-col mx-3 mt-2.5 mb-3 rounded-2xl bg-white/60 dark:bg-drb-turquoise-900/50 backdrop-blur-md border border-white/50 dark:border-white/[0.06] shadow-card overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col mx-3 mt-2.5 mb-3 rounded-2xl bg-white/20 backdrop-blur-md border border-white/25 shadow-lg overflow-hidden">
           <EdenChat clienteId={clienteId || ""} agencyContext={agencyContext} />
         </div>
       </div>

@@ -1,123 +1,92 @@
 "use client";
 
 /**
- * SVG mountain landscape background for the admin right column.
- * Inspired by layered mountain silhouettes with sky gradient.
- * Uses DRB turquoise palette.
+ * Full-height SVG mountain landscape for the admin right column.
+ * Dark sky at top (blends with Eden's dark artboard), lighter toward bottom.
+ * 4 mountain layers + pine silhouettes + subtle moon glow.
  */
 export default function MountainBackground() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Sky gradient */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(180deg, #E6F9FA 0%, #CCF3F5 20%, #99E7EB 45%, #33CFD7 70%, #1CABB0 90%, #126771 100%)",
-        }}
+    <svg
+      className="absolute inset-0 w-full h-full"
+      viewBox="0 0 300 800"
+      fill="none"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        {/* Sky gradient: dark top → lighter bottom */}
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#072331" />
+          <stop offset="15%" stopColor="#0C4551" />
+          <stop offset="35%" stopColor="#126771" />
+          <stop offset="55%" stopColor="#178991" />
+          <stop offset="75%" stopColor="#1CABB0" />
+          <stop offset="90%" stopColor="#99E7EB" />
+          <stop offset="100%" stopColor="#CCF3F5" />
+        </linearGradient>
+
+        {/* Moon glow */}
+        <radialGradient id="moonGlow" cx="0.73" cy="0.11" r="0.12">
+          <stop offset="0%" stopColor="#D4F24D" stopOpacity="0.35" />
+          <stop offset="50%" stopColor="#D4F24D" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="#D4F24D" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* Sky fill */}
+      <rect width="300" height="800" fill="url(#sky)" />
+
+      {/* Moon glow circle */}
+      <circle cx="220" cy="90" r="100" fill="url(#moonGlow)" />
+      <circle cx="220" cy="90" r="18" fill="#D4F24D" opacity="0.15" />
+
+      {/* Stars (small dots in dark sky area) */}
+      <circle cx="40" cy="30" r="1" fill="white" opacity="0.4" />
+      <circle cx="120" cy="50" r="0.8" fill="white" opacity="0.3" />
+      <circle cx="80" cy="80" r="0.6" fill="white" opacity="0.25" />
+      <circle cx="260" cy="40" r="0.8" fill="white" opacity="0.35" />
+      <circle cx="180" cy="25" r="0.7" fill="white" opacity="0.3" />
+      <circle cx="50" cy="120" r="0.6" fill="white" opacity="0.2" />
+      <circle cx="250" cy="130" r="0.5" fill="white" opacity="0.15" />
+
+      {/* Mountain layer 4 — farthest (subtle, lighter) */}
+      <path
+        d="M0 450 Q30 370 60 410 Q90 350 120 400 Q150 330 180 380 Q210 310 240 370 Q270 340 300 360 L300 520 L0 520Z"
+        fill="#33CFD7"
+        opacity="0.25"
       />
 
-      {/* Dark mode sky */}
-      <div
-        className="absolute inset-0 hidden dark:block"
-        style={{
-          background:
-            "linear-gradient(180deg, #072331 0%, #0C4551 20%, #0C4551 40%, #126771 65%, #178991 85%, #1CABB0 100%)",
-        }}
+      {/* Mountain layer 3 — mid-far */}
+      <path
+        d="M0 490 Q25 410 55 450 Q80 380 110 430 Q140 370 170 420 Q200 360 230 400 Q260 370 290 410 L300 410 L300 560 L0 560Z"
+        fill="#178991"
+        opacity="0.35"
       />
 
-      {/* Sun/moon glow */}
-      <div
-        className="absolute top-8 start-1/2 -translate-x-1/2 w-16 h-16 rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(212,242,77,0.6) 0%, rgba(212,242,77,0.2) 40%, transparent 70%)",
-        }}
-      />
-      <div
-        className="absolute top-10 start-1/2 -translate-x-1/2 w-8 h-8 rounded-full dark:hidden"
-        style={{ background: "rgba(212,242,77,0.5)" }}
-      />
-      <div
-        className="absolute top-10 start-1/2 -translate-x-1/2 w-8 h-8 rounded-full hidden dark:block"
-        style={{ background: "rgba(212,242,77,0.3)" }}
+      {/* Mountain layer 2 — mid-close */}
+      <path
+        d="M0 530 Q30 460 65 500 Q90 440 125 480 Q155 420 185 470 Q215 430 245 460 Q275 420 300 460 L300 600 L0 600Z"
+        fill="#126771"
+        opacity="0.45"
       />
 
-      {/* Mountain layers — SVG */}
-      <svg
-        className="absolute bottom-0 start-0 w-full"
-        style={{ height: "65%" }}
-        viewBox="0 0 300 200"
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Layer 4 — farthest mountains */}
-        <path
-          d="M0 120 Q30 60 60 100 Q80 70 100 90 Q130 40 160 85 Q180 55 210 80 Q240 50 270 95 Q285 70 300 100 L300 200 L0 200Z"
-          className="fill-drb-turquoise-300/40 dark:fill-drb-turquoise-700/30"
-        />
-
-        {/* Layer 3 — mid-far mountains */}
-        <path
-          d="M0 140 Q20 90 50 120 Q70 85 100 110 Q120 75 150 105 Q175 65 200 100 Q225 80 260 115 Q280 90 300 120 L300 200 L0 200Z"
-          className="fill-drb-turquoise-500/50 dark:fill-drb-turquoise-600/40"
-        />
-
-        {/* Layer 2 — mid-close mountains */}
-        <path
-          d="M0 155 Q25 115 55 140 Q75 110 110 135 Q135 100 165 130 Q185 105 215 125 Q245 100 275 140 Q290 120 300 145 L300 200 L0 200Z"
-          className="fill-drb-turquoise-700/60 dark:fill-drb-turquoise-500/35"
-        />
-
-        {/* Layer 1 — closest mountains */}
-        <path
-          d="M0 170 Q20 140 45 160 Q65 135 90 155 Q110 130 140 150 Q160 135 185 155 Q210 130 240 160 Q265 140 285 165 Q295 150 300 170 L300 200 L0 200Z"
-          className="fill-drb-turquoise-800/70 dark:fill-drb-turquoise-400/25"
-        />
-
-        {/* Pine tree silhouettes — bottom strip */}
-        {/* Group of pines left */}
-        <path
-          d="M10 200 L15 175 L20 200 M18 200 L24 178 L30 200 M26 200 L30 180 L34 200"
-          className="fill-drb-turquoise-900/30 dark:fill-drb-turquoise-300/15"
-        />
-        {/* Group of pines center-left */}
-        <path
-          d="M70 200 L76 177 L82 200 M78 200 L85 172 L92 200 M88 200 L93 179 L98 200"
-          className="fill-drb-turquoise-900/30 dark:fill-drb-turquoise-300/15"
-        />
-        {/* Group of pines center */}
-        <path
-          d="M135 200 L140 180 L145 200 M142 200 L148 174 L154 200 M150 200 L155 182 L160 200"
-          className="fill-drb-turquoise-900/30 dark:fill-drb-turquoise-300/15"
-        />
-        {/* Group of pines center-right */}
-        <path
-          d="M195 200 L200 178 L205 200 M202 200 L208 173 L214 200 M210 200 L214 180 L218 200"
-          className="fill-drb-turquoise-900/30 dark:fill-drb-turquoise-300/15"
-        />
-        {/* Group of pines right */}
-        <path
-          d="M260 200 L266 176 L272 200 M268 200 L275 170 L282 200 M278 200 L282 178 L286 200"
-          className="fill-drb-turquoise-900/30 dark:fill-drb-turquoise-300/15"
-        />
-      </svg>
-
-      {/* Atmospheric haze overlay at bottom */}
-      <div
-        className="absolute bottom-0 start-0 w-full h-1/4"
-        style={{
-          background:
-            "linear-gradient(0deg, rgba(18,103,113,0.3) 0%, transparent 100%)",
-        }}
+      {/* Mountain layer 1 — closest (darkest) */}
+      <path
+        d="M0 570 Q20 520 50 550 Q75 500 105 540 Q130 490 160 530 Q190 510 220 540 Q250 500 280 535 L300 520 L300 640 L0 640Z"
+        fill="#0C4551"
+        opacity="0.55"
       />
-      <div
-        className="absolute bottom-0 start-0 w-full h-1/4 hidden dark:block"
-        style={{
-          background:
-            "linear-gradient(0deg, rgba(4,24,32,0.5) 0%, transparent 100%)",
-        }}
+
+      {/* Pine tree silhouettes — continuous strip */}
+      <path
+        d="M0 630 L8 608 L16 630 L22 610 L28 630 L36 605 L44 630 L50 612 L56 630 L64 606 L72 630 L78 614 L84 630 L92 608 L100 630 L106 610 L112 630 L120 604 L128 630 L134 612 L140 630 L148 606 L156 630 L162 614 L168 630 L176 608 L184 630 L190 610 L196 630 L204 604 L212 630 L218 612 L224 630 L232 606 L240 630 L246 614 L252 630 L260 608 L268 630 L274 612 L280 630 L288 606 L296 630 L300 625 L300 800 L0 800Z"
+        fill="#0C4551"
+        opacity="0.4"
       />
-    </div>
+
+      {/* Bottom fog/haze */}
+      <rect y="700" width="300" height="100" fill="#CCF3F5" opacity="0.15" />
+    </svg>
   );
 }
