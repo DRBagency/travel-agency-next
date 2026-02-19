@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Send, Loader2, Bot, User } from "lucide-react";
 import dynamic from "next/dynamic";
+import type { Application } from "@splinetool/runtime";
 
 const Spline = dynamic(() => import("@splinetool/react-spline"), {
   ssr: false,
@@ -31,6 +32,18 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const splineContainerRef = useRef<HTMLDivElement>(null);
+
+  // Zoom out the camera on Spline load so the character is fully visible
+  const handleSplineLoad = useCallback((spline: Application) => {
+    try {
+      const camera = spline.findObjectByName("Camera");
+      if (camera) {
+        camera.position.z = 1000;
+      }
+    } catch {
+      // Camera not found — scale fallback handled via CSS
+    }
+  }, []);
 
   // Block wheel events inside Spline to prevent panel scroll + zoom
   useEffect(() => {
@@ -102,7 +115,12 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
           ref={splineContainerRef}
           className="eden-spline-wrapper relative w-full h-[280px] rounded-2xl overflow-hidden"
         >
-          <Spline scene="https://prod.spline.design/BkOlv0JtuanNyTN9/scene.splinecode" />
+          <div className="w-[160%] h-[160%] origin-center" style={{ transform: "scale(0.625)", transformOrigin: "center center" }}>
+            <Spline
+              scene="https://prod.spline.design/BkOlv0JtuanNyTN9/scene.splinecode"
+              onLoad={handleSplineLoad}
+            />
+          </div>
         </div>
 
         {/* Name with gradient */}

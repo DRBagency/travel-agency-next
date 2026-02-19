@@ -464,13 +464,23 @@ html {
     padding: 6px 8px !important;
   }
 
-  /* ─── Spline: transparent bg + hide watermark ─── */
-  .eden-spline-wrapper canvas {
-    background: transparent !important;
+  /* ─── Spline: blend purple bg + nuke watermark ─── */
+  .eden-spline-wrapper {
+    background: #072331;
   }
+  .eden-spline-wrapper canvas {
+    mix-blend-mode: screen !important;
+  }
+  .eden-spline-wrapper a[href*="spline"],
   .eden-spline-wrapper > div > a,
-  .eden-spline-wrapper a[href*="spline.design"],
-  .eden-spline-wrapper a[href*="spline"] {
+  .eden-spline-wrapper > div > div:last-child,
+  .eden-spline-wrapper canvas + div {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 }
