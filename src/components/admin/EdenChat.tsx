@@ -33,15 +33,52 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
   const splineContainerRef = useRef<HTMLDivElement>(null);
 
   // Block wheel events inside Spline to prevent panel scroll + zoom
+  // + nuke watermark and black backgrounds via JS (CSS alone doesn't work)
   useEffect(() => {
     const el = splineContainerRef.current;
     if (!el) return;
+
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       e.stopPropagation();
     };
     el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
+
+    const cleanup = () => {
+      // Remove inline background from all child elements
+      el.querySelectorAll("*").forEach((child) => {
+        const h = child as HTMLElement;
+        if (h.tagName === "CANVAS") return; // don't touch the canvas element itself
+        if (h.style.background) h.style.background = "transparent";
+        if (h.style.backgroundColor) h.style.backgroundColor = "transparent";
+      });
+      // Remove watermark links/containers
+      el.querySelectorAll("a").forEach((a) => {
+        if (a.href?.includes("spline")) {
+          const parent = a.closest("div:not(.eden-spline-wrapper)");
+          if (parent && parent !== el) parent.remove();
+          else a.remove();
+        }
+      });
+      el.querySelectorAll("img").forEach((img) => {
+        if (img.alt?.toLowerCase().includes("spline")) {
+          img.parentElement?.remove();
+        }
+      });
+    };
+
+    // Run repeatedly during load, then observe
+    const interval = setInterval(cleanup, 300);
+    const timeout = setTimeout(() => clearInterval(interval), 6000);
+    const observer = new MutationObserver(cleanup);
+    observer.observe(el, { childList: true, subtree: true, attributes: true });
+
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+      clearInterval(interval);
+      clearTimeout(timeout);
+      observer.disconnect();
+    };
   }, []);
 
   useEffect(() => {
