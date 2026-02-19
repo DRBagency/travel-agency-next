@@ -88,15 +88,15 @@
   "notifications": {
     "title": "Notifications",
     "empty": "No notifications",
-    "newTicket": "New support ticket",
-    "ticketDesc": "Client requests date change",
+    "markAllRead": "Mark all as read",
     "newBooking": "New booking received",
-    "bookingDesc": "Maldives - Premium Pack",
-    "pendingDoc": "Pending document",
-    "docDesc": "Invoice #2024-031 not sent",
-    "timeAgo5m": "5 min ago",
-    "timeAgo15m": "15 min ago",
-    "timeAgo1h": "1h ago"
+    "paymentReceived": "Payment received",
+    "newClient": "New agency registered",
+    "newTicket": "New support ticket",
+    "timeAgoNow": "Now",
+    "timeAgoMinutes": "{n} min ago",
+    "timeAgoHours": "{n}h ago",
+    "timeAgoDays": "{n}d ago"
   },
   "admin": {
     "nav": {
@@ -856,6 +856,17 @@
       "night": "Night",
       "generalTips": "General tips",
       "whatToBring": "What to bring",
+      "editItinerary": "Edit itinerary",
+      "doneEditing": "Done editing",
+      "saveError": "Error saving itinerary",
+      "saveSuccess": "Itinerary saved successfully",
+      "savedItineraries": "Saved itineraries",
+      "noSavedItineraries": "No saved itineraries",
+      "viewItinerary": "View itinerary",
+      "deleteItinerary": "Delete itinerary",
+      "confirmDeleteItinerary": "Delete this itinerary? This action cannot be undone.",
+      "createdAt": "Created on",
+      "daysUnit": "days",
       "styles": {
         "relax": "Relax",
         "aventura": "Adventure",
@@ -912,7 +923,20 @@
       "faqQuestionPlaceholder": "Customer question...",
       "faqAnswerPlaceholder": "Bot answer...",
       "saveConfig": "Save configuration",
-      "saved": "Configuration saved"
+      "saved": "Configuration saved",
+      "faqSuggestions": "FAQ Suggestions",
+      "faqSuggestion1q": "What are your business hours?",
+      "faqSuggestion1a": "We are open Monday to Friday 9:00-19:00 and Saturdays 10:00-14:00.",
+      "faqSuggestion2q": "How can I make a booking?",
+      "faqSuggestion2a": "You can book directly from our website by selecting your destination and dates.",
+      "faqSuggestion3q": "What payment methods do you accept?",
+      "faqSuggestion3a": "We accept credit/debit cards (Visa, Mastercard) through Stripe, our secure payment platform.",
+      "faqSuggestion4q": "What is the cancellation policy?",
+      "faqSuggestion4a": "Free cancellation is available up to 48h before departure. Check the specific conditions for each destination.",
+      "faqSuggestion5q": "Does the trip include insurance?",
+      "faqSuggestion5a": "We recommend purchasing travel insurance. We can advise you on the best options for your destination.",
+      "faqSuggestion6q": "How can I contact the agency?",
+      "faqSuggestion6a": "You can reach us by email, phone or through the contact form on our website."
     },
     "assistant": {
       "title": "AI Assistant",
@@ -923,6 +947,8 @@
       "suggestion2": "Write me an Instagram post about Maldives",
       "suggestion3": "How can I improve my conversion rate?",
       "suggestion4": "Generate a budget for 4 people to Thailand",
+      "suggestion5": "Help me create a summer newsletter post",
+      "suggestion6": "How should I respond to an unhappy customer?",
       "inputPlaceholder": "Type your message...",
       "errorGeneric": "Error processing your message. Please try again."
     },
@@ -998,6 +1024,11 @@
       "title": "AI Recommendations",
       "refresh": "Refresh",
       "errorGeneric": "Error generating recommendations"
+    },
+    "locked": {
+      "title": "Premium Feature",
+      "description": "AI features are available on Grow and Pro plans. Upgrade your plan to access itineraries, chatbot and AI assistant.",
+      "upgrade": "Upgrade my plan"
     }
   },
   "landing": {

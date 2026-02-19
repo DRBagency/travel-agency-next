@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import { createOwnerNotification } from "@/lib/notifications/create-notification";
 import SubmitButton from "@/components/admin/SubmitButton";
 import Link from "next/link";
 import { getTranslations } from 'next-intl/server';
@@ -39,6 +40,13 @@ async function createTicket(formData: FormData) {
     ticket_id: ticket.id,
     sender_type: "client",
     message: description.trim(),
+  });
+
+  await createOwnerNotification({
+    type: "ticket",
+    title: `Nuevo ticket: ${subject.trim()}`,
+    description: `Prioridad: ${priority || "normal"}`,
+    href: `/owner/soporte`,
   });
 
   revalidatePath("/admin/soporte");

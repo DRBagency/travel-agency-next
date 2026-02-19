@@ -88,15 +88,15 @@
   "notifications": {
     "title": "Notificaciones",
     "empty": "Sin notificaciones",
-    "newTicket": "Nuevo ticket de soporte",
-    "ticketDesc": "Cliente solicita cambio de fechas",
+    "markAllRead": "Marcar todo como leído",
     "newBooking": "Nueva reserva recibida",
-    "bookingDesc": "Maldivas - Pack Premium",
-    "pendingDoc": "Documento pendiente",
-    "docDesc": "Factura #2024-031 sin enviar",
-    "timeAgo5m": "Hace 5 min",
-    "timeAgo15m": "Hace 15 min",
-    "timeAgo1h": "Hace 1h"
+    "paymentReceived": "Pago recibido",
+    "newClient": "Nueva agencia registrada",
+    "newTicket": "Nuevo ticket de soporte",
+    "timeAgoNow": "Ahora",
+    "timeAgoMinutes": "Hace {n} min",
+    "timeAgoHours": "Hace {n}h",
+    "timeAgoDays": "Hace {n}d"
   },
   "admin": {
     "nav": {
@@ -856,6 +856,17 @@
       "night": "Noche",
       "generalTips": "Tips generales",
       "whatToBring": "Qué llevar",
+      "editItinerary": "Editar itinerario",
+      "doneEditing": "Finalizar edición",
+      "saveError": "Error al guardar el itinerario",
+      "saveSuccess": "Itinerario guardado correctamente",
+      "savedItineraries": "Itinerarios guardados",
+      "noSavedItineraries": "No hay itinerarios guardados",
+      "viewItinerary": "Ver itinerario",
+      "deleteItinerary": "Eliminar itinerario",
+      "confirmDeleteItinerary": "¿Eliminar este itinerario? Esta acción no se puede deshacer.",
+      "createdAt": "Creado el",
+      "daysUnit": "días",
       "styles": {
         "relax": "Relax",
         "aventura": "Aventura",
@@ -912,7 +923,20 @@
       "faqQuestionPlaceholder": "Pregunta del cliente...",
       "faqAnswerPlaceholder": "Respuesta del bot...",
       "saveConfig": "Guardar configuración",
-      "saved": "Configuración guardada"
+      "saved": "Configuración guardada",
+      "faqSuggestions": "Sugerencias de FAQs",
+      "faqSuggestion1q": "¿Cuáles son vuestros horarios de atención?",
+      "faqSuggestion1a": "Nuestro horario es de lunes a viernes de 9:00 a 19:00 y sábados de 10:00 a 14:00.",
+      "faqSuggestion2q": "¿Cómo puedo hacer una reserva?",
+      "faqSuggestion2a": "Puedes reservar directamente desde nuestra web, seleccionando el destino y las fechas deseadas.",
+      "faqSuggestion3q": "¿Qué métodos de pago aceptan?",
+      "faqSuggestion3a": "Aceptamos tarjetas de crédito/débito (Visa, Mastercard) a través de Stripe, nuestra plataforma de pago segura.",
+      "faqSuggestion4q": "¿Cuál es la política de cancelación?",
+      "faqSuggestion4a": "La cancelación gratuita está disponible hasta 48h antes de la salida. Consulta las condiciones específicas de cada destino.",
+      "faqSuggestion5q": "¿El viaje incluye seguro?",
+      "faqSuggestion5a": "Recomendamos contratar un seguro de viaje. Podemos asesorarte sobre las mejores opciones según tu destino.",
+      "faqSuggestion6q": "¿Cómo puedo contactar con la agencia?",
+      "faqSuggestion6a": "Puedes contactarnos por email, teléfono o a través del formulario de contacto en nuestra web."
     },
     "assistant": {
       "title": "Asistente IA",
@@ -923,6 +947,8 @@
       "suggestion2": "Escríbeme un post para Instagram sobre Maldivas",
       "suggestion3": "¿Cómo puedo mejorar mi tasa de conversión?",
       "suggestion4": "Genera un presupuesto para 4 personas a Tailandia",
+      "suggestion5": "Ayúdame a crear un post para una newsletter de verano",
+      "suggestion6": "¿Cómo debería responder a un cliente insatisfecho?",
       "inputPlaceholder": "Escribe tu mensaje...",
       "errorGeneric": "Error al procesar tu mensaje. Inténtalo de nuevo."
     },
@@ -998,6 +1024,11 @@
       "title": "Recomendaciones IA",
       "refresh": "Actualizar",
       "errorGeneric": "Error al generar recomendaciones"
+    },
+    "locked": {
+      "title": "Funcionalidad Premium",
+      "description": "Las funciones de IA están disponibles en los planes Grow y Pro. Actualiza tu plan para acceder a itinerarios, chatbot y asistente IA.",
+      "upgrade": "Actualizar mi plan"
     }
   },
   "landing": {

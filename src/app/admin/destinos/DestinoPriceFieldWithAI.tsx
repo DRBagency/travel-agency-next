@@ -7,6 +7,7 @@ interface Props {
   defaultValue?: number;
   destinoName?: string;
   clienteId: string;
+  plan?: string;
   label: string;
   placeholder: string;
 }
@@ -15,9 +16,11 @@ export default function DestinoPriceFieldWithAI({
   defaultValue = 0,
   destinoName = "",
   clienteId,
+  plan,
   label,
   placeholder,
 }: Props) {
+  const aiLocked = !plan || plan === "start";
   const [price, setPrice] = useState(defaultValue);
   const [name] = useState(destinoName);
 
@@ -35,7 +38,7 @@ export default function DestinoPriceFieldWithAI({
           placeholder={placeholder}
         />
       </div>
-      {name && (
+      {name && !aiLocked && (
         <AIPricingSuggestion
           destinoName={name}
           currentPrice={price}

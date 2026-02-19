@@ -199,9 +199,24 @@ export async function POST(req: NextRequest) {
       ? data.prompt
       : JSON.stringify(data);
 
+    const MAX_TOKENS_MAP: Record<AIAction, number> = {
+      "generate-description": 512,
+      "optimize-pricing": 1024,
+      "free-chat": 2000,
+      "generate-itinerary": 4096,
+      "draft-email": 2048,
+      "chatbot-response": 1024,
+      "suggest-destinations": 1024,
+      "analyze-bookings": 2048,
+      "generate-report": 2048,
+      "ai-recommendations": 2048,
+    };
+
+    const maxTokens = MAX_TOKENS_MAP[action] || 2048;
+
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 4096,
+      max_tokens: maxTokens,
       system: systemPrompt,
       messages: [{ role: "user", content: userMessage }],
     });

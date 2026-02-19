@@ -217,7 +217,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
             <ThemeToggle />
 
             {/* Functional notifications */}
-            <NotificationBell />
+            <NotificationBell isOwner />
 
             {/* User avatar */}
             <div className="flex items-center gap-3 ps-3 border-s border-gray-200/80 dark:border-white/[0.06]">

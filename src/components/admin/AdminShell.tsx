@@ -23,8 +23,10 @@ import {
   Brain,
   Bot,
   MessageCircle,
+  Lock,
   type LucideIcon,
 } from "lucide-react";
+import { isAILocked, AI_ROUTES } from "@/lib/plan-gating";
 import {
   Sheet,
   SheetContent,
@@ -39,6 +41,7 @@ import LanguageSelector from "@/components/ui/LanguageSelector";
 interface AdminShellProps {
   clientName: string;
   clientEmail?: string;
+  clienteId?: string;
   plan?: string;
   primaryColor?: string | null;
   logoUrl?: string | null;
@@ -115,6 +118,7 @@ function SidebarNav({
         {items.map((item) => {
           const active = isActive(item.href);
           const Icon = item.icon;
+          const locked = AI_ROUTES.includes(item.href) && isAILocked(plan);
           return (
             <Link
               key={item.href}
@@ -127,7 +131,8 @@ function SidebarNav({
               }`}
             >
               <Icon className="w-[18px] h-[18px] shrink-0" />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {locked && <Lock className="w-3.5 h-3.5 text-gray-400 dark:text-white/30 shrink-0" />}
             </Link>
           );
         })}
@@ -183,6 +188,7 @@ function SidebarNav({
 const AdminShell = ({
   clientName,
   clientEmail,
+  clienteId,
   plan,
   primaryColor,
   logoUrl,
@@ -314,7 +320,7 @@ const AdminShell = ({
             <ThemeToggle />
 
             {/* Functional notifications */}
-            <NotificationBell />
+            <NotificationBell clienteId={clienteId} />
 
             {/* User avatar + info */}
             <div className="hidden sm:flex items-center gap-3 ps-3 border-s border-gray-200/80 dark:border-white/[0.06]">

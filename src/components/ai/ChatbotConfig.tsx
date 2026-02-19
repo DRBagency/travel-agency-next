@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Bot, Save, Loader2, Plus, Trash2 } from "lucide-react";
+import { Bot, Save, Loader2, Plus, Trash2, Lightbulb } from "lucide-react";
 
 interface FAQ {
   question: string;
@@ -71,6 +71,25 @@ export default function ChatbotConfig({ clienteId, initialConfig, destinos }: Pr
         : [...prev.idiomas, lang],
     }));
   };
+
+  const addSuggestedFaq = (questionKey: string, answerKey: string) => {
+    setConfig((prev) => ({
+      ...prev,
+      faqs: [
+        ...prev.faqs,
+        { question: t(questionKey), answer: t(answerKey) },
+      ],
+    }));
+  };
+
+  const FAQ_SUGGESTIONS = [
+    { qKey: "faqSuggestion1q", aKey: "faqSuggestion1a" },
+    { qKey: "faqSuggestion2q", aKey: "faqSuggestion2a" },
+    { qKey: "faqSuggestion3q", aKey: "faqSuggestion3a" },
+    { qKey: "faqSuggestion4q", aKey: "faqSuggestion4a" },
+    { qKey: "faqSuggestion5q", aKey: "faqSuggestion5a" },
+    { qKey: "faqSuggestion6q", aKey: "faqSuggestion6a" },
+  ];
 
   const save = async () => {
     setSaving(true);
@@ -204,7 +223,27 @@ export default function ChatbotConfig({ clienteId, initialConfig, destinos }: Pr
         </div>
 
         {config.faqs.length === 0 && (
-          <p className="text-sm text-gray-400 dark:text-white/40">{t("noFaqs")}</p>
+          <div className="space-y-3">
+            <p className="text-sm text-gray-400 dark:text-white/40">{t("noFaqs")}</p>
+            <div>
+              <p className="text-xs font-medium text-gray-500 dark:text-white/50 mb-2 flex items-center gap-1.5">
+                <Lightbulb className="w-3.5 h-3.5" />
+                {t("faqSuggestions")}
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                {FAQ_SUGGESTIONS.map((s, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => addSuggestedFaq(s.qKey, s.aKey)}
+                    className="text-start p-3 rounded-xl border border-dashed border-gray-200 dark:border-white/10 text-sm text-gray-600 dark:text-white/60 hover:border-drb-turquoise-500 hover:text-drb-turquoise-600 dark:hover:text-drb-turquoise-400 transition-colors"
+                  >
+                    {t(s.qKey)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
 
         {config.faqs.map((faq, idx) => (

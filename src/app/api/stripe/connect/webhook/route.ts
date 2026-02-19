@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { sendReservationEmails } from "@/lib/emails/send-reservation-emails";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
+import { createNotification } from "@/lib/notifications/create-notification";
 
 export const runtime = "nodejs";
 
@@ -85,6 +86,15 @@ export async function POST(req: Request) {
       }
 
       console.log("✅ Reserva guardada en Supabase:", session.id);
+
+      // Crear notificación para la agencia
+      await createNotification({
+        clienteId: m.cliente_id,
+        type: "reserva",
+        title: `Nueva reserva: ${m.destino_nombre}`,
+        description: `${m.nombre} - ${Number(m.personas)} personas - ${Number(m.total).toFixed(2)}€`,
+        href: `/admin/reservas`,
+      });
 
       const { data: client } = await supabaseAdmin
         .from("clientes")

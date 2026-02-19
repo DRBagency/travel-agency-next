@@ -30,6 +30,8 @@ export default function FreeChat({ clienteId, agencyContext }: Props) {
     t("suggestion2"),
     t("suggestion3"),
     t("suggestion4"),
+    t("suggestion5"),
+    t("suggestion6"),
   ];
 
   const send = async (text?: string) => {
@@ -81,7 +83,7 @@ export default function FreeChat({ clienteId, agencyContext }: Props) {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("emptyTitle")}</h3>
             <p className="text-sm text-gray-400 dark:text-white/40 mb-6 max-w-md">{t("emptySubtitle")}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full max-w-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 w-full max-w-2xl">
               {SUGGESTIONS.map((s, i) => (
                 <button
                   key={i}

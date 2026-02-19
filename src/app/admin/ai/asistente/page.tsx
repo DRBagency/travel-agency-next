@@ -1,7 +1,9 @@
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { getTranslations } from "next-intl/server";
+import { isAILocked } from "@/lib/plan-gating";
 import FreeChat from "@/components/ai/FreeChat";
+import AILockedOverlay from "@/components/ai/AILockedOverlay";
 import { MessageCircle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -9,35 +11,6 @@ export const dynamic = "force-dynamic";
 export default async function AIAssistantPage() {
   const client = await requireAdminClient();
   const t = await getTranslations("ai.assistant");
-
-  // Build context from agency data
-  const { data: destinos } = await supabaseAdmin
-    .from("destinos")
-    .select("nombre, descripcion, precio, activo")
-    .eq("cliente_id", client.id);
-
-  const { data: reservas } = await supabaseAdmin
-    .from("reservas")
-    .select("id, destino, precio, estado_pago")
-    .eq("cliente_id", client.id);
-
-  const destinosList = (destinos || [])
-    .map((d: any) => `- ${d.nombre}: ${d.precio}€ (${d.activo ? "activo" : "inactivo"})`)
-    .join("\n");
-
-  const totalReservas = reservas?.length || 0;
-  const pagadas = reservas?.filter((r: any) => r.estado_pago === "pagado") || [];
-  const totalIngresos = pagadas.reduce((s: number, r: any) => s + Number(r.precio), 0);
-
-  const agencyContext = `
-Agencia: ${client.nombre}
-Plan: ${client.plan || "No definido"}
-Destinos activos:
-${destinosList || "Ninguno"}
-Reservas totales: ${totalReservas}
-Reservas pagadas: ${pagadas.length}
-Ingresos totales: ${totalIngresos}€
-`.trim();
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -51,7 +24,44 @@ Ingresos totales: ${totalIngresos}€
         </div>
       </div>
 
-      <FreeChat clienteId={client.id} agencyContext={agencyContext} />
+      {isAILocked(client.plan) ? (
+        <AILockedOverlay />
+      ) : (
+        <AssistantPageContent clientId={client.id} clientName={client.nombre} clientPlan={client.plan} />
+      )}
     </div>
   );
+}
+
+async function AssistantPageContent({ clientId, clientName, clientPlan }: { clientId: string; clientName: string; clientPlan?: string }) {
+  // Build context from agency data
+  const { data: destinos } = await supabaseAdmin
+    .from("destinos")
+    .select("nombre, descripcion, precio, activo")
+    .eq("cliente_id", clientId);
+
+  const { data: reservas } = await supabaseAdmin
+    .from("reservas")
+    .select("id, destino, precio, estado_pago")
+    .eq("cliente_id", clientId);
+
+  const destinosList = (destinos || [])
+    .map((d: any) => `- ${d.nombre}: ${d.precio}€ (${d.activo ? "activo" : "inactivo"})`)
+    .join("\n");
+
+  const totalReservas = reservas?.length || 0;
+  const pagadas = reservas?.filter((r: any) => r.estado_pago === "pagado") || [];
+  const totalIngresos = pagadas.reduce((s: number, r: any) => s + Number(r.precio), 0);
+
+  const agencyContext = `
+Agencia: ${clientName}
+Plan: ${clientPlan || "No definido"}
+Destinos activos:
+${destinosList || "Ninguno"}
+Reservas totales: ${totalReservas}
+Reservas pagadas: ${pagadas.length}
+Ingresos totales: ${totalIngresos}€
+`.trim();
+
+  return <FreeChat clienteId={clientId} agencyContext={agencyContext} />;
 }

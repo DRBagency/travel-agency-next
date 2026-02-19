@@ -133,6 +133,7 @@ export default async function AdminEmailsPage({
               <EmailBodyWithAI
                 defaultValue={template?.html_body ?? ""}
                 clienteId={client.id}
+                plan={client.plan}
                 label={t('htmlBody')}
                 name="html_body"
               />

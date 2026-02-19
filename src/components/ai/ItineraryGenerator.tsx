@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import {
   Sparkles,
   MapPin,
@@ -30,6 +31,8 @@ import {
   ShoppingBag,
   Music,
   BookOpen,
+  Pencil,
+  Check,
 } from "lucide-react";
 
 interface ItineraryDay {
@@ -117,6 +120,61 @@ export default function ItineraryGenerator({ clienteId }: Props) {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
   const [expandedDay, setExpandedDay] = useState<number | null>(0);
+  const [editMode, setEditMode] = useState(false);
+
+  const updateDay = (idx: number, field: string, value: string) => {
+    if (!result) return;
+    setSaved(false);
+    setResult({
+      ...result,
+      dias: result.dias.map((d, i) =>
+        i === idx ? { ...d, [field]: value } : d
+      ),
+    });
+  };
+
+  const updateActivity = (dayIdx: number, period: "manana" | "tarde" | "noche", field: string, value: string) => {
+    if (!result) return;
+    setSaved(false);
+    setResult({
+      ...result,
+      dias: result.dias.map((d, i) =>
+        i === dayIdx
+          ? {
+              ...d,
+              actividades: {
+                ...d.actividades,
+                [period]: { ...d.actividades[period], [field]: value },
+              },
+            }
+          : d
+      ),
+    });
+  };
+
+  const updateSummary = (field: string, value: string) => {
+    if (!result) return;
+    setSaved(false);
+    setResult({ ...result, [field]: value });
+  };
+
+  const updateTip = (idx: number, value: string) => {
+    if (!result) return;
+    setSaved(false);
+    setResult({
+      ...result,
+      tips_generales: result.tips_generales.map((t, i) => (i === idx ? value : t)),
+    });
+  };
+
+  const updatePackItem = (idx: number, value: string) => {
+    if (!result) return;
+    setSaved(false);
+    setResult({
+      ...result,
+      que_llevar: result.que_llevar.map((t, i) => (i === idx ? value : t)),
+    });
+  };
 
   const toggleInterest = (interest: string) => {
     setForm((prev) => ({
@@ -307,9 +365,15 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
           precio_estimado: result.precio_total_estimado,
         }),
       });
-      if (res.ok) setSaved(true);
-    } catch {
-      // silent
+      if (res.ok) {
+        setSaved(true);
+        toast.success(t("saveSuccess"));
+      } else {
+        const json = await res.json().catch(() => ({}));
+        throw new Error(json.error || t("saveError"));
+      }
+    } catch (err: any) {
+      toast.error(err.message || t("saveError"));
     } finally {
       setSaving(false);
     }
@@ -498,27 +562,39 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
               <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 flex items-center justify-center">
                 <DollarSign className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="text-xs text-gray-400 dark:text-white/40">{t("estimatedPrice")}</p>
-                <p className="text-lg font-bold text-gray-900 dark:text-white">{result.precio_total_estimado}</p>
+                {editMode ? (
+                  <input value={result.precio_total_estimado} onChange={(e) => updateSummary("precio_total_estimado", e.target.value)} className="panel-input text-sm font-bold mt-0.5 w-full" />
+                ) : (
+                  <p className="text-lg font-bold text-gray-900 dark:text-white">{result.precio_total_estimado}</p>
+                )}
               </div>
             </div>
             <div className="panel-card p-4 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/15 flex items-center justify-center">
                 <Calendar className="w-5 h-5 text-amber-600 dark:text-amber-400" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="text-xs text-gray-400 dark:text-white/40">{t("bestSeason")}</p>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">{result.mejor_epoca}</p>
+                {editMode ? (
+                  <input value={result.mejor_epoca} onChange={(e) => updateSummary("mejor_epoca", e.target.value)} className="panel-input text-sm mt-0.5 w-full" />
+                ) : (
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{result.mejor_epoca}</p>
+                )}
               </div>
             </div>
             <div className="panel-card p-4 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/15 flex items-center justify-center">
                 <Thermometer className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="text-xs text-gray-400 dark:text-white/40">{t("weather")}</p>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">{result.clima}</p>
+                {editMode ? (
+                  <input value={result.clima} onChange={(e) => updateSummary("clima", e.target.value)} className="panel-input text-sm mt-0.5 w-full" />
+                ) : (
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{result.clima}</p>
+                )}
               </div>
             </div>
           </div>
@@ -535,8 +611,17 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
                     <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-drb-turquoise-600 dark:text-drb-turquoise-400 font-bold text-sm">
                       {dia.dia}
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">{dia.titulo}</h3>
+                    <div className="flex-1 min-w-0">
+                      {editMode ? (
+                        <input
+                          value={dia.titulo}
+                          onChange={(e) => { e.stopPropagation(); updateDay(idx, "titulo", e.target.value); }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="panel-input text-sm font-semibold w-full"
+                        />
+                      ) : (
+                        <h3 className="font-semibold text-gray-900 dark:text-white">{dia.titulo}</h3>
+                      )}
                       <p className="text-xs text-gray-400 dark:text-white/40">{t("dayLabel", { n: dia.dia })}</p>
                     </div>
                   </div>
@@ -551,6 +636,8 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
                       icon={<Sun className="w-4 h-4" />}
                       activity={dia.actividades.manana}
                       color="amber"
+                      editMode={editMode}
+                      onUpdate={(field, value) => updateActivity(idx, "manana", field, value)}
                     />
                     {/* Afternoon */}
                     <ActivityCard
@@ -558,6 +645,8 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
                       icon={<Sunset className="w-4 h-4" />}
                       activity={dia.actividades.tarde}
                       color="orange"
+                      editMode={editMode}
+                      onUpdate={(field, value) => updateActivity(idx, "tarde", field, value)}
                     />
                     {/* Night */}
                     <ActivityCard
@@ -565,12 +654,18 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
                       icon={<Moon className="w-4 h-4" />}
                       activity={dia.actividades.noche}
                       color="indigo"
+                      editMode={editMode}
+                      onUpdate={(field, value) => updateActivity(idx, "noche", field, value)}
                     />
                     {/* Local tip */}
-                    {dia.tip_local && (
+                    {(dia.tip_local || editMode) && (
                       <div className="flex items-start gap-2 mt-2 p-3 rounded-xl bg-drb-lime-50 dark:bg-drb-lime-500/10 border border-drb-lime-200 dark:border-drb-lime-500/20">
                         <Lightbulb className="w-4 h-4 text-drb-lime-600 dark:text-drb-lime-400 mt-0.5 shrink-0" />
-                        <p className="text-sm text-drb-lime-800 dark:text-drb-lime-300">{dia.tip_local}</p>
+                        {editMode ? (
+                          <input value={dia.tip_local} onChange={(e) => updateDay(idx, "tip_local", e.target.value)} className="panel-input text-sm flex-1" />
+                        ) : (
+                          <p className="text-sm text-drb-lime-800 dark:text-drb-lime-300">{dia.tip_local}</p>
+                        )}
                       </div>
                     )}
                   </div>
@@ -591,8 +686,12 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
                   <ul className="space-y-2">
                     {result.tips_generales.map((tip, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-gray-600 dark:text-white/60">
-                        <span className="text-drb-turquoise-500 mt-1">-</span>
-                        {tip}
+                        <span className="text-drb-turquoise-500 mt-1 shrink-0">-</span>
+                        {editMode ? (
+                          <input value={tip} onChange={(e) => updateTip(i, e.target.value)} className="panel-input text-sm flex-1" />
+                        ) : (
+                          tip
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -607,8 +706,12 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
                   <ul className="space-y-2">
                     {result.que_llevar.map((item, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-gray-600 dark:text-white/60">
-                        <span className="text-drb-turquoise-500 mt-1">-</span>
-                        {item}
+                        <span className="text-drb-turquoise-500 mt-1 shrink-0">-</span>
+                        {editMode ? (
+                          <input value={item} onChange={(e) => updatePackItem(i, e.target.value)} className="panel-input text-sm flex-1" />
+                        ) : (
+                          item
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -619,6 +722,17 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
 
           {/* Action buttons */}
           <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => setEditMode(!editMode)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-colors ${
+                editMode
+                  ? "border-drb-turquoise-500 bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                  : "border-gray-200 dark:border-white/20 text-gray-700 dark:text-white/70 hover:bg-gray-50 dark:hover:bg-white/10"
+              }`}
+            >
+              {editMode ? <Check className="w-4 h-4" /> : <Pencil className="w-4 h-4" />}
+              {editMode ? t("doneEditing") : t("editItinerary")}
+            </button>
             <button
               onClick={saveItinerary}
               disabled={saving || saved}
@@ -650,11 +764,15 @@ function ActivityCard({
   icon,
   activity,
   color,
+  editMode = false,
+  onUpdate,
 }: {
   period: string;
   icon: React.ReactNode;
   activity: Activity;
   color: string;
+  editMode?: boolean;
+  onUpdate?: (field: string, value: string) => void;
 }) {
   const colorMap: Record<string, string> = {
     amber: "bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400",
@@ -670,16 +788,28 @@ function ActivityCard({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 mb-1">
           <span className={`text-xs font-medium ${colorMap[color]?.split(" ").slice(2).join(" ")}`}>{period}</span>
-          {activity.duracion && (
-            <span className="text-xs text-gray-400 dark:text-white/30">{activity.duracion}</span>
+          {editMode ? (
+            <input value={activity.duracion} onChange={(e) => onUpdate?.("duracion", e.target.value)} className="panel-input text-xs w-24" />
+          ) : (
+            activity.duracion && <span className="text-xs text-gray-400 dark:text-white/30">{activity.duracion}</span>
           )}
         </div>
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white">{activity.titulo}</h4>
-        <p className="text-xs text-gray-500 dark:text-white/50 mt-0.5">{activity.descripcion}</p>
-        {activity.precio_estimado && (
-          <p className="text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 mt-1">
-            ~{activity.precio_estimado}
-          </p>
+        {editMode ? (
+          <div className="space-y-1.5">
+            <input value={activity.titulo} onChange={(e) => onUpdate?.("titulo", e.target.value)} className="panel-input text-sm font-semibold w-full" />
+            <textarea value={activity.descripcion} onChange={(e) => onUpdate?.("descripcion", e.target.value)} className="panel-input text-xs w-full min-h-[40px]" />
+            <input value={activity.precio_estimado} onChange={(e) => onUpdate?.("precio_estimado", e.target.value)} className="panel-input text-xs w-32" placeholder="Precio" />
+          </div>
+        ) : (
+          <>
+            <h4 className="text-sm font-semibold text-gray-900 dark:text-white">{activity.titulo}</h4>
+            <p className="text-xs text-gray-500 dark:text-white/50 mt-0.5">{activity.descripcion}</p>
+            {activity.precio_estimado && (
+              <p className="text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 mt-1">
+                ~{activity.precio_estimado}
+              </p>
+            )}
+          </>
         )}
       </div>
     </div>

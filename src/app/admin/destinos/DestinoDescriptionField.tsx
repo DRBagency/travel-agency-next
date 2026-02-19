@@ -7,6 +7,7 @@ interface Props {
   defaultValue?: string;
   destinoName?: string;
   clienteId: string;
+  plan?: string;
   label: string;
   placeholder: string;
 }
@@ -15,21 +16,25 @@ export default function DestinoDescriptionField({
   defaultValue = "",
   destinoName = "",
   clienteId,
+  plan,
   label,
   placeholder,
 }: Props) {
+  const aiLocked = !plan || plan === "start";
   const [value, setValue] = useState(defaultValue);
 
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
         <label className="panel-label">{label}</label>
-        <AIDescriptionButton
-          context={destinoName || "travel destination"}
-          fieldName="descripcion"
-          onAccept={(text) => setValue(text)}
-          clienteId={clienteId}
-        />
+        {!aiLocked && (
+          <AIDescriptionButton
+            context={destinoName || "travel destination"}
+            fieldName="descripcion"
+            onAccept={(text) => setValue(text)}
+            clienteId={clienteId}
+          />
+        )}
       </div>
       <textarea
         name="descripcion"

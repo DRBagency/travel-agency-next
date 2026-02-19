@@ -59,6 +59,7 @@ interface Counts {
 interface MiWebContentProps {
   client: ClientData;
   counts: Counts;
+  plan?: string;
 }
 
 type SectionKey =
@@ -76,7 +77,8 @@ interface SaveState {
   error: string | null;
 }
 
-export default function MiWebContent({ client, counts }: MiWebContentProps) {
+export default function MiWebContent({ client, counts, plan }: MiWebContentProps) {
+  const aiLocked = !plan || plan === "start";
   const t = useTranslations('admin.miWeb');
   const tc = useTranslations('common');
 
@@ -384,12 +386,14 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                 <label className="panel-label">
                   {t("heroSubtitle")}
                 </label>
-                <AIDescriptionButton
-                  context={`hero subtitle for travel agency "${client.nombre}"`}
-                  fieldName="hero_subtitle"
-                  onAccept={(text) => updateField("hero_subtitle", text)}
-                  clienteId={client.id}
-                />
+                {!aiLocked && (
+                  <AIDescriptionButton
+                    context={`hero subtitle for travel agency "${client.nombre}"`}
+                    fieldName="hero_subtitle"
+                    onAccept={(text) => updateField("hero_subtitle", text)}
+                    clienteId={client.id}
+                  />
+                )}
               </div>
               <textarea
                 value={fields.hero_subtitle}
@@ -565,12 +569,14 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                 <label className="panel-label">
                   {t("aboutText")}
                 </label>
-                <AIDescriptionButton
-                  context={`about us section for travel agency "${client.nombre}"`}
-                  fieldName="about_text_1"
-                  onAccept={(text) => updateField("about_text_1", text)}
-                  clienteId={client.id}
-                />
+                {!aiLocked && (
+                  <AIDescriptionButton
+                    context={`about us section for travel agency "${client.nombre}"`}
+                    fieldName="about_text_1"
+                    onAccept={(text) => updateField("about_text_1", text)}
+                    clienteId={client.id}
+                  />
+                )}
               </div>
               <textarea
                 value={fields.about_text_1}
@@ -584,12 +590,14 @@ export default function MiWebContent({ client, counts }: MiWebContentProps) {
                 <label className="panel-label">
                   {t("aboutVision")}
                 </label>
-                <AIDescriptionButton
-                  context={`company vision statement for travel agency "${client.nombre}"`}
-                  fieldName="about_text_2"
-                  onAccept={(text) => updateField("about_text_2", text)}
-                  clienteId={client.id}
-                />
+                {!aiLocked && (
+                  <AIDescriptionButton
+                    context={`company vision statement for travel agency "${client.nombre}"`}
+                    fieldName="about_text_2"
+                    onAccept={(text) => updateField("about_text_2", text)}
+                    clienteId={client.id}
+                  />
+                )}
               </div>
               <textarea
                 value={fields.about_text_2}

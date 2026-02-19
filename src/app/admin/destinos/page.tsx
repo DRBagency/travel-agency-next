@@ -121,12 +121,14 @@ export default async function AdminDestinosPage({
               </div>
               <DestinoPriceFieldWithAI
                 clienteId={client.id}
+                plan={client.plan}
                 label={t('priceLabel')}
                 placeholder={t('pricePlaceholder')}
               />
             </div>
             <DestinoDescriptionField
               clienteId={client.id}
+              plan={client.plan}
               label={tc('description')}
               placeholder={t('descriptionPlaceholder')}
             />

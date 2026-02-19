@@ -29,6 +29,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     <AdminShell
       clientName={client.nombre}
       clientEmail={client.email}
+      clienteId={client.id}
       plan={client.plan}
       primaryColor={client.primary_color}
       logoUrl={client.logo_url}

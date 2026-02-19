@@ -32,6 +32,7 @@ export default async function MiWebPage() {
 
   return (
       <MiWebContent
+        plan={client.plan}
         client={{
           id: client.id,
           nombre: client.nombre,

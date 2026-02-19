@@ -1,6 +1,10 @@
 import { requireAdminClient } from "@/lib/requireAdminClient";
+import { supabaseAdmin } from "@/lib/supabase-server";
 import { getTranslations } from "next-intl/server";
+import { isAILocked } from "@/lib/plan-gating";
 import ItineraryGenerator from "@/components/ai/ItineraryGenerator";
+import AILockedOverlay from "@/components/ai/AILockedOverlay";
+import SavedItinerariesList from "@/components/ai/SavedItinerariesList";
 import { Sparkles } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +25,14 @@ export default async function AIItinerariosPage() {
         </div>
       </div>
 
-      <ItineraryGenerator clienteId={client.id} />
+      {isAILocked(client.plan) ? (
+        <AILockedOverlay />
+      ) : (
+        <>
+          <ItineraryGenerator clienteId={client.id} />
+          <SavedItinerariesList clienteId={client.id} />
+        </>
+      )}
     </div>
   );
 }

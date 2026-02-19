@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { sendBillingEmail } from "@/lib/emails/send-billing-email";
+import { createOwnerNotification } from "@/lib/notifications/create-notification";
 
 export const runtime = 'nodejs';
 
@@ -148,6 +149,14 @@ export async function POST(req: Request) {
           `❌ [Billing Webhook] Failed to send welcome email: ${result.error}`
         );
       }
+
+      // Notificar al owner
+      await createOwnerNotification({
+        type: "nuevo_cliente",
+        title: `Nueva agencia: ${cliente.nombre}`,
+        description: `Plan ${planName || "Premium"} - ${cliente.email}`,
+        href: `/owner/clientes`,
+      });
     }
 
     // ========================================================================
