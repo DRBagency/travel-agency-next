@@ -91,7 +91,7 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
         {/* Name with gradient */}
         <span className="text-2xl font-bold bg-gradient-to-r from-drb-turquoise-300 to-drb-lime-400 bg-clip-text text-transparent mt-1.5">
-          Eden
+          Eden AI
         </span>
       </div>
 
