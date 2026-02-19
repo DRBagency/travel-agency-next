@@ -463,4 +463,25 @@ html {
   .fc-travelie-theme .fc .fc-next-button {
     padding: 6px 8px !important;
   }
+
+  /* ─── Eden Rive — hide artboard black background ─── */
+  .eden-rive-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+  .eden-rive-canvas,
+  .eden-rive-canvas > canvas {
+    mix-blend-mode: screen;
+  }
+  /* Radial mask: fade edges so any remaining dark border blends away */
+  .eden-rive-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 35%, var(--eden-bg, #E6F9FA) 72%);
+    pointer-events: none;
+  }
+  .dark .eden-rive-wrapper::after {
+    background: radial-gradient(circle, transparent 35%, var(--eden-bg-dark, #072331) 72%);
+  }
 }

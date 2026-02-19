@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Camera, Loader2, X, User, Mail, Phone } from "lucide-react";
 import { sileo } from "sileo";
 import NotificationBell from "@/components/ui/NotificationBell";
+import MountainBackground from "./MountainBackground";
 import EdenChat from "./EdenChat";
 
 interface AdminRightColumnProps {
@@ -34,7 +35,7 @@ export default function AdminRightColumn({
   const tc = useTranslations("common");
   const router = useRouter();
 
-  // Profile photo state (separate from agency logo)
+  // Profile photo state
   const [avatarUrl, setAvatarUrl] = useState(profilePhoto || "");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -74,7 +75,6 @@ export default function AdminRightColumn({
       sileo.error({ title: "Upload failed" });
     } finally {
       setUploading(false);
-      // Reset input so same file can be selected again
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
@@ -108,80 +108,86 @@ export default function AdminRightColumn({
   const avatarDisplay = avatarUrl || profilePhoto;
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-[#041820] border-s border-gray-200/80 dark:border-white/[0.06]">
-      {/* Profile section */}
-      <div className="relative px-4 pt-5 pb-4 border-b border-gray-100 dark:border-white/[0.06]">
-        {/* Notification bell top-right */}
-        <div className="absolute top-3 end-3">
-          <NotificationBell clienteId={clienteId} />
-        </div>
+    <div className="relative flex flex-col h-full overflow-hidden">
+      {/* Mountain landscape background — fills entire column */}
+      <MountainBackground />
 
-        <div className="flex flex-col items-center text-center">
-          {/* Avatar with upload */}
-          <button
-            type="button"
-            onClick={handleAvatarClick}
-            disabled={uploading}
-            className="group relative w-16 h-16 rounded-full overflow-hidden mb-3 ring-2 ring-drb-turquoise-200 dark:ring-drb-turquoise-500/30 transition-all hover:ring-drb-turquoise-400"
-          >
-            {avatarDisplay ? (
-              <img
-                src={avatarDisplay}
-                alt={clientName}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div
-                className="w-full h-full flex items-center justify-center text-white font-bold text-xl"
-                style={{
-                  background: primaryColor
-                    ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
-                    : "linear-gradient(135deg, #1CABB0, #178991)",
-                }}
-              >
-                {clientName.charAt(0).toUpperCase()}
-              </div>
-            )}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-              {uploading ? (
-                <Loader2 className="w-5 h-5 text-white animate-spin" />
+      {/* Content layer on top of landscape */}
+      <div className="relative z-10 flex flex-col h-full">
+        {/* ── Profile card — glassmorphism ── */}
+        <div className="mx-3 mt-3 rounded-2xl bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-md border border-white/50 dark:border-white/[0.08] shadow-card p-4">
+          {/* Notification bell */}
+          <div className="absolute top-4 end-4 z-20">
+            <NotificationBell clienteId={clienteId} />
+          </div>
+
+          <div className="flex flex-col items-center text-center">
+            {/* Avatar */}
+            <button
+              type="button"
+              onClick={handleAvatarClick}
+              disabled={uploading}
+              className="group relative w-16 h-16 rounded-full overflow-hidden mb-2.5 ring-2 ring-white/70 dark:ring-drb-turquoise-400/30 shadow-md transition-all hover:ring-drb-turquoise-400 hover:shadow-lg"
+            >
+              {avatarDisplay ? (
+                <img
+                  src={avatarDisplay}
+                  alt={clientName}
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <Camera className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div
+                  className="w-full h-full flex items-center justify-center text-white font-bold text-xl"
+                  style={{
+                    background: primaryColor
+                      ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
+                      : "linear-gradient(135deg, #1CABB0, #178991)",
+                  }}
+                >
+                  {clientName.charAt(0).toUpperCase()}
+                </div>
               )}
-            </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </button>
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                {uploading ? (
+                  <Loader2 className="w-5 h-5 text-white animate-spin" />
+                ) : (
+                  <Camera className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </button>
 
-          {/* Name and email */}
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate max-w-full">
-            {clientName}
-          </h3>
-          {clientEmail && (
-            <p className="text-xs text-gray-400 dark:text-white/40 truncate max-w-full mt-0.5">
-              {clientEmail}
-            </p>
-          )}
+            {/* Name and email */}
+            <h3 className="text-sm font-semibold text-drb-turquoise-800 dark:text-white truncate max-w-full">
+              {clientName}
+            </h3>
+            {clientEmail && (
+              <p className="text-[11px] text-drb-turquoise-600/60 dark:text-white/40 truncate max-w-full mt-0.5">
+                {clientEmail}
+              </p>
+            )}
 
-          {/* Edit profile button — opens modal */}
-          <button
-            type="button"
-            onClick={() => setEditOpen(true)}
-            className="mt-3 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-100 dark:hover:bg-drb-turquoise-500/20 transition-colors"
-          >
-            {t("editProfile")}
-          </button>
+            {/* Edit profile button */}
+            <button
+              type="button"
+              onClick={() => setEditOpen(true)}
+              className="mt-2.5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium bg-white/60 dark:bg-drb-turquoise-500/15 backdrop-blur-sm border border-drb-turquoise-200/50 dark:border-drb-turquoise-500/20 text-drb-turquoise-600 dark:text-drb-turquoise-300 hover:bg-drb-turquoise-50 dark:hover:bg-drb-turquoise-500/25 hover:border-drb-turquoise-400/50 transition-all shadow-sm"
+            >
+              {t("editProfile")}
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Eden Chat — fills remaining space */}
-      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-        <EdenChat clienteId={clienteId || ""} agencyContext={agencyContext} />
+        {/* ── Eden Chat card — glassmorphism, fills remaining space ── */}
+        <div className="flex-1 min-h-0 flex flex-col mx-3 mt-2.5 mb-3 rounded-2xl bg-white/60 dark:bg-drb-turquoise-900/50 backdrop-blur-md border border-white/50 dark:border-white/[0.06] shadow-card overflow-hidden">
+          <EdenChat clienteId={clienteId || ""} agencyContext={agencyContext} />
+        </div>
       </div>
 
       {/* ===== Edit Profile Modal ===== */}
@@ -243,7 +249,7 @@ export default function AdminRightColumn({
                 </button>
               </div>
 
-              {/* Name (read-only — agency name) */}
+              {/* Name (read-only) */}
               <div>
                 <label className="panel-label flex items-center gap-1.5">
                   <User className="w-3.5 h-3.5" />

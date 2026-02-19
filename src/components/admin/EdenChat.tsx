@@ -44,16 +44,19 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
   // Try known input names — the asset exposes trigger/boolean inputs
   const waveTrigger = useStateMachineInput(rive, STATE_MACHINE, "Wave");
   const waveTriggerAlt = useStateMachineInput(rive, STATE_MACHINE, "wave");
-  const greetingTrigger = useStateMachineInput(rive, STATE_MACHINE, "Greeting");
+  const greetingTrigger = useStateMachineInput(
+    rive,
+    STATE_MACHINE,
+    "Greeting"
+  );
   const talkingInput = useStateMachineInput(rive, STATE_MACHINE, "Talking");
   const talkingAlt = useStateMachineInput(rive, STATE_MACHINE, "talking");
   const isTalking = useStateMachineInput(rive, STATE_MACHINE, "isTalking");
 
-  // Log discovered inputs on mount (dev only) and fire greeting
+  // Log discovered inputs on mount and fire greeting
   useEffect(() => {
     if (!rive || hasGreeted) return;
 
-    // Discover all available inputs
     try {
       const inputs = rive.stateMachineInputs(STATE_MACHINE);
       if (inputs && inputs.length > 0) {
@@ -82,9 +85,9 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
   // Set talking state while loading AI response
   useEffect(() => {
-    const input = talkingInput || talkingAlt || isTalking;
-    if (input) {
-      input.value = loading;
+    const inp = talkingInput || talkingAlt || isTalking;
+    if (inp) {
+      inp.value = loading;
     }
   }, [loading, talkingInput, talkingAlt, isTalking]);
 
@@ -101,12 +104,7 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const suggestions = [
-    t("chip1"),
-    t("chip2"),
-    t("chip3"),
-    t("chip4"),
-  ];
+  const suggestions = [t("chip1"), t("chip2"), t("chip3"), t("chip4")];
 
   const send = async (text?: string) => {
     const msg = text || input.trim();
@@ -154,24 +152,30 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Eden character header — transparent, Rive-powered animations */}
-      <div className="flex flex-col items-center pt-4 pb-2 px-3">
+      {/* Eden character — large, transparent bg via mix-blend-mode */}
+      <div className="flex flex-col items-center pt-3 pb-1 px-3">
         <button
           type="button"
           onClick={fireWave}
-          className="cursor-pointer"
+          className="cursor-pointer relative"
           title="Say hi!"
         >
+          {/* Radial mask to blend Rive's dark artboard into the landscape bg */}
           <div
-            className="w-[180px] h-[180px]"
+            className="relative w-[220px] h-[220px] eden-rive-wrapper"
             style={{ background: "transparent" }}
           >
-            <RiveComponent
-              style={{ background: "transparent" }}
-            />
+            <RiveComponent className="eden-rive-canvas" />
           </div>
         </button>
-        <h3 className="text-gray-900 dark:text-white font-bold text-base -mt-1">Eden</h3>
+
+        {/* Name with gradient */}
+        <span className="text-xl font-bold bg-gradient-to-r from-drb-turquoise-400 to-drb-lime-400 bg-clip-text text-transparent -mt-2">
+          Eden
+        </span>
+        <p className="text-[11px] text-drb-turquoise-700/70 dark:text-drb-turquoise-300/60 mt-0.5">
+          {t("subtitle")}
+        </p>
       </div>
 
       {/* Messages area */}
@@ -180,21 +184,21 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
           <div className="space-y-3">
             {/* Welcome message */}
             <div className="flex gap-2">
-              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0 shadow-sm">
                 <Bot className="w-3 h-3 text-white" />
               </div>
-              <div className="bg-gray-100 dark:bg-white/[0.06] rounded-xl rounded-tl-sm px-3 py-2 text-xs text-gray-700 dark:text-white/80">
+              <div className="bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-sm rounded-2xl rounded-tl-sm px-3 py-2 text-xs text-drb-turquoise-800 dark:text-white/85 shadow-sm border border-white/40 dark:border-white/[0.06]">
                 {t("welcome")}
               </div>
             </div>
 
-            {/* Quick suggestions */}
+            {/* Quick suggestions — pill style */}
             <div className="flex flex-wrap gap-1.5 ps-8">
               {suggestions.map((s, i) => (
                 <button
                   key={i}
                   onClick={() => send(s)}
-                  className="px-2.5 py-1.5 rounded-lg text-[11px] font-medium border border-drb-turquoise-200 dark:border-drb-turquoise-500/20 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-50 dark:hover:bg-drb-turquoise-500/10 transition-colors"
+                  className="px-3 py-1.5 rounded-full text-[11px] font-medium bg-white/60 dark:bg-drb-turquoise-900/50 backdrop-blur-sm border border-drb-turquoise-200/60 dark:border-drb-turquoise-500/20 text-drb-turquoise-700 dark:text-drb-turquoise-300 hover:bg-drb-turquoise-50 dark:hover:bg-drb-turquoise-500/20 hover:border-drb-turquoise-400 dark:hover:border-drb-turquoise-400/40 transition-all shadow-sm"
                 >
                   {s}
                 </button>
@@ -209,22 +213,24 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
             className={`flex gap-2 ${msg.role === "user" ? "justify-end" : ""}`}
           >
             {msg.role === "assistant" && (
-              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0 shadow-sm">
                 <Bot className="w-3 h-3 text-white" />
               </div>
             )}
             <div
-              className={`max-w-[85%] rounded-xl px-3 py-2 text-xs ${
+              className={`max-w-[85%] rounded-2xl px-3 py-2 text-xs shadow-sm ${
                 msg.role === "user"
-                  ? "bg-drb-turquoise-500 text-white rounded-tr-sm"
-                  : "bg-gray-100 dark:bg-white/[0.06] text-gray-700 dark:text-white/80 rounded-tl-sm"
+                  ? "bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 text-white rounded-tr-sm"
+                  : "bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-sm text-drb-turquoise-800 dark:text-white/85 rounded-tl-sm border border-white/40 dark:border-white/[0.06]"
               }`}
             >
-              <div className="whitespace-pre-wrap break-words">{msg.content}</div>
+              <div className="whitespace-pre-wrap break-words">
+                {msg.content}
+              </div>
             </div>
             {msg.role === "user" && (
-              <div className="w-6 h-6 rounded-md bg-gray-200 dark:bg-white/10 flex items-center justify-center shrink-0">
-                <User className="w-3 h-3 text-gray-500 dark:text-white/50" />
+              <div className="w-6 h-6 rounded-lg bg-white/50 dark:bg-white/10 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-sm">
+                <User className="w-3 h-3 text-drb-turquoise-600 dark:text-white/50" />
               </div>
             )}
           </div>
@@ -232,21 +238,21 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
         {loading && (
           <div className="flex gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0">
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0 shadow-sm">
               <Bot className="w-3 h-3 text-white" />
             </div>
-            <div className="bg-gray-100 dark:bg-white/[0.06] rounded-xl rounded-tl-sm px-3 py-2">
+            <div className="bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-sm rounded-2xl rounded-tl-sm px-3 py-2 shadow-sm border border-white/40 dark:border-white/[0.06]">
               <div className="flex items-center gap-1">
                 <div
-                  className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-400 animate-bounce"
                   style={{ animationDelay: "0ms" }}
                 />
                 <div
-                  className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-400 animate-bounce"
                   style={{ animationDelay: "150ms" }}
                 />
                 <div
-                  className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-400 animate-bounce"
                   style={{ animationDelay: "300ms" }}
                 />
               </div>
@@ -257,26 +263,26 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <div className="border-t border-gray-100 dark:border-white/[0.06] p-3">
-        <div className="flex gap-2">
+      {/* Input — premium style */}
+      <div className="p-3 pt-2">
+        <div className="flex gap-2 bg-white/70 dark:bg-drb-turquoise-900/60 backdrop-blur-sm rounded-full border border-white/50 dark:border-drb-turquoise-500/20 shadow-sm px-1 py-1">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
-            className="panel-input flex-1 text-xs py-2"
+            className="flex-1 bg-transparent text-xs py-1.5 px-3 outline-none text-drb-turquoise-800 dark:text-white placeholder:text-drb-turquoise-400/60 dark:placeholder:text-drb-turquoise-400/40"
             placeholder={t("placeholder")}
             disabled={loading}
           />
           <button
             onClick={() => send()}
             disabled={loading || !input.trim()}
-            className="shrink-0 w-8 h-8 rounded-lg bg-drb-turquoise-500 hover:bg-drb-turquoise-600 disabled:opacity-40 flex items-center justify-center transition-colors"
+            className="shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 hover:from-drb-turquoise-400 hover:to-drb-turquoise-500 disabled:opacity-40 flex items-center justify-center transition-all shadow-sm"
           >
             {loading ? (
-              <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
+              <Loader2 className="w-3 h-3 text-white animate-spin" />
             ) : (
-              <Send className="w-3.5 h-3.5 text-white" />
+              <Send className="w-3 h-3 text-white" />
             )}
           </button>
         </div>
