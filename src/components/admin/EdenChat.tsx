@@ -1,9 +1,17 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Send, Loader2, Bot, User } from "lucide-react";
-import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
+import {
+  useRive,
+  useStateMachineInput,
+  Layout,
+  Fit,
+  Alignment,
+} from "@rive-app/react-canvas";
+
+const STATE_MACHINE = "State Machine 1";
 
 interface Message {
   role: "user" | "assistant";
@@ -20,16 +28,74 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [hasGreeted, setHasGreeted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { RiveComponent } = useRive({
+  const { rive, RiveComponent } = useRive({
     src: "/animations/eden-assistant.riv",
+    stateMachines: STATE_MACHINE,
     autoplay: true,
     layout: new Layout({
       fit: Fit.Contain,
       alignment: Alignment.Center,
     }),
   });
+
+  // Try known input names — the asset exposes trigger/boolean inputs
+  const waveTrigger = useStateMachineInput(rive, STATE_MACHINE, "Wave");
+  const waveTriggerAlt = useStateMachineInput(rive, STATE_MACHINE, "wave");
+  const greetingTrigger = useStateMachineInput(rive, STATE_MACHINE, "Greeting");
+  const talkingInput = useStateMachineInput(rive, STATE_MACHINE, "Talking");
+  const talkingAlt = useStateMachineInput(rive, STATE_MACHINE, "talking");
+  const isTalking = useStateMachineInput(rive, STATE_MACHINE, "isTalking");
+
+  // Log discovered inputs on mount (dev only) and fire greeting
+  useEffect(() => {
+    if (!rive || hasGreeted) return;
+
+    // Discover all available inputs
+    try {
+      const inputs = rive.stateMachineInputs(STATE_MACHINE);
+      if (inputs && inputs.length > 0) {
+        console.log(
+          "[Eden] State machine inputs:",
+          inputs.map((i) => `${i.name} (${i.type})`).join(", ")
+        );
+      }
+    } catch {
+      // rive not ready yet
+    }
+
+    // Fire greeting/wave on first load
+    const timer = setTimeout(() => {
+      const trigger = waveTrigger || waveTriggerAlt || greetingTrigger;
+      if (trigger && typeof (trigger as any).fire === "function") {
+        (trigger as any).fire();
+      } else if (trigger) {
+        trigger.value = true;
+      }
+      setHasGreeted(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [rive, waveTrigger, waveTriggerAlt, greetingTrigger, hasGreeted]);
+
+  // Set talking state while loading AI response
+  useEffect(() => {
+    const input = talkingInput || talkingAlt || isTalking;
+    if (input) {
+      input.value = loading;
+    }
+  }, [loading, talkingInput, talkingAlt, isTalking]);
+
+  const fireWave = useCallback(() => {
+    const trigger = waveTrigger || waveTriggerAlt || greetingTrigger;
+    if (trigger && typeof (trigger as any).fire === "function") {
+      (trigger as any).fire();
+    } else if (trigger) {
+      trigger.value = true;
+    }
+  }, [waveTrigger, waveTriggerAlt, greetingTrigger]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -88,11 +154,23 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Eden character header — no background, floating animation */}
+      {/* Eden character header — transparent, Rive-powered animations */}
       <div className="flex flex-col items-center pt-4 pb-2 px-3">
-        <div className="w-[160px] h-[160px] animate-eden-float">
-          <RiveComponent />
-        </div>
+        <button
+          type="button"
+          onClick={fireWave}
+          className="cursor-pointer"
+          title="Say hi!"
+        >
+          <div
+            className="w-[180px] h-[180px]"
+            style={{ background: "transparent" }}
+          >
+            <RiveComponent
+              style={{ background: "transparent" }}
+            />
+          </div>
+        </button>
         <h3 className="text-gray-900 dark:text-white font-bold text-base -mt-1">Eden</h3>
       </div>
 
