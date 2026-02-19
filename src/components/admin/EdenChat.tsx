@@ -117,7 +117,7 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
         >
           <div className="w-[160%] h-[160%] origin-center" style={{ transform: "scale(0.625)", transformOrigin: "center center" }}>
             <Spline
-              scene="https://prod.spline.design/BkOlv0JtuanNyTN9/scene.splinecode"
+              scene="https://prod.spline.design/PX9GtYNPr-kMz72z/scene.splinecode"
               onLoad={handleSplineLoad}
             />
           </div>
