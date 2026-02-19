@@ -464,19 +464,4 @@ html {
     padding: 6px 8px !important;
   }
 
-  /* ─── Eden Rive — circular clip + radial vignette ─── */
-  .eden-rive-wrapper {
-    position: relative;
-    border-radius: 50%;
-    overflow: hidden;
-  }
-  /* Radial vignette: softens edges into the near-black sky behind */
-  .eden-rive-wrapper::after {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    background: radial-gradient(circle, transparent 45%, #010A0F 78%);
-    pointer-events: none;
-  }
 }

@@ -152,21 +152,40 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Eden character — sits on dark sky, vignette blends artboard edges */}
-      <div className="flex flex-col items-center pt-2 pb-0 px-3">
+      {/* Eden starry night card — black artboard blends into dark gradient */}
+      <div className="flex flex-col items-center pt-2 pb-1 px-3">
         <button
           type="button"
           onClick={fireWave}
-          className="cursor-pointer"
+          className="cursor-pointer relative rounded-2xl overflow-hidden"
           title="Say hi!"
+          style={{
+            background:
+              "linear-gradient(180deg, #000000 0%, #041820 50%, #0C4551 100%)",
+          }}
         >
-          <div className="w-[220px] h-[220px] eden-rive-wrapper">
+          {/* Decorative stars */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-4 start-5 w-1 h-1 rounded-full bg-white/40" />
+            <div className="absolute top-8 end-6 w-0.5 h-0.5 rounded-full bg-white/30" />
+            <div className="absolute top-3 end-10 w-0.5 h-0.5 rounded-full bg-white/50" />
+            <div className="absolute top-12 start-8 w-0.5 h-0.5 rounded-full bg-white/25" />
+            {/* Moon glow */}
+            <div
+              className="absolute top-3 end-4 w-5 h-5 rounded-full"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(212,242,77,0.25) 0%, transparent 70%)",
+              }}
+            />
+          </div>
+          <div className="w-[200px] h-[200px]">
             <RiveComponent />
           </div>
         </button>
 
-        {/* Name with gradient — no subtitle */}
-        <span className="text-2xl font-bold bg-gradient-to-r from-drb-turquoise-300 to-drb-lime-400 bg-clip-text text-transparent -mt-3">
+        {/* Name with gradient */}
+        <span className="text-2xl font-bold bg-gradient-to-r from-drb-turquoise-300 to-drb-lime-400 bg-clip-text text-transparent mt-1.5">
           Eden
         </span>
       </div>

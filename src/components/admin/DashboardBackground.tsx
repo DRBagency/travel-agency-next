@@ -1,10 +1,9 @@
 "use client";
 
 /**
- * Very subtle mountain landscape for the dashboard main content area.
- * Uses warm/lime tones at very low opacity — barely visible watermark effect.
- * Light mode: pale green mountains on white.
- * Dark mode: dark turquoise mountains on dark bg.
+ * Subtle but VISIBLE mountain landscape for the dashboard main area.
+ * Mountains at 15-25% opacity — visible in empty spaces between cards.
+ * Light mode: turquoise pastels. Dark mode: dark turquoise tones.
  */
 export default function DashboardBackground() {
   return (
@@ -15,54 +14,66 @@ export default function DashboardBackground() {
       preserveAspectRatio="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Light mode layers */}
+      <defs>
+        {/* Light mode subtle sky tint */}
+        <linearGradient id="dashSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="60%" stopColor="#E6F9FA" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#CCF3F5" stopOpacity="0.5" />
+        </linearGradient>
+        {/* Dark mode sky */}
+        <linearGradient id="dashSkyDark" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#041820" stopOpacity="0" />
+          <stop offset="70%" stopColor="#072331" stopOpacity="0.3" />
+          <stop offset="100%" stopColor="#0C4551" stopOpacity="0.2" />
+        </linearGradient>
+      </defs>
+
+      {/* Light mode */}
       <g className="dark:hidden">
-        {/* Subtle sky tint */}
-        <rect width="1200" height="800" fill="#E6F9FA" opacity="0.3" />
+        {/* Sky tint in lower half */}
+        <rect width="1200" height="800" fill="url(#dashSky)" />
 
-        {/* Mountain layer 3 — far, lime tint */}
+        {/* Mountain layer 3 — farthest */}
         <path
-          d="M0 520 Q100 400 200 460 Q300 380 400 440 Q500 360 600 420 Q700 370 800 430 Q900 380 1000 450 Q1100 400 1200 440 L1200 800 L0 800Z"
-          fill="#EBFBC3"
-          opacity="0.08"
+          d="M0 500 Q100 380 200 440 Q300 360 400 420 Q500 350 600 400 Q700 340 800 410 Q900 370 1000 430 Q1100 380 1200 420 L1200 800 L0 800Z"
+          fill="#CCF3F5"
+          opacity="0.3"
         />
 
-        {/* Mountain layer 2 — mid, turquoise tint */}
+        {/* Mountain layer 2 — middle */}
         <path
-          d="M0 580 Q80 480 180 530 Q280 450 380 510 Q480 440 580 500 Q680 460 780 510 Q880 450 980 520 Q1080 470 1200 500 L1200 800 L0 800Z"
+          d="M0 570 Q80 470 180 520 Q280 440 380 500 Q480 420 580 480 Q680 440 780 490 Q880 430 980 500 Q1080 460 1200 490 L1200 800 L0 800Z"
           fill="#99E7EB"
-          opacity="0.1"
-        />
-
-        {/* Mountain layer 1 — front, slightly stronger */}
-        <path
-          d="M0 640 Q100 560 200 600 Q300 540 400 590 Q500 550 600 580 Q700 540 800 580 Q900 550 1000 590 Q1100 560 1200 580 L1200 800 L0 800Z"
-          fill="#66DBE1"
-          opacity="0.08"
-        />
-      </g>
-
-      {/* Dark mode layers */}
-      <g className="hidden dark:block">
-        {/* Mountain layer 3 — far */}
-        <path
-          d="M0 520 Q100 400 200 460 Q300 380 400 440 Q500 360 600 420 Q700 370 800 430 Q900 380 1000 450 Q1100 400 1200 440 L1200 800 L0 800Z"
-          fill="#0C4551"
-          opacity="0.06"
-        />
-
-        {/* Mountain layer 2 — mid */}
-        <path
-          d="M0 580 Q80 480 180 530 Q280 450 380 510 Q480 440 580 500 Q680 460 780 510 Q880 450 980 520 Q1080 470 1200 500 L1200 800 L0 800Z"
-          fill="#126771"
-          opacity="0.08"
+          opacity="0.25"
         />
 
         {/* Mountain layer 1 — front */}
         <path
-          d="M0 640 Q100 560 200 600 Q300 540 400 590 Q500 550 600 580 Q700 540 800 580 Q900 550 1000 590 Q1100 560 1200 580 L1200 800 L0 800Z"
+          d="M0 630 Q100 550 200 590 Q300 530 400 580 Q500 540 600 570 Q700 530 800 570 Q900 540 1000 580 Q1100 550 1200 570 L1200 800 L0 800Z"
+          fill="#66DBE1"
+          opacity="0.2"
+        />
+      </g>
+
+      {/* Dark mode */}
+      <g className="hidden dark:block">
+        <rect width="1200" height="800" fill="url(#dashSkyDark)" />
+
+        <path
+          d="M0 500 Q100 380 200 440 Q300 360 400 420 Q500 350 600 400 Q700 340 800 410 Q900 370 1000 430 Q1100 380 1200 420 L1200 800 L0 800Z"
+          fill="#0C4551"
+          opacity="0.2"
+        />
+        <path
+          d="M0 570 Q80 470 180 520 Q280 440 380 500 Q480 420 580 480 Q680 440 780 490 Q880 430 980 500 Q1080 460 1200 490 L1200 800 L0 800Z"
+          fill="#126771"
+          opacity="0.15"
+        />
+        <path
+          d="M0 630 Q100 550 200 590 Q300 530 400 580 Q500 540 600 570 Q700 530 800 570 Q900 540 1000 580 Q1100 550 1200 570 L1200 800 L0 800Z"
           fill="#178991"
-          opacity="0.06"
+          opacity="0.1"
         />
       </g>
     </svg>

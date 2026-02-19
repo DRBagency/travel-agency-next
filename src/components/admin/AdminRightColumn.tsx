@@ -115,7 +115,7 @@ export default function AdminRightColumn({
       {/* Content layer on top of landscape */}
       <div className="relative z-10 flex flex-col h-full">
         {/* ── Profile card — glassmorphism over dark sky ── */}
-        <div className="relative mx-3 mt-3 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 shadow-lg p-4">
+        <div className="relative mx-3 mt-3 rounded-2xl bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg p-4">
           {/* Notification bell */}
           <div className="absolute top-3 end-3 z-20">
             <NotificationBell clienteId={clienteId} />
@@ -185,7 +185,7 @@ export default function AdminRightColumn({
         </div>
 
         {/* ── Eden Chat card — glassmorphism, fills remaining space ── */}
-        <div className="flex-1 min-h-0 flex flex-col mx-3 mt-2.5 mb-3 rounded-2xl bg-white/20 backdrop-blur-md border border-white/25 shadow-lg overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col mx-3 mt-2.5 mb-3 rounded-2xl bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg overflow-hidden">
           <EdenChat clienteId={clienteId || ""} agencyContext={agencyContext} />
         </div>
       </div>
