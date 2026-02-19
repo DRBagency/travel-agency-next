@@ -464,4 +464,13 @@ html {
     padding: 6px 8px !important;
   }
 
+  /* ─── Spline: transparent bg + hide watermark ─── */
+  .eden-spline-wrapper canvas {
+    background: transparent !important;
+  }
+  .eden-spline-wrapper > div > a,
+  .eden-spline-wrapper a[href*="spline.design"],
+  .eden-spline-wrapper a[href*="spline"] {
+    display: none !important;
+  }
 }
