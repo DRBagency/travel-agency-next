@@ -464,13 +464,7 @@ html {
     padding: 6px 8px !important;
   }
 
-  /* ─── Spline: blend purple bg + nuke watermark ─── */
-  .eden-spline-wrapper {
-    background: #072331;
-  }
-  .eden-spline-wrapper canvas {
-    mix-blend-mode: screen !important;
-  }
+  /* ─── Spline: hide watermark ─── */
   .eden-spline-wrapper a[href*="spline"],
   .eden-spline-wrapper > div > a,
   .eden-spline-wrapper > div > div:last-child,
