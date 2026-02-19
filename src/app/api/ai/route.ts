@@ -34,6 +34,15 @@ type AIAction =
   | "ai-recommendations"
   | "free-chat";
 
+// Actions that return JSON — strip markdown code fences from response
+const JSON_ACTIONS: AIAction[] = ["generate-itinerary", "optimize-pricing", "suggest-destinations"];
+
+function stripCodeFences(text: string): string {
+  const trimmed = text.trim();
+  const match = trimmed.match(/^```(?:json|JSON)?\s*\n?([\s\S]*?)\n?\s*```$/);
+  return match ? match[1].trim() : trimmed;
+}
+
 function getSystemPrompt(action: AIAction, data: Record<string, any>): string {
   const prompts: Record<AIAction, string> = {
     "generate-itinerary": `Eres un experto planificador de viajes de una agencia de viajes profesional. Genera itinerarios detallados día por día.
@@ -198,7 +207,12 @@ export async function POST(req: NextRequest) {
     });
 
     const textContent = message.content.find((c) => c.type === "text");
-    const responseText = textContent?.text || "";
+    let responseText = textContent?.text || "";
+
+    // Strip markdown code fences from JSON responses
+    if (JSON_ACTIONS.includes(action)) {
+      responseText = stripCodeFences(responseText);
+    }
 
     return NextResponse.json({
       result: responseText,

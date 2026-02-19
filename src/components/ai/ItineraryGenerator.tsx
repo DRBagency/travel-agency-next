@@ -161,7 +161,11 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "AI request failed");
 
-      const parsed = JSON.parse(json.result) as ItineraryResult;
+      // Strip markdown code fences if present (safety net)
+      let raw = json.result;
+      const fenceMatch = raw.trim().match(/^```(?:json|JSON)?\s*\n?([\s\S]*?)\n?\s*```$/);
+      if (fenceMatch) raw = fenceMatch[1].trim();
+      const parsed = JSON.parse(raw) as ItineraryResult;
       setResult(parsed);
       setExpandedDay(0);
     } catch (err: any) {

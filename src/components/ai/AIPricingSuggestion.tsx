@@ -48,7 +48,11 @@ Sugiere un precio competitivo con justificación.`,
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Error");
-      setResult(JSON.parse(json.result));
+      // Strip markdown code fences if present (safety net)
+      let raw = json.result;
+      const fenceMatch = raw.trim().match(/^```(?:json|JSON)?\s*\n?([\s\S]*?)\n?\s*```$/);
+      if (fenceMatch) raw = fenceMatch[1].trim();
+      setResult(JSON.parse(raw));
     } catch (e: any) {
       setError(e.message || t("errorGeneric"));
     } finally {
