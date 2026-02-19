@@ -100,7 +100,8 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
       <div className="flex flex-col items-center pt-2 pb-1 px-3">
         <div
           ref={splineContainerRef}
-          className="eden-spline-wrapper relative w-full h-[280px] rounded-2xl overflow-hidden"
+          className="eden-spline-wrapper relative w-full rounded-2xl overflow-hidden"
+          style={{ height: 280, maxHeight: 280, minHeight: 280 }}
         >
           <Spline scene="https://prod.spline.design/PX9GtYNPr-kMz72z/scene.splinecode" />
         </div>
