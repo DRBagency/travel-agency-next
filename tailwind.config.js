@@ -118,7 +118,6 @@ module.exports = {
         'marquee-reverse': 'marqueeReverse var(--marquee-duration, 40s) linear infinite',
         'gradient-shift': 'gradientShift 8s ease infinite',
         'spin-slow': 'spin 20s linear infinite',
-        'eden-float': 'edenFloat 3s ease-in-out infinite',
       },
       keyframes: {
         slideInRight: {
@@ -165,10 +164,6 @@ module.exports = {
         gradientShift: {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
-        },
-        edenFloat: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-8px)' },
         },
       },
     },
