@@ -88,18 +88,12 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Gradient background header with Rive character */}
-      <div className="relative overflow-hidden rounded-2xl mx-3 mt-3 bg-gradient-to-br from-drb-turquoise-500 via-drb-turquoise-600 to-drb-turquoise-700">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,242,77,0.15),transparent_60%)]" />
-        <div className="relative flex flex-col items-center py-4 px-3">
-          <div className="w-[100px] h-[100px] mb-2">
-            <RiveComponent />
-          </div>
-          <h3 className="text-white font-bold text-base">Eden</h3>
-          <p className="text-white/70 text-xs text-center mt-0.5">
-            {t("subtitle")}
-          </p>
+      {/* Eden character header — no background, floating animation */}
+      <div className="flex flex-col items-center pt-4 pb-2 px-3">
+        <div className="w-[160px] h-[160px] animate-eden-float">
+          <RiveComponent />
         </div>
+        <h3 className="text-gray-900 dark:text-white font-bold text-base -mt-1">Eden</h3>
       </div>
 
       {/* Messages area */}

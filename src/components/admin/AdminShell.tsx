@@ -54,6 +54,8 @@ interface AdminShellProps {
   plan?: string;
   primaryColor?: string | null;
   logoUrl?: string | null;
+  profilePhoto?: string | null;
+  contactPhone?: string | null;
   subscriptionActive?: boolean;
   agencyContext?: string;
   children: ReactNode;
@@ -379,6 +381,8 @@ const AdminShell = ({
   plan,
   primaryColor,
   logoUrl,
+  profilePhoto,
+  contactPhone,
   subscriptionActive = true,
   agencyContext = "",
   children,
@@ -478,7 +482,9 @@ const AdminShell = ({
           clientEmail={clientEmail}
           clienteId={clienteId}
           logoUrl={logoUrl}
+          profilePhoto={profilePhoto}
           primaryColor={primaryColor}
+          contactPhone={contactPhone}
           agencyContext={agencyContext}
           plan={plan}
         />

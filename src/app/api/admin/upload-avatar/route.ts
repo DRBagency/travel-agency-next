@@ -17,11 +17,17 @@ export async function POST(req: NextRequest) {
 
   const ext = file.name.split(".").pop() || "png";
   const filename = `avatars/${clienteId}.${ext}`;
-  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  // Ensure bucket exists (idempotent)
+  await supabaseAdmin.storage.createBucket("public-assets", {
+    public: true,
+    fileSizeLimit: 5 * 1024 * 1024, // 5MB
+  });
 
   const { error: uploadError } = await supabaseAdmin.storage
     .from("public-assets")
-    .upload(filename, arrayBuffer, {
+    .upload(filename, buffer, {
       contentType: file.type,
       upsert: true,
     });
@@ -34,13 +40,18 @@ export async function POST(req: NextRequest) {
     .from("public-assets")
     .getPublicUrl(filename);
 
-  const url = urlData.publicUrl;
+  // Add cache-busting param so browser shows updated image
+  const url = `${urlData.publicUrl}?t=${Date.now()}`;
 
-  // Update the logo_url field on the clientes table
-  await supabaseAdmin
+  // Update the profile_photo field (separate from logo_url)
+  const { error: dbError } = await supabaseAdmin
     .from("clientes")
-    .update({ logo_url: url })
+    .update({ profile_photo: url })
     .eq("id", clienteId);
+
+  if (dbError) {
+    return NextResponse.json({ error: dbError.message }, { status: 500 });
+  }
 
   return NextResponse.json({ url });
 }

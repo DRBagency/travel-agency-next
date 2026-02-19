@@ -131,7 +131,10 @@
       "chip2": "Sugerir destinos",
       "chip3": "Escribir email",
       "chip4": "Analizar reservas",
-      "editProfile": "Editar perfil"
+      "editProfile": "Editar perfil",
+      "photoUpdated": "Foto actualizada",
+      "profileSaved": "Perfil guardado",
+      "phone": "Teléfono"
     },
     "dashboard": {
       "greeting": "Hola, {name}!",
