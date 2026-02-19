@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { sileo } from "sileo";
 import {
   Bell,
   MessageSquare,
@@ -12,7 +13,6 @@ import {
   UserPlus,
   CheckCheck,
 } from "lucide-react";
-import { toast } from "sonner";
 
 interface Notification {
   id: string;
@@ -76,7 +76,8 @@ export default function NotificationBell({ clienteId, isOwner }: Props) {
         if (newNotifs.length > prev.length && prev.length > 0) {
           const newest = newNotifs[0];
           if (newest) {
-            toast.info(newest.title, {
+            sileo.info({
+              title: newest.title,
               description: newest.description || undefined,
             });
           }

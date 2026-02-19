@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Sparkles, Loader2, Check, RefreshCw, Eye } from "lucide-react";
+import { sileo } from "sileo";
 
 interface Props {
   clienteId: string;
@@ -47,6 +48,7 @@ El email debe ser profesional, atractivo y con estilos inline.`,
       setResult(json.result);
     } catch (e: any) {
       setResult(`<p style="color:red">⚠️ ${e.message || t("errorGeneric")}</p>`);
+      sileo.error({ title: "Error al generar email" });
     } finally {
       setLoading(false);
     }

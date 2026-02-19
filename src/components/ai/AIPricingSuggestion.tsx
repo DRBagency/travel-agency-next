@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Lightbulb, Loader2, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { sileo } from "sileo";
 
 interface PricingResult {
   precio_sugerido: number;
@@ -55,6 +56,7 @@ Sugiere un precio competitivo con justificación.`,
       setResult(JSON.parse(raw));
     } catch (e: any) {
       setError(e.message || t("errorGeneric"));
+      sileo.error({ title: "Error al analizar precio" });
     } finally {
       setLoading(false);
     }

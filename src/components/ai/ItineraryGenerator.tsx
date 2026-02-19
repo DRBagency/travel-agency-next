@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
   Sparkles,
   MapPin,
@@ -367,13 +367,13 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
       });
       if (res.ok) {
         setSaved(true);
-        toast.success(t("saveSuccess"));
+        sileo.success({ title: t("saveSuccess") });
       } else {
         const json = await res.json().catch(() => ({}));
         throw new Error(json.error || t("saveError"));
       }
     } catch (err: any) {
-      toast.error(err.message || t("saveError"));
+      sileo.error({ title: err.message || t("saveError") });
     } finally {
       setSaving(false);
     }

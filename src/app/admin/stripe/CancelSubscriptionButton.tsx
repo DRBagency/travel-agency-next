@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { sileo } from "sileo";
 
 export default function CancelSubscriptionButton() {
   const t = useTranslations('admin.stripe');
@@ -25,10 +26,10 @@ export default function CancelSubscriptionButton() {
         throw new Error(data.error || t('cancelError'));
       }
 
-      alert(t('cancelSuccess'));
+      sileo.success({ title: "Suscripción cancelada" });
       window.location.reload();
     } catch (error: any) {
-      alert(error.message || t('cancelError'));
+      sileo.error({ title: "Error al cancelar suscripción" });
       console.error("❌ [CancelSubscriptionButton]", error);
     } finally {
       setLoading(false);

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { sileo } from "sileo";
 
 export default function ReactivateSubscriptionButton() {
   const t = useTranslations('admin.stripe');
@@ -25,10 +26,10 @@ export default function ReactivateSubscriptionButton() {
         throw new Error(data.error || t('reactivateError'));
       }
 
-      alert(t('reactivateSuccess'));
+      sileo.success({ title: "Suscripción reactivada" });
       window.location.reload();
     } catch (error: any) {
-      alert(error.message || t('reactivateError'));
+      sileo.error({ title: "Error al reactivar suscripción" });
       console.error("❌ [ReactivateSubscriptionButton]", error);
     } finally {
       setLoading(false);

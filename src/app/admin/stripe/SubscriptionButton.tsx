@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { sileo } from "sileo";
 
 export default function SubscriptionButton() {
   const t = useTranslations('admin.stripe');
@@ -21,7 +22,7 @@ export default function SubscriptionButton() {
       }
       window.location.href = data.url;
     } catch {
-      alert(t('checkoutError'));
+      sileo.error({ title: "Error al crear suscripción" });
     } finally {
       setLoading(false);
     }

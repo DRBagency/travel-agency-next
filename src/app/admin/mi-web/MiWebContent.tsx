@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { sileo } from "sileo";
 import {
   ChevronDown,
   ChevronRight,
@@ -163,6 +164,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
         ...prev,
         [section]: { loading: false, success: true, error: null },
       }));
+      sileo.success({ title: "Guardado correctamente" });
       setTimeout(() => {
         setSaveStates((prev) => ({
           ...prev,
@@ -178,6 +180,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
           error: err instanceof Error ? err.message : tc("error"),
         },
       }));
+      sileo.error({ title: "Error al guardar" });
     }
   }
 

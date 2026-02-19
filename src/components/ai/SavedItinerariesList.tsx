@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
   MapPin,
   Calendar,
@@ -65,12 +65,12 @@ export default function SavedItinerariesList({ clienteId }: Props) {
 
       if (res.ok) {
         setItineraries((prev) => prev.filter((it) => it.id !== id));
-        toast.success(tc("success"));
+        sileo.success({ title: tc("success") });
       } else {
         throw new Error("Failed to delete");
       }
     } catch {
-      toast.error(tc("error"));
+      sileo.error({ title: tc("error") });
     } finally {
       setDeletingId(null);
     }

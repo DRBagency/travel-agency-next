@@ -3,7 +3,8 @@ import { Manrope, Sora, Noto_Sans_Arabic } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
-import { Toaster } from "sonner";
+import { Toaster } from "sileo";
+import "sileo/styles.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -46,7 +47,7 @@ export default async function RootLayout({
         >
           <NextIntlClientProvider messages={messages}>
             {children}
-            <Toaster position="top-right" richColors closeButton />
+            <Toaster position="top-center" />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { sileo } from "sileo";
 import {
   Sparkles,
   Loader2,
@@ -150,9 +151,10 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
         itinerario: itinerary,
       });
 
+      sileo.success({ title: t("aiGenerated") });
       setOpen(false);
     } catch {
-      // silently fail
+      sileo.error({ title: ti("errorGeneric") });
     } finally {
       setLoading(false);
     }

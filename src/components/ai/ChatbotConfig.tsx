@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Bot, Save, Loader2, Plus, Trash2, Lightbulb } from "lucide-react";
+import { sileo } from "sileo";
 
 interface FAQ {
   question: string;
@@ -100,9 +101,12 @@ export default function ChatbotConfig({ clienteId, initialConfig, destinos }: Pr
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ clienteId, config }),
       });
-      if (res.ok) setSaved(true);
+      if (res.ok) {
+        setSaved(true);
+        sileo.success({ title: "Configuración guardada" });
+      }
     } catch {
-      // silent
+      sileo.error({ title: "Error al guardar configuración" });
     } finally {
       setSaving(false);
     }

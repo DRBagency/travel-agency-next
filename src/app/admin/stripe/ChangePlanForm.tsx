@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { sileo } from "sileo";
 
 interface ChangePlanFormProps {
   currentPlan: string;
@@ -30,7 +31,7 @@ export default function ChangePlanForm({
       }
       window.location.reload();
     } catch {
-      alert(t('changePlanError'));
+      sileo.error({ title: "Error al cambiar plan" });
     } finally {
       setLoading(false);
     }

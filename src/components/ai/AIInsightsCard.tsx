@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Brain, Loader2, RefreshCw } from "lucide-react";
+import { sileo } from "sileo";
 
 interface Props {
   metricsContext: string;
@@ -30,6 +31,7 @@ export default function AIInsightsCard({ metricsContext }: Props) {
       setResult(json.result);
     } catch (e: any) {
       setResult(`⚠️ ${e.message || t("errorGeneric")}`);
+      sileo.error({ title: "Error al generar informe" });
     } finally {
       setLoading(false);
     }

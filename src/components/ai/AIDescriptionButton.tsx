@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Sparkles, Loader2, RefreshCw, Check } from "lucide-react";
+import { sileo } from "sileo";
 
 interface Props {
   context: string; // e.g. destination name, field context
@@ -48,6 +49,7 @@ Idioma: ${lang === "es" ? "español" : lang === "en" ? "inglés" : "árabe"}`,
       setResult(json.result);
     } catch (e: any) {
       setResult(`⚠️ ${e.message || t("errorGeneric")}`);
+      sileo.error({ title: "Error al generar descripción" });
     } finally {
       setLoading(false);
     }

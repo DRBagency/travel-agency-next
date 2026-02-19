@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { sileo } from "sileo";
 
 interface ConnectStripeButtonProps {
   label: string;
@@ -32,7 +33,7 @@ export default function ConnectStripeButton({
 
       window.location.href = data.url;
     } catch {
-      alert(t('onboardingError'));
+      sileo.error({ title: "Error al conectar Stripe" });
     } finally {
       setLoading(false);
     }

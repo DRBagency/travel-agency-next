@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from 'next-intl';
+import { sileo } from "sileo";
 import {
   Calendar,
   Link2,
@@ -350,6 +351,7 @@ export default function CalendarioContent({
           }),
         });
         if (!res.ok) throw new Error("Error updating");
+        sileo.success({ title: "Evento actualizado" });
       } else {
         const res = await fetch(`${apiBasePath}/events`, {
           method: "POST",
@@ -364,12 +366,13 @@ export default function CalendarioContent({
           }),
         });
         if (!res.ok) throw new Error("Error creating");
+        sileo.success({ title: "Evento creado" });
       }
 
       setModalOpen(false);
       fetchEvents();
     } catch {
-      alert(t('errorSaving'));
+      sileo.error({ title: "Error en la operación" });
     } finally {
       setFormSaving(false);
     }
@@ -383,11 +386,12 @@ export default function CalendarioContent({
         method: "DELETE",
       });
       if (res.ok) {
+        sileo.success({ title: "Evento eliminado" });
         fetchEvents();
         setModalOpen(false);
       }
     } catch {
-      alert(t('errorDeleting'));
+      sileo.error({ title: "Error en la operación" });
     }
   };
 
@@ -400,10 +404,11 @@ export default function CalendarioContent({
         method: "POST",
       });
       if (res.ok) {
+        sileo.success({ title: "Google Calendar desconectado" });
         window.location.reload();
       }
     } catch {
-      alert(t('errorDisconnecting'));
+      sileo.error({ title: "Error en la operación" });
     } finally {
       setDisconnecting(false);
     }
@@ -420,11 +425,12 @@ export default function CalendarioContent({
         body: JSON.stringify({ url: embedUrl.trim() }),
       });
       if (res.ok) {
+        sileo.success({ title: "URL guardada" });
         setSavedUrl(true);
         setTimeout(() => setSavedUrl(false), 3000);
       }
     } catch {
-      alert(t('errorSavingUrl'));
+      sileo.error({ title: "Error en la operación" });
     } finally {
       setSavingUrl(false);
     }
