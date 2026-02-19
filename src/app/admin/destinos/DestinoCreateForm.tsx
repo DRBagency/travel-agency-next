@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { isAILocked } from "@/lib/plan-gating";
 import DestinoAIGenerator from "./DestinoAIGenerator";
 import DestinoDescriptionField from "./DestinoDescriptionField";
 import DestinoPriceFieldWithAI from "./DestinoPriceFieldWithAI";
 import DestinoImageField from "./DestinoImageField";
+import ItineraryEditor from "./ItineraryEditor";
 import SubmitButton from "@/components/admin/SubmitButton";
 
 interface DestinoCreateFormProps {
@@ -41,7 +42,6 @@ export default function DestinoCreateForm({
   const [imagenUrl, setImagenUrl] = useState("");
   const [itinerario, setItinerario] = useState<any>(null);
   const [activo, setActivo] = useState(true);
-  const [previewOpen, setPreviewOpen] = useState(false);
 
   const handleAIGenerated = (data: {
     nombre: string;
@@ -152,42 +152,12 @@ export default function DestinoCreateForm({
             {labels.publishNow}
           </label>
 
-          {/* Itinerary preview */}
+          {/* Itinerary editor */}
           {itinerario && dias.length > 0 && (
-            <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setPreviewOpen(!previewOpen)}
-                className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-white/[0.03] text-start"
-              >
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-drb-turquoise-500" />
-                  <span className="text-sm font-medium text-gray-700 dark:text-white/70">
-                    {t("hasItinerary")} — {dias.length} {dias.length === 1 ? "día" : "días"}
-                  </span>
-                </div>
-                {previewOpen ? (
-                  <ChevronUp className="w-4 h-4 text-gray-400" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
-                )}
-              </button>
-              {previewOpen && (
-                <div className="px-4 py-3 space-y-2 max-h-72 overflow-y-auto">
-                  {dias.map((dia: any, i: number) => (
-                    <div
-                      key={i}
-                      className="text-sm text-gray-600 dark:text-white/60 border-s-2 border-drb-turquoise-300 dark:border-drb-turquoise-500/40 ps-3 py-1"
-                    >
-                      <span className="font-medium text-gray-800 dark:text-white/80">
-                        {t("dayLabel", { n: i + 1 })}:
-                      </span>{" "}
-                      {dia.titulo || dia.title || `Day ${i + 1}`}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ItineraryEditor
+              itinerario={itinerario}
+              onChange={(updated) => setItinerario(updated)}
+            />
           )}
 
           <div className="flex justify-end">

@@ -178,7 +178,17 @@
       "hasItinerary": "Itinerario IA",
       "styleRelax": "Relax",
       "styleCultural": "Cultural",
-      "styleAdventure": "Aventura"
+      "styleAdventure": "Aventura",
+      "itinerarySummary": "Resumen",
+      "editItinerary": "Editar itinerario",
+      "addTip": "Añadir consejo",
+      "localTip": "Consejo local",
+      "activityTitle": "Título",
+      "activityDesc": "Descripción",
+      "activityPrice": "Precio est.",
+      "activityDuration": "Duración",
+      "searchUnsplash": "Buscar en Unsplash",
+      "dayLabel": "Día {n}"
     },
     "soporte": {
       "title": "Soporte",

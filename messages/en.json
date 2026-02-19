@@ -178,7 +178,17 @@
       "hasItinerary": "AI Itinerary",
       "styleRelax": "Relax",
       "styleCultural": "Cultural",
-      "styleAdventure": "Adventure"
+      "styleAdventure": "Adventure",
+      "itinerarySummary": "Summary",
+      "editItinerary": "Edit itinerary",
+      "addTip": "Add tip",
+      "localTip": "Local tip",
+      "activityTitle": "Title",
+      "activityDesc": "Description",
+      "activityPrice": "Est. price",
+      "activityDuration": "Duration",
+      "searchUnsplash": "Search Unsplash",
+      "dayLabel": "Day {n}"
     },
     "reservas": {
       "title": "Bookings",

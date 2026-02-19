@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { Pencil, ImageIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   Dialog,
@@ -12,6 +12,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import SubmitButton from "@/components/admin/SubmitButton";
+import ItineraryEditor from "./ItineraryEditor";
+import UnsplashPicker from "@/app/admin/mi-web/UnsplashPicker";
 
 interface DestinoEditDialogProps {
   destino: {
@@ -35,9 +37,10 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
   const [precio, setPrecio] = useState(destino.precio ?? 0);
   const [imagenUrl, setImagenUrl] = useState(destino.imagen_url ?? "");
   const [activo, setActivo] = useState(destino.activo);
-  const [previewOpen, setPreviewOpen] = useState(false);
+  const [itinerario, setItinerario] = useState(destino.itinerario);
+  const [unsplashOpen, setUnsplashOpen] = useState(false);
 
-  const dias = destino.itinerario?.dias || destino.itinerario?.days || [];
+  const dias = itinerario?.dias || itinerario?.days || [];
 
   const handleSubmit = async (formData: FormData) => {
     await action(formData);
@@ -55,7 +58,7 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
           {tc("edit")}
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("editDestination")}</DialogTitle>
           <DialogDescription>{t("editDestinationDesc")}</DialogDescription>
@@ -63,7 +66,7 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
 
         <form action={handleSubmit} className="grid gap-4">
           <input type="hidden" name="id" value={destino.id} />
-          <input type="hidden" name="itinerario" value={destino.itinerario ? JSON.stringify(destino.itinerario) : ""} />
+          <input type="hidden" name="itinerario" value={itinerario ? JSON.stringify(itinerario) : ""} />
 
           <div>
             <label className="panel-label">{tc("name")}</label>
@@ -100,12 +103,22 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
           <div>
             <label className="panel-label">Imagen</label>
             <input type="hidden" name="imagen_url" value={imagenUrl} />
-            <input
-              value={imagenUrl}
-              onChange={(e) => setImagenUrl(e.target.value)}
-              className="panel-input w-full"
-              placeholder="https://..."
-            />
+            <div className="flex gap-2">
+              <input
+                value={imagenUrl}
+                onChange={(e) => setImagenUrl(e.target.value)}
+                className="panel-input w-full flex-1"
+                placeholder="https://..."
+              />
+              <button
+                type="button"
+                onClick={() => setUnsplashOpen(true)}
+                className="shrink-0 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors"
+                title={t("searchUnsplash")}
+              >
+                <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/50" />
+              </button>
+            </div>
             {imagenUrl && (
               <div className="mt-2 rounded-xl border border-gray-200 dark:border-white/20 overflow-hidden max-w-xs">
                 <img
@@ -128,42 +141,12 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
             {tc("active")}
           </label>
 
-          {/* Itinerary preview */}
-          {destino.itinerario && dias.length > 0 && (
-            <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setPreviewOpen(!previewOpen)}
-                className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-white/[0.03] text-start"
-              >
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5 text-drb-turquoise-500" />
-                  <span className="text-sm font-medium text-gray-700 dark:text-white/70">
-                    {t("hasItinerary")} — {dias.length} {dias.length === 1 ? "día" : "días"}
-                  </span>
-                </div>
-                {previewOpen ? (
-                  <ChevronUp className="w-4 h-4 text-gray-400" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
-                )}
-              </button>
-              {previewOpen && (
-                <div className="px-4 py-3 space-y-1.5 max-h-48 overflow-y-auto">
-                  {dias.map((dia: any, i: number) => (
-                    <div
-                      key={i}
-                      className="text-sm text-gray-600 dark:text-white/60 border-s-2 border-drb-turquoise-300 dark:border-drb-turquoise-500/40 ps-3 py-1"
-                    >
-                      <span className="font-medium text-gray-800 dark:text-white/80">
-                        {t("dayLabel", { n: i + 1 })}:
-                      </span>{" "}
-                      {dia.titulo || dia.title || `Day ${i + 1}`}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          {/* Itinerary editor */}
+          {itinerario && dias.length > 0 && (
+            <ItineraryEditor
+              itinerario={itinerario}
+              onChange={(updated) => setItinerario(updated)}
+            />
           )}
 
           <div className="flex justify-end gap-2 pt-2">
@@ -180,6 +163,13 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
           </div>
         </form>
       </DialogContent>
+
+      <UnsplashPicker
+        open={unsplashOpen}
+        onClose={() => setUnsplashOpen(false)}
+        onSelect={(url) => setImagenUrl(url)}
+        defaultQuery={nombre}
+      />
     </Dialog>
   );
 }

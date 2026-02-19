@@ -178,7 +178,17 @@
       "hasItinerary": "جدول الذكاء الاصطناعي",
       "styleRelax": "استرخاء",
       "styleCultural": "ثقافي",
-      "styleAdventure": "مغامرة"
+      "styleAdventure": "مغامرة",
+      "itinerarySummary": "ملخص",
+      "editItinerary": "تعديل الجدول",
+      "addTip": "إضافة نصيحة",
+      "localTip": "نصيحة محلية",
+      "activityTitle": "العنوان",
+      "activityDesc": "الوصف",
+      "activityPrice": "السعر التقديري",
+      "activityDuration": "المدة",
+      "searchUnsplash": "بحث في Unsplash",
+      "dayLabel": "اليوم {n}"
     },
     "reservas": {
       "title": "الحجوزات",
