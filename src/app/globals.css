@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Sileo toast overrides ─── */
+:root {
+  --sileo-height: 52px;
+  --sileo-width: 400px;
+  --sileo-duration: 400ms;
+}
+[data-sileo-title] {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+}
+[data-sileo-description] {
+  font-size: 0.875rem !important;
+}
+[data-sileo-badge] {
+  width: 30px !important;
+  height: 30px !important;
+}
+
 * {
   box-sizing: border-box;
 }

@@ -13,6 +13,7 @@ export default function ChangePlanForm({
 }: ChangePlanFormProps) {
   const t = useTranslations('admin.stripe');
   const tc = useTranslations('common');
+  const tt = useTranslations("toast");
   const [plan, setPlan] = useState(currentPlan);
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +32,7 @@ export default function ChangePlanForm({
       }
       window.location.reload();
     } catch {
-      sileo.error({ title: "Error al cambiar plan" });
+      sileo.error({ title: tt("errorChangePlan") });
     } finally {
       setLoading(false);
     }

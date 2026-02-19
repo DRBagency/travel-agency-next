@@ -11,6 +11,7 @@ interface Props {
 
 export default function AIInsightsCard({ metricsContext }: Props) {
   const t = useTranslations("ai.insights");
+  const tt = useTranslations("toast");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
 
@@ -31,7 +32,7 @@ export default function AIInsightsCard({ metricsContext }: Props) {
       setResult(json.result);
     } catch (e: any) {
       setResult(`⚠️ ${e.message || t("errorGeneric")}`);
-      sileo.error({ title: "Error al generar informe" });
+      sileo.error({ title: tt("errorGenerateReport") });
     } finally {
       setLoading(false);
     }

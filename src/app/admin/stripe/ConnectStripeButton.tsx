@@ -15,6 +15,7 @@ export default function ConnectStripeButton({
 }: ConnectStripeButtonProps) {
   const t = useTranslations('admin.stripe');
   const tc = useTranslations('common');
+  const tt = useTranslations("toast");
   const [loading, setLoading] = useState(false);
 
   const handleConnect = async () => {
@@ -33,7 +34,7 @@ export default function ConnectStripeButton({
 
       window.location.href = data.url;
     } catch {
-      sileo.error({ title: "Error al conectar Stripe" });
+      sileo.error({ title: tt("errorConnectStripe") });
     } finally {
       setLoading(false);
     }

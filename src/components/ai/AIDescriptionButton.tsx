@@ -14,6 +14,7 @@ interface Props {
 
 export default function AIDescriptionButton({ context, fieldName, onAccept, clienteId }: Props) {
   const t = useTranslations("ai.description");
+  const tt = useTranslations("toast");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
@@ -49,7 +50,7 @@ Idioma: ${lang === "es" ? "español" : lang === "en" ? "inglés" : "árabe"}`,
       setResult(json.result);
     } catch (e: any) {
       setResult(`⚠️ ${e.message || t("errorGeneric")}`);
-      sileo.error({ title: "Error al generar descripción" });
+      sileo.error({ title: tt("errorGenerateDescription") });
     } finally {
       setLoading(false);
     }

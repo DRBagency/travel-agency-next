@@ -28,6 +28,7 @@ interface Props {
 
 export default function ChatbotConfig({ clienteId, initialConfig, destinos }: Props) {
   const t = useTranslations("ai.chatbot");
+  const tt = useTranslations("toast");
 
   const [config, setConfig] = useState<ChatbotConfigData>(
     initialConfig || {
@@ -103,10 +104,10 @@ export default function ChatbotConfig({ clienteId, initialConfig, destinos }: Pr
       });
       if (res.ok) {
         setSaved(true);
-        sileo.success({ title: "Configuración guardada" });
+        sileo.success({ title: tt("configSaved") });
       }
     } catch {
-      sileo.error({ title: "Error al guardar configuración" });
+      sileo.error({ title: tt("errorSaveConfig") });
     } finally {
       setSaving(false);
     }

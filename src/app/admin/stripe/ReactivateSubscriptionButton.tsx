@@ -7,6 +7,7 @@ import { sileo } from "sileo";
 export default function ReactivateSubscriptionButton() {
   const t = useTranslations('admin.stripe');
   const tc = useTranslations('common');
+  const tt = useTranslations("toast");
   const [loading, setLoading] = useState(false);
 
   const handleReactivate = async () => {
@@ -26,10 +27,10 @@ export default function ReactivateSubscriptionButton() {
         throw new Error(data.error || t('reactivateError'));
       }
 
-      sileo.success({ title: "Suscripción reactivada" });
+      sileo.success({ title: tt("subscriptionReactivated") });
       window.location.reload();
     } catch (error: any) {
-      sileo.error({ title: "Error al reactivar suscripción" });
+      sileo.error({ title: tt("errorReactivateSubscription") });
       console.error("❌ [ReactivateSubscriptionButton]", error);
     } finally {
       setLoading(false);

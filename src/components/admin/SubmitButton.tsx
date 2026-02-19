@@ -4,6 +4,7 @@ import { useFormStatus } from "react-dom";
 import { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import { sileo } from "sileo";
+import { useTranslations } from "next-intl";
 
 interface SubmitButtonProps {
   children: React.ReactNode;
@@ -16,11 +17,12 @@ interface SubmitButtonProps {
 export default function SubmitButton({
   children,
   className,
-  successText = "Guardado",
+  successText,
   errorText,
   formAction,
 }: SubmitButtonProps) {
   const { pending } = useFormStatus();
+  const tt = useTranslations("toast");
   const wasPending = useRef(false);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export default function SubmitButton({
       wasPending.current = true;
     } else if (wasPending.current) {
       wasPending.current = false;
-      sileo.success({ title: successText });
+      sileo.success({ title: successText || tt("saved") });
     }
   }, [pending, successText]);
 

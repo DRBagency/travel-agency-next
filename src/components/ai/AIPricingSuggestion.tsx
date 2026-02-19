@@ -23,6 +23,7 @@ interface Props {
 
 export default function AIPricingSuggestion({ destinoName, currentPrice, clienteId }: Props) {
   const t = useTranslations("ai.pricing");
+  const tt = useTranslations("toast");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PricingResult | null>(null);
   const [open, setOpen] = useState(false);
@@ -56,7 +57,7 @@ Sugiere un precio competitivo con justificación.`,
       setResult(JSON.parse(raw));
     } catch (e: any) {
       setError(e.message || t("errorGeneric"));
-      sileo.error({ title: "Error al analizar precio" });
+      sileo.error({ title: tt("errorAnalyzePrice") });
     } finally {
       setLoading(false);
     }

@@ -1133,5 +1133,29 @@
       "placeholder": "اكتب رسالتك...",
       "title": "المساعد الافتراضي"
     }
+  },
+  "toast": {
+    "saved": "تم الحفظ",
+    "savedSuccessfully": "تم الحفظ بنجاح",
+    "configSaved": "تم حفظ الإعدادات",
+    "errorGeneric": "فشلت العملية",
+    "errorSaving": "خطأ في الحفظ",
+    "errorSaveConfig": "خطأ في حفظ الإعدادات",
+    "eventCreated": "تم إنشاء الحدث",
+    "eventUpdated": "تم تحديث الحدث",
+    "eventDeleted": "تم حذف الحدث",
+    "urlSaved": "تم حفظ الرابط",
+    "googleDisconnected": "تم فصل تقويم جوجل",
+    "subscriptionCancelled": "تم إلغاء الاشتراك",
+    "subscriptionReactivated": "تم إعادة تفعيل الاشتراك",
+    "errorCreateSubscription": "خطأ في إنشاء الاشتراك",
+    "errorCancelSubscription": "خطأ في إلغاء الاشتراك",
+    "errorReactivateSubscription": "خطأ في إعادة تفعيل الاشتراك",
+    "errorChangePlan": "خطأ في تغيير الخطة",
+    "errorConnectStripe": "خطأ في ربط سترايب",
+    "errorGenerateDescription": "خطأ في توليد الوصف",
+    "errorGenerateEmail": "خطأ في توليد البريد",
+    "errorAnalyzePrice": "خطأ في تحليل السعر",
+    "errorGenerateReport": "خطأ في إنشاء التقرير"
   }
 }

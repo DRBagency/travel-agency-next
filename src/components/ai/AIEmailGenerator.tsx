@@ -12,6 +12,7 @@ interface Props {
 
 export default function AIEmailGenerator({ clienteId, onAccept }: Props) {
   const t = useTranslations("ai.email");
+  const tt = useTranslations("toast");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
@@ -48,7 +49,7 @@ El email debe ser profesional, atractivo y con estilos inline.`,
       setResult(json.result);
     } catch (e: any) {
       setResult(`<p style="color:red">⚠️ ${e.message || t("errorGeneric")}</p>`);
-      sileo.error({ title: "Error al generar email" });
+      sileo.error({ title: tt("errorGenerateEmail") });
     } finally {
       setLoading(false);
     }

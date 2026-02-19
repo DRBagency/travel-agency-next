@@ -47,7 +47,14 @@ export default async function RootLayout({
         >
           <NextIntlClientProvider messages={messages}>
             {children}
-            <Toaster position="top-center" />
+            <Toaster
+              position="top-center"
+              offset={20}
+              options={{
+                duration: 2500,
+                roundness: 18,
+              }}
+            />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

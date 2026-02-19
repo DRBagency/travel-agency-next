@@ -7,6 +7,7 @@ import { sileo } from "sileo";
 export default function SubscriptionButton() {
   const t = useTranslations('admin.stripe');
   const tc = useTranslations('common');
+  const tt = useTranslations("toast");
   const [loading, setLoading] = useState(false);
 
   const handleSubscribe = async () => {
@@ -22,7 +23,7 @@ export default function SubscriptionButton() {
       }
       window.location.href = data.url;
     } catch {
-      sileo.error({ title: "Error al crear suscripción" });
+      sileo.error({ title: tt("errorCreateSubscription") });
     } finally {
       setLoading(false);
     }

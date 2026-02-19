@@ -7,6 +7,7 @@ import { sileo } from "sileo";
 export default function CancelSubscriptionButton() {
   const t = useTranslations('admin.stripe');
   const tc = useTranslations('common');
+  const tt = useTranslations("toast");
   const [loading, setLoading] = useState(false);
 
   const handleCancel = async () => {
@@ -26,10 +27,10 @@ export default function CancelSubscriptionButton() {
         throw new Error(data.error || t('cancelError'));
       }
 
-      sileo.success({ title: "Suscripción cancelada" });
+      sileo.success({ title: tt("subscriptionCancelled") });
       window.location.reload();
     } catch (error: any) {
-      sileo.error({ title: "Error al cancelar suscripción" });
+      sileo.error({ title: tt("errorCancelSubscription") });
       console.error("❌ [CancelSubscriptionButton]", error);
     } finally {
       setLoading(false);

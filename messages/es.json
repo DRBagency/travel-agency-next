@@ -1133,5 +1133,29 @@
       "placeholder": "Escribe tu mensaje...",
       "title": "Asistente Virtual"
     }
+  },
+  "toast": {
+    "saved": "Guardado",
+    "savedSuccessfully": "Guardado correctamente",
+    "configSaved": "Configuración guardada",
+    "errorGeneric": "Error en la operación",
+    "errorSaving": "Error al guardar",
+    "errorSaveConfig": "Error al guardar configuración",
+    "eventCreated": "Evento creado",
+    "eventUpdated": "Evento actualizado",
+    "eventDeleted": "Evento eliminado",
+    "urlSaved": "URL guardada",
+    "googleDisconnected": "Google Calendar desconectado",
+    "subscriptionCancelled": "Suscripción cancelada",
+    "subscriptionReactivated": "Suscripción reactivada",
+    "errorCreateSubscription": "Error al crear suscripción",
+    "errorCancelSubscription": "Error al cancelar suscripción",
+    "errorReactivateSubscription": "Error al reactivar suscripción",
+    "errorChangePlan": "Error al cambiar plan",
+    "errorConnectStripe": "Error al conectar Stripe",
+    "errorGenerateDescription": "Error al generar descripción",
+    "errorGenerateEmail": "Error al generar email",
+    "errorAnalyzePrice": "Error al analizar precio",
+    "errorGenerateReport": "Error al generar informe"
   }
 }

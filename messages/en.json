@@ -1133,5 +1133,29 @@
       "placeholder": "Type your message...",
       "title": "Virtual Assistant"
     }
+  },
+  "toast": {
+    "saved": "Saved",
+    "savedSuccessfully": "Saved successfully",
+    "configSaved": "Configuration saved",
+    "errorGeneric": "Operation failed",
+    "errorSaving": "Error saving",
+    "errorSaveConfig": "Error saving configuration",
+    "eventCreated": "Event created",
+    "eventUpdated": "Event updated",
+    "eventDeleted": "Event deleted",
+    "urlSaved": "URL saved",
+    "googleDisconnected": "Google Calendar disconnected",
+    "subscriptionCancelled": "Subscription cancelled",
+    "subscriptionReactivated": "Subscription reactivated",
+    "errorCreateSubscription": "Error creating subscription",
+    "errorCancelSubscription": "Error cancelling subscription",
+    "errorReactivateSubscription": "Error reactivating subscription",
+    "errorChangePlan": "Error changing plan",
+    "errorConnectStripe": "Error connecting Stripe",
+    "errorGenerateDescription": "Error generating description",
+    "errorGenerateEmail": "Error generating email",
+    "errorAnalyzePrice": "Error analyzing price",
+    "errorGenerateReport": "Error generating report"
   }
 }

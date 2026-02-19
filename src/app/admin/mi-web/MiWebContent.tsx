@@ -82,6 +82,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
   const aiLocked = !plan || plan === "start";
   const t = useTranslations('admin.miWeb');
   const tc = useTranslations('common');
+  const tt = useTranslations("toast");
 
   const [fields, setFields] = useState({
     logo_url: client.logo_url ?? "",
@@ -164,7 +165,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
         ...prev,
         [section]: { loading: false, success: true, error: null },
       }));
-      sileo.success({ title: "Guardado correctamente" });
+      sileo.success({ title: tt("savedSuccessfully") });
       setTimeout(() => {
         setSaveStates((prev) => ({
           ...prev,
@@ -180,7 +181,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
           error: err instanceof Error ? err.message : tc("error"),
         },
       }));
-      sileo.error({ title: "Error al guardar" });
+      sileo.error({ title: tt("errorSaving") });
     }
   }
 

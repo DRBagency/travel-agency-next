@@ -256,6 +256,7 @@ export default function CalendarioContent({
 }: CalendarioContentProps) {
   const t = useTranslations('admin.calendario');
   const tc = useTranslations('common');
+  const tt = useTranslations("toast");
 
   // Build translated EVENT_COLORS
   const EVENT_COLORS = EVENT_COLOR_DATA.map((c) => ({
@@ -351,7 +352,7 @@ export default function CalendarioContent({
           }),
         });
         if (!res.ok) throw new Error("Error updating");
-        sileo.success({ title: "Evento actualizado" });
+        sileo.success({ title: tt("eventUpdated") });
       } else {
         const res = await fetch(`${apiBasePath}/events`, {
           method: "POST",
@@ -366,13 +367,13 @@ export default function CalendarioContent({
           }),
         });
         if (!res.ok) throw new Error("Error creating");
-        sileo.success({ title: "Evento creado" });
+        sileo.success({ title: tt("eventCreated") });
       }
 
       setModalOpen(false);
       fetchEvents();
     } catch {
-      sileo.error({ title: "Error en la operación" });
+      sileo.error({ title: tt("errorGeneric") });
     } finally {
       setFormSaving(false);
     }
@@ -386,12 +387,12 @@ export default function CalendarioContent({
         method: "DELETE",
       });
       if (res.ok) {
-        sileo.success({ title: "Evento eliminado" });
+        sileo.success({ title: tt("eventDeleted") });
         fetchEvents();
         setModalOpen(false);
       }
     } catch {
-      sileo.error({ title: "Error en la operación" });
+      sileo.error({ title: tt("errorGeneric") });
     }
   };
 
@@ -404,11 +405,11 @@ export default function CalendarioContent({
         method: "POST",
       });
       if (res.ok) {
-        sileo.success({ title: "Google Calendar desconectado" });
+        sileo.success({ title: tt("googleDisconnected") });
         window.location.reload();
       }
     } catch {
-      sileo.error({ title: "Error en la operación" });
+      sileo.error({ title: tt("errorGeneric") });
     } finally {
       setDisconnecting(false);
     }
@@ -425,12 +426,12 @@ export default function CalendarioContent({
         body: JSON.stringify({ url: embedUrl.trim() }),
       });
       if (res.ok) {
-        sileo.success({ title: "URL guardada" });
+        sileo.success({ title: tt("urlSaved") });
         setSavedUrl(true);
         setTimeout(() => setSavedUrl(false), 3000);
       }
     } catch {
-      sileo.error({ title: "Error en la operación" });
+      sileo.error({ title: tt("errorGeneric") });
     } finally {
       setSavingUrl(false);
     }
