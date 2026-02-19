@@ -464,16 +464,19 @@ html {
     padding: 6px 8px !important;
   }
 
-  /* ─── Eden Rive — blend dark artboard into dark sky ─── */
+  /* ─── Eden Rive — circular clip + radial vignette ─── */
   .eden-rive-wrapper {
     position: relative;
+    border-radius: 50%;
+    overflow: hidden;
   }
-  /* Radial vignette: fades the square artboard edges into the sky behind */
+  /* Radial vignette: softens edges into the near-black sky behind */
   .eden-rive-wrapper::after {
     content: "";
     position: absolute;
-    inset: -4px;
-    background: radial-gradient(ellipse 70% 70% at center, transparent 40%, #0C4551 75%);
+    inset: -2px;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 45%, #010A0F 78%);
     pointer-events: none;
   }
 }

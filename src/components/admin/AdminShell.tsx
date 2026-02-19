@@ -40,6 +40,7 @@ import PageTransition from "@/components/ui/PageTransition";
 import SearchBar from "@/components/ui/SearchBar";
 import LanguageSelector from "@/components/ui/LanguageSelector";
 import AdminRightColumn from "./AdminRightColumn";
+import DashboardBackground from "./DashboardBackground";
 
 // --- Constants ---
 const SIDEBAR_W_COLLAPSED = 64;
@@ -429,29 +430,7 @@ const AdminShell = ({
     { label: t("nav.aiChatbot"), href: "/admin/ai/chatbot", icon: Bot },
   ];
 
-  const pageTitles: Record<string, string> = {
-    "/admin": t("nav.dashboard"),
-    "/admin/mi-web": t("nav.miWeb"),
-    "/admin/opiniones": t("nav.opiniones"),
-    "/admin/destinos": t("nav.destinos"),
-    "/admin/reservas": t("nav.reservas"),
-    "/admin/analytics": t("nav.analytics"),
-    "/admin/calendario": t("nav.calendario"),
-    "/admin/documentos": t("nav.documentos"),
-    "/admin/soporte": t("nav.soporte"),
-    "/admin/stripe": t("nav.stripe"),
-    "/admin/emails": t("nav.emails"),
-    "/admin/legales": t("nav.legales"),
-    "/admin/ai/chatbot": t("nav.aiChatbot"),
-  };
-
   const allowWhenInactive = pathname.startsWith("/admin/stripe");
-
-  const pageTitle =
-    Object.entries(pageTitles).find(([path]) => {
-      if (path === "/admin") return pathname === "/admin";
-      return pathname.startsWith(path);
-    })?.[1] || tc("panel");
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
@@ -558,10 +537,6 @@ const AdminShell = ({
               )}
             </div>
 
-            {/* Page title (desktop) */}
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white hidden lg:block">
-              {pageTitle}
-            </h1>
           </div>
 
           <div className="flex items-center gap-3">
@@ -600,7 +575,7 @@ const AdminShell = ({
 
       {/* ========== MAIN CONTENT ========== */}
       <main
-        className="px-4 lg:px-6 py-6 transition-all duration-200"
+        className="relative px-4 lg:px-6 py-6 transition-all duration-200"
         style={{
           marginInlineStart: `var(--main-sidebar-w, 0px)`,
           marginInlineEnd: `var(--main-right-w, 0px)`,
@@ -614,6 +589,9 @@ const AdminShell = ({
             main { --main-right-w: ${RIGHT_COL_W}px; }
           }
         `}</style>
+        {/* Subtle mountain landscape background */}
+        <DashboardBackground />
+        <div className="relative z-[1]">
         {subscriptionActive || allowWhenInactive ? (
           <PageTransition key={pathname}>{children}</PageTransition>
         ) : (
@@ -636,6 +614,7 @@ const AdminShell = ({
             </div>
           </div>
         )}
+        </div>
       </main>
 
       {/* ========== MOBILE/TABLET RIGHT PANEL DRAWER ========== */}

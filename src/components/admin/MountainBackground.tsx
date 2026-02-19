@@ -15,11 +15,12 @@ export default function MountainBackground() {
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        {/* Sky gradient: dark top → lighter bottom */}
+        {/* Sky gradient: near-black top (matches Rive artboard) → lighter bottom */}
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#072331" />
-          <stop offset="15%" stopColor="#0C4551" />
-          <stop offset="35%" stopColor="#126771" />
+          <stop offset="0%" stopColor="#010A0F" />
+          <stop offset="10%" stopColor="#041820" />
+          <stop offset="25%" stopColor="#0C4551" />
+          <stop offset="40%" stopColor="#126771" />
           <stop offset="55%" stopColor="#178991" />
           <stop offset="75%" stopColor="#1CABB0" />
           <stop offset="90%" stopColor="#99E7EB" />
