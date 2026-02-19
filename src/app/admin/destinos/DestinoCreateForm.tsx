@@ -76,7 +76,7 @@ export default function DestinoCreateForm({
       </summary>
 
       <div className="px-6 pb-6 border-t border-gray-100 dark:border-white/[0.06] pt-6 space-y-5">
-        {aiAvailable && <DestinoAIGenerator onGenerated={handleAIGenerated} />}
+        {aiAvailable && <DestinoAIGenerator clienteId={clienteId} onGenerated={handleAIGenerated} />}
 
         <form action={action} className="grid gap-4">
           <input type="hidden" name="itinerario" value={itinerario ? JSON.stringify(itinerario) : ""} />

@@ -5,6 +5,7 @@ import SubmitButton from "@/components/admin/SubmitButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import DeleteWithConfirm from "@/components/ui/DeleteWithConfirm";
 import DestinoCreateForm from "./DestinoCreateForm";
+import DestinoEditDialog from "./DestinoEditDialog";
 import { MapPin, Trash2, Sparkles } from "lucide-react";
 import { getTranslations } from 'next-intl/server';
 
@@ -211,6 +212,10 @@ export default async function AdminDestinosPage({
                         </>
                       )}
                     </form>
+                    <DestinoEditDialog
+                      destino={destino}
+                      action={updateDestino}
+                    />
                     <DeleteWithConfirm
                       action={deleteDestino}
                       hiddenFields={{ id: destino.id }}

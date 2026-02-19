@@ -161,6 +161,8 @@
       "pricePlaceholder": "Ej: 799",
       "descriptionPlaceholder": "Descripción breve y atractiva del destino",
       "saveDestination": "Guardar destino",
+      "editDestination": "Editar destino",
+      "editDestinationDesc": "Modifica los datos del destino",
       "noDestinations": "Todavía no hay destinos.",
       "addFirstDestination": "Añade tu primer destino arriba.",
       "destination": "Destino",

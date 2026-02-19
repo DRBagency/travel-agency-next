@@ -161,6 +161,8 @@
       "pricePlaceholder": "مثال: 799",
       "descriptionPlaceholder": "وصف مختصر وجذاب للوجهة",
       "saveDestination": "حفظ الوجهة",
+      "editDestination": "تعديل الوجهة",
+      "editDestinationDesc": "تعديل بيانات الوجهة",
       "noDestinations": "لا توجد وجهات بعد.",
       "addFirstDestination": "أضف وجهتك الأولى أعلاه.",
       "destination": "وجهة",
