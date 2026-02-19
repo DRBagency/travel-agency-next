@@ -165,7 +165,18 @@
       "addFirstDestination": "Añade tu primer destino arriba.",
       "destination": "Destino",
       "noName": "Sin nombre",
-      "noImage": "Sin imagen"
+      "noImage": "Sin imagen",
+      "generateWithAI": "Generar con IA",
+      "aiGenerating": "Generando destino completo...",
+      "aiGenerated": "Destino generado con IA",
+      "aiDestination": "Destino / Ciudad",
+      "aiDuration": "Duración (días)",
+      "aiStyle": "Estilo de viaje",
+      "generateAll": "Generar todo con IA",
+      "hasItinerary": "Itinerario IA",
+      "styleRelax": "Relax",
+      "styleCultural": "Cultural",
+      "styleAdventure": "Aventura"
     },
     "soporte": {
       "title": "Soporte",
@@ -1057,7 +1068,15 @@
       "reserve": "Reservar",
       "loading": "Cargando destinos...",
       "empty": "Este cliente no tiene destinos activos",
-      "noImage": "Sin imagen"
+      "noImage": "Sin imagen",
+      "viewItinerary": "Ver itinerario",
+      "hideItinerary": "Ocultar itinerario",
+      "dayLabel": "Día {n}",
+      "bestSeason": "Mejor época",
+      "weather": "Clima",
+      "morning": "Mañana",
+      "afternoon": "Tarde",
+      "night": "Noche"
     },
     "testimonials": {
       "badge": "Opiniones reales",

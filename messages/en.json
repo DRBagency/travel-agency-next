@@ -165,7 +165,18 @@
       "addFirstDestination": "Add your first destination above.",
       "destination": "Destination",
       "noName": "No name",
-      "noImage": "No image"
+      "noImage": "No image",
+      "generateWithAI": "Generate with AI",
+      "aiGenerating": "Generating complete destination...",
+      "aiGenerated": "Destination generated with AI",
+      "aiDestination": "Destination / City",
+      "aiDuration": "Duration (days)",
+      "aiStyle": "Travel style",
+      "generateAll": "Generate everything with AI",
+      "hasItinerary": "AI Itinerary",
+      "styleRelax": "Relax",
+      "styleCultural": "Cultural",
+      "styleAdventure": "Adventure"
     },
     "reservas": {
       "title": "Bookings",
@@ -1057,7 +1068,15 @@
       "reserve": "Book Now",
       "loading": "Loading destinations...",
       "empty": "No active destinations available",
-      "noImage": "No image"
+      "noImage": "No image",
+      "viewItinerary": "View itinerary",
+      "hideItinerary": "Hide itinerary",
+      "dayLabel": "Day {n}",
+      "bestSeason": "Best season",
+      "weather": "Weather",
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "night": "Night"
     },
     "testimonials": {
       "badge": "Real Reviews",

@@ -214,7 +214,6 @@ const AdminShell = ({
     { label: t("nav.stripe"), href: "/admin/stripe", icon: CreditCard },
     { label: t("nav.emails"), href: "/admin/emails", icon: Mail },
     { label: t("nav.legales"), href: "/admin/legales", icon: Scale },
-    { label: t("nav.aiItinerarios"), href: "/admin/ai/itinerarios", icon: Sparkles },
     { label: t("nav.aiChatbot"), href: "/admin/ai/chatbot", icon: Bot },
     { label: t("nav.aiAsistente"), href: "/admin/ai/asistente", icon: MessageCircle },
   ];
@@ -232,7 +231,6 @@ const AdminShell = ({
     "/admin/stripe": t("nav.stripe"),
     "/admin/emails": t("nav.emails"),
     "/admin/legales": t("nav.legales"),
-    "/admin/ai/itinerarios": t("nav.aiItinerarios"),
     "/admin/ai/chatbot": t("nav.aiChatbot"),
     "/admin/ai/asistente": t("nav.aiAsistente"),
   };

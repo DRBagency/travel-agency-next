@@ -165,7 +165,18 @@
       "addFirstDestination": "أضف وجهتك الأولى أعلاه.",
       "destination": "وجهة",
       "noName": "بدون اسم",
-      "noImage": "بدون صورة"
+      "noImage": "بدون صورة",
+      "generateWithAI": "توليد بالذكاء الاصطناعي",
+      "aiGenerating": "جارٍ توليد الوجهة...",
+      "aiGenerated": "تم توليد الوجهة بالذكاء الاصطناعي",
+      "aiDestination": "الوجهة / المدينة",
+      "aiDuration": "المدة (أيام)",
+      "aiStyle": "أسلوب السفر",
+      "generateAll": "توليد كل شيء بالذكاء الاصطناعي",
+      "hasItinerary": "جدول الذكاء الاصطناعي",
+      "styleRelax": "استرخاء",
+      "styleCultural": "ثقافي",
+      "styleAdventure": "مغامرة"
     },
     "reservas": {
       "title": "الحجوزات",
@@ -1057,7 +1068,15 @@
       "reserve": "احجز الآن",
       "loading": "جارٍ تحميل الوجهات...",
       "empty": "لا توجد وجهات نشطة متاحة",
-      "noImage": "لا توجد صورة"
+      "noImage": "لا توجد صورة",
+      "viewItinerary": "عرض الجدول",
+      "hideItinerary": "إخفاء الجدول",
+      "dayLabel": "اليوم {n}",
+      "bestSeason": "أفضل موسم",
+      "weather": "الطقس",
+      "morning": "الصباح",
+      "afternoon": "بعد الظهر",
+      "night": "المساء"
     },
     "testimonials": {
       "badge": "تقييمات حقيقية",
