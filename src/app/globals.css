@@ -464,25 +464,5 @@ html {
     padding: 6px 8px !important;
   }
 
-  /* ─── Spline: transparent bg, fixed size, hide watermark ─── */
-  .eden-spline-wrapper,
-  .eden-spline-wrapper > div,
-  .eden-spline-wrapper canvas {
-    background: transparent !important;
-  }
-  .eden-spline-wrapper a[href*="spline"],
-  .eden-spline-wrapper > div > a,
-  .eden-spline-wrapper > div > div:last-child,
-  .eden-spline-wrapper canvas + div,
-  .eden-spline-wrapper img[alt*="spline" i],
-  .eden-spline-wrapper div[style*="bottom"] a {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    position: absolute !important;
-    width: 0 !important;
-    height: 0 !important;
-    overflow: hidden !important;
-  }
+
 }

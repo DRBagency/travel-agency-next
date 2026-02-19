@@ -2,17 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Send, Loader2, Bot, User } from "lucide-react";
-import dynamic from "next/dynamic";
-
-const Spline = dynamic(() => import("@splinetool/react-spline"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[280px] flex items-center justify-center">
-      <div className="animate-pulse text-white/50 text-sm">Loading Eden AI...</div>
-    </div>
-  ),
-});
+import { Send, Loader2, Bot, User, Sparkles } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -30,56 +20,6 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const splineContainerRef = useRef<HTMLDivElement>(null);
-
-  // Block wheel events inside Spline to prevent panel scroll + zoom
-  // + nuke watermark and black backgrounds via JS (CSS alone doesn't work)
-  useEffect(() => {
-    const el = splineContainerRef.current;
-    if (!el) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-    el.addEventListener("wheel", handleWheel, { passive: false });
-
-    const cleanup = () => {
-      // Remove inline background from all child elements
-      el.querySelectorAll("*").forEach((child) => {
-        const h = child as HTMLElement;
-        if (h.tagName === "CANVAS") return; // don't touch the canvas element itself
-        if (h.style.background) h.style.background = "transparent";
-        if (h.style.backgroundColor) h.style.backgroundColor = "transparent";
-      });
-      // Remove watermark links/containers
-      el.querySelectorAll("a").forEach((a) => {
-        if (a.href?.includes("spline")) {
-          const parent = a.closest("div:not(.eden-spline-wrapper)");
-          if (parent && parent !== el) parent.remove();
-          else a.remove();
-        }
-      });
-      el.querySelectorAll("img").forEach((img) => {
-        if (img.alt?.toLowerCase().includes("spline")) {
-          img.parentElement?.remove();
-        }
-      });
-    };
-
-    // Run repeatedly during load, then observe
-    const interval = setInterval(cleanup, 300);
-    const timeout = setTimeout(() => clearInterval(interval), 6000);
-    const observer = new MutationObserver(cleanup);
-    observer.observe(el, { childList: true, subtree: true, attributes: true });
-
-    return () => {
-      el.removeEventListener("wheel", handleWheel);
-      clearInterval(interval);
-      clearTimeout(timeout);
-      observer.disconnect();
-    };
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -133,18 +73,12 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Eden 3D Spline scene */}
-      <div className="flex flex-col items-center pt-2 pb-1 px-3">
-        <div
-          ref={splineContainerRef}
-          className="eden-spline-wrapper relative w-full rounded-2xl overflow-hidden"
-          style={{ height: 280, maxHeight: 280, minHeight: 280 }}
-        >
-          <Spline scene="https://prod.spline.design/PX9GtYNPr-kMz72z/scene.splinecode" />
+      {/* Eden AI header */}
+      <div className="flex flex-col items-center pt-4 pb-2 px-3">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-drb-turquoise-500 via-drb-turquoise-400 to-drb-lime-500 flex items-center justify-center shadow-lg">
+          <Sparkles className="w-8 h-8 text-white" />
         </div>
-
-        {/* Name with gradient */}
-        <span className="text-2xl font-bold bg-gradient-to-r from-drb-turquoise-300 to-drb-lime-400 bg-clip-text text-transparent mt-1.5">
+        <span className="text-2xl font-bold bg-gradient-to-r from-drb-turquoise-300 to-drb-lime-400 bg-clip-text text-transparent mt-2">
           Eden AI
         </span>
       </div>
@@ -163,7 +97,7 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
               </div>
             </div>
 
-            {/* Quick suggestions — pill style */}
+            {/* Quick suggestions */}
             <div className="flex flex-wrap gap-1.5 ps-9">
               {suggestions.map((s, i) => (
                 <button
@@ -234,7 +168,7 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input — premium style */}
+      {/* Input */}
       <div className="p-3 pt-2">
         <div className="flex gap-2 bg-white/20 backdrop-blur-md rounded-full border border-white/30 shadow-sm px-1.5 py-1.5">
           <input

@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 19 Febrero 2026
+> **Última actualización:** 20 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -55,7 +55,7 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **Charts:** Recharts
 - **Calendar:** FullCalendar
 - **Animations:** Framer Motion (framer-motion@12.29.2) + Lottie (lottie-react)
-- **Rive:** @rive-app/react-canvas (interactive login animations)
+- **Rive:** @rive-app/react-canvas (interactive login animations only)
 - **Icons:** Lucide React
 - **AI:** Anthropic Claude API (@anthropic-ai/sdk) — itineraries, recommendations, chatbot config
 
@@ -102,7 +102,7 @@ travel-agency-next/
 │   ├── components/
 │   │   ├── ui/               # shadcn/ui + DataTable, KPICard, ConfirmDialog, EmptyState, DeleteWithConfirm, AnimatedSection, RiveAnimation
 │   │   ├── ai/               # AI components (ItineraryGenerator, ChatbotConfig, AIDescriptionButton, AIEmailGenerator, AIPricingSuggestion, FreeChat, AIRecommendations, AIInsightsCard)
-│   │   ├── admin/            # Componentes admin (charts, dashboard)
+│   │   ├── admin/            # Componentes admin (charts, dashboard, AdminShell, EdenChat, MountainBackground, DashboardBackground, AdminRightColumn)
 │   │   ├── owner/            # Componentes owner (charts, LatestAgenciesTable, ExecutionLogsTable)
 │   │   └── ChatbotWidget.tsx # Widget flotante público para chatbot AI
 │   ├── i18n/
@@ -294,8 +294,19 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **Landing i18n**: Per-client language via `preferred_language` column in `clientes` table, nested NextIntlClientProvider, 80+ keys in `landing.*` namespace (ES/EN/AR), RTL `dir` wrapper, configurable from `/admin/mi-web`
 - ✅ **Dropdown Contrast Fix**: CSS rules for `<option>` elements in dark mode (white-on-white text bug)
 
+### ✅ Fase 6 completada (Admin Layout Redesign + Eden AI + Visual Upgrade):
+- ✅ **Admin Layout Redesign**: Collapsible sidebar with pin/unpin (Framer Motion), right column on xl+ breakpoint, mobile drawer
+- ✅ **AdminShell**: 3-column layout (sidebar | main content | right column), responsive behavior, no duplicate page titles
+- ✅ **AdminRightColumn**: Profile card with avatar upload, edit profile modal (name, email, phone), notification bell, glassmorphism cards (bg-white/25 backdrop-blur-lg)
+- ✅ **Eden AI Chat**: AI assistant in right column, free-chat via /api/ai, suggestion chips, typing indicator, glassmorphism chat bubbles (bg-white/30)
+- ✅ **Mountain Landscape Backgrounds**: MountainBackground.tsx (vivid SVG for right column, sky gradient + 4 mountain layers + pines + moon), DashboardBackground.tsx (subtle SVG for main area, light/dark mode)
+- ✅ **Profile Photo System**: Separate `profile_photo` column in clientes table, Supabase Storage bucket `profile-photos`, upload API `/api/admin/upload-avatar`
+- ✅ **Supabase Migration**: `20260220100000_add_profile_photo_and_storage.sql` — profile_photo column + storage bucket + RLS policies
+- ✅ **i18n Keys**: admin.eden namespace (welcome, chip1-4, placeholder, editProfile, photoUpdated, profileSaved, phone) in ES/EN/AR
+- ✅ **Eden AI Visual**: Tried Rive animation (black bg issues), tried Spline 3D (watermark/bg issues) — currently simple icon+gradient header, pending better 3D/animation solution
+
 ### 🚫 No implementado (Roadmap futuro):
-CRM, marketing automation, gestión equipo, app nativa, API pública, white-label, multi-moneda, pagos offline
+CRM, marketing automation, gestión equipo, app nativa, API pública, white-label, multi-moneda, pagos offline, Eden AI 3D avatar (pending better solution)
 
 ---
 
@@ -402,6 +413,16 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 | `EmptyState` | Client | Estado vacío con icon, title, description, action + framer-motion entrance |
 | `AnimatedSection` | Client | Viewport-triggered animation (framer-motion) |
 | `DashboardCard` | Server | Card de navegación con icon + hover |
+| `NotificationBell` | Client | Campana de notificaciones con badge count |
+
+### Componentes Admin (`src/components/admin/`):
+| Componente | Tipo | Uso |
+|------------|------|-----|
+| `AdminShell` | Client | Layout principal admin: sidebar + main + right column |
+| `AdminRightColumn` | Client | Columna derecha: perfil + Eden AI chat |
+| `EdenChat` | Client | Chat AI asistente con /api/ai free-chat |
+| `MountainBackground` | Client | SVG paisaje montañas para columna derecha |
+| `DashboardBackground` | Client | SVG montañas sutiles para area principal |
 
 ### Patrones UI:
 - **Wrapper pages:** `<div className="space-y-{6,8} animate-fade-in">`
