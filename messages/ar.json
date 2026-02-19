@@ -59,7 +59,9 @@
     "created": "تم الإنشاء",
     "confirmDelete": "تأكيد الحذف",
     "confirmDeleteDesc": "هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.",
-    "of": "من"
+    "of": "من",
+    "pin": "تثبيت",
+    "unpin": "إلغاء التثبيت"
   },
   "auth": {
     "adminLogin": {
@@ -120,6 +122,16 @@
       "subscriptionInactive": "اشتراكك غير نشط",
       "subscriptionInactiveDesc": "فعّل اشتراكك للوصول إلى جميع ميزات لوحة التحكم.",
       "activateSubscription": "تفعيل الاشتراك"
+    },
+    "eden": {
+      "subtitle": "مساعدك الذكي",
+      "welcome": "مرحبا! أنا إيدن، مساعدك الذكي. كيف يمكنني مساعدتك اليوم؟",
+      "placeholder": "اكتب رسالتك...",
+      "chip1": "إنشاء خط سير",
+      "chip2": "اقتراح وجهات",
+      "chip3": "كتابة بريد إلكتروني",
+      "chip4": "تحليل الحجوزات",
+      "editProfile": "تعديل الملف الشخصي"
     },
     "dashboard": {
       "greeting": "مرحبًا، {name}!",

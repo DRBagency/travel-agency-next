@@ -59,7 +59,9 @@
     "created": "Created",
     "confirmDelete": "Confirm deletion",
     "confirmDeleteDesc": "Are you sure? This action cannot be undone.",
-    "of": "of"
+    "of": "of",
+    "pin": "Pin",
+    "unpin": "Unpin"
   },
   "auth": {
     "adminLogin": {
@@ -120,6 +122,16 @@
       "subscriptionInactive": "Your subscription is not active",
       "subscriptionInactiveDesc": "Activate your subscription to access all panel features.",
       "activateSubscription": "Activate subscription"
+    },
+    "eden": {
+      "subtitle": "Your smart assistant",
+      "welcome": "Hi! I'm Eden, your smart assistant. How can I help you today?",
+      "placeholder": "Type your message...",
+      "chip1": "Generate itinerary",
+      "chip2": "Suggest destinations",
+      "chip3": "Write email",
+      "chip4": "Analyze bookings",
+      "editProfile": "Edit profile"
     },
     "dashboard": {
       "greeting": "Hello, {name}!",

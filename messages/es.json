@@ -59,7 +59,9 @@
     "created": "Creada",
     "confirmDelete": "Confirmar eliminación",
     "confirmDeleteDesc": "¿Estás seguro? Esta acción no se puede deshacer.",
-    "of": "de"
+    "of": "de",
+    "pin": "Fijar",
+    "unpin": "Desfijar"
   },
   "auth": {
     "adminLogin": {
@@ -120,6 +122,16 @@
       "subscriptionInactive": "Tu suscripción no está activa",
       "subscriptionInactiveDesc": "Activa la suscripción para acceder a todas las funciones del panel.",
       "activateSubscription": "Activar suscripción"
+    },
+    "eden": {
+      "subtitle": "Tu asistente inteligente",
+      "welcome": "¡Hola! Soy Eden, tu asistente inteligente. ¿En qué puedo ayudarte hoy?",
+      "placeholder": "Escribe tu mensaje...",
+      "chip1": "Generar itinerario",
+      "chip2": "Sugerir destinos",
+      "chip3": "Escribir email",
+      "chip4": "Analizar reservas",
+      "editProfile": "Editar perfil"
     },
     "dashboard": {
       "greeting": "Hola, {name}!",

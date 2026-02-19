@@ -1,9 +1,10 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { motion } from "framer-motion";
 import {
   Menu,
   LayoutDashboard,
@@ -20,10 +21,12 @@ import {
   Scale,
   LogOut,
   Sparkles,
-  Brain,
   Bot,
-  MessageCircle,
   Lock,
+  Pin,
+  PinOff,
+  MessageCircle,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { isAILocked, AI_ROUTES } from "@/lib/plan-gating";
@@ -35,8 +38,14 @@ import {
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import PageTransition from "@/components/ui/PageTransition";
 import SearchBar from "@/components/ui/SearchBar";
-import NotificationBell from "@/components/ui/NotificationBell";
 import LanguageSelector from "@/components/ui/LanguageSelector";
+import AdminRightColumn from "./AdminRightColumn";
+
+// --- Constants ---
+const SIDEBAR_W_COLLAPSED = 64;
+const SIDEBAR_W_EXPANDED = 240;
+const RIGHT_COL_W = 300;
+const LS_KEY_PINNED = "drb_sidebar_pinned";
 
 interface AdminShellProps {
   clientName: string;
@@ -46,6 +55,7 @@ interface AdminShellProps {
   primaryColor?: string | null;
   logoUrl?: string | null;
   subscriptionActive?: boolean;
+  agencyContext?: string;
   children: ReactNode;
 }
 
@@ -55,7 +65,209 @@ interface NavItem {
   icon: LucideIcon;
 }
 
-function SidebarNav({
+// ====================================================================
+// SIDEBAR (Desktop — collapsible with pin)
+// ====================================================================
+function DesktopSidebar({
+  items,
+  pathname,
+  clientName,
+  logoUrl,
+  primaryColor,
+  plan,
+  t,
+  tc,
+  pinned,
+  onTogglePin,
+  expanded,
+  onHoverStart,
+  onHoverEnd,
+}: {
+  items: NavItem[];
+  pathname: string;
+  clientName: string;
+  logoUrl?: string | null;
+  primaryColor?: string | null;
+  plan?: string;
+  t: (key: string) => string;
+  tc: (key: string) => string;
+  pinned: boolean;
+  onTogglePin: () => void;
+  expanded: boolean;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
+}) {
+  const isActive = (href: string) =>
+    href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
+
+  const showLabels = expanded || pinned;
+
+  return (
+    <motion.aside
+      className="fixed start-0 top-0 bottom-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col"
+      animate={{ width: showLabels ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+    >
+      {/* Logo + pin button */}
+      <div className="flex items-center h-16 border-b border-gray-200/80 dark:border-white/[0.06] px-3 gap-2">
+        <div className="shrink-0">
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt={clientName}
+              className="h-9 w-9 rounded-xl object-contain"
+            />
+          ) : (
+            <div
+              className="h-9 w-9 rounded-xl flex items-center justify-center text-white font-bold text-sm"
+              style={{
+                background: primaryColor
+                  ? `linear-gradient(135deg, ${primaryColor}, #1CABB0)`
+                  : "linear-gradient(135deg, #1CABB0, #178991)",
+              }}
+            >
+              {clientName.charAt(0).toUpperCase()}
+            </div>
+          )}
+        </div>
+        {showLabels && (
+          <motion.div
+            className="min-w-0 flex-1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.05 }}
+          >
+            <div className="font-display text-sm font-semibold text-gray-900 dark:text-white truncate">
+              {clientName}
+            </div>
+            {plan && (
+              <div className="text-xs text-gray-400 dark:text-white/40">
+                {tc("plan")} {plan}
+              </div>
+            )}
+          </motion.div>
+        )}
+        {showLabels && (
+          <button
+            onClick={onTogglePin}
+            className="shrink-0 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+            title={pinned ? tc("unpin") : tc("pin")}
+          >
+            {pinned ? (
+              <Pin className="w-3.5 h-3.5 text-drb-turquoise-500" />
+            ) : (
+              <PinOff className="w-3.5 h-3.5 text-gray-400 dark:text-white/40" />
+            )}
+          </button>
+        )}
+      </div>
+
+      {/* Nav items */}
+      <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5">
+        {items.map((item) => {
+          const active = isActive(item.href);
+          const Icon = item.icon;
+          const locked = AI_ROUTES.includes(item.href) && isAILocked(plan);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              title={!showLabels ? item.label : undefined}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
+                active
+                  ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                  : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
+              }`}
+            >
+              <Icon className="w-[18px] h-[18px] shrink-0" />
+              {showLabels && (
+                <motion.span
+                  className="flex-1 truncate"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.05 }}
+                >
+                  {item.label}
+                </motion.span>
+              )}
+              {showLabels && locked && (
+                <Lock className="w-3.5 h-3.5 text-gray-400 dark:text-white/30 shrink-0" />
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Upgrade CTA — only when expanded */}
+      {showLabels && (
+        <motion.div
+          className="p-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="relative rounded-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-drb-turquoise-600 via-drb-turquoise-500 to-drb-lime-500" />
+            <div className="relative p-3 text-white">
+              <Sparkles className="w-4 h-4 mb-1.5 text-drb-turquoise-200" />
+              <p className="text-xs font-semibold">{tc("upgradeExperience")}</p>
+              <Link
+                href="/admin/stripe"
+                className="mt-2 inline-flex items-center text-[11px] font-semibold bg-white/20 hover:bg-white/30 rounded-lg px-2.5 py-1 transition-colors backdrop-blur-sm"
+              >
+                {tc("upgradeNow")}
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Logout */}
+      <div className="px-2 pb-2">
+        <a
+          href="/admin/logout"
+          title={!showLabels ? tc("logout") : undefined}
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
+        >
+          <LogOut className="w-[18px] h-[18px] shrink-0" />
+          {showLabels && (
+            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              {tc("logout")}
+            </motion.span>
+          )}
+        </a>
+      </div>
+
+      {/* DRB branding */}
+      {showLabels && (
+        <motion.div
+          className="px-3 pb-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="flex items-center gap-2 px-3 py-1.5">
+            <div className="w-4 h-4 rounded bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-[8px]">
+              D
+            </div>
+            <span className="text-[10px] text-gray-400 dark:text-white/30">
+              {tc("poweredBy")}{" "}
+              <span className="font-semibold text-gray-500 dark:text-white/50">
+                DRB Agency
+              </span>
+            </span>
+          </div>
+        </motion.div>
+      )}
+    </motion.aside>
+  );
+}
+
+// ====================================================================
+// MOBILE SIDEBAR (Sheet-based, full expanded)
+// ====================================================================
+function MobileSidebarNav({
   items,
   pathname,
   onNavigate,
@@ -81,14 +293,9 @@ function SidebarNav({
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#041820]">
-      {/* Logo + agency name — h-16 matches header height for line alignment */}
       <div className="flex items-center gap-3 px-6 h-16 border-b border-gray-200/80 dark:border-white/[0.06]">
         {logoUrl ? (
-          <img
-            src={logoUrl}
-            alt={clientName}
-            className="h-9 w-9 rounded-xl object-contain"
-          />
+          <img src={logoUrl} alt={clientName} className="h-9 w-9 rounded-xl object-contain" />
         ) : (
           <div
             className="h-9 w-9 rounded-xl flex items-center justify-center text-white font-bold text-sm"
@@ -113,7 +320,6 @@ function SidebarNav({
         </div>
       </div>
 
-      {/* Nav items */}
       <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
         {items.map((item) => {
           const active = isActive(item.href);
@@ -138,28 +344,6 @@ function SidebarNav({
         })}
       </nav>
 
-      {/* CTA banner with ocean background */}
-      <div className="p-4">
-        <div className="relative rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-drb-turquoise-600 via-drb-turquoise-500 to-drb-lime-500" />
-          <div className="absolute inset-0 opacity-20 bg-[url('/images/sidebar-cta-bg.svg')] bg-cover bg-center" />
-          <div className="relative p-4 text-white">
-            <Sparkles className="w-5 h-5 mb-2 text-drb-turquoise-200" />
-            <p className="text-sm font-semibold">{tc("upgradeExperience")}</p>
-            <p className="text-xs text-white/70 mt-1">
-              {tc("unlockPremium")}
-            </p>
-            <Link
-              href="/admin/stripe"
-              className="mt-3 inline-flex items-center text-xs font-semibold bg-white/20 hover:bg-white/30 rounded-lg px-3 py-1.5 transition-colors backdrop-blur-sm"
-            >
-              {tc("upgradeNow")}
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Logout */}
       <div className="px-3 pb-2">
         <a
           href="/admin/logout"
@@ -170,14 +354,14 @@ function SidebarNav({
         </a>
       </div>
 
-      {/* DRB Agency Branding */}
       <div className="px-4 pb-4">
         <div className="flex items-center gap-2 px-3 py-2">
           <div className="w-5 h-5 rounded bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-[9px]">
             D
           </div>
           <span className="text-[11px] text-gray-400 dark:text-white/30">
-            {tc("poweredBy")} <span className="font-semibold text-gray-500 dark:text-white/50">DRB Agency</span>
+            {tc("poweredBy")}{" "}
+            <span className="font-semibold text-gray-500 dark:text-white/50">DRB Agency</span>
           </span>
         </div>
       </div>
@@ -185,6 +369,9 @@ function SidebarNav({
   );
 }
 
+// ====================================================================
+// MAIN SHELL
+// ====================================================================
 const AdminShell = ({
   clientName,
   clientEmail,
@@ -193,14 +380,35 @@ const AdminShell = ({
   primaryColor,
   logoUrl,
   subscriptionActive = true,
+  agencyContext = "",
   children,
 }: AdminShellProps) => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [rightPanelOpen, setRightPanelOpen] = useState(false);
   const t = useTranslations("admin");
   const tc = useTranslations("common");
   const locale = useLocale();
 
+  // Sidebar pin state (persisted in localStorage)
+  const [pinned, setPinned] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(LS_KEY_PINNED);
+    if (stored === "true") setPinned(true);
+  }, []);
+
+  const togglePin = () => {
+    const next = !pinned;
+    setPinned(next);
+    localStorage.setItem(LS_KEY_PINNED, String(next));
+  };
+
+  const sidebarExpanded = pinned || hovered;
+  const sidebarWidth = sidebarExpanded ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED;
+
+  // Remove AI Assistant from sidebar nav (moved to right column)
   const navItems: NavItem[] = [
     { label: t("nav.dashboard"), href: "/admin", icon: LayoutDashboard },
     { label: t("nav.miWeb"), href: "/admin/mi-web", icon: Globe },
@@ -215,7 +423,6 @@ const AdminShell = ({
     { label: t("nav.emails"), href: "/admin/emails", icon: Mail },
     { label: t("nav.legales"), href: "/admin/legales", icon: Scale },
     { label: t("nav.aiChatbot"), href: "/admin/ai/chatbot", icon: Bot },
-    { label: t("nav.aiAsistente"), href: "/admin/ai/asistente", icon: MessageCircle },
   ];
 
   const pageTitles: Record<string, string> = {
@@ -232,36 +439,71 @@ const AdminShell = ({
     "/admin/emails": t("nav.emails"),
     "/admin/legales": t("nav.legales"),
     "/admin/ai/chatbot": t("nav.aiChatbot"),
-    "/admin/ai/asistente": t("nav.aiAsistente"),
   };
 
   const allowWhenInactive = pathname.startsWith("/admin/stripe");
 
-  // Get page title from pathname
-  const pageTitle = Object.entries(pageTitles).find(([path]) => {
-    if (path === "/admin") return pathname === "/admin";
-    return pathname.startsWith(path);
-  })?.[1] || tc("panel");
+  const pageTitle =
+    Object.entries(pageTitles).find(([path]) => {
+      if (path === "/admin") return pathname === "/admin";
+      return pathname.startsWith(path);
+    })?.[1] || tc("panel");
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
-      {/* Desktop sidebar */}
-      <aside className="fixed start-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
-        <SidebarNav
-          items={navItems}
-          pathname={pathname}
+      {/* ========== DESKTOP SIDEBAR ========== */}
+      <DesktopSidebar
+        items={navItems}
+        pathname={pathname}
+        clientName={clientName}
+        logoUrl={logoUrl}
+        primaryColor={primaryColor}
+        plan={plan}
+        t={t}
+        tc={tc}
+        pinned={pinned}
+        onTogglePin={togglePin}
+        expanded={hovered}
+        onHoverStart={() => setHovered(true)}
+        onHoverEnd={() => setHovered(false)}
+      />
+
+      {/* ========== DESKTOP RIGHT COLUMN (xl only) ========== */}
+      <aside
+        className="fixed end-0 top-0 bottom-0 hidden xl:flex flex-col z-40"
+        style={{ width: RIGHT_COL_W }}
+      >
+        <AdminRightColumn
           clientName={clientName}
+          clientEmail={clientEmail}
+          clienteId={clienteId}
           logoUrl={logoUrl}
           primaryColor={primaryColor}
+          agencyContext={agencyContext}
           plan={plan}
-          t={t}
-          tc={tc}
         />
       </aside>
 
-      {/* Header */}
-      <header className="sticky top-0 z-30 lg:ms-[260px] bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
-        <div className="flex items-center justify-between px-4 lg:px-8 h-16">
+      {/* ========== HEADER ========== */}
+      <header
+        className="sticky top-0 z-30 bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06] transition-all duration-200"
+        style={{
+          marginInlineStart: `var(--sidebar-w, ${SIDEBAR_W_COLLAPSED}px)`,
+          marginInlineEnd: `var(--right-col-w, 0px)`,
+        }}
+      >
+        <style>{`
+          @media (min-width: 1024px) {
+            header { --sidebar-w: ${sidebarWidth}px; }
+          }
+          @media (max-width: 1023px) {
+            header { --sidebar-w: 0px; }
+          }
+          @media (min-width: 1280px) {
+            header { --right-col-w: ${RIGHT_COL_W}px; }
+          }
+        `}</style>
+        <div className="flex items-center justify-between px-4 lg:px-6 h-16">
           <div className="flex items-center gap-4">
             {/* Mobile hamburger */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -270,8 +512,11 @@ const AdminShell = ({
                   <Menu className="w-5 h-5 text-gray-600 dark:text-white" />
                 </button>
               </SheetTrigger>
-              <SheetContent side={locale === "ar" ? "right" : "left"} className="w-[260px] p-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06]">
-                <SidebarNav
+              <SheetContent
+                side={locale === "ar" ? "right" : "left"}
+                className="w-[260px] p-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06]"
+              >
+                <MobileSidebarNav
                   items={navItems}
                   pathname={pathname}
                   onNavigate={() => setMobileOpen(false)}
@@ -288,7 +533,11 @@ const AdminShell = ({
             {/* Mobile branding */}
             <div className="flex items-center gap-2 lg:hidden">
               {logoUrl ? (
-                <img src={logoUrl} alt={clientName} className="h-7 w-7 rounded-lg object-contain" />
+                <img
+                  src={logoUrl}
+                  alt={clientName}
+                  className="h-7 w-7 rounded-lg object-contain"
+                />
               ) : (
                 <div
                   className="h-7 w-7 rounded-lg flex items-center justify-center text-white font-bold text-xs"
@@ -310,18 +559,21 @@ const AdminShell = ({
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Functional search bar */}
             <SearchBar navItems={navItems} />
-
             <LanguageSelector />
-
             <ThemeToggle />
 
-            {/* Functional notifications */}
-            <NotificationBell clienteId={clienteId} />
+            {/* Eden FAB for tablet/mobile (opens right panel) */}
+            <button
+              onClick={() => setRightPanelOpen(true)}
+              className="xl:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+              title="Eden"
+            >
+              <MessageCircle className="w-5 h-5 text-drb-turquoise-500" />
+            </button>
 
-            {/* User avatar + info */}
-            <div className="hidden sm:flex items-center gap-3 ps-3 border-s border-gray-200/80 dark:border-white/[0.06]">
+            {/* User avatar + info (desktop) */}
+            <div className="hidden sm:flex xl:hidden items-center gap-3 ps-3 border-s border-gray-200/80 dark:border-white/[0.06]">
               <div className="text-end hidden md:block">
                 <div className="text-sm font-medium text-gray-900 dark:text-white">
                   {clientName}
@@ -340,8 +592,22 @@ const AdminShell = ({
         </div>
       </header>
 
-      {/* Main content */}
-      <main className="lg:ms-[260px] px-4 lg:px-8 py-6">
+      {/* ========== MAIN CONTENT ========== */}
+      <main
+        className="px-4 lg:px-6 py-6 transition-all duration-200"
+        style={{
+          marginInlineStart: `var(--main-sidebar-w, 0px)`,
+          marginInlineEnd: `var(--main-right-w, 0px)`,
+        }}
+      >
+        <style>{`
+          @media (min-width: 1024px) {
+            main { --main-sidebar-w: ${sidebarWidth}px; }
+          }
+          @media (min-width: 1280px) {
+            main { --main-right-w: ${RIGHT_COL_W}px; }
+          }
+        `}</style>
         {subscriptionActive || allowWhenInactive ? (
           <PageTransition key={pathname}>{children}</PageTransition>
         ) : (
@@ -365,6 +631,35 @@ const AdminShell = ({
           </div>
         )}
       </main>
+
+      {/* ========== MOBILE/TABLET RIGHT PANEL DRAWER ========== */}
+      {rightPanelOpen && (
+        <div className="fixed inset-0 z-50 xl:hidden">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setRightPanelOpen(false)}
+          />
+          <div className="absolute end-0 top-0 bottom-0 w-[320px] max-w-[90vw] animate-slide-in-right">
+            <div className="h-full relative">
+              <button
+                onClick={() => setRightPanelOpen(false)}
+                className="absolute top-3 start-3 z-10 p-1.5 rounded-lg bg-white/80 dark:bg-white/10 hover:bg-gray-100 dark:hover:bg-white/20 transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-600 dark:text-white/70" />
+              </button>
+              <AdminRightColumn
+                clientName={clientName}
+                clientEmail={clientEmail}
+                clienteId={clienteId}
+                logoUrl={logoUrl}
+                primaryColor={primaryColor}
+                agencyContext={agencyContext}
+                plan={plan}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
