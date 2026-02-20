@@ -18,10 +18,15 @@ import {
   Share2,
   FileText,
   Link2,
+  Star,
+  Scale,
+  MapPin,
   type LucideIcon,
 } from "lucide-react";
 import UnsplashPicker from "./UnsplashPicker";
 import AIDescriptionButton from "@/components/ai/AIDescriptionButton";
+import OpinionesManager from "./OpinionesManager";
+import LegalesManager from "./LegalesManager";
 
 interface ClientData {
   id: string;
@@ -57,10 +62,32 @@ interface Counts {
   legales: number;
 }
 
+interface Opinion {
+  id: string;
+  nombre: string | null;
+  ubicacion: string | null;
+  comentario: string | null;
+  rating: number;
+  activo: boolean;
+  created_at: string;
+}
+
+interface LegalPage {
+  id: string;
+  titulo: string | null;
+  slug: string | null;
+  contenido: string | null;
+  activo: boolean;
+  created_at: string;
+}
+
 interface MiWebContentProps {
   client: ClientData;
   counts: Counts;
   plan?: string;
+  opiniones: Opinion[];
+  legales: LegalPage[];
+  locale: string;
 }
 
 type SectionKey =
@@ -70,7 +97,9 @@ type SectionKey =
   | "about"
   | "contact"
   | "social"
-  | "footer";
+  | "footer"
+  | "opiniones"
+  | "legales";
 
 interface SaveState {
   loading: boolean;
@@ -78,7 +107,7 @@ interface SaveState {
   error: string | null;
 }
 
-export default function MiWebContent({ client, counts, plan }: MiWebContentProps) {
+export default function MiWebContent({ client, counts, plan, opiniones, legales, locale }: MiWebContentProps) {
   const aiLocked = !plan || plan === "start";
   const t = useTranslations('admin.miWeb');
   const tc = useTranslations('common');
@@ -120,6 +149,8 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
     contact: { loading: false, success: false, error: null },
     social: { loading: false, success: false, error: null },
     footer: { loading: false, success: false, error: null },
+    opiniones: { loading: false, success: false, error: null },
+    legales: { loading: false, success: false, error: null },
   });
 
   const [unsplash, setUnsplash] = useState<{
@@ -769,56 +800,61 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
         )}
       </section>
 
-      {/* Enlaces rapidos */}
+      {/* Opiniones */}
+      <section className="panel-card p-5 space-y-3">
+        <SectionHeader
+          sectionKey="opiniones"
+          icon={Star}
+          title={t("reviewsSection")}
+          subtitle={`${counts.opiniones} ${t("publishedF")}`}
+        />
+        {openSections.has("opiniones") && (
+          <OpinionesManager
+            opiniones={opiniones}
+            clientId={client.id}
+            locale={locale}
+          />
+        )}
+      </section>
+
+      {/* Legales */}
+      <section className="panel-card p-5 space-y-3">
+        <SectionHeader
+          sectionKey="legales"
+          icon={Scale}
+          title={t("legalSection")}
+          subtitle={`${counts.legales} ${t("pages")}`}
+        />
+        {openSections.has("legales") && (
+          <LegalesManager
+            legales={legales}
+            clientId={client.id}
+          />
+        )}
+      </section>
+
+      {/* Enlace a destinos */}
       <section className="panel-card p-5 space-y-3">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
-            <Link2 className="w-3.5 h-3.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
+            <MapPin className="w-3.5 h-3.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
           </div>
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex-1">{t("relatedSections")}</h2>
-          <span className="text-xs text-gray-400 dark:text-white/40 hidden sm:block">{t("relatedSectionsSub")}</span>
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white flex-1">{t("relatedSections")}</h2>
         </div>
-        <div className="grid sm:grid-cols-3 gap-4">
-          <a
-            href="/admin/destinos"
-            className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
-                {t("destinationsSection")}
-              </span>
-            </div>
+        <a
+          href="/admin/destinos"
+          className="flex items-center justify-between rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
+        >
+          <div>
+            <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
+              {t("destinationsSection")}
+            </span>
             <p className="text-sm text-gray-400 dark:text-white/50">
               {counts.destinos} {t("published")}
             </p>
-          </a>
-          <a
-            href="/admin/opiniones"
-            className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
-                {t("reviewsSection")}
-              </span>
-            </div>
-            <p className="text-sm text-gray-400 dark:text-white/50">
-              {counts.opiniones} {t("publishedF")}
-            </p>
-          </a>
-          <a
-            href="/admin/legales"
-            className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
-                {t("legalSection")}
-              </span>
-            </div>
-            <p className="text-sm text-gray-400 dark:text-white/50">
-              {counts.legales} {t("pages")}
-            </p>
-          </a>
-        </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/40" />
+        </a>
       </section>
 
       {/* Unsplash Picker Modal */}

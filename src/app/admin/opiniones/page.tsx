@@ -229,17 +229,15 @@ export default async function AdminOpinionsPage({
                       <input type="hidden" name="ubicacion" value={opinion.ubicacion ?? ""} />
                       <input type="hidden" name="comentario" value={opinion.comentario ?? ""} />
                       <input type="hidden" name="rating" value={opinion.rating ?? 5} />
+                      <input type="hidden" name="activo" value={opinion.activo ? "" : "on"} />
                       {opinion.activo ? (
                         <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-white/60 hover:bg-gray-200 dark:hover:bg-white/[0.1] transition-colors">
                           {tc('unpublish')}
                         </SubmitButton>
                       ) : (
-                        <>
-                          <input type="hidden" name="activo" value="on" />
-                          <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/25 transition-colors">
-                            {tc('publish')}
-                          </SubmitButton>
-                        </>
+                        <SubmitButton className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/25 transition-colors">
+                          {tc('publish')}
+                        </SubmitButton>
                       )}
                     </form>
                     <DeleteWithConfirm
