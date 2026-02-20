@@ -118,7 +118,6 @@ export function LatestBookings({
     latestBookings: string;
     viewAll: string;
     noBookingsYet: string;
-    noMoreBookings: string;
     booking: string;
     count: number;
   };
@@ -158,7 +157,7 @@ export function LatestBookings({
           </div>
         ) : (
           <div ref={animateRef} className="space-y-1.5">
-            {bookings.slice(0, 6).map((r, index) => {
+            {bookings.slice(0, 5).map((r, index) => {
               const initial = (r.nombre || "R").charAt(0).toUpperCase();
               const gradient = getAvatarGradient(initial);
 
@@ -172,7 +171,7 @@ export function LatestBookings({
                   {r.id ? (
                     <Link
                       href={`/admin/reserva/${r.id}`}
-                      className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-2.5 hover:bg-drb-turquoise-50/50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer"
+                      className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-3 hover:bg-drb-turquoise-50/50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
                         <div
@@ -213,7 +212,7 @@ export function LatestBookings({
                       </div>
                     </Link>
                   ) : (
-                    <div className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-2.5">
+                    <div className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-3">
                       <div className="flex items-center gap-3">
                         <div
                           className={`w-8 h-8 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-sm font-semibold shadow-sm`}
@@ -251,17 +250,6 @@ export function LatestBookings({
               );
               return rowContent;
             })}
-
-            {/* Fill remaining slots up to 6 with placeholder */}
-            {Array.from({ length: Math.max(0, 6 - bookings.slice(0, 6).length) }).map((_, i) => (
-              <div
-                key={`empty-${i}`}
-                className="flex items-center gap-3 rounded-xl bg-gray-50/50 dark:bg-white/[0.015] border border-dashed border-gray-200/60 dark:border-white/[0.04] px-3 py-2.5"
-              >
-                <div className="w-8 h-8 rounded-full shrink-0 bg-gray-200 dark:bg-white/10" />
-                <span className="text-xs text-gray-300 dark:text-white/15">{labels.noMoreBookings}</span>
-              </div>
-            ))}
           </div>
         )}
       </div>

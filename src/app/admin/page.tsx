@@ -218,7 +218,6 @@ export default async function AdminPage() {
               latestBookings: t('latestBookings'),
               viewAll: tc('viewAll'),
               noBookingsYet: t('noBookingsYet'),
-              noMoreBookings: t('noMoreBookings'),
               booking: t('booking'),
               count: reservasSafe.length,
             }}
