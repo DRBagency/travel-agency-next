@@ -7,9 +7,9 @@ import { setLocale } from "@/lib/set-locale";
 import { Globe } from "lucide-react";
 
 const languages = [
-  { code: "es", label: "ES", flag: "🇪🇸" },
-  { code: "en", label: "EN", flag: "🇬🇧" },
-  { code: "ar", label: "AR", flag: "🇸🇦" },
+  { code: "es", label: "Español", flag: "🇪🇸" },
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "ar", label: "العربية", flag: "🇸🇦" },
 ] as const;
 
 export default function LanguageSelector() {
@@ -44,11 +44,10 @@ export default function LanguageSelector() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors text-sm"
+        title={current.label}
       >
         <Globe className="w-4 h-4 text-gray-500 dark:text-white/60" />
-        <span className="text-gray-700 dark:text-white/80 font-medium">
-          {current.flag} {current.label}
-        </span>
+        <span className="text-base leading-none">{current.flag}</span>
       </button>
 
       {isOpen && (

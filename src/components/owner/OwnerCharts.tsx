@@ -37,16 +37,17 @@ function useChartStyles() {
   };
 }
 
-export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
+export function MRRChart({ data, compact }: { data: { month: string; mrr: number }[]; compact?: boolean }) {
   const styles = useChartStyles();
   const t = useTranslations('owner.charts');
+  const h = compact ? 160 : 280;
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="panel-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className={compact ? "panel-card p-4" : "panel-card p-6"}>
+      <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white mb-1`}>
         {t('mrrGrowth')}
       </h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>
-      <ResponsiveContainer width="100%" height={280}>
+      {!compact && <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>}
+      <ResponsiveContainer width="100%" height={h}>
         <AreaChart data={data}>
           <defs>
             <linearGradient id="gradientMRR" x1="0" y1="0" x2="0" y2="1">
@@ -55,8 +56,8 @@ export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
-          <XAxis dataKey="month" stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
-          <YAxis stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
+          <XAxis dataKey="month" stroke={styles.axisStroke} tick={{ fontSize: compact ? 10 : 12 }} />
+          <YAxis stroke={styles.axisStroke} tick={{ fontSize: compact ? 10 : 12 }} width={compact ? 30 : 60} />
           <Tooltip
             contentStyle={styles.tooltipStyle}
             labelStyle={styles.labelStyle}
@@ -66,10 +67,10 @@ export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
             type="monotone"
             dataKey="mrr"
             stroke="#1CABB0"
-            strokeWidth={2.5}
+            strokeWidth={2}
             fill="url(#gradientMRR)"
-            dot={{ r: 4, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
-            activeDot={{ r: 6, fill: "#1CABB0" }}
+            dot={{ r: compact ? 2.5 : 4, fill: "#1CABB0", strokeWidth: 2, stroke: "#fff" }}
+            activeDot={{ r: compact ? 4 : 6, fill: "#1CABB0" }}
             name={t('mrrEur')}
           />
         </AreaChart>
@@ -78,16 +79,17 @@ export function MRRChart({ data }: { data: { month: string; mrr: number }[] }) {
   );
 }
 
-export function ClientesChart({ data }: { data: { month: string; clientes: number }[] }) {
+export function ClientesChart({ data, compact }: { data: { month: string; clientes: number }[]; compact?: boolean }) {
   const styles = useChartStyles();
   const t = useTranslations('owner.charts');
+  const h = compact ? 160 : 280;
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className="panel-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className={compact ? "panel-card p-4" : "panel-card p-6"}>
+      <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white mb-1`}>
         {t('newClients')}
       </h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>
-      <ResponsiveContainer width="100%" height={280}>
+      {!compact && <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>}
+      <ResponsiveContainer width="100%" height={h}>
         <AreaChart data={data}>
           <defs>
             <linearGradient id="gradientClientes" x1="0" y1="0" x2="0" y2="1">
@@ -96,17 +98,17 @@ export function ClientesChart({ data }: { data: { month: string; clientes: numbe
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
-          <XAxis dataKey="month" stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
-          <YAxis stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
+          <XAxis dataKey="month" stroke={styles.axisStroke} tick={{ fontSize: compact ? 10 : 12 }} />
+          <YAxis stroke={styles.axisStroke} tick={{ fontSize: compact ? 10 : 12 }} width={compact ? 30 : 60} />
           <Tooltip contentStyle={styles.tooltipStyle} labelStyle={styles.labelStyle} />
           <Area
             type="monotone"
             dataKey="clientes"
             stroke="#D4F24D"
-            strokeWidth={2.5}
+            strokeWidth={2}
             fill="url(#gradientClientes)"
-            dot={{ r: 4, fill: "#D4F24D", strokeWidth: 2, stroke: "#fff" }}
-            activeDot={{ r: 6, fill: "#D4F24D" }}
+            dot={{ r: compact ? 2.5 : 4, fill: "#D4F24D", strokeWidth: 2, stroke: "#fff" }}
+            activeDot={{ r: compact ? 4 : 6, fill: "#D4F24D" }}
             name={t('clients')}
           />
         </AreaChart>
@@ -115,16 +117,17 @@ export function ClientesChart({ data }: { data: { month: string; clientes: numbe
   );
 }
 
-export function ReservasOwnerChart({ data }: { data: { month: string; reservas: number }[] }) {
+export function ReservasOwnerChart({ data, compact }: { data: { month: string; reservas: number }[]; compact?: boolean }) {
   const styles = useChartStyles();
   const t = useTranslations('owner.charts');
+  const h = compact ? 160 : 280;
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="panel-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className={compact ? "panel-card p-4" : "panel-card p-6"}>
+      <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white mb-1`}>
         {t('platformBookings')}
       </h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>
-      <ResponsiveContainer width="100%" height={280}>
+      {!compact && <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>}
+      <ResponsiveContainer width="100%" height={h}>
         <AreaChart data={data}>
           <defs>
             <linearGradient id="gradientReservasOwner" x1="0" y1="0" x2="0" y2="1">
@@ -133,17 +136,17 @@ export function ReservasOwnerChart({ data }: { data: { month: string; reservas: 
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
-          <XAxis dataKey="month" stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
-          <YAxis stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
+          <XAxis dataKey="month" stroke={styles.axisStroke} tick={{ fontSize: compact ? 10 : 12 }} />
+          <YAxis stroke={styles.axisStroke} tick={{ fontSize: compact ? 10 : 12 }} width={compact ? 30 : 60} />
           <Tooltip contentStyle={styles.tooltipStyle} labelStyle={styles.labelStyle} />
           <Area
             type="monotone"
             dataKey="reservas"
             stroke="#F59E0B"
-            strokeWidth={2.5}
+            strokeWidth={2}
             fill="url(#gradientReservasOwner)"
-            dot={{ r: 4, fill: "#F59E0B", strokeWidth: 2, stroke: "#fff" }}
-            activeDot={{ r: 6, fill: "#F59E0B" }}
+            dot={{ r: compact ? 2.5 : 4, fill: "#F59E0B", strokeWidth: 2, stroke: "#fff" }}
+            activeDot={{ r: compact ? 4 : 6, fill: "#F59E0B" }}
             name={t('bookings')}
           />
         </AreaChart>
@@ -161,8 +164,10 @@ const PLAN_COLORS: Record<string, string> = {
 
 export function RevenueBreakdownChart({
   data,
+  compact,
 }: {
   data: Record<string, { count: number; mrr: number }>;
+  compact?: boolean;
 }) {
   const styles = useChartStyles();
   const t = useTranslations("owner.charts");
@@ -176,30 +181,36 @@ export function RevenueBreakdownChart({
 
   if (chartData.length === 0) return null;
 
+  const h = compact ? 140 : 280;
+  const innerR = compact ? 30 : 60;
+  const outerR = compact ? 50 : 100;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.25 }}
-      className="panel-card p-6"
+      className={compact ? "panel-card p-4" : "panel-card p-6"}
     >
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+      <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white mb-1`}>
         {t("revenueByPlan")}
       </h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">
-        {t("mrrDistribution")}
-      </p>
-      <ResponsiveContainer width="100%" height={280}>
+      {!compact && (
+        <p className="text-sm text-gray-400 dark:text-white/40 mb-4">
+          {t("mrrDistribution")}
+        </p>
+      )}
+      <ResponsiveContainer width="100%" height={h}>
         <PieChart>
           <Pie
             data={chartData}
             cx="50%"
             cy="50%"
-            innerRadius={60}
-            outerRadius={100}
+            innerRadius={innerR}
+            outerRadius={outerR}
             paddingAngle={4}
             dataKey="value"
-            label={({ name, value }) => `${name}: ${value}€`}
+            label={compact ? false : ({ name, value }) => `${name}: ${value}€`}
           >
             {chartData.map((entry) => (
               <Cell
@@ -223,48 +234,54 @@ export function RevenueBreakdownChart({
 
 export function TopDestinosChart({
   data,
+  compact,
 }: {
   data: { name: string; count: number }[];
+  compact?: boolean;
 }) {
   const styles = useChartStyles();
   const t = useTranslations("owner.charts");
 
   if (data.length === 0) return null;
 
+  const h = compact ? 160 : 280;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3 }}
-      className="panel-card p-6"
+      className={compact ? "panel-card p-4" : "panel-card p-6"}
     >
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+      <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white mb-1`}>
         {t("topDestinations")}
       </h3>
-      <p className="text-sm text-gray-400 dark:text-white/40 mb-4">
-        {t("byBookings")}
-      </p>
-      <ResponsiveContainer width="100%" height={280}>
+      {!compact && (
+        <p className="text-sm text-gray-400 dark:text-white/40 mb-4">
+          {t("byBookings")}
+        </p>
+      )}
+      <ResponsiveContainer width="100%" height={h}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid
             strokeDasharray="3 3"
             stroke={styles.gridStroke}
             horizontal={false}
           />
-          <XAxis type="number" stroke={styles.axisStroke} tick={{ fontSize: 12 }} />
+          <XAxis type="number" stroke={styles.axisStroke} tick={{ fontSize: compact ? 10 : 12 }} />
           <YAxis
             type="category"
             dataKey="name"
             stroke={styles.axisStroke}
-            tick={{ fontSize: 11 }}
-            width={120}
+            tick={{ fontSize: compact ? 9 : 11 }}
+            width={compact ? 70 : 120}
           />
           <Tooltip
             contentStyle={styles.tooltipStyle}
             labelStyle={styles.labelStyle}
             formatter={(value: any) => [`${value}`, t("bookings")]}
           />
-          <Bar dataKey="count" fill="#1CABB0" radius={[0, 6, 6, 0]} barSize={24} />
+          <Bar dataKey="count" fill="#1CABB0" radius={[0, 6, 6, 0]} barSize={compact ? 16 : 24} />
         </BarChart>
       </ResponsiveContainer>
     </motion.div>

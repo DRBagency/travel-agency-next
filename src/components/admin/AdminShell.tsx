@@ -39,6 +39,7 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 import PageTransition from "@/components/ui/PageTransition";
 import SearchBar from "@/components/ui/SearchBar";
 import LanguageSelector from "@/components/ui/LanguageSelector";
+import NotificationBell from "@/components/ui/NotificationBell";
 import AdminRightColumn from "./AdminRightColumn";
 import DashboardBackground from "./DashboardBackground";
 
@@ -69,10 +70,50 @@ interface NavItem {
 }
 
 // ====================================================================
+// Curved sidebar separator with reflective gradient effect
+// ====================================================================
+function SidebarSeparator({ expanded }: { expanded: boolean }) {
+  if (!expanded) return <div className="my-1.5" />;
+  return (
+    <div className="my-1.5 mx-3 overflow-hidden">
+      <svg viewBox="0 0 200 8" className="w-full h-2" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="sepLight" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#1CABB0" stopOpacity="0" />
+            <stop offset="20%" stopColor="#1CABB0" stopOpacity="0.25" />
+            <stop offset="50%" stopColor="#D4F24D" stopOpacity="0.4" />
+            <stop offset="80%" stopColor="#1CABB0" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#1CABB0" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="sepDark" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#1CABB0" stopOpacity="0" />
+            <stop offset="20%" stopColor="#1CABB0" stopOpacity="0.3" />
+            <stop offset="50%" stopColor="#33CFD7" stopOpacity="0.5" />
+            <stop offset="80%" stopColor="#1CABB0" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#1CABB0" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="sepShine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#fff" stopOpacity="0" />
+            <stop offset="45%" stopColor="#fff" stopOpacity="0" />
+            <stop offset="50%" stopColor="#fff" stopOpacity="0.6" />
+            <stop offset="55%" stopColor="#fff" stopOpacity="0" />
+            <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d="M 0 4 Q 50 0, 100 4 Q 150 8, 200 4" stroke="url(#sepLight)" strokeWidth="1.5" fill="none" className="dark:hidden" />
+        <path d="M 0 4 Q 50 0, 100 4 Q 150 8, 200 4" stroke="url(#sepDark)" strokeWidth="1.5" fill="none" className="hidden dark:block" />
+        <path d="M 0 4 Q 50 0, 100 4 Q 150 8, 200 4" stroke="url(#sepShine)" strokeWidth="0.5" fill="none" className="opacity-50" />
+      </svg>
+    </div>
+  );
+}
+
+// ====================================================================
 // SIDEBAR (Desktop — collapsible with pin)
 // ====================================================================
 function DesktopSidebar({
   items,
+  navGroups,
   pathname,
   clientName,
   logoUrl,
@@ -87,6 +128,7 @@ function DesktopSidebar({
   onHoverEnd,
 }: {
   items: NavItem[];
+  navGroups?: NavItem[][];
   pathname: string;
   clientName: string;
   logoUrl?: string | null;
@@ -167,40 +209,47 @@ function DesktopSidebar({
         )}
       </div>
 
-      {/* Nav items */}
-      <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5">
-        {items.map((item) => {
-          const active = isActive(item.href);
-          const Icon = item.icon;
-          const locked = AI_ROUTES.includes(item.href) && isAILocked(plan);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              title={!showLabels ? item.label : undefined}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
-                active
-                  ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
-                  : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
-              }`}
-            >
-              <Icon className="w-[18px] h-[18px] shrink-0" />
-              {showLabels && (
-                <motion.span
-                  className="flex-1 truncate"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.05 }}
-                >
-                  {item.label}
-                </motion.span>
-              )}
-              {showLabels && locked && (
-                <Lock className="w-3.5 h-3.5 text-gray-400 dark:text-white/30 shrink-0" />
-              )}
-            </Link>
-          );
-        })}
+      {/* Nav items with group separators */}
+      <nav className="flex-1 overflow-y-auto px-2 py-3">
+        {(navGroups || [items]).map((group, gi) => (
+          <div key={gi}>
+            {gi > 0 && <SidebarSeparator expanded={showLabels} />}
+            <div className="space-y-0.5">
+              {group.map((item) => {
+                const active = isActive(item.href);
+                const Icon = item.icon;
+                const locked = AI_ROUTES.includes(item.href) && isAILocked(plan);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={!showLabels ? item.label : undefined}
+                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
+                      active
+                        ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                        : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    {showLabels && (
+                      <motion.span
+                        className="flex-1 truncate"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.05 }}
+                      >
+                        {item.label}
+                      </motion.span>
+                    )}
+                    {showLabels && locked && (
+                      <Lock className="w-3.5 h-3.5 text-gray-400 dark:text-white/30 shrink-0" />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Upgrade CTA — only when expanded */}
@@ -272,6 +321,7 @@ function DesktopSidebar({
 // ====================================================================
 function MobileSidebarNav({
   items,
+  navGroups,
   pathname,
   onNavigate,
   clientName,
@@ -282,6 +332,7 @@ function MobileSidebarNav({
   tc,
 }: {
   items: NavItem[];
+  navGroups?: NavItem[][];
   pathname: string;
   onNavigate?: () => void;
   clientName: string;
@@ -323,28 +374,35 @@ function MobileSidebarNav({
         </div>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
-        {items.map((item) => {
-          const active = isActive(item.href);
-          const Icon = item.icon;
-          const locked = AI_ROUTES.includes(item.href) && isAILocked(plan);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onNavigate}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
-                active
-                  ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
-                  : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
-              }`}
-            >
-              <Icon className="w-[18px] h-[18px] shrink-0" />
-              <span className="flex-1">{item.label}</span>
-              {locked && <Lock className="w-3.5 h-3.5 text-gray-400 dark:text-white/30 shrink-0" />}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 overflow-y-auto px-3 py-3">
+        {(navGroups || [items]).map((group, gi) => (
+          <div key={gi}>
+            {gi > 0 && <SidebarSeparator expanded />}
+            <div className="space-y-0.5">
+              {group.map((item) => {
+                const active = isActive(item.href);
+                const Icon = item.icon;
+                const locked = AI_ROUTES.includes(item.href) && isAILocked(plan);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onNavigate}
+                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
+                      active
+                        ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                        : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    <span className="flex-1">{item.label}</span>
+                    {locked && <Lock className="w-3.5 h-3.5 text-gray-400 dark:text-white/30 shrink-0" />}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       <div className="px-3 pb-2">
@@ -413,22 +471,37 @@ const AdminShell = ({
   const sidebarExpanded = pinned || hovered;
   const sidebarWidth = sidebarExpanded ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED;
 
-  // Remove AI Assistant from sidebar nav (moved to right column)
-  const navItems: NavItem[] = [
-    { label: t("nav.dashboard"), href: "/admin", icon: LayoutDashboard },
-    { label: t("nav.miWeb"), href: "/admin/mi-web", icon: Globe },
-    { label: t("nav.opiniones"), href: "/admin/opiniones", icon: Star },
-    { label: t("nav.destinos"), href: "/admin/destinos", icon: MapPin },
-    { label: t("nav.reservas"), href: "/admin/reservas", icon: CalendarCheck },
-    { label: t("nav.analytics"), href: "/admin/analytics", icon: BarChart3 },
-    { label: t("nav.calendario"), href: "/admin/calendario", icon: Calendar },
-    { label: t("nav.documentos"), href: "/admin/documentos", icon: FileText },
-    { label: t("nav.soporte"), href: "/admin/soporte", icon: Headphones },
-    { label: t("nav.stripe"), href: "/admin/stripe", icon: CreditCard },
-    { label: t("nav.emails"), href: "/admin/emails", icon: Mail },
-    { label: t("nav.legales"), href: "/admin/legales", icon: Scale },
-    { label: t("nav.aiChatbot"), href: "/admin/ai/chatbot", icon: Bot },
+  // Nav items grouped with separators between groups
+  const navGroups: NavItem[][] = [
+    // Home
+    [{ label: t("nav.dashboard"), href: "/admin", icon: LayoutDashboard }],
+    // Content
+    [
+      { label: t("nav.miWeb"), href: "/admin/mi-web", icon: Globe },
+      { label: t("nav.opiniones"), href: "/admin/opiniones", icon: Star },
+      { label: t("nav.destinos"), href: "/admin/destinos", icon: MapPin },
+    ],
+    // Operations
+    [
+      { label: t("nav.reservas"), href: "/admin/reservas", icon: CalendarCheck },
+      { label: t("nav.analytics"), href: "/admin/analytics", icon: BarChart3 },
+      { label: t("nav.calendario"), href: "/admin/calendario", icon: Calendar },
+    ],
+    // Management
+    [
+      { label: t("nav.documentos"), href: "/admin/documentos", icon: FileText },
+      { label: t("nav.soporte"), href: "/admin/soporte", icon: Headphones },
+    ],
+    // Config
+    [
+      { label: t("nav.stripe"), href: "/admin/stripe", icon: CreditCard },
+      { label: t("nav.emails"), href: "/admin/emails", icon: Mail },
+      { label: t("nav.legales"), href: "/admin/legales", icon: Scale },
+    ],
+    // AI
+    [{ label: t("nav.aiChatbot"), href: "/admin/ai/chatbot", icon: Bot }],
   ];
+  const navItems = navGroups.flat();
 
   const allowWhenInactive = pathname.startsWith("/admin/stripe");
 
@@ -437,6 +510,7 @@ const AdminShell = ({
       {/* ========== DESKTOP SIDEBAR ========== */}
       <DesktopSidebar
         items={navItems}
+        navGroups={navGroups}
         pathname={pathname}
         clientName={clientName}
         logoUrl={logoUrl}
@@ -503,6 +577,7 @@ const AdminShell = ({
               >
                 <MobileSidebarNav
                   items={navItems}
+                  navGroups={navGroups}
                   pathname={pathname}
                   onNavigate={() => setMobileOpen(false)}
                   clientName={clientName}
@@ -543,6 +618,7 @@ const AdminShell = ({
             <SearchBar navItems={navItems} />
             <LanguageSelector />
             <ThemeToggle />
+            <NotificationBell clienteId={clienteId} />
 
             {/* Eden FAB for tablet/mobile (opens right panel) */}
             <button

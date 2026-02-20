@@ -2,13 +2,13 @@
 
 /**
  * Subtle but VISIBLE mountain landscape for the dashboard main area.
- * Mountains at 15-25% opacity — visible in empty spaces between cards.
+ * Fixed to viewport so it covers full screen including empty space.
  * Light mode: turquoise pastels. Dark mode: dark turquoise tones.
  */
 export default function DashboardBackground() {
   return (
     <svg
-      className="absolute inset-0 w-full h-full pointer-events-none"
+      className="fixed inset-0 w-full h-full pointer-events-none z-0"
       viewBox="0 0 1200 800"
       fill="none"
       preserveAspectRatio="none"

@@ -39,14 +39,51 @@ interface NavItem {
   icon: LucideIcon;
 }
 
+function OwnerSidebarSeparator() {
+  return (
+    <div className="my-1.5 mx-3 overflow-hidden">
+      <svg viewBox="0 0 200 8" className="w-full h-2" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="osepLight" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#1CABB0" stopOpacity="0" />
+            <stop offset="20%" stopColor="#1CABB0" stopOpacity="0.25" />
+            <stop offset="50%" stopColor="#D4F24D" stopOpacity="0.4" />
+            <stop offset="80%" stopColor="#1CABB0" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#1CABB0" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="osepDark" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#1CABB0" stopOpacity="0" />
+            <stop offset="20%" stopColor="#1CABB0" stopOpacity="0.3" />
+            <stop offset="50%" stopColor="#33CFD7" stopOpacity="0.5" />
+            <stop offset="80%" stopColor="#1CABB0" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#1CABB0" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="osepShine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#fff" stopOpacity="0" />
+            <stop offset="45%" stopColor="#fff" stopOpacity="0" />
+            <stop offset="50%" stopColor="#fff" stopOpacity="0.6" />
+            <stop offset="55%" stopColor="#fff" stopOpacity="0" />
+            <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d="M 0 4 Q 50 0, 100 4 Q 150 8, 200 4" stroke="url(#osepLight)" strokeWidth="1.5" fill="none" className="dark:hidden" />
+        <path d="M 0 4 Q 50 0, 100 4 Q 150 8, 200 4" stroke="url(#osepDark)" strokeWidth="1.5" fill="none" className="hidden dark:block" />
+        <path d="M 0 4 Q 50 0, 100 4 Q 150 8, 200 4" stroke="url(#osepShine)" strokeWidth="0.5" fill="none" className="opacity-50" />
+      </svg>
+    </div>
+  );
+}
+
 function SidebarNav({
   items,
+  navGroups,
   pathname,
   onNavigate,
   t,
   tc,
 }: {
   items: NavItem[];
+  navGroups?: NavItem[][];
   pathname: string;
   onNavigate?: () => void;
   t: (key: string) => string;
@@ -72,27 +109,34 @@ function SidebarNav({
         </div>
       </div>
 
-      {/* Nav items */}
-      <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
-        {items.map((item) => {
-          const active = isActive(item.href);
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onNavigate}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
-                active
-                  ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
-                  : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
-              }`}
-            >
-              <Icon className="w-[18px] h-[18px] shrink-0" />
-              {item.label}
-            </Link>
-          );
-        })}
+      {/* Nav items with group separators */}
+      <nav className="flex-1 overflow-y-auto px-3 py-3">
+        {(navGroups || [items]).map((group, gi) => (
+          <div key={gi}>
+            {gi > 0 && <OwnerSidebarSeparator />}
+            <div className="space-y-0.5">
+              {group.map((item) => {
+                const active = isActive(item.href);
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onNavigate}
+                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
+                      active
+                        ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                        : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* CTA banner */}
@@ -131,32 +175,28 @@ export default function OwnerShell({ children }: OwnerShellProps) {
   const tc = useTranslations("common");
   const locale = useLocale();
 
-  const navItems: NavItem[] = [
-    { label: t("nav.dashboard"), href: "/owner", icon: LayoutDashboard },
-    { label: t("nav.clientes"), href: "/owner/clientes", icon: Users },
-    { label: t("nav.calendario"), href: "/owner/calendario", icon: Calendar },
-    { label: t("nav.emails"), href: "/owner/emails", icon: Mail },
-    { label: t("nav.monetizacion"), href: "/owner/monetizacion", icon: TrendingUp },
-    { label: t("nav.stripe"), href: "/owner/stripe", icon: CreditCard },
-    { label: t("nav.automatizaciones"), href: "/owner/automatizaciones", icon: Zap },
-    { label: t("nav.soporte"), href: "/owner/soporte", icon: Headphones },
+  const navGroups: NavItem[][] = [
+    // Home
+    [{ label: t("nav.dashboard"), href: "/owner", icon: LayoutDashboard }],
+    // Core
+    [
+      { label: t("nav.clientes"), href: "/owner/clientes", icon: Users },
+      { label: t("nav.calendario"), href: "/owner/calendario", icon: Calendar },
+      { label: t("nav.soporte"), href: "/owner/soporte", icon: Headphones },
+    ],
+    // Revenue
+    [
+      { label: t("nav.monetizacion"), href: "/owner/monetizacion", icon: TrendingUp },
+      { label: t("nav.stripe"), href: "/owner/stripe", icon: CreditCard },
+    ],
+    // Config
+    [
+      { label: t("nav.emails"), href: "/owner/emails", icon: Mail },
+      { label: t("nav.automatizaciones"), href: "/owner/automatizaciones", icon: Zap },
+    ],
   ];
+  const navItems = navGroups.flat();
 
-  const pageTitles: Record<string, string> = {
-    "/owner": t("nav.dashboard"),
-    "/owner/clientes": t("nav.clientes"),
-    "/owner/calendario": t("nav.calendario"),
-    "/owner/emails": t("nav.emails"),
-    "/owner/monetizacion": t("nav.monetizacion"),
-    "/owner/stripe": t("nav.stripe"),
-    "/owner/automatizaciones": t("nav.automatizaciones"),
-    "/owner/soporte": t("nav.soporte"),
-  };
-
-  const pageTitle = Object.entries(pageTitles).find(([path]) => {
-    if (path === "/owner") return pathname === "/owner";
-    return pathname.startsWith(path);
-  })?.[1] || t("panelOwner");
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
@@ -164,6 +204,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
       <aside className="fixed start-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
         <SidebarNav
           items={navItems}
+          navGroups={navGroups}
           pathname={pathname}
           t={t}
           tc={tc}
@@ -184,6 +225,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
               <SheetContent side={locale === "ar" ? "right" : "left"} className="w-[260px] p-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06]">
                 <SidebarNav
                   items={navItems}
+                  navGroups={navGroups}
                   pathname={pathname}
                   onNavigate={() => setMobileOpen(false)}
                   t={t}
@@ -202,10 +244,6 @@ export default function OwnerShell({ children }: OwnerShellProps) {
               </span>
             </div>
 
-            {/* Page title (desktop) */}
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white hidden lg:block">
-              {pageTitle}
-            </h1>
           </div>
 
           <div className="flex items-center gap-3">

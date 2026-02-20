@@ -2,17 +2,10 @@ import { getDashboardMetrics } from "@/lib/owner/get-dashboard-metrics";
 import { getChartData } from "@/lib/owner/get-chart-data";
 import { MRRChart, ClientesChart, ReservasOwnerChart, RevenueBreakdownChart, TopDestinosChart } from "@/components/owner/OwnerCharts";
 import LatestAgenciesTable from "@/components/owner/LatestAgenciesTable";
-import DashboardCard from "@/components/ui/DashboardCard";
 import KPICard from "@/components/ui/KPICard";
 import { getTranslations, getLocale } from "next-intl/server";
 import AIInsightsCard from "@/components/ai/AIInsightsCard";
 import {
-  Users,
-  Mail,
-  TrendingUp,
-  CreditCard,
-  Zap,
-  Headphones,
   Building2,
   DollarSign,
   ShoppingBag,
@@ -24,14 +17,12 @@ export const dynamic = "force-dynamic";
 
 export default async function OwnerDashboardPage() {
   const t = await getTranslations('owner.dashboard');
-  const tc = await getTranslations('common');
-  const tn = await getTranslations('owner.nav');
   const locale = await getLocale();
   const metrics = await getDashboardMetrics();
   const chartData = await getChartData(locale);
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-5 animate-fade-in">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('greeting')}</h1>
@@ -39,7 +30,7 @@ export default async function OwnerDashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
         <KPICard
           title={t('totalAgencies')}
           value={metrics.totalClientes}
@@ -81,60 +72,13 @@ export default async function OwnerDashboardPage() {
         />
       </div>
 
-      {/* Charts - Row 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <MRRChart data={chartData.mrrPorMes} />
-        <ClientesChart data={chartData.clientesPorMes} />
-        <ReservasOwnerChart data={chartData.reservasPorMes} />
-      </div>
-
-      {/* Charts - Row 2 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <RevenueBreakdownChart data={metrics.planBreakdown} />
-        <TopDestinosChart data={metrics.topDestinos} />
-      </div>
-
-      {/* Navigation Cards */}
-      <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('quickAccess')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          <DashboardCard
-            icon={<Users className="w-5 h-5" />}
-            title={t('clients')}
-            subtitle={t('manageAgencies')}
-            href="/owner/clientes"
-          />
-          <DashboardCard
-            icon={<Mail className="w-5 h-5" />}
-            title={tn('emails')}
-            subtitle={t('billingTemplates')}
-            href="/owner/emails"
-          />
-          <DashboardCard
-            icon={<TrendingUp className="w-5 h-5" />}
-            title={tn('monetizacion')}
-            subtitle={t('mrrAndCommissions')}
-            href="/owner/monetizacion"
-          />
-          <DashboardCard
-            icon={<CreditCard className="w-5 h-5" />}
-            title={tn('stripe')}
-            subtitle={t('paymentConfig')}
-            href="/owner/stripe"
-          />
-          <DashboardCard
-            icon={<Zap className="w-5 h-5" />}
-            title={tn('automatizaciones')}
-            subtitle={t('autoFlows')}
-            href="/owner/automatizaciones"
-          />
-          <DashboardCard
-            icon={<Headphones className="w-5 h-5" />}
-            title={tn('soporte')}
-            subtitle={t('agencyTickets')}
-            href="/owner/soporte"
-          />
-        </div>
+      {/* All 5 Charts — compact single row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+        <MRRChart data={chartData.mrrPorMes} compact />
+        <ClientesChart data={chartData.clientesPorMes} compact />
+        <ReservasOwnerChart data={chartData.reservasPorMes} compact />
+        <RevenueBreakdownChart data={metrics.planBreakdown} compact />
+        <TopDestinosChart data={metrics.topDestinos} compact />
       </div>
 
       {/* AI Insights */}

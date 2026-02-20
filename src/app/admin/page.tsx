@@ -1,6 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
-import DashboardCard from "@/components/ui/DashboardCard";
 import KPICard from "@/components/ui/KPICard";
 import { ReservasChart, IngresosChart, RevenueProjectionChart, DestinosChart } from "@/components/admin/AdminAnalyticsCharts";
 import {
@@ -12,19 +11,10 @@ import {
 import { subMonths, addMonths, format, startOfMonth, endOfMonth } from "date-fns";
 import { getTranslations, getLocale } from 'next-intl/server';
 import {
-  Globe,
-  MapPin,
-  CalendarCheck,
-  Star,
-  Mail,
-  FileText,
-  CreditCard,
-  BarChart3,
   DollarSign,
   ShoppingBag,
   Ticket,
   Map,
-  Sparkles,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -33,7 +23,6 @@ export default async function AdminPage() {
   const client = await requireAdminClient();
   const t = await getTranslations('admin.dashboard');
   const tc = await getTranslations('common');
-  const tn = await getTranslations('admin.nav');
   const locale = await getLocale();
 
   /* Métricas de reservas */
@@ -125,7 +114,7 @@ export default async function AdminPage() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       {/* Greeting */}
       <PremiumGreeting
         greeting={greeting}
@@ -134,7 +123,7 @@ export default async function AdminPage() {
       />
 
       {/* 4 KPI Cards */}
-      <StaggeredGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <StaggeredGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <StaggeredItem>
           <KPICard
             title={t('totalBilled')}
@@ -183,79 +172,14 @@ export default async function AdminPage() {
         </StaggeredItem>
       </StaggeredGrid>
 
-      {/* 3 Charts — same row like /owner */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <ReservasChart data={reservasChartData} />
-        <IngresosChart data={ingresosChartData} />
-        <RevenueProjectionChart data={projectionData} />
-      </div>
-
-      {/* Destinos Chart */}
-      {destinosChartData.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <DestinosChart data={destinosChartData} />
-        </div>
-      )}
-
-      {/* Navigation Cards */}
-      <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('manageAgency')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <DashboardCard
-            icon={<Globe className="w-5 h-5" />}
-            title={t('webContent')}
-            subtitle={t('webContentSub')}
-            href="/admin/mi-web"
-          />
-          <DashboardCard
-            icon={<MapPin className="w-5 h-5" />}
-            title={t('destinations')}
-            subtitle={t('destinationsSub')}
-            href="/admin/destinos"
-          />
-          <DashboardCard
-            icon={<CalendarCheck className="w-5 h-5" />}
-            title={t('bookings')}
-            subtitle={t('bookingsSub')}
-            href="/admin/reservas"
-          />
-          <DashboardCard
-            icon={<Star className="w-5 h-5" />}
-            title={t('reviews')}
-            subtitle={t('reviewsSub')}
-            href="/admin/opiniones"
-          />
-          <DashboardCard
-            icon={<Mail className="w-5 h-5" />}
-            title={tn('emails')}
-            subtitle={t('emailsSub')}
-            href="/admin/emails"
-          />
-          <DashboardCard
-            icon={<FileText className="w-5 h-5" />}
-            title={t('legalPages')}
-            subtitle={t('legalPagesSub')}
-            href="/admin/legales"
-          />
-          <DashboardCard
-            icon={<CreditCard className="w-5 h-5" />}
-            title={tn('stripe')}
-            subtitle={t('stripeSub')}
-            href="/admin/stripe"
-          />
-          <DashboardCard
-            icon={<BarChart3 className="w-5 h-5" />}
-            title={tn('analytics')}
-            subtitle={t('statisticsSub')}
-            href="/admin/analytics"
-          />
-          <DashboardCard
-            icon={<Sparkles className="w-5 h-5" />}
-            title={t('aiTools')}
-            subtitle={t('aiToolsSub')}
-            href="/admin/ai/itinerarios"
-          />
-        </div>
+      {/* All 4 Charts — single row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+        <ReservasChart data={reservasChartData} compact />
+        <IngresosChart data={ingresosChartData} compact />
+        <RevenueProjectionChart data={projectionData} compact />
+        {destinosChartData.length > 0 && (
+          <DestinosChart data={destinosChartData} compact />
+        )}
       </div>
 
       {/* Últimas reservas */}

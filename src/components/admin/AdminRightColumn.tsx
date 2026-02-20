@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Camera, Loader2, X, User, Mail, Phone } from "lucide-react";
 import { sileo } from "sileo";
-import NotificationBell from "@/components/ui/NotificationBell";
 import MountainBackground from "./MountainBackground";
 import EdenChat from "./EdenChat";
 
@@ -116,11 +115,6 @@ export default function AdminRightColumn({
       <div className="relative z-10 flex flex-col h-full">
         {/* ── Profile card — glassmorphism over dark sky ── */}
         <div className="relative mx-3 mt-3 rounded-2xl bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg p-4">
-          {/* Notification bell */}
-          <div className="absolute top-3 end-3 z-20">
-            <NotificationBell clienteId={clienteId} />
-          </div>
-
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
             <button
