@@ -201,18 +201,12 @@ export default async function AdminPage() {
         </StaggeredItem>
       </StaggeredGrid>
 
-      {/* All 4 Charts — single row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2">
-        <ReservasChart data={reservasChartData} compact />
-        <IngresosChart data={ingresosChartData} compact />
-        <RevenueProjectionChart data={projectionData} compact />
-        {destinosChartData.length > 0 && (
-          <DestinosChart data={destinosChartData} compact />
-        )}
-      </div>
-
-      {/* Upcoming events + Latest bookings */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+      {/* 2 Charts + Upcoming Events */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2 lg:col-span-2">
+          <ReservasChart data={reservasChartData} compact />
+          <IngresosChart data={ingresosChartData} compact />
+        </div>
         <UpcomingEventsWidget
           events={(upcomingEvents ?? []) as any[]}
           locale={locale}
@@ -225,6 +219,18 @@ export default async function AdminPage() {
             allDay: t('allDay'),
           }}
         />
+      </div>
+
+      {/* 2 Charts + Latest Bookings */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2 lg:col-span-2">
+          <RevenueProjectionChart data={projectionData} compact />
+          {destinosChartData.length > 0 ? (
+            <DestinosChart data={destinosChartData} compact />
+          ) : (
+            <div />
+          )}
+        </div>
         <LatestBookings
           bookings={reservasSafe as any[]}
           locale={locale}
@@ -238,7 +244,7 @@ export default async function AdminPage() {
         />
       </div>
 
-      {/* Destinations map + Recent messages */}
+      {/* Map + Messages */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <DestinationsMapWrapper
           destinations={(destinosConCoords ?? []) as any[]}

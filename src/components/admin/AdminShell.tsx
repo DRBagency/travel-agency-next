@@ -652,7 +652,7 @@ const AdminShell = ({
 
       {/* ========== MAIN CONTENT ========== */}
       <main
-        className="relative px-4 lg:px-6 py-6 transition-all duration-200"
+        className="relative px-4 lg:px-6 pt-3 pb-6 transition-all duration-200"
         style={{
           marginInlineStart: `var(--main-sidebar-w, 0px)`,
           marginInlineEnd: `var(--main-right-w, 0px)`,
