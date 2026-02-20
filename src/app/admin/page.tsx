@@ -202,7 +202,7 @@ export default async function AdminPage() {
       </StaggeredGrid>
 
       {/* Charts (left) | Bookings (center) | Charts (right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_3fr_1fr] gap-2">
         {/* Left — 2 charts stacked */}
         <div className="space-y-2">
           <ReservasChart data={reservasChartData} compact />
@@ -210,7 +210,7 @@ export default async function AdminPage() {
         </div>
 
         {/* Center — Latest 5 bookings (spans full height of side charts) */}
-        <div className="lg:col-span-2 flex">
+        <div>
           <LatestBookings
             bookings={reservasSafe as any[]}
             locale={locale}
