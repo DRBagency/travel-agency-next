@@ -100,63 +100,64 @@ export default function UpcomingEventsWidget({
       </div>
 
       <div className="px-4 pb-3">
-        {events.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-6 text-center">
-            <Calendar className="w-8 h-8 text-purple-300 dark:text-purple-600 mb-2" />
-            <p className="text-sm text-gray-400 dark:text-white/40">{labels.noUpcomingEvents}</p>
-          </div>
-        ) : (
-          <div className="space-y-1.5">
-            {events.slice(0, 3).map((event, i) => {
-              const color = getEventColor(event.color);
-              const todayEvent = isToday(event.start_time);
-              const tomorrowEvent = isTomorrow(event.start_time);
+        <div className="space-y-1.5">
+          {/* Render actual events (max 3) */}
+          {events.slice(0, 3).map((event, i) => {
+            const color = getEventColor(event.color);
+            const todayEvent = isToday(event.start_time);
+            const tomorrowEvent = isTomorrow(event.start_time);
 
-              return (
-                <motion.div
-                  key={event.id}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.05 * i }}
-                  className="flex items-start gap-2.5 rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-2 hover:bg-gray-100/80 dark:hover:bg-white/[0.05] transition-colors"
-                >
-                  {/* Color dot + line */}
-                  <div className="flex flex-col items-center pt-1">
-                    <div
-                      className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: color }}
-                    />
-                    {i < events.length - 1 && (
-                      <div className="w-px h-full mt-1 bg-gray-200 dark:bg-white/10" />
+            return (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.05 * i }}
+                className="flex items-start gap-2.5 rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-2 hover:bg-gray-100/80 dark:hover:bg-white/[0.05] transition-colors"
+              >
+                <div className="flex flex-col items-center pt-1">
+                  <div
+                    className="w-2.5 h-2.5 rounded-full shrink-0"
+                    style={{ backgroundColor: color }}
+                  />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      {event.title}
+                    </span>
+                    {todayEvent && (
+                      <span className="badge-info text-[10px] px-1.5 py-0.5">{labels.today}</span>
+                    )}
+                    {tomorrowEvent && (
+                      <span className="badge-warning text-[10px] px-1.5 py-0.5">{labels.tomorrow}</span>
                     )}
                   </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                        {event.title}
-                      </span>
-                      {todayEvent && (
-                        <span className="badge-info text-[10px] px-1.5 py-0.5">{labels.today}</span>
-                      )}
-                      {tomorrowEvent && (
-                        <span className="badge-warning text-[10px] px-1.5 py-0.5">{labels.tomorrow}</span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <Clock className="w-3 h-3 text-gray-400 dark:text-white/30" />
-                      <span className="text-xs text-gray-400 dark:text-white/40">
-                        {event.all_day
-                          ? `${formatEventTime(event.start_time, true, locale)} · ${labels.allDay}`
-                          : formatEventTime(event.start_time, false, locale)}
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <Clock className="w-3 h-3 text-gray-400 dark:text-white/30" />
+                    <span className="text-xs text-gray-400 dark:text-white/40">
+                      {event.all_day
+                        ? `${formatEventTime(event.start_time, true, locale)} · ${labels.allDay}`
+                        : formatEventTime(event.start_time, false, locale)}
+                    </span>
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        )}
+                </div>
+              </motion.div>
+            );
+          })}
+
+          {/* Fill remaining slots up to 3 with placeholder */}
+          {Array.from({ length: Math.max(0, 3 - events.slice(0, 3).length) }).map((_, i) => (
+            <div
+              key={`empty-${i}`}
+              className="flex items-center gap-2.5 rounded-xl bg-gray-50/50 dark:bg-white/[0.015] border border-dashed border-gray-200/60 dark:border-white/[0.04] px-3 py-2"
+            >
+              <div className="w-2.5 h-2.5 rounded-full shrink-0 bg-gray-200 dark:bg-white/10" />
+              <span className="text-xs text-gray-300 dark:text-white/15">{labels.noUpcomingEvents}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </motion.div>
   );

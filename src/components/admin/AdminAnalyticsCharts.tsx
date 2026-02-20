@@ -54,7 +54,7 @@ const chartVariants = {
 export function ReservasChart({ data, compact }: { data: { month: string; reservas: number }[]; compact?: boolean }) {
   const styles = useChartStyles();
   const t = useTranslations('admin.analytics.charts');
-  const h = compact ? 160 : 280;
+  const h = compact ? 140 : 280;
   return (
     <motion.div
       variants={chartVariants}
@@ -101,7 +101,7 @@ export function ReservasChart({ data, compact }: { data: { month: string; reserv
 export function IngresosChart({ data, compact }: { data: { month: string; ingresos: number }[]; compact?: boolean }) {
   const styles = useChartStyles();
   const t = useTranslations('admin.analytics.charts');
-  const h = compact ? 160 : 280;
+  const h = compact ? 140 : 280;
   return (
     <motion.div
       variants={chartVariants}
@@ -237,7 +237,7 @@ interface ProjectionPoint {
 export function RevenueProjectionChart({ data, compact }: { data: ProjectionPoint[]; compact?: boolean }) {
   const styles = useChartStyles();
   const t = useTranslations('admin.analytics.charts');
-  const h = compact ? 160 : 280;
+  const h = compact ? 140 : 280;
 
   const chartData = data.map((d) => ({
     month: d.month,

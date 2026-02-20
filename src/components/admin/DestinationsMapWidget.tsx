@@ -131,7 +131,7 @@ export default function DestinationsMapWidget({
         <div className="px-4 pb-3">
           <div
             ref={mapRef}
-            className="w-full h-[200px] rounded-xl overflow-hidden bg-gray-100 dark:bg-white/[0.03]"
+            className="w-full h-[140px] rounded-xl overflow-hidden bg-gray-100 dark:bg-white/[0.03]"
             style={{ opacity: ready ? 1 : 0.5, transition: "opacity 0.3s" }}
           />
         </div>
