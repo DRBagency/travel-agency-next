@@ -201,69 +201,70 @@ export default async function AdminPage() {
         </StaggeredItem>
       </StaggeredGrid>
 
-      {/* Row 2: Chart | Events | Chart — 1+2+1 bento */}
+      {/* Charts (left) | Bookings (center) | Charts (right) */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
-        <ReservasChart data={reservasChartData} compact />
+        {/* Left — 2 charts stacked */}
+        <div className="space-y-2">
+          <ReservasChart data={reservasChartData} compact />
+          <IngresosChart data={ingresosChartData} compact />
+        </div>
+
+        {/* Center — Bookings */}
         <div className="lg:col-span-2">
-          <UpcomingEventsWidget
-            events={(upcomingEvents ?? []) as any[]}
+          <LatestBookings
+            bookings={reservasSafe as any[]}
             locale={locale}
             labels={{
-              upcomingEvents: t('upcomingEvents'),
-              viewCalendar: t('viewCalendar'),
-              noUpcomingEvents: t('noUpcomingEvents'),
-              today: tc('today'),
-              tomorrow: tc('tomorrow'),
-              allDay: t('allDay'),
+              latestBookings: t('latestBookings'),
+              viewAll: tc('viewAll'),
+              noBookingsYet: t('noBookingsYet'),
+              booking: t('booking'),
+              count: reservasSafe.length,
             }}
           />
         </div>
-        <RevenueProjectionChart data={projectionData} compact />
+
+        {/* Right — 2 charts stacked */}
+        <div className="space-y-2">
+          <RevenueProjectionChart data={projectionData} compact />
+          {destinosChartData.length > 0 && (
+            <DestinosChart data={destinosChartData} compact />
+          )}
+        </div>
       </div>
 
-      {/* Row 3: Wide chart | Wide bookings — 1+1 bento */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-        <IngresosChart data={ingresosChartData} compact />
-        <LatestBookings
-          bookings={reservasSafe as any[]}
-          locale={locale}
+      {/* Map (square) + Events + Messages */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+        <DestinationsMapWrapper
+          destinations={(destinosConCoords ?? []) as any[]}
           labels={{
-            latestBookings: t('latestBookings'),
-            viewAll: tc('viewAll'),
-            noBookingsYet: t('noBookingsYet'),
-            booking: t('booking'),
-            count: reservasSafe.length,
+            destinationsMap: t('destinationsMap'),
+            viewDestinations: t('viewDestinations'),
+            noDestinations: t('noDestinations'),
           }}
         />
-      </div>
-
-      {/* Row 4: Wide map | Destinos | Messages — 2+1+1 bento */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-        <div className="sm:col-span-2 lg:col-span-2">
-          <DestinationsMapWrapper
-            destinations={(destinosConCoords ?? []) as any[]}
-            labels={{
-              destinationsMap: t('destinationsMap'),
-              viewDestinations: t('viewDestinations'),
-              noDestinations: t('noDestinations'),
-            }}
-          />
-        </div>
-        {destinosChartData.length > 0 && (
-          <DestinosChart data={destinosChartData} compact />
-        )}
-        <div className={destinosChartData.length > 0 ? "" : "sm:col-span-2 lg:col-span-2"}>
-          <RecentMessagesWidget
-            messages={(recentMessages ?? []) as any[]}
-            locale={locale}
-            labels={{
-              recentMessages: t('recentMessages'),
-              viewAllMessages: t('viewAllMessages'),
-              noMessages: t('noMessages'),
-              unread: t('unread'),
-            }}
-          />
-        </div>
+        <UpcomingEventsWidget
+          events={(upcomingEvents ?? []) as any[]}
+          locale={locale}
+          labels={{
+            upcomingEvents: t('upcomingEvents'),
+            viewCalendar: t('viewCalendar'),
+            noUpcomingEvents: t('noUpcomingEvents'),
+            today: tc('today'),
+            tomorrow: tc('tomorrow'),
+            allDay: t('allDay'),
+          }}
+        />
+        <RecentMessagesWidget
+          messages={(recentMessages ?? []) as any[]}
+          locale={locale}
+          labels={{
+            recentMessages: t('recentMessages'),
+            viewAllMessages: t('viewAllMessages'),
+            noMessages: t('noMessages'),
+            unread: t('unread'),
+          }}
+        />
       </div>
     </div>
   );

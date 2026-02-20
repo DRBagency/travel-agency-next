@@ -106,16 +106,11 @@ export default function KPICard({
     return (
       <motion.div
         whileHover={{ y: -1, transition: { duration: 0.2 } }}
-        className={`kpi-card !p-3 border-s-4 ${accent.border} ${accent.tint} ${accent.glow}`}>
-        <div className="flex items-center gap-2.5">
-          {icon && (
-            <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${accent.iconGradient} flex items-center justify-center shrink-0 shadow-md`}>
-              <div className="text-white [&>svg]:w-4 [&>svg]:h-4">{icon}</div>
-            </div>
-          )}
-          <div className="min-w-0">
-            <p className="text-[11px] text-gray-500 dark:text-white/60 leading-tight">{title}</p>
-            <p className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
+        className={`kpi-card !p-4 border-s-4 ${accent.border} ${accent.tint} ${accent.glow}`}>
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <p className="text-xs text-gray-500 dark:text-white/60 mb-0.5">{title}</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">
               {numericValue !== undefined ? (
                 <AnimatedCounter
                   value={numericValue}
@@ -127,7 +122,7 @@ export default function KPICard({
               )}
             </p>
             {trend !== undefined ? (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 mt-1">
                 {trend > 0 ? (
                   <TrendingUp className="w-3 h-3 text-emerald-500" />
                 ) : trend < 0 ? (
@@ -140,11 +135,16 @@ export default function KPICard({
                 </span>
               </div>
             ) : (
-              <p className="text-[10px] text-gray-400 dark:text-white/40 leading-tight">
+              <p className="text-[11px] text-gray-400 dark:text-white/40 mt-1">
                 {subtitle || "\u2014"}
               </p>
             )}
           </div>
+          {icon && (
+            <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${accent.iconGradient} flex items-center justify-center shrink-0 shadow-md`}>
+              <div className="text-white [&>svg]:w-4.5 [&>svg]:h-4.5">{icon}</div>
+            </div>
+          )}
         </div>
       </motion.div>
     );

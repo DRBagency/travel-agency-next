@@ -54,23 +54,25 @@ const chartVariants = {
 export function ReservasChart({ data, compact }: { data: { month: string; reservas: number }[]; compact?: boolean }) {
   const styles = useChartStyles();
   const t = useTranslations('admin.analytics.charts');
-  const h = compact ? 130 : 280;
+  const h = compact ? 160 : 280;
   return (
     <motion.div
       variants={chartVariants}
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-      className={compact ? "panel-card p-3" : "panel-card p-6"}
+      className={compact ? "panel-card p-4" : "panel-card p-6"}
     >
-      <div className="flex items-center gap-1.5 mb-0.5">
-        <div className={`${compact ? "w-5 h-5" : "w-8 h-8"} rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center`}>
-          <BarChart3 className={`${compact ? "w-2.5 h-2.5" : "w-4 h-4"} text-white`} />
+      <div className="flex items-center gap-2 mb-1">
+        <div className={`${compact ? "w-6 h-6" : "w-8 h-8"} rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center`}>
+          <BarChart3 className={`${compact ? "w-3 h-3" : "w-4 h-4"} text-white`} />
         </div>
-        <h3 className={`${compact ? "text-xs" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('bookings')}</h3>
-        {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('last6Months')}</p>}
+        <div>
+          <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('bookings')}</h3>
+          {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('last6Months')}</p>}
+        </div>
       </div>
-      <div className={compact ? "mt-1" : "mt-4"}>
+      <div className={compact ? "mt-2" : "mt-4"}>
         <ResponsiveContainer width="100%" height={h}>
           <BarChart data={data}>
             <defs>
@@ -99,23 +101,25 @@ export function ReservasChart({ data, compact }: { data: { month: string; reserv
 export function IngresosChart({ data, compact }: { data: { month: string; ingresos: number }[]; compact?: boolean }) {
   const styles = useChartStyles();
   const t = useTranslations('admin.analytics.charts');
-  const h = compact ? 130 : 280;
+  const h = compact ? 160 : 280;
   return (
     <motion.div
       variants={chartVariants}
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-      className={compact ? "panel-card p-3" : "panel-card p-6"}
+      className={compact ? "panel-card p-4" : "panel-card p-6"}
     >
-      <div className="flex items-center gap-1.5 mb-0.5">
-        <div className={`${compact ? "w-5 h-5" : "w-8 h-8"} rounded-lg bg-gradient-to-br from-drb-lime-500 to-drb-lime-600 flex items-center justify-center`}>
-          <DollarSign className={`${compact ? "w-2.5 h-2.5" : "w-4 h-4"} text-white`} />
+      <div className="flex items-center gap-2 mb-1">
+        <div className={`${compact ? "w-6 h-6" : "w-8 h-8"} rounded-lg bg-gradient-to-br from-drb-lime-500 to-drb-lime-600 flex items-center justify-center`}>
+          <DollarSign className={`${compact ? "w-3 h-3" : "w-4 h-4"} text-white`} />
         </div>
-        <h3 className={`${compact ? "text-xs" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('revenue')}</h3>
-        {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('last6Months')}</p>}
+        <div>
+          <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('revenue')}</h3>
+          {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('last6Months')}</p>}
+        </div>
       </div>
-      <div className={compact ? "mt-1" : "mt-4"}>
+      <div className={compact ? "mt-2" : "mt-4"}>
         <ResponsiveContainer width="100%" height={h}>
           <AreaChart data={data}>
             <defs>
@@ -159,9 +163,9 @@ export function DestinosChart({ data, compact }: { data: { destino: string; valu
   const t = useTranslations('admin.analytics.charts');
   const total = data.reduce((sum, d) => sum + d.value, 0);
 
-  const pieSize = compact ? 90 : 180;
-  const innerR = compact ? 26 : 55;
-  const outerR = compact ? 40 : 80;
+  const pieSize = compact ? 120 : 180;
+  const innerR = compact ? 36 : 55;
+  const outerR = compact ? 52 : 80;
 
   return (
     <motion.div
@@ -169,16 +173,18 @@ export function DestinosChart({ data, compact }: { data: { destino: string; valu
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
-      className={compact ? "panel-card p-3" : "panel-card p-6"}
+      className={compact ? "panel-card p-4" : "panel-card p-6"}
     >
-      <div className={`flex items-center gap-1.5 ${compact ? "mb-1" : "mb-4"}`}>
-        <div className={`${compact ? "w-5 h-5" : "w-8 h-8"} rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center`}>
-          <MapPin className={`${compact ? "w-2.5 h-2.5" : "w-4 h-4"} text-white`} />
+      <div className={`flex items-center gap-2 ${compact ? "mb-2" : "mb-4"}`}>
+        <div className={`${compact ? "w-6 h-6" : "w-8 h-8"} rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center`}>
+          <MapPin className={`${compact ? "w-3 h-3" : "w-4 h-4"} text-white`} />
         </div>
-        <h3 className={`${compact ? "text-xs" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('topDestinations')}</h3>
-        {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('byBookings')}</p>}
+        <div>
+          <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('topDestinations')}</h3>
+          {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('byBookings')}</p>}
+        </div>
       </div>
-      <div className={compact ? "flex items-center gap-3" : "flex items-center gap-6"}>
+      <div className={compact ? "flex flex-col items-center gap-2" : "flex items-center gap-6"}>
         <div className="relative">
           <ResponsiveContainer width={pieSize} height={pieSize}>
             <PieChart>
@@ -200,20 +206,20 @@ export function DestinosChart({ data, compact }: { data: { destino: string; valu
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center">
-              <div className={`${compact ? "text-sm" : "text-2xl"} font-bold text-gray-900 dark:text-white`}>{total}</div>
-              <div className={`${compact ? "text-[8px]" : "text-[10px]"} text-gray-400 dark:text-white/40`}>{t('total')}</div>
+              <div className={`${compact ? "text-lg" : "text-2xl"} font-bold text-gray-900 dark:text-white`}>{total}</div>
+              <div className="text-[10px] text-gray-400 dark:text-white/40">{t('total')}</div>
             </div>
           </div>
         </div>
-        <div className={compact ? "flex-1 space-y-0.5" : "flex-1 space-y-2.5"}>
+        <div className={compact ? "w-full space-y-1" : "flex-1 space-y-2.5"}>
           {data.map((item, index) => (
-            <div key={item.destino} className="flex items-center gap-1">
+            <div key={item.destino} className="flex items-center gap-1.5">
               <div
-                className={`${compact ? "w-1.5 h-1.5" : "w-3 h-3"} rounded-full shrink-0`}
+                className={`${compact ? "w-2 h-2" : "w-3 h-3"} rounded-full shrink-0`}
                 style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
               />
-              <span className={`${compact ? "text-[11px]" : "text-sm"} text-gray-600 dark:text-white/70 flex-1 truncate`}>{item.destino}</span>
-              <span className={`${compact ? "text-[11px]" : "text-sm"} font-semibold text-gray-900 dark:text-white`}>{item.value}</span>
+              <span className={`${compact ? "text-xs" : "text-sm"} text-gray-600 dark:text-white/70 flex-1 truncate`}>{item.destino}</span>
+              <span className={`${compact ? "text-xs" : "text-sm"} font-semibold text-gray-900 dark:text-white`}>{item.value}</span>
             </div>
           ))}
         </div>
@@ -231,7 +237,7 @@ interface ProjectionPoint {
 export function RevenueProjectionChart({ data, compact }: { data: ProjectionPoint[]; compact?: boolean }) {
   const styles = useChartStyles();
   const t = useTranslations('admin.analytics.charts');
-  const h = compact ? 130 : 280;
+  const h = compact ? 160 : 280;
 
   const chartData = data.map((d) => ({
     month: d.month,
@@ -250,16 +256,18 @@ export function RevenueProjectionChart({ data, compact }: { data: ProjectionPoin
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.5, delay: 0.25, ease: "easeOut" }}
-      className={compact ? "panel-card p-3" : "panel-card p-6"}
+      className={compact ? "panel-card p-4" : "panel-card p-6"}
     >
-      <div className="flex items-center gap-1.5 mb-0.5">
-        <div className={`${compact ? "w-5 h-5" : "w-8 h-8"} rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center`}>
-          <TrendingUp className={`${compact ? "w-2.5 h-2.5" : "w-4 h-4"} text-white`} />
+      <div className="flex items-center gap-2 mb-1">
+        <div className={`${compact ? "w-6 h-6" : "w-8 h-8"} rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center`}>
+          <TrendingUp className={`${compact ? "w-3 h-3" : "w-4 h-4"} text-white`} />
         </div>
-        <h3 className={`${compact ? "text-xs" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('revenueProjection')}</h3>
-        {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('basedOnTrend')}</p>}
+        <div>
+          <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('revenueProjection')}</h3>
+          {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('basedOnTrend')}</p>}
+        </div>
       </div>
-      <div className={compact ? "mt-1" : "mt-4"}>
+      <div className={compact ? "mt-2" : "mt-4"}>
         <ResponsiveContainer width="100%" height={h}>
           <AreaChart data={chartData}>
             <defs>
