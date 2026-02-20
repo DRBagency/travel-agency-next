@@ -34,6 +34,7 @@ export async function POST(req: Request) {
     contactEmail: client.contact_email || "info@agencia.com",
     contactPhone: client.contact_phone || "+34 600 000 000",
     clientName: client.nombre || "Mi Agencia",
+    primaryColor: client.primary_color || "#1CABB0",
   };
 
   const html = renderEmail({
