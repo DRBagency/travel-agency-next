@@ -21,10 +21,21 @@ const Contact = ({ primaryColor, email, phone, address }: ContactProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSubmitted(true);
-    setFormData({ name: "", email: "", message: "" });
-    setIsSubmitting(false);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (res.ok) {
+        setIsSubmitted(true);
+        setFormData({ name: "", email: "", message: "" });
+      }
+    } catch {
+      // Silently fail for the end user
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactItems = [

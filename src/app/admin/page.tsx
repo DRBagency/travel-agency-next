@@ -8,6 +8,9 @@ import {
   StaggeredItem,
   LatestBookings,
 } from "@/components/admin/AdminDashboardClient";
+import UpcomingEventsWidget from "@/components/admin/UpcomingEventsWidget";
+import RecentMessagesWidget from "@/components/admin/RecentMessagesWidget";
+import DestinationsMapWrapper from "@/components/admin/DestinationsMapWrapper";
 import { subMonths, addMonths, format, startOfMonth, endOfMonth } from "date-fns";
 import { getTranslations, getLocale } from 'next-intl/server';
 import {
@@ -38,6 +41,32 @@ export default async function AdminPage() {
     .select("id", { count: "exact", head: true })
     .eq("cliente_id", client.id)
     .eq("activo", true);
+
+  /* Upcoming calendar events (next 5) */
+  const { data: upcomingEvents } = await supabaseAdmin
+    .from("calendar_events")
+    .select("id, title, start_time, end_time, all_day, description")
+    .eq("cliente_id", client.id)
+    .gte("start_time", new Date().toISOString())
+    .order("start_time", { ascending: true })
+    .limit(5);
+
+  /* Destinos with coordinates (for map) */
+  const { data: destinosConCoords } = await supabaseAdmin
+    .from("destinos")
+    .select("id, nombre, precio, latitude, longitude, imagen_url")
+    .eq("cliente_id", client.id)
+    .eq("activo", true)
+    .not("latitude", "is", null)
+    .not("longitude", "is", null);
+
+  /* Recent contact messages (last 5) */
+  const { data: recentMessages } = await supabaseAdmin
+    .from("contact_messages")
+    .select("id, sender_name, sender_email, message, read, created_at")
+    .eq("cliente_id", client.id)
+    .order("created_at", { ascending: false })
+    .limit(5);
 
   const reservasSafe = reservas ?? [];
   const pagadas = reservasSafe.filter((r) => r.estado_pago === "pagado");
@@ -182,18 +211,54 @@ export default async function AdminPage() {
         )}
       </div>
 
-      {/* Últimas reservas */}
-      <LatestBookings
-        bookings={reservasSafe as any[]}
-        locale={locale}
-        labels={{
-          latestBookings: t('latestBookings'),
-          viewAll: tc('viewAll'),
-          noBookingsYet: t('noBookingsYet'),
-          booking: t('booking'),
-          count: reservasSafe.length,
-        }}
-      />
+      {/* Upcoming events + Latest bookings */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <UpcomingEventsWidget
+          events={(upcomingEvents ?? []) as any[]}
+          locale={locale}
+          labels={{
+            upcomingEvents: t('upcomingEvents'),
+            viewCalendar: t('viewCalendar'),
+            noUpcomingEvents: t('noUpcomingEvents'),
+            today: tc('today'),
+            tomorrow: tc('tomorrow'),
+            allDay: t('allDay'),
+          }}
+        />
+        <LatestBookings
+          bookings={reservasSafe as any[]}
+          locale={locale}
+          labels={{
+            latestBookings: t('latestBookings'),
+            viewAll: tc('viewAll'),
+            noBookingsYet: t('noBookingsYet'),
+            booking: t('booking'),
+            count: reservasSafe.length,
+          }}
+        />
+      </div>
+
+      {/* Destinations map + Recent messages */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <DestinationsMapWrapper
+          destinations={(destinosConCoords ?? []) as any[]}
+          labels={{
+            destinationsMap: t('destinationsMap'),
+            viewDestinations: t('viewDestinations'),
+            noDestinations: t('noDestinations'),
+          }}
+        />
+        <RecentMessagesWidget
+          messages={(recentMessages ?? []) as any[]}
+          locale={locale}
+          labels={{
+            recentMessages: t('recentMessages'),
+            viewAllMessages: t('viewAllMessages'),
+            noMessages: t('noMessages'),
+            unread: t('unread'),
+          }}
+        />
+      </div>
     </div>
   );
 }

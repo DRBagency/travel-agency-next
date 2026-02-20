@@ -42,6 +42,8 @@ export default function DestinoCreateForm({
   const [imagenUrl, setImagenUrl] = useState("");
   const [itinerario, setItinerario] = useState<any>(null);
   const [activo, setActivo] = useState(true);
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
 
   const handleAIGenerated = (data: {
     nombre: string;
@@ -139,6 +141,34 @@ export default function DestinoCreateForm({
                 />
               </div>
             )}
+          </div>
+
+          {/* Coordinates (optional) */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="panel-label">{t("latitude")}</label>
+              <input
+                name="latitude"
+                type="number"
+                step="any"
+                value={latitude}
+                onChange={(e) => setLatitude(e.target.value)}
+                className="panel-input w-full"
+                placeholder="40.4168"
+              />
+            </div>
+            <div>
+              <label className="panel-label">{t("longitude")}</label>
+              <input
+                name="longitude"
+                type="number"
+                step="any"
+                value={longitude}
+                onChange={(e) => setLongitude(e.target.value)}
+                className="panel-input w-full"
+                placeholder="-3.7038"
+              />
+            </div>
           </div>
 
           <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">

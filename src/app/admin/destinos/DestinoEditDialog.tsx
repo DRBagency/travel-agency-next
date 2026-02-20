@@ -24,6 +24,8 @@ interface DestinoEditDialogProps {
     imagen_url: string | null;
     activo: boolean;
     itinerario: any | null;
+    latitude?: number | null;
+    longitude?: number | null;
   };
   action: (formData: FormData) => Promise<void> | void;
 }
@@ -38,6 +40,8 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
   const [imagenUrl, setImagenUrl] = useState(destino.imagen_url ?? "");
   const [activo, setActivo] = useState(destino.activo);
   const [itinerario, setItinerario] = useState(destino.itinerario);
+  const [latitude, setLatitude] = useState(destino.latitude?.toString() ?? "");
+  const [longitude, setLongitude] = useState(destino.longitude?.toString() ?? "");
   const [unsplashOpen, setUnsplashOpen] = useState(false);
 
   const dias = itinerario?.dias || itinerario?.days || [];
@@ -128,6 +132,34 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
                 />
               </div>
             )}
+          </div>
+
+          {/* Coordinates */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="panel-label">{t("latitude")}</label>
+              <input
+                name="latitude"
+                type="number"
+                step="any"
+                value={latitude}
+                onChange={(e) => setLatitude(e.target.value)}
+                className="panel-input w-full"
+                placeholder="40.4168"
+              />
+            </div>
+            <div>
+              <label className="panel-label">{t("longitude")}</label>
+              <input
+                name="longitude"
+                type="number"
+                step="any"
+                value={longitude}
+                onChange={(e) => setLongitude(e.target.value)}
+                className="panel-input w-full"
+                placeholder="-3.7038"
+              />
+            </div>
           </div>
 
           <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">

@@ -61,7 +61,9 @@
     "confirmDeleteDesc": "¿Estás seguro? Esta acción no se puede deshacer.",
     "of": "de",
     "pin": "Fijar",
-    "unpin": "Desfijar"
+    "unpin": "Desfijar",
+    "today": "Hoy",
+    "tomorrow": "Mañana"
   },
   "auth": {
     "adminLogin": {
@@ -116,7 +118,8 @@
       "legales": "Legales",
       "aiItinerarios": "Itinerarios IA",
       "aiChatbot": "Chatbot IA",
-      "aiAsistente": "Asistente IA"
+      "aiAsistente": "Asistente IA",
+      "mensajes": "Mensajes"
     },
     "shell": {
       "subscriptionInactive": "Tu suscripción no está activa",
@@ -164,7 +167,18 @@
       "aiToolsSub": "Itinerarios, chatbot y más",
       "latestBookings": "Últimas reservas",
       "noBookingsYet": "No hay reservas todavía.",
-      "booking": "Reserva"
+      "booking": "Reserva",
+      "upcomingEvents": "Próximos eventos",
+      "viewCalendar": "Ver calendario",
+      "noUpcomingEvents": "No hay eventos próximos",
+      "allDay": "Todo el día",
+      "recentMessages": "Mensajes recientes",
+      "viewAllMessages": "Ver todos",
+      "noMessages": "Sin mensajes nuevos",
+      "unread": "sin leer",
+      "destinationsMap": "Mapa de destinos",
+      "viewDestinations": "Ver destinos",
+      "noDestinations": "Sin destinos con ubicación"
     },
     "destinos": {
       "title": "Destinos",
@@ -176,6 +190,8 @@
       "pricePlaceholder": "Ej: 799",
       "descriptionPlaceholder": "Descripción breve y atractiva del destino",
       "saveDestination": "Guardar destino",
+      "latitude": "Latitud",
+      "longitude": "Longitud",
       "editDestination": "Editar destino",
       "editDestinationDesc": "Modifica los datos del destino",
       "noDestinations": "Todavía no hay destinos.",
@@ -204,6 +220,20 @@
       "activityDuration": "Duración",
       "searchUnsplash": "Buscar en Unsplash",
       "dayLabel": "Día {n}"
+    },
+    "mensajes": {
+      "title": "Mensajes",
+      "subtitle": "Mensajes del formulario de contacto de tu landing",
+      "from": "De",
+      "email": "Email",
+      "message": "Mensaje",
+      "received": "Recibido",
+      "status": "Estado",
+      "read": "Leído",
+      "unread": "No leído",
+      "markAsRead": "Marcar como leído",
+      "noMessages": "No hay mensajes todavía",
+      "noMessagesDesc": "Cuando alguien envíe un mensaje desde tu web, aparecerá aquí."
     },
     "soporte": {
       "title": "Soporte",

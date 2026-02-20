@@ -61,7 +61,9 @@
     "confirmDeleteDesc": "هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.",
     "of": "من",
     "pin": "تثبيت",
-    "unpin": "إلغاء التثبيت"
+    "unpin": "إلغاء التثبيت",
+    "today": "اليوم",
+    "tomorrow": "غداً"
   },
   "auth": {
     "adminLogin": {
@@ -116,7 +118,8 @@
       "legales": "القانونية",
       "aiItinerarios": "مسارات الرحلات بالذكاء الاصطناعي",
       "aiChatbot": "روبوت المحادثة",
-      "aiAsistente": "المساعد الذكي"
+      "aiAsistente": "المساعد الذكي",
+      "mensajes": "الرسائل"
     },
     "shell": {
       "subscriptionInactive": "اشتراكك غير نشط",
@@ -164,7 +167,18 @@
       "aiToolsSub": "مسارات الرحلات والمحادثة الآلية والمزيد",
       "latestBookings": "آخر الحجوزات",
       "noBookingsYet": "لا توجد حجوزات بعد.",
-      "booking": "حجز"
+      "booking": "حجز",
+      "upcomingEvents": "الأحداث القادمة",
+      "viewCalendar": "عرض التقويم",
+      "noUpcomingEvents": "لا توجد أحداث قادمة",
+      "allDay": "طوال اليوم",
+      "recentMessages": "الرسائل الأخيرة",
+      "viewAllMessages": "عرض الكل",
+      "noMessages": "لا توجد رسائل جديدة",
+      "unread": "غير مقروءة",
+      "destinationsMap": "خريطة الوجهات",
+      "viewDestinations": "عرض الوجهات",
+      "noDestinations": "لا توجد وجهات بموقع"
     },
     "destinos": {
       "title": "الوجهات",
@@ -176,6 +190,8 @@
       "pricePlaceholder": "مثال: 799",
       "descriptionPlaceholder": "وصف مختصر وجذاب للوجهة",
       "saveDestination": "حفظ الوجهة",
+      "latitude": "خط العرض",
+      "longitude": "خط الطول",
       "editDestination": "تعديل الوجهة",
       "editDestinationDesc": "تعديل بيانات الوجهة",
       "noDestinations": "لا توجد وجهات بعد.",
@@ -237,6 +253,20 @@
         "generating": "جارٍ الإنشاء...",
         "exportPdf": "تصدير PDF"
       }
+    },
+    "mensajes": {
+      "title": "الرسائل",
+      "subtitle": "رسائل نموذج الاتصال من صفحتك",
+      "from": "من",
+      "email": "البريد الإلكتروني",
+      "message": "الرسالة",
+      "received": "تم الاستلام",
+      "status": "الحالة",
+      "read": "مقروءة",
+      "unread": "غير مقروءة",
+      "markAsRead": "تحديد كمقروءة",
+      "noMessages": "لا توجد رسائل بعد",
+      "noMessagesDesc": "عندما يرسل شخص رسالة من موقعك، ستظهر هنا."
     },
     "soporte": {
       "title": "الدعم",

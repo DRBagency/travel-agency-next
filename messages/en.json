@@ -61,7 +61,9 @@
     "confirmDeleteDesc": "Are you sure? This action cannot be undone.",
     "of": "of",
     "pin": "Pin",
-    "unpin": "Unpin"
+    "unpin": "Unpin",
+    "today": "Today",
+    "tomorrow": "Tomorrow"
   },
   "auth": {
     "adminLogin": {
@@ -116,7 +118,8 @@
       "legales": "Legal",
       "aiItinerarios": "AI Itineraries",
       "aiChatbot": "AI Chatbot",
-      "aiAsistente": "AI Assistant"
+      "aiAsistente": "AI Assistant",
+      "mensajes": "Messages"
     },
     "shell": {
       "subscriptionInactive": "Your subscription is not active",
@@ -164,7 +167,18 @@
       "aiToolsSub": "Itineraries, chatbot and more",
       "latestBookings": "Latest bookings",
       "noBookingsYet": "No bookings yet.",
-      "booking": "Booking"
+      "booking": "Booking",
+      "upcomingEvents": "Upcoming Events",
+      "viewCalendar": "View calendar",
+      "noUpcomingEvents": "No upcoming events",
+      "allDay": "All day",
+      "recentMessages": "Recent Messages",
+      "viewAllMessages": "View all",
+      "noMessages": "No new messages",
+      "unread": "unread",
+      "destinationsMap": "Destinations Map",
+      "viewDestinations": "View destinations",
+      "noDestinations": "No destinations with location"
     },
     "destinos": {
       "title": "Destinations",
@@ -176,6 +190,8 @@
       "pricePlaceholder": "E.g.: 799",
       "descriptionPlaceholder": "Brief and attractive description of the destination",
       "saveDestination": "Save destination",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
       "editDestination": "Edit destination",
       "editDestinationDesc": "Modify destination details",
       "noDestinations": "No destinations yet.",
@@ -237,6 +253,20 @@
         "generating": "Generating...",
         "exportPdf": "Export PDF"
       }
+    },
+    "mensajes": {
+      "title": "Messages",
+      "subtitle": "Contact form messages from your landing page",
+      "from": "From",
+      "email": "Email",
+      "message": "Message",
+      "received": "Received",
+      "status": "Status",
+      "read": "Read",
+      "unread": "Unread",
+      "markAsRead": "Mark as read",
+      "noMessages": "No messages yet",
+      "noMessagesDesc": "When someone sends a message from your website, it will appear here."
     },
     "soporte": {
       "title": "Support",

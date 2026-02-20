@@ -489,6 +489,7 @@ const AdminShell = ({
     ],
     // Management
     [
+      { label: t("nav.mensajes"), href: "/admin/mensajes", icon: MessageCircle },
       { label: t("nav.documentos"), href: "/admin/documentos", icon: FileText },
       { label: t("nav.soporte"), href: "/admin/soporte", icon: Headphones },
     ],

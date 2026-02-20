@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { sileo } from "sileo";
+import { supabase } from "@/lib/supabase";
 import {
   Bell,
   MessageSquare,
@@ -59,7 +60,7 @@ function timeAgo(dateStr: string, t: (key: string, values?: Record<string, any>)
 export default function NotificationBell({ clienteId, isOwner }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [prevCount, setPrevCount] = useState(0);
+  const [bellPulse, setBellPulse] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("notifications");
 
@@ -81,6 +82,9 @@ export default function NotificationBell({ clienteId, isOwner }: Props) {
               description: newest.description || undefined,
             });
           }
+          // Pulse bell animation
+          setBellPulse(true);
+          setTimeout(() => setBellPulse(false), 1500);
         }
         return newNotifs;
       });
@@ -89,11 +93,35 @@ export default function NotificationBell({ clienteId, isOwner }: Props) {
     }
   }, [apiUrl]);
 
+  // Initial fetch + polling fallback (60s)
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000);
+    const interval = setInterval(fetchNotifications, 60000);
     return () => clearInterval(interval);
   }, [fetchNotifications]);
+
+  // Supabase Realtime — listen for new inserts and refetch instantly
+  useEffect(() => {
+    const table = isOwner ? "owner_notifications" : "notifications";
+    const channelName = isOwner
+      ? "owner-notif-realtime"
+      : `notif-realtime-${clienteId || "anon"}`;
+
+    const channel = supabase
+      .channel(channelName)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table },
+        () => {
+          fetchNotifications();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [isOwner, clienteId, fetchNotifications]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -142,7 +170,7 @@ export default function NotificationBell({ clienteId, isOwner }: Props) {
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
       >
-        <Bell className="w-5 h-5 text-gray-500 dark:text-white/60" />
+        <Bell className={`w-5 h-5 text-gray-500 dark:text-white/60 transition-transform ${bellPulse ? "animate-bounce" : ""}`} />
         {unreadCount > 0 && (
           <span className="absolute top-1 end-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
             {unreadCount > 99 ? "99+" : unreadCount}

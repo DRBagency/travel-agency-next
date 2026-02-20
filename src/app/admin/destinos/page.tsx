@@ -25,6 +25,8 @@ async function createDestino(formData: FormData) {
     imagen_url: (formData.get("imagen_url") as string) || null,
     activo: formData.get("activo") === "on",
     itinerario: itinerarioRaw ? JSON.parse(itinerarioRaw) : null,
+    latitude: formData.get("latitude") ? Number(formData.get("latitude")) : null,
+    longitude: formData.get("longitude") ? Number(formData.get("longitude")) : null,
   };
 
   await supabaseAdmin.from("destinos").insert(payload);
@@ -48,6 +50,8 @@ async function updateDestino(formData: FormData) {
     imagen_url: (formData.get("imagen_url") as string) || null,
     activo: formData.get("activo") === "on",
     itinerario: itinerarioRaw ? JSON.parse(itinerarioRaw) : null,
+    latitude: formData.get("latitude") ? Number(formData.get("latitude")) : null,
+    longitude: formData.get("longitude") ? Number(formData.get("longitude")) : null,
   };
 
   await supabaseAdmin.from("destinos").update(payload).eq("id", id);
