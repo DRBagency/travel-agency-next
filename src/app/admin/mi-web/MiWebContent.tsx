@@ -237,7 +237,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
         <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
           <Icon className="w-3.5 h-3.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
         </div>
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex-1">{title}</h2>
+        <h2 className="text-base font-semibold text-gray-900 dark:text-white flex-1">{title}</h2>
         {!isOpen && (
           <span className="text-xs text-gray-400 dark:text-white/40 hidden sm:block">{subtitle}</span>
         )}
@@ -272,7 +272,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </div>
 
       {/* Marca y Estilo */}
-      <section className="panel-card p-4 space-y-3">
+      <section className="panel-card p-5 space-y-3">
         <SectionHeader
           sectionKey="marca"
           icon={Palette}
@@ -370,7 +370,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Hero */}
-      <section className="panel-card p-4 space-y-3">
+      <section className="panel-card p-5 space-y-3">
         <SectionHeader
           sectionKey="hero"
           icon={Image}
@@ -483,7 +483,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Stats */}
-      <section className="panel-card p-4 space-y-3">
+      <section className="panel-card p-5 space-y-3">
         <SectionHeader
           sectionKey="stats"
           icon={BarChart3}
@@ -554,7 +554,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Sobre nosotros */}
-      <section className="panel-card p-4 space-y-3">
+      <section className="panel-card p-5 space-y-3">
         <SectionHeader
           sectionKey="about"
           icon={Users}
@@ -627,7 +627,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Contacto */}
-      <section className="panel-card p-4 space-y-3">
+      <section className="panel-card p-5 space-y-3">
         <SectionHeader
           sectionKey="contact"
           icon={Phone}
@@ -688,7 +688,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Redes sociales */}
-      <section className="panel-card p-4 space-y-3">
+      <section className="panel-card p-5 space-y-3">
         <SectionHeader
           sectionKey="social"
           icon={Share2}
@@ -743,7 +743,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Footer */}
-      <section className="panel-card p-4 space-y-3">
+      <section className="panel-card p-5 space-y-3">
         <SectionHeader
           sectionKey="footer"
           icon={FileText}
@@ -770,7 +770,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Enlaces rapidos */}
-      <section className="panel-card p-4 space-y-3">
+      <section className="panel-card p-5 space-y-3">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
             <Link2 className="w-3.5 h-3.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
