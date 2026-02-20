@@ -40,8 +40,11 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
   const [imagenUrl, setImagenUrl] = useState(destino.imagen_url ?? "");
   const [activo, setActivo] = useState(destino.activo);
   const [itinerario, setItinerario] = useState(destino.itinerario);
-  const [latitude, setLatitude] = useState(destino.latitude?.toString() ?? "");
-  const [longitude, setLongitude] = useState(destino.longitude?.toString() ?? "");
+  const [coordenadas, setCoordenadas] = useState(
+    destino.latitude && destino.longitude
+      ? `${destino.latitude}, ${destino.longitude}`
+      : ""
+  );
   const [unsplashOpen, setUnsplashOpen] = useState(false);
 
   const dias = itinerario?.dias || itinerario?.days || [];
@@ -134,32 +137,20 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
             )}
           </div>
 
-          {/* Coordinates */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="panel-label">{t("latitude")}</label>
-              <input
-                name="latitude"
-                type="number"
-                step="any"
-                value={latitude}
-                onChange={(e) => setLatitude(e.target.value)}
-                className="panel-input w-full"
-                placeholder="40.4168"
-              />
-            </div>
-            <div>
-              <label className="panel-label">{t("longitude")}</label>
-              <input
-                name="longitude"
-                type="number"
-                step="any"
-                value={longitude}
-                onChange={(e) => setLongitude(e.target.value)}
-                className="panel-input w-full"
-                placeholder="-3.7038"
-              />
-            </div>
+          {/* Coordinates (single field for easy copy/paste) */}
+          <div>
+            <label className="panel-label">{t("coordinates")}</label>
+            <input
+              name="coordenadas"
+              type="text"
+              value={coordenadas}
+              onChange={(e) => setCoordenadas(e.target.value)}
+              className="panel-input w-full"
+              placeholder="40.4168, -3.7038"
+            />
+            <p className="text-xs text-gray-400 dark:text-white/30 mt-1">{t("coordinatesHelp")}</p>
+            <input type="hidden" name="latitude" value={coordenadas.split(",")[0]?.trim() || ""} />
+            <input type="hidden" name="longitude" value={coordenadas.split(",")[1]?.trim() || ""} />
           </div>
 
           <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">

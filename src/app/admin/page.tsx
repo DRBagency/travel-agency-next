@@ -45,11 +45,11 @@ export default async function AdminPage() {
   /* Upcoming calendar events (next 5) */
   const { data: upcomingEvents } = await supabaseAdmin
     .from("calendar_events")
-    .select("id, title, start_time, end_time, all_day, description")
+    .select("id, title, start_time, end_time, all_day, description, color")
     .eq("cliente_id", client.id)
     .gte("start_time", new Date().toISOString())
     .order("start_time", { ascending: true })
-    .limit(5);
+    .limit(3);
 
   /* Destinos with coordinates (for map) */
   const { data: destinosConCoords } = await supabaseAdmin
@@ -66,7 +66,7 @@ export default async function AdminPage() {
     .select("id, sender_name, sender_email, message, read, created_at")
     .eq("cliente_id", client.id)
     .order("created_at", { ascending: false })
-    .limit(5);
+    .limit(3);
 
   const reservasSafe = reservas ?? [];
   const pagadas = reservasSafe.filter((r) => r.estado_pago === "pagado");
@@ -143,7 +143,7 @@ export default async function AdminPage() {
   });
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-2">
       {/* Greeting */}
       <PremiumGreeting
         greeting={greeting}
@@ -152,7 +152,7 @@ export default async function AdminPage() {
       />
 
       {/* 4 KPI Cards */}
-      <StaggeredGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <StaggeredGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
         <StaggeredItem>
           <KPICard
             title={t('totalBilled')}
@@ -202,7 +202,7 @@ export default async function AdminPage() {
       </StaggeredGrid>
 
       {/* All 4 Charts — single row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2">
         <ReservasChart data={reservasChartData} compact />
         <IngresosChart data={ingresosChartData} compact />
         <RevenueProjectionChart data={projectionData} compact />
@@ -212,7 +212,7 @@ export default async function AdminPage() {
       </div>
 
       {/* Upcoming events + Latest bookings */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <UpcomingEventsWidget
           events={(upcomingEvents ?? []) as any[]}
           locale={locale}
@@ -239,7 +239,7 @@ export default async function AdminPage() {
       </div>
 
       {/* Destinations map + Recent messages */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <DestinationsMapWrapper
           destinations={(destinosConCoords ?? []) as any[]}
           labels={{

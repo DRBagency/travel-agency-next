@@ -81,12 +81,12 @@ export default function UpcomingEventsWidget({
       transition={{ duration: 0.5, delay: 0.35 }}
       className="panel-card"
     >
-      <div className="flex items-center justify-between p-5 pb-3">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-            <Calendar className="w-4 h-4 text-white" />
+      <div className="flex items-center justify-between px-4 pt-3 pb-2">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+            <Calendar className="w-3.5 h-3.5 text-white" />
           </div>
-          <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
             {labels.upcomingEvents}
           </h2>
         </div>
@@ -99,20 +99,15 @@ export default function UpcomingEventsWidget({
         </Link>
       </div>
 
-      <div className="px-5 pb-5">
+      <div className="px-4 pb-3">
         {events.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <Calendar className="w-10 h-10 text-purple-300 dark:text-purple-600 mb-3" />
-            </motion.div>
+          <div className="flex flex-col items-center justify-center py-6 text-center">
+            <Calendar className="w-8 h-8 text-purple-300 dark:text-purple-600 mb-2" />
             <p className="text-sm text-gray-400 dark:text-white/40">{labels.noUpcomingEvents}</p>
           </div>
         ) : (
-          <div className="space-y-2">
-            {events.map((event, i) => {
+          <div className="space-y-1.5">
+            {events.slice(0, 3).map((event, i) => {
               const color = getEventColor(event.color);
               const todayEvent = isToday(event.start_time);
               const tomorrowEvent = isTomorrow(event.start_time);
@@ -123,7 +118,7 @@ export default function UpcomingEventsWidget({
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.05 * i }}
-                  className="flex items-start gap-3 rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3.5 py-3 hover:bg-gray-100/80 dark:hover:bg-white/[0.05] transition-colors"
+                  className="flex items-start gap-2.5 rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-2 hover:bg-gray-100/80 dark:hover:bg-white/[0.05] transition-colors"
                 >
                   {/* Color dot + line */}
                   <div className="flex flex-col items-center pt-1">

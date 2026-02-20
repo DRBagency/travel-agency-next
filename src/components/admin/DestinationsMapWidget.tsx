@@ -101,16 +101,16 @@ export default function DestinationsMapWidget({
       transition={{ duration: 0.5, delay: 0.45 }}
       className="panel-card overflow-hidden"
     >
-      <div className="flex items-center justify-between p-5 pb-3">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center">
-            <MapPin className="w-4 h-4 text-white" />
+      <div className="flex items-center justify-between px-4 pt-3 pb-2">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center">
+            <MapPin className="w-3.5 h-3.5 text-white" />
           </div>
-          <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
             {labels.destinationsMap}
           </h2>
           {destinations.length > 0 && (
-            <span className="badge-info text-xs">{destinations.length}</span>
+            <span className="badge-info text-[10px]">{destinations.length}</span>
           )}
         </div>
         <Link
@@ -123,20 +123,15 @@ export default function DestinationsMapWidget({
       </div>
 
       {destinations.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-8 text-center px-5 pb-5">
-          <motion.div
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <MapPin className="w-10 h-10 text-amber-300 dark:text-amber-600 mb-3" />
-          </motion.div>
+        <div className="flex flex-col items-center justify-center py-6 text-center px-4 pb-3">
+          <MapPin className="w-8 h-8 text-amber-300 dark:text-amber-600 mb-2" />
           <p className="text-sm text-gray-400 dark:text-white/40">{labels.noDestinations}</p>
         </div>
       ) : (
-        <div className="px-5 pb-5">
+        <div className="px-4 pb-3">
           <div
             ref={mapRef}
-            className="w-full h-[200px] rounded-xl overflow-hidden bg-gray-100 dark:bg-white/[0.03]"
+            className="w-full h-[150px] rounded-xl overflow-hidden bg-gray-100 dark:bg-white/[0.03]"
             style={{ opacity: ready ? 1 : 0.5, transition: "opacity 0.3s" }}
           />
         </div>
