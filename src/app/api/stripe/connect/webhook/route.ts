@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { sendReservationEmails } from "@/lib/emails/send-reservation-emails";
+import { sendTemplateEmail } from "@/lib/emails/send-template-email";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 import { createNotification } from "@/lib/notifications/create-notification";
 
@@ -107,7 +108,7 @@ export async function POST(req: Request) {
         .select("tipo, subject, html_body, cta_text, cta_url, activo")
         .eq("cliente_id", m.cliente_id)
         .eq("activo", true)
-        .in("tipo", ["reserva_cliente", "reserva_agencia"]);
+        .in("tipo", ["reserva_cliente", "reserva_agencia", "bienvenida"]);
 
       const templatesByType = (templates || []).reduce(
         (acc: Record<string, any>, row: any) => {
@@ -126,6 +127,14 @@ export async function POST(req: Request) {
           ? `https://${baseUrl.replace(/^https?:\/\//, "")}/admin/reserva/${reserva.id}`
           : null;
 
+        const branding = {
+          clientName: client.nombre,
+          logoUrl: client.logo_url,
+          primaryColor: client.primary_color,
+          contactEmail: client.contact_email,
+          contactPhone: client.contact_phone,
+        };
+
         await sendReservationEmails(
           {
             customerName: reserva.nombre,
@@ -137,18 +146,37 @@ export async function POST(req: Request) {
             returnDate: reserva.fecha_regreso,
             adminUrl,
           },
-          {
-            clientName: client.nombre,
-            logoUrl: client.logo_url,
-            primaryColor: client.primary_color,
-            contactEmail: client.contact_email,
-            contactPhone: client.contact_phone,
-          },
+          branding,
           {
             reserva_cliente: templatesByType.reserva_cliente ?? null,
             reserva_agencia: templatesByType.reserva_agencia ?? null,
           }
         );
+
+        // Send bienvenida email if this is the customer's first booking
+        if (templatesByType.bienvenida && reserva.email) {
+          const { count } = await supabaseAdmin
+            .from("reservas")
+            .select("id", { count: "exact", head: true })
+            .eq("cliente_id", m.cliente_id)
+            .eq("email", reserva.email);
+
+          if (count === 1) {
+            await sendTemplateEmail({
+              template: templatesByType.bienvenida,
+              to: reserva.email,
+              tokens: {
+                customerName: reserva.nombre,
+                clientName: client.nombre,
+                contactEmail: client.contact_email,
+                contactPhone: client.contact_phone,
+              },
+              branding,
+            }).catch((err) =>
+              console.error("❌ Error sending bienvenida email:", err)
+            );
+          }
+        }
       }
     }
 

@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import SubmitButton from "@/components/admin/SubmitButton";
 import EmailPreviewButton from "@/components/admin/EmailPreviewButton";
 import EmailBodyWithAI from "./EmailBodyWithAI";
+import SendPromocionButton from "./SendPromocionButton";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import { getTranslations } from 'next-intl/server';
 
@@ -11,17 +12,17 @@ const EMAIL_GROUPS = [
   {
     groupKey: "groupReservas" as const,
     types: [
-      { tipo: "reserva_cliente", labelKey: "reservaCliente" as const, descKey: "reservaClienteDesc" as const, tokensKey: "tokensReserva" as const },
-      { tipo: "reserva_agencia", labelKey: "reservaAgencia" as const, descKey: "reservaAgenciaDesc" as const, tokensKey: "tokensReserva" as const },
+      { tipo: "reserva_cliente", labelKey: "reservaCliente" as const, descKey: "reservaClienteDesc" as const, tokensKey: "tokensReserva" as const, triggerKey: "triggerReservaCliente" as const },
+      { tipo: "reserva_agencia", labelKey: "reservaAgencia" as const, descKey: "reservaAgenciaDesc" as const, tokensKey: "tokensReserva" as const, triggerKey: "triggerReservaAgencia" as const },
     ],
   },
   {
     groupKey: "groupMarketing" as const,
     types: [
-      { tipo: "bienvenida", labelKey: "bienvenida" as const, descKey: "bienvenidaDesc" as const, tokensKey: "tokensBienvenida" as const },
-      { tipo: "recordatorio_viaje", labelKey: "recordatorioViaje" as const, descKey: "recordatorioViajeDesc" as const, tokensKey: "tokensRecordatorio" as const },
-      { tipo: "seguimiento", labelKey: "seguimiento" as const, descKey: "seguimientoDesc" as const, tokensKey: "tokensSeguimiento" as const },
-      { tipo: "promocion", labelKey: "promocion" as const, descKey: "promocionDesc" as const, tokensKey: "tokensPromocion" as const },
+      { tipo: "bienvenida", labelKey: "bienvenida" as const, descKey: "bienvenidaDesc" as const, tokensKey: "tokensBienvenida" as const, triggerKey: "triggerBienvenida" as const },
+      { tipo: "recordatorio_viaje", labelKey: "recordatorioViaje" as const, descKey: "recordatorioViajeDesc" as const, tokensKey: "tokensRecordatorio" as const, triggerKey: "triggerRecordatorio" as const },
+      { tipo: "seguimiento", labelKey: "seguimiento" as const, descKey: "seguimientoDesc" as const, tokensKey: "tokensSeguimiento" as const, triggerKey: "triggerSeguimiento" as const },
+      { tipo: "promocion", labelKey: "promocion" as const, descKey: "promocionDesc" as const, tokensKey: "tokensPromocion" as const, triggerKey: "triggerPromocion" as const },
     ],
   },
 ];
@@ -131,10 +132,16 @@ export default async function AdminEmailsPage({
                       <input type="hidden" name="id" value={template.id} />
                     )}
 
-                    <p className="text-xs text-gray-400 dark:text-white/30 bg-gray-50 dark:bg-white/[0.03] rounded-lg px-3 py-2">
-                      <span className="font-medium text-gray-500 dark:text-white/50">{t('availableTokens')}:</span>{" "}
-                      {t(type.tokensKey)}
-                    </p>
+                    <div className="flex flex-col gap-2 text-xs bg-gray-50 dark:bg-white/[0.03] rounded-lg px-3 py-2">
+                      <p className="text-gray-400 dark:text-white/30">
+                        <span className="font-medium text-gray-500 dark:text-white/50">{t('trigger')}:</span>{" "}
+                        {t(type.triggerKey)}
+                      </p>
+                      <p className="text-gray-400 dark:text-white/30">
+                        <span className="font-medium text-gray-500 dark:text-white/50">{t('availableTokens')}:</span>{" "}
+                        {t(type.tokensKey)}
+                      </p>
+                    </div>
 
                     <div className="flex items-center justify-between">
                       <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/70">
@@ -186,14 +193,17 @@ export default async function AdminEmailsPage({
                       </div>
                     </div>
 
-                    <div className="flex justify-end gap-3">
-                      <EmailPreviewButton
-                        apiUrl="/api/admin/email-preview"
-                        formId={`email-form-${type.tipo}`}
-                      />
-                      <SubmitButton className="btn-primary">
-                        {t('saveTemplate')}
-                      </SubmitButton>
+                    <div className="flex items-center justify-between">
+                      {type.tipo === "promocion" ? <SendPromocionButton /> : <div />}
+                      <div className="flex gap-3">
+                        <EmailPreviewButton
+                          apiUrl="/api/admin/email-preview"
+                          formId={`email-form-${type.tipo}`}
+                        />
+                        <SubmitButton className="btn-primary">
+                          {t('saveTemplate')}
+                        </SubmitButton>
+                      </div>
                     </div>
                   </form>
                 </details>
