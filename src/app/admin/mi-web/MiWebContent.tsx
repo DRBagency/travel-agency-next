@@ -110,7 +110,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
   });
 
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(
-    new Set(["marca", "hero"])
+    new Set()
   );
   const [saveStates, setSaveStates] = useState<Record<SectionKey, SaveState>>({
     marca: { loading: false, success: false, error: null },
@@ -232,26 +232,26 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
     return (
       <button
         onClick={() => toggleSection(sectionKey)}
-        className="w-full flex items-center gap-3 text-start"
+        className="w-full flex items-center gap-2.5 text-start"
       >
-        <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
-          <Icon className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
+        <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
+          <Icon className="w-3.5 h-3.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
         </div>
-        <div className="flex-1">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
-          <p className="text-sm text-gray-400 dark:text-white/50">{subtitle}</p>
-        </div>
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex-1">{title}</h2>
+        {!isOpen && (
+          <span className="text-xs text-gray-400 dark:text-white/40 hidden sm:block">{subtitle}</span>
+        )}
         {isOpen ? (
-          <ChevronDown className="w-5 h-5 text-gray-400 dark:text-white/50" />
+          <ChevronDown className="w-4 h-4 text-gray-400 dark:text-white/50" />
         ) : (
-          <ChevronRight className="w-5 h-5 text-gray-400 dark:text-white/50" />
+          <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/50" />
         )}
       </button>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-3">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -272,7 +272,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </div>
 
       {/* Marca y Estilo */}
-      <section className="panel-card p-6 space-y-5">
+      <section className="panel-card p-4 space-y-3">
         <SectionHeader
           sectionKey="marca"
           icon={Palette}
@@ -281,81 +281,87 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
         />
         {openSections.has("marca") && (
           <div className="space-y-4 pt-2">
-            <div>
-              <label className="panel-label block mb-1">
-                {t("agencyName")}
-              </label>
-              <input
-                value={client.nombre}
-                readOnly
-                className="w-full rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 px-3 py-2 text-gray-400 dark:text-white/50 cursor-not-allowed"
-              />
-              <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
-                {t("readOnly")}
-              </p>
-            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("agencyName")}
+                </label>
+                <input
+                  value={client.nombre}
+                  readOnly
+                  className="w-full rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 px-3 py-2 text-gray-400 dark:text-white/50 cursor-not-allowed"
+                />
+                <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
+                  {t("readOnly")}
+                </p>
+              </div>
 
-            <div>
-              <label className="panel-label block mb-1">
-                {t("logoUrl")}
-              </label>
-              <input
-                value={fields.logo_url}
-                onChange={(e) => updateField("logo_url", e.target.value)}
-                className="panel-input w-full"
-                placeholder="https://..."
-              />
-              {fields.logo_url && (
-                <div className="mt-2 inline-block rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-2">
-                  <img
-                    src={fields.logo_url}
-                    alt="Logo preview"
-                    className="h-12 w-auto object-contain"
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("logoUrl")}
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    value={fields.logo_url}
+                    onChange={(e) => updateField("logo_url", e.target.value)}
+                    className="panel-input w-full"
+                    placeholder="https://..."
                   />
+                  {fields.logo_url && (
+                    <div className="shrink-0 rounded-lg border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-1">
+                      <img
+                        src={fields.logo_url}
+                        alt="Logo preview"
+                        className="h-8 w-auto object-contain"
+                      />
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-
-            <div>
-              <label className="panel-label block mb-1">
-                {t("primaryColor")}
-              </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="color"
-                  value={fields.primary_color}
-                  onChange={(e) => updateField("primary_color", e.target.value)}
-                  className="h-10 w-14 rounded-lg border border-gray-200 dark:border-white/30 cursor-pointer bg-transparent"
-                />
-                <input
-                  value={fields.primary_color}
-                  onChange={(e) => updateField("primary_color", e.target.value)}
-                  className="w-32 panel-input font-mono text-sm"
-                  placeholder="#1CABB0"
-                />
-                <div
-                  className="h-10 w-10 rounded-xl border border-gray-200 dark:border-white/20"
-                  style={{ backgroundColor: fields.primary_color }}
-                />
               </div>
             </div>
 
-            <div>
-              <label className="panel-label block mb-1">
-                {t("landingLanguage")}
-              </label>
-              <select
-                value={fields.preferred_language}
-                onChange={(e) => updateField("preferred_language", e.target.value)}
-                className="panel-input w-full max-w-xs"
-              >
-                <option value="es">Español</option>
-                <option value="en">English</option>
-                <option value="ar">العربية (Arabic)</option>
-              </select>
-              <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
-                {t("landingLanguageHint")}
-              </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("primaryColor")}
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={fields.primary_color}
+                    onChange={(e) => updateField("primary_color", e.target.value)}
+                    className="h-10 w-14 rounded-lg border border-gray-200 dark:border-white/30 cursor-pointer bg-transparent"
+                  />
+                  <input
+                    value={fields.primary_color}
+                    onChange={(e) => updateField("primary_color", e.target.value)}
+                    className="w-32 panel-input font-mono text-sm"
+                    placeholder="#1CABB0"
+                  />
+                  <div
+                    className="h-10 w-10 rounded-xl border border-gray-200 dark:border-white/20"
+                    style={{ backgroundColor: fields.primary_color }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("landingLanguage")}
+                </label>
+                <select
+                  value={fields.preferred_language}
+                  onChange={(e) => updateField("preferred_language", e.target.value)}
+                  className="panel-input w-full"
+                >
+                  <option value="es">Español</option>
+                  <option value="en">English</option>
+                  <option value="ar">العربية (Arabic)</option>
+                </select>
+                <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
+                  {t("landingLanguageHint")}
+                </p>
+              </div>
             </div>
 
             {renderSaveButton("marca", ["logo_url", "primary_color", "preferred_language"])}
@@ -364,7 +370,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Hero */}
-      <section className="panel-card p-6 space-y-5">
+      <section className="panel-card p-4 space-y-3">
         <SectionHeader
           sectionKey="hero"
           icon={Image}
@@ -402,7 +408,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
               <textarea
                 value={fields.hero_subtitle}
                 onChange={(e) => updateField("hero_subtitle", e.target.value)}
-                className="panel-input w-full min-h-[100px]"
+                className="panel-input w-full min-h-[80px]"
                 placeholder={t("heroSubtitlePlaceholder")}
               />
             </div>
@@ -477,7 +483,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Stats */}
-      <section className="panel-card p-6 space-y-5">
+      <section className="panel-card p-4 space-y-3">
         <SectionHeader
           sectionKey="stats"
           icon={BarChart3}
@@ -548,7 +554,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Sobre nosotros */}
-      <section className="panel-card p-6 space-y-5">
+      <section className="panel-card p-4 space-y-3">
         <SectionHeader
           sectionKey="about"
           icon={Users}
@@ -585,7 +591,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
               <textarea
                 value={fields.about_text_1}
                 onChange={(e) => updateField("about_text_1", e.target.value)}
-                className="panel-input w-full min-h-[100px]"
+                className="panel-input w-full min-h-[80px]"
                 placeholder={t("aboutTextPlaceholder")}
               />
             </div>
@@ -606,7 +612,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
               <textarea
                 value={fields.about_text_2}
                 onChange={(e) => updateField("about_text_2", e.target.value)}
-                className="panel-input w-full min-h-[100px]"
+                className="panel-input w-full min-h-[80px]"
                 placeholder={t("aboutVisionPlaceholder")}
               />
             </div>
@@ -621,7 +627,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Contacto */}
-      <section className="panel-card p-6 space-y-5">
+      <section className="panel-card p-4 space-y-3">
         <SectionHeader
           sectionKey="contact"
           icon={Phone}
@@ -667,7 +673,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
                 onChange={(e) =>
                   updateField("contact_address", e.target.value)
                 }
-                className="panel-input w-full min-h-[100px]"
+                className="panel-input w-full min-h-[80px]"
                 placeholder="Calle, ciudad, pais"
               />
             </div>
@@ -682,7 +688,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Redes sociales */}
-      <section className="panel-card p-6 space-y-5">
+      <section className="panel-card p-4 space-y-3">
         <SectionHeader
           sectionKey="social"
           icon={Share2}
@@ -691,38 +697,40 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
         />
         {openSections.has("social") && (
           <div className="space-y-4 pt-2">
-            <div>
-              <label className="panel-label block mb-1">
-                Instagram
-              </label>
-              <input
-                value={fields.instagram_url}
-                onChange={(e) => updateField("instagram_url", e.target.value)}
-                className="panel-input w-full"
-                placeholder="https://instagram.com/tu-agencia"
-              />
-            </div>
-            <div>
-              <label className="panel-label block mb-1">
-                Facebook
-              </label>
-              <input
-                value={fields.facebook_url}
-                onChange={(e) => updateField("facebook_url", e.target.value)}
-                className="panel-input w-full"
-                placeholder="https://facebook.com/tu-agencia"
-              />
-            </div>
-            <div>
-              <label className="panel-label block mb-1">
-                TikTok
-              </label>
-              <input
-                value={fields.tiktok_url}
-                onChange={(e) => updateField("tiktok_url", e.target.value)}
-                className="panel-input w-full"
-                placeholder="https://tiktok.com/@tu-agencia"
-              />
+            <div className="grid md:grid-cols-3 gap-4">
+              <div>
+                <label className="panel-label block mb-1">
+                  Instagram
+                </label>
+                <input
+                  value={fields.instagram_url}
+                  onChange={(e) => updateField("instagram_url", e.target.value)}
+                  className="panel-input w-full"
+                  placeholder="https://instagram.com/..."
+                />
+              </div>
+              <div>
+                <label className="panel-label block mb-1">
+                  Facebook
+                </label>
+                <input
+                  value={fields.facebook_url}
+                  onChange={(e) => updateField("facebook_url", e.target.value)}
+                  className="panel-input w-full"
+                  placeholder="https://facebook.com/..."
+                />
+              </div>
+              <div>
+                <label className="panel-label block mb-1">
+                  TikTok
+                </label>
+                <input
+                  value={fields.tiktok_url}
+                  onChange={(e) => updateField("tiktok_url", e.target.value)}
+                  className="panel-input w-full"
+                  placeholder="https://tiktok.com/..."
+                />
+              </div>
             </div>
 
             {renderSaveButton("social", [
@@ -735,7 +743,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Footer */}
-      <section className="panel-card p-6 space-y-5">
+      <section className="panel-card p-4 space-y-3">
         <SectionHeader
           sectionKey="footer"
           icon={FileText}
@@ -751,7 +759,7 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
               <textarea
                 value={fields.footer_text}
                 onChange={(e) => updateField("footer_text", e.target.value)}
-                className="panel-input w-full min-h-[100px]"
+                className="panel-input w-full min-h-[80px]"
                 placeholder={t("footerTextPlaceholder")}
               />
             </div>
@@ -762,17 +770,13 @@ export default function MiWebContent({ client, counts, plan }: MiWebContentProps
       </section>
 
       {/* Enlaces rapidos */}
-      <section className="panel-card p-6 space-y-5">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
-              <Link2 className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
-            </div>
-            {t("relatedSections")}
-          </h2>
-          <p className="text-sm text-gray-400 dark:text-white/50 mt-1">
-            {t("relatedSectionsSub")}
-          </p>
+      <section className="panel-card p-4 space-y-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
+            <Link2 className="w-3.5 h-3.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
+          </div>
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex-1">{t("relatedSections")}</h2>
+          <span className="text-xs text-gray-400 dark:text-white/40 hidden sm:block">{t("relatedSectionsSub")}</span>
         </div>
         <div className="grid sm:grid-cols-3 gap-4">
           <a

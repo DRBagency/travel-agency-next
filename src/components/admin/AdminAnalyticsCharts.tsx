@@ -196,12 +196,13 @@ export function DestinosChart({ data, compact }: { data: { destino: string; valu
                 outerRadius={outerR}
                 paddingAngle={3}
                 dataKey="value"
+                nameKey="destino"
               >
                 {data.map((_entry, index) => (
                   <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={styles.tooltipStyle} />
+              {!compact && <Tooltip contentStyle={styles.tooltipStyle} />}
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
