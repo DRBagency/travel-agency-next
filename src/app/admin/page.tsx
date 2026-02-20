@@ -201,7 +201,7 @@ export default async function AdminPage() {
         </StaggeredItem>
       </StaggeredGrid>
 
-      {/* Charts (left) | Events + Bookings (center) | Charts (right) */}
+      {/* Charts (left) | Bookings (center) | Charts (right) */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
         {/* Left — 2 charts stacked */}
         <div className="space-y-2">
@@ -209,20 +209,8 @@ export default async function AdminPage() {
           <IngresosChart data={ingresosChartData} compact />
         </div>
 
-        {/* Center — Events + Bookings stacked */}
-        <div className="lg:col-span-2 space-y-2">
-          <UpcomingEventsWidget
-            events={(upcomingEvents ?? []) as any[]}
-            locale={locale}
-            labels={{
-              upcomingEvents: t('upcomingEvents'),
-              viewCalendar: t('viewCalendar'),
-              noUpcomingEvents: t('noUpcomingEvents'),
-              today: tc('today'),
-              tomorrow: tc('tomorrow'),
-              allDay: t('allDay'),
-            }}
-          />
+        {/* Center — Latest 5 bookings (spans full height of side charts) */}
+        <div className="lg:col-span-2 flex">
           <LatestBookings
             bookings={reservasSafe as any[]}
             locale={locale}
@@ -245,14 +233,26 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      {/* Map + Messages */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+      {/* Map + Events + Messages — 3 square widgets */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
         <DestinationsMapWrapper
           destinations={(destinosConCoords ?? []) as any[]}
           labels={{
             destinationsMap: t('destinationsMap'),
             viewDestinations: t('viewDestinations'),
             noDestinations: t('noDestinations'),
+          }}
+        />
+        <UpcomingEventsWidget
+          events={(upcomingEvents ?? []) as any[]}
+          locale={locale}
+          labels={{
+            upcomingEvents: t('upcomingEvents'),
+            viewCalendar: t('viewCalendar'),
+            noUpcomingEvents: t('noUpcomingEvents'),
+            today: tc('today'),
+            tomorrow: tc('tomorrow'),
+            allDay: t('allDay'),
           }}
         />
         <RecentMessagesWidget

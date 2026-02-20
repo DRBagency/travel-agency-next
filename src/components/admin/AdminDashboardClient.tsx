@@ -129,7 +129,7 @@ export function LatestBookings({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="panel-card"
+      className="panel-card h-full flex flex-col"
     >
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <div className="flex items-center gap-2">
@@ -149,15 +149,15 @@ export function LatestBookings({
           {labels.viewAll}
         </a>
       </div>
-      <div className="px-4 pb-3">
+      <div className="px-4 pb-3 flex-1 flex flex-col justify-between">
         {bookings.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-6 text-center">
+          <div className="flex flex-col items-center justify-center py-6 text-center flex-1">
             <Plane className="w-8 h-8 text-drb-turquoise-300 dark:text-drb-turquoise-600 mb-2" />
             <p className="text-sm text-gray-400 dark:text-white/40">{labels.noBookingsYet}</p>
           </div>
         ) : (
           <div ref={animateRef} className="space-y-1.5">
-            {bookings.slice(0, 3).map((r, index) => {
+            {bookings.slice(0, 5).map((r, index) => {
               const initial = (r.nombre || "R").charAt(0).toUpperCase();
               const gradient = getAvatarGradient(initial);
 

@@ -52,7 +52,7 @@ export default function RecentMessagesWidget({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
-      className="panel-card"
+      className="panel-card h-full overflow-hidden"
     >
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <div className="flex items-center gap-2">
@@ -111,10 +111,7 @@ export default function RecentMessagesWidget({
                       {timeAgo(msg.created_at, locale)}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-400 dark:text-white/40 truncate mt-0.5">
-                    {msg.sender_email}
-                  </p>
-                  <p className="text-xs text-gray-600 dark:text-white/60 line-clamp-1 mt-1">
+                  <p className="text-xs text-gray-600 dark:text-white/60 line-clamp-1 mt-0.5">
                     {msg.message}
                   </p>
                 </div>

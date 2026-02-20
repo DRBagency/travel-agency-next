@@ -99,7 +99,7 @@ export default function DestinationsMapWidget({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.45 }}
-      className="panel-card overflow-hidden"
+      className="panel-card h-full overflow-hidden"
     >
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <div className="flex items-center gap-2">
