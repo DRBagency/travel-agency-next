@@ -9,7 +9,6 @@ import {
   Menu,
   LayoutDashboard,
   Globe,
-  Star,
   MapPin,
   CalendarCheck,
   BarChart3,
@@ -18,7 +17,6 @@ import {
   Headphones,
   CreditCard,
   Mail,
-  Scale,
   LogOut,
   Sparkles,
   Bot,
@@ -478,7 +476,6 @@ const AdminShell = ({
     // Content
     [
       { label: t("nav.miWeb"), href: "/admin/mi-web", icon: Globe },
-      { label: t("nav.opiniones"), href: "/admin/opiniones", icon: Star },
       { label: t("nav.destinos"), href: "/admin/destinos", icon: MapPin },
     ],
     // Operations
@@ -497,7 +494,6 @@ const AdminShell = ({
     [
       { label: t("nav.stripe"), href: "/admin/stripe", icon: CreditCard },
       { label: t("nav.emails"), href: "/admin/emails", icon: Mail },
-      { label: t("nav.legales"), href: "/admin/legales", icon: Scale },
     ],
     // AI
     [{ label: t("nav.aiChatbot"), href: "/admin/ai/chatbot", icon: Bot }],
