@@ -201,47 +201,48 @@ export default async function AdminPage() {
         </StaggeredItem>
       </StaggeredGrid>
 
-      {/* 2 Charts + Upcoming Events */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
-        <div className="grid grid-cols-2 gap-2 lg:col-span-2">
+      {/* Charts (left) | Events + Bookings (center) | Charts (right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
+        {/* Left — 2 charts stacked */}
+        <div className="space-y-2">
           <ReservasChart data={reservasChartData} compact />
           <IngresosChart data={ingresosChartData} compact />
         </div>
-        <UpcomingEventsWidget
-          events={(upcomingEvents ?? []) as any[]}
-          locale={locale}
-          labels={{
-            upcomingEvents: t('upcomingEvents'),
-            viewCalendar: t('viewCalendar'),
-            noUpcomingEvents: t('noUpcomingEvents'),
-            today: tc('today'),
-            tomorrow: tc('tomorrow'),
-            allDay: t('allDay'),
-          }}
-        />
-      </div>
 
-      {/* 2 Charts + Latest Bookings */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
-        <div className="grid grid-cols-2 gap-2 lg:col-span-2">
+        {/* Center — Events + Bookings stacked */}
+        <div className="lg:col-span-2 space-y-2">
+          <UpcomingEventsWidget
+            events={(upcomingEvents ?? []) as any[]}
+            locale={locale}
+            labels={{
+              upcomingEvents: t('upcomingEvents'),
+              viewCalendar: t('viewCalendar'),
+              noUpcomingEvents: t('noUpcomingEvents'),
+              today: tc('today'),
+              tomorrow: tc('tomorrow'),
+              allDay: t('allDay'),
+            }}
+          />
+          <LatestBookings
+            bookings={reservasSafe as any[]}
+            locale={locale}
+            labels={{
+              latestBookings: t('latestBookings'),
+              viewAll: tc('viewAll'),
+              noBookingsYet: t('noBookingsYet'),
+              booking: t('booking'),
+              count: reservasSafe.length,
+            }}
+          />
+        </div>
+
+        {/* Right — 2 charts stacked */}
+        <div className="space-y-2">
           <RevenueProjectionChart data={projectionData} compact />
-          {destinosChartData.length > 0 ? (
+          {destinosChartData.length > 0 && (
             <DestinosChart data={destinosChartData} compact />
-          ) : (
-            <div />
           )}
         </div>
-        <LatestBookings
-          bookings={reservasSafe as any[]}
-          locale={locale}
-          labels={{
-            latestBookings: t('latestBookings'),
-            viewAll: tc('viewAll'),
-            noBookingsYet: t('noBookingsYet'),
-            booking: t('booking'),
-            count: reservasSafe.length,
-          }}
-        />
       </div>
 
       {/* Map + Messages */}

@@ -3,6 +3,8 @@
 import {
   AreaChart,
   Area,
+  BarChart,
+  Bar,
   PieChart,
   Pie,
   Cell,
@@ -72,34 +74,24 @@ export function ReservasChart({ data, compact }: { data: { month: string; reserv
       </div>
       <div className={compact ? "mt-2" : "mt-4"}>
         <ResponsiveContainer width="100%" height={h}>
-          <AreaChart data={data}>
+          <BarChart data={data}>
             <defs>
-              <linearGradient id="gradientReservas" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#1CABB0" stopOpacity={0.4} />
-                <stop offset="100%" stopColor="#1CABB0" stopOpacity={0.05} />
+              <linearGradient id="gradientReservasBar" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#1CABB0" stopOpacity={0.9} />
+                <stop offset="100%" stopColor="#1CABB0" stopOpacity={0.4} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke={styles.gridStroke} />
             <XAxis dataKey="month" stroke={styles.axisStroke} tick={{ fontSize: compact ? 10 : 12 }} />
             <YAxis stroke={styles.axisStroke} tick={{ fontSize: compact ? 10 : 12 }} width={compact ? 30 : 60} />
-            <Tooltip contentStyle={styles.tooltipStyle} />
-            <Area
-              type="monotone"
+            <Tooltip contentStyle={styles.tooltipStyle} cursor={{ fill: styles.isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)" }} />
+            <Bar
               dataKey="reservas"
-              stroke="#1CABB0"
-              strokeWidth={2}
-              fill="url(#gradientReservas)"
-              dot={{ r: compact ? 2.5 : 4, fill: "#1CABB0", strokeWidth: 2, stroke: styles.isDark ? "#072331" : "#fff" }}
-              activeDot={{
-                r: compact ? 4 : 7,
-                fill: "#1CABB0",
-                strokeWidth: 2,
-                stroke: styles.isDark ? "#072331" : "#fff",
-                style: { filter: "drop-shadow(0 0 6px rgba(28,171,176,0.5))" },
-              }}
+              fill="url(#gradientReservasBar)"
+              radius={[4, 4, 0, 0]}
               name={t('bookings')}
             />
-          </AreaChart>
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </motion.div>
