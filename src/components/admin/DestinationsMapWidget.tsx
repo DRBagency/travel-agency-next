@@ -42,10 +42,10 @@ export default function DestinationsMapWidget({
       if (cancelled || !mapRef.current) return;
 
       const map = L.map(mapRef.current, {
-        zoomControl: false,
+        zoomControl: true,
         attributionControl: false,
         dragging: true,
-        scrollWheelZoom: false,
+        scrollWheelZoom: true,
       });
 
       // Tile layer — clean style
