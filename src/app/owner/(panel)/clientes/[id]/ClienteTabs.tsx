@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { Info, MapPin, ShoppingBag, Sparkles } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Info, MapPin, ShoppingBag, Sparkles, Handshake } from "lucide-react";
 
 interface ClienteTabsProps {
   infoTab: ReactNode;
   destinationsTab: ReactNode;
   bookingsTab: ReactNode;
   aiTab: ReactNode;
+  crmTab?: ReactNode;
   destinationsCount: number;
   bookingsCount: number;
 }
@@ -18,17 +20,25 @@ export default function ClienteTabs({
   destinationsTab,
   bookingsTab,
   aiTab,
+  crmTab,
   destinationsCount,
   bookingsCount,
 }: ClienteTabsProps) {
   const t = useTranslations("owner.clientes.tabs");
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("info");
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "crm" && crmTab) setActiveTab("crm");
+  }, [searchParams, crmTab]);
 
   const tabs = [
     { id: "info", label: t("info"), icon: Info },
     { id: "destinations", label: t("destinations"), icon: MapPin, count: destinationsCount },
     { id: "bookings", label: t("bookings"), icon: ShoppingBag, count: bookingsCount },
     { id: "ai", label: t("ai"), icon: Sparkles },
+    ...(crmTab ? [{ id: "crm", label: t("crm"), icon: Handshake }] : []),
   ];
 
   return (
@@ -66,6 +76,7 @@ export default function ClienteTabs({
         {activeTab === "destinations" && destinationsTab}
         {activeTab === "bookings" && bookingsTab}
         {activeTab === "ai" && aiTab}
+        {activeTab === "crm" && crmTab}
       </div>
     </div>
   );

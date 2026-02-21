@@ -722,7 +722,8 @@
       "monetizacion": "التسييل",
       "stripe": "Stripe",
       "automatizaciones": "الأتمتة",
-      "soporte": "الدعم"
+      "soporte": "الدعم",
+      "crm": "إدارة العلاقات"
     },
     "panelOwner": "لوحة المالك",
     "dashboard": {
@@ -788,7 +789,8 @@
         "info": "المعلومات",
         "destinations": "الوجهات",
         "bookings": "الحجوزات",
-        "ai": "الذكاء الاصطناعي"
+        "ai": "الذكاء الاصطناعي",
+        "crm": "إدارة العلاقات"
       },
       "destinationsCount": "{count} وجهات",
       "bookingsCount": "{count} حجوزات",
@@ -942,6 +944,48 @@
       "chip3": "صياغة بريد للوكالة",
       "chip4": "اقتراح تحسينات",
       "platformOwner": "مالك المنصة"
+    },
+    "crm": {
+      "title": "إدارة العلاقات",
+      "subtitle": "خط أنابيب المبيعات وتتبع العملاء",
+      "totalLeads": "إجمالي العملاء المحتملين",
+      "inNegotiation": "قيد التفاوض",
+      "active": "نشط",
+      "atRisk": "معرض للخطر",
+      "stages": {
+        "lead": "عميل محتمل",
+        "contactado": "تم التواصل",
+        "demo": "عرض توضيحي",
+        "activo": "نشط",
+        "en_riesgo": "معرض للخطر",
+        "perdido": "مفقود"
+      },
+      "recentActivity": "النشاط الأخير",
+      "noActivities": "لا توجد أنشطة مسجلة",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "اكتب ملاحظات حول هذا العميل...",
+      "saveNotes": "حفظ الملاحظات",
+      "notesSaved": "تم حفظ الملاحظات",
+      "addActivity": "تسجيل نشاط",
+      "activityType": "نوع النشاط",
+      "activityContent": "الوصف",
+      "activityContentPlaceholder": "صف النشاط...",
+      "types": {
+        "note": "ملاحظة",
+        "call": "مكالمة",
+        "email": "بريد إلكتروني",
+        "meeting": "اجتماع",
+        "status_change": "تغيير الحالة"
+      },
+      "statusChanged": "تم تغيير الحالة",
+      "from": "من",
+      "to": "إلى",
+      "tabTitle": "إدارة العلاقات",
+      "changeStatus": "تغيير الحالة",
+      "pipeline": "خط الأنابيب",
+      "dragToMove": "اسحب للنقل",
+      "lastActivity": "آخر نشاط",
+      "noClientsInStage": "لا يوجد عملاء في هذه المرحلة"
     }
   },
   "booking": {

@@ -722,7 +722,8 @@
       "monetizacion": "Monetización",
       "stripe": "Stripe",
       "automatizaciones": "Automatización",
-      "soporte": "Soporte"
+      "soporte": "Soporte",
+      "crm": "CRM"
     },
     "panelOwner": "Panel Owner",
     "dashboard": {
@@ -788,7 +789,8 @@
         "info": "Información",
         "destinations": "Destinos",
         "bookings": "Reservas",
-        "ai": "Inteligencia Artificial"
+        "ai": "Inteligencia Artificial",
+        "crm": "CRM"
       },
       "destinationsCount": "{count} destinos",
       "bookingsCount": "{count} reservas",
@@ -942,6 +944,48 @@
       "chip3": "Redactar email a agencia",
       "chip4": "Sugerir mejoras",
       "platformOwner": "Platform Owner"
+    },
+    "crm": {
+      "title": "CRM",
+      "subtitle": "Pipeline comercial y seguimiento de clientes",
+      "totalLeads": "Total leads",
+      "inNegotiation": "En negociación",
+      "active": "Activos",
+      "atRisk": "En riesgo",
+      "stages": {
+        "lead": "Lead",
+        "contactado": "Contactado",
+        "demo": "Demo",
+        "activo": "Activo",
+        "en_riesgo": "En riesgo",
+        "perdido": "Perdido"
+      },
+      "recentActivity": "Actividad reciente",
+      "noActivities": "Sin actividades registradas",
+      "notes": "Notas",
+      "notesPlaceholder": "Escribe notas sobre este cliente...",
+      "saveNotes": "Guardar notas",
+      "notesSaved": "Notas guardadas",
+      "addActivity": "Registrar actividad",
+      "activityType": "Tipo de actividad",
+      "activityContent": "Descripción",
+      "activityContentPlaceholder": "Describe la actividad...",
+      "types": {
+        "note": "Nota",
+        "call": "Llamada",
+        "email": "Email",
+        "meeting": "Reunión",
+        "status_change": "Cambio de estado"
+      },
+      "statusChanged": "Estado cambiado",
+      "from": "de",
+      "to": "a",
+      "tabTitle": "CRM",
+      "changeStatus": "Cambiar estado",
+      "pipeline": "Pipeline",
+      "dragToMove": "Arrastra para mover",
+      "lastActivity": "Última actividad",
+      "noClientsInStage": "Sin clientes en esta etapa"
     }
   },
   "booking": {

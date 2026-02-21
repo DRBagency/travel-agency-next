@@ -5,6 +5,7 @@ import { getTranslations, getLocale } from 'next-intl/server';
 import ConnectStripeButton from "./ConnectStripeButton";
 import AIRecommendations from "@/components/ai/AIRecommendations";
 import ClienteTabs from "./ClienteTabs";
+import CRMTab from "./CRMTab";
 import { MapPin, ShoppingBag } from "lucide-react";
 
 async function updateCliente(formData: FormData) {
@@ -100,6 +101,12 @@ export default async function ClientePage({ params }: ClientePageProps) {
     .from("reservas")
     .select("id, nombre, email, destino, precio, estado_pago, personas, created_at")
     .eq("cliente_id", id)
+    .order("created_at", { ascending: false });
+
+  const { data: clientActivities } = await supabaseAdmin
+    .from("client_activities")
+    .select("id, client_id, type, content, metadata, created_at")
+    .eq("client_id", id)
     .order("created_at", { ascending: false });
 
   if (!cliente) {
@@ -345,6 +352,23 @@ Ingresos: ${totalRevenue}€`}
     />
   );
 
+  // CRM tab content
+  const crmTab = (
+    <CRMTab
+      clientId={cliente.id}
+      notes={cliente.client_notes || ""}
+      leadStatus={cliente.lead_status || "lead"}
+      activities={(clientActivities || []) as Array<{
+        id: string;
+        client_id: string;
+        type: string;
+        content: string;
+        metadata: Record<string, unknown>;
+        created_at: string;
+      }>}
+    />
+  );
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
@@ -363,6 +387,7 @@ Ingresos: ${totalRevenue}€`}
         destinationsTab={destinationsTab}
         bookingsTab={bookingsTab}
         aiTab={aiTab}
+        crmTab={crmTab}
         destinationsCount={destinos.length}
         bookingsCount={reservas.length}
       />

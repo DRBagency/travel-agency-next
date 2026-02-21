@@ -722,7 +722,8 @@
       "monetizacion": "Monetization",
       "stripe": "Stripe",
       "automatizaciones": "Automation",
-      "soporte": "Support"
+      "soporte": "Support",
+      "crm": "CRM"
     },
     "panelOwner": "Owner Panel",
     "dashboard": {
@@ -788,7 +789,8 @@
         "info": "Information",
         "destinations": "Destinations",
         "bookings": "Bookings",
-        "ai": "Artificial Intelligence"
+        "ai": "Artificial Intelligence",
+        "crm": "CRM"
       },
       "destinationsCount": "{count} destinations",
       "bookingsCount": "{count} bookings",
@@ -942,6 +944,48 @@
       "chip3": "Draft email to agency",
       "chip4": "Suggest improvements",
       "platformOwner": "Platform Owner"
+    },
+    "crm": {
+      "title": "CRM",
+      "subtitle": "Sales pipeline and client tracking",
+      "totalLeads": "Total leads",
+      "inNegotiation": "In negotiation",
+      "active": "Active",
+      "atRisk": "At risk",
+      "stages": {
+        "lead": "Lead",
+        "contactado": "Contacted",
+        "demo": "Demo",
+        "activo": "Active",
+        "en_riesgo": "At risk",
+        "perdido": "Lost"
+      },
+      "recentActivity": "Recent activity",
+      "noActivities": "No activities recorded",
+      "notes": "Notes",
+      "notesPlaceholder": "Write notes about this client...",
+      "saveNotes": "Save notes",
+      "notesSaved": "Notes saved",
+      "addActivity": "Log activity",
+      "activityType": "Activity type",
+      "activityContent": "Description",
+      "activityContentPlaceholder": "Describe the activity...",
+      "types": {
+        "note": "Note",
+        "call": "Call",
+        "email": "Email",
+        "meeting": "Meeting",
+        "status_change": "Status change"
+      },
+      "statusChanged": "Status changed",
+      "from": "from",
+      "to": "to",
+      "tabTitle": "CRM",
+      "changeStatus": "Change status",
+      "pipeline": "Pipeline",
+      "dragToMove": "Drag to move",
+      "lastActivity": "Last activity",
+      "noClientsInStage": "No clients in this stage"
     }
   },
   "booking": {

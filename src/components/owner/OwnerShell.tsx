@@ -15,6 +15,7 @@ import {
   CreditCard,
   Zap,
   Headphones,
+  Handshake,
   LogOut,
   Sparkles,
   Pin,
@@ -394,6 +395,7 @@ export default function OwnerShell({
     // Core
     [
       { label: t("nav.clientes"), href: "/owner/clientes", icon: Users },
+      { label: t("nav.crm"), href: "/owner/crm", icon: Handshake },
       { label: t("nav.calendario"), href: "/owner/calendario", icon: Calendar },
       { label: t("nav.soporte"), href: "/owner/soporte", icon: Headphones },
     ],
