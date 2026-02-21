@@ -29,6 +29,7 @@ export default function AdminRightColumn({
   primaryColor,
   contactPhone,
   agencyContext,
+  plan,
 }: AdminRightColumnProps) {
   const t = useTranslations("admin.eden");
   const tc = useTranslations("common");
@@ -180,7 +181,7 @@ export default function AdminRightColumn({
 
         {/* ── Eden Chat card — glassmorphism, fills remaining space ── */}
         <div className="flex-1 min-h-0 flex flex-col mx-3 mt-2.5 mb-3 rounded-2xl bg-white/25 backdrop-blur-lg border border-white/30 shadow-lg overflow-hidden">
-          <EdenChat clienteId={clienteId || ""} agencyContext={agencyContext} />
+          <EdenChat clienteId={clienteId || ""} agencyContext={agencyContext} plan={plan} />
         </div>
       </div>
 

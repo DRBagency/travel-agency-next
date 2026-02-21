@@ -139,7 +139,10 @@
       "editProfile": "Editar perfil",
       "photoUpdated": "Foto actualizada",
       "profileSaved": "Perfil guardado",
-      "phone": "Teléfono"
+      "phone": "Teléfono",
+      "lockedTitle": "Eden AI bloqueado",
+      "lockedDesc": "Disponible a partir del plan Grow",
+      "upgradePlan": "Mejorar plan"
     },
     "dashboard": {
       "greeting": "Hola, {name}!",
@@ -222,7 +225,10 @@
       "activityPrice": "Precio est.",
       "activityDuration": "Duración",
       "searchUnsplash": "Buscar en Unsplash",
-      "dayLabel": "Día {n}"
+      "dayLabel": "Día {n}",
+      "pricePerAdult": "Precio por adulto",
+      "pricePerChild": "Precio por niño",
+      "pricePerGroup": "Precio por grupo"
     },
     "mensajes": {
       "title": "Mensajes",
@@ -443,7 +449,15 @@
       "save": "Guardar",
       "stripeId": "Stripe ID",
       "created": "Creada",
-      "backToBookings": "Volver a reservas"
+      "backToBookings": "Volver a reservas",
+      "passengers": "Pasajeros",
+      "documentType": "Tipo doc.",
+      "documentNumber": "Nº documento",
+      "birthDate": "Fecha nac.",
+      "nationality": "Nacionalidad",
+      "adults": "Adultos",
+      "children": "Niños",
+      "noPassengers": "Sin datos de pasajeros"
     },
     "reservas": {
       "title": "Reservas",
@@ -1064,7 +1078,20 @@
     "pay": "Pagar",
     "subscriptionInactive": "Tu suscripción no está activa.",
     "paymentsNotEnabled": "Esta agencia aún no puede aceptar pagos.",
-    "paymentError": "Error al iniciar el pago"
+    "paymentError": "Error al iniciar el pago",
+    "passengerDetails": "Datos de pasajeros",
+    "passengerN": "Pasajero {n}",
+    "documentType": "Tipo de documento",
+    "dni": "DNI",
+    "passport": "Pasaporte",
+    "nie": "NIE",
+    "documentNumber": "Nº de documento",
+    "birthDate": "Fecha de nacimiento",
+    "nationality": "Nacionalidad",
+    "adultPrice": "Adulto",
+    "childPrice": "Niño",
+    "groupPrice": "Grupo",
+    "priceBreakdown": "Desglose"
   },
   "ai": {
     "itinerarios": {
@@ -1305,7 +1332,10 @@
       "weather": "Clima",
       "morning": "Mañana",
       "afternoon": "Tarde",
-      "night": "Noche"
+      "night": "Noche",
+      "perAdult": "por adulto",
+      "perChild": "por niño",
+      "perGroup": "por grupo"
     },
     "testimonials": {
       "badge": "Opiniones reales",

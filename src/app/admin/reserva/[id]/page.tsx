@@ -159,7 +159,14 @@ export default async function ReservaPage({
 
           <div>
             <span className="text-gray-500 dark:text-white/60">{t('persons')}</span>
-            <p>{reserva.personas ?? "—"}</p>
+            <p>
+              {reserva.personas ?? "—"}
+              {(reserva.adults > 0 || reserva.children > 0) && (
+                <span className="text-sm text-gray-400 dark:text-white/40 ms-2">
+                  ({reserva.adults} {t('adults')} · {reserva.children} {t('children')})
+                </span>
+              )}
+            </p>
           </div>
 
           <div>
@@ -216,6 +223,43 @@ export default async function ReservaPage({
           </div>
         </div>
       </div>
+
+        {/* Passengers */}
+        {Array.isArray(reserva.passengers) && reserva.passengers.length > 0 && (
+          <div className="panel-card p-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              {t('passengers')}
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200 dark:border-white/10 text-start">
+                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">#</th>
+                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('client')}</th>
+                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('documentType')}</th>
+                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('documentNumber')}</th>
+                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('birthDate')}</th>
+                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('nationality')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(reserva.passengers as Array<{ name: string; document_type: string; document_number: string; birth_date: string; nationality: string }>).map(
+                    (p, i) => (
+                      <tr key={i} className="border-b border-gray-100 dark:border-white/5">
+                        <td className="py-2 pe-4 text-gray-400 dark:text-white/40">{i + 1}</td>
+                        <td className="py-2 pe-4 font-medium">{p.name}</td>
+                        <td className="py-2 pe-4 uppercase text-gray-500 dark:text-white/50">{p.document_type}</td>
+                        <td className="py-2 pe-4">{p.document_number}</td>
+                        <td className="py-2 pe-4">{p.birth_date}</td>
+                        <td className="py-2 pe-4">{p.nationality}</td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         <div className="mt-2">
         <a

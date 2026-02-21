@@ -63,30 +63,31 @@ export async function POST(req: Request) {
         return new Response("ok", { status: 200 });
       }
 
+      /* La reserva ya existe (creada en checkout con estado pendiente_pago).
+         Ahora solo actualizamos el estado a "pagado". */
+      const reservaId = m.reserva_id;
+
+      if (!reservaId) {
+        console.error("❌ No reserva_id in metadata");
+        return new Response("ok", { status: 200 });
+      }
+
       const { data: reserva, error } = await supabaseAdmin
         .from("reservas")
-        .insert({
-          cliente_id: m.cliente_id,
-          destino: m.destino_nombre,
-          nombre: m.nombre,
-          email: m.email,
-          telefono: m.telefono || null,
-          fecha_salida: m.fecha_salida,
-          fecha_regreso: m.fecha_regreso,
-          personas: Number(m.personas),
-          precio: Number(m.total),
+        .update({
           estado_pago: "pagado",
           stripe_session_id: session.id,
         })
+        .eq("id", reservaId)
         .select("*")
         .single();
 
       if (error) {
-        console.error("❌ Supabase insert error:", error);
+        console.error("❌ Supabase update error:", error);
         return new Response("ok", { status: 200 });
       }
 
-      console.log("✅ Reserva guardada en Supabase:", session.id);
+      console.log("✅ Reserva actualizada a pagado:", session.id);
 
       // Crear notificación para la agencia
       await createNotification({

@@ -23,6 +23,9 @@ export interface Destination {
   id: string;
   nombre: string;
   precio: number;
+  precio_adulto?: number;
+  precio_nino?: number;
+  precio_grupo?: number;
   imagen_url: string | null;
 }
 
@@ -39,6 +42,14 @@ interface CustomerData {
   name: string;
   email: string;
   phone: string;
+}
+
+interface PassengerData {
+  name: string;
+  document_type: "dni" | "passport" | "nie";
+  document_number: string;
+  birth_date: string;
+  nationality: string;
 }
 
 const BookingModal = ({
@@ -67,6 +78,8 @@ const BookingModal = ({
     phone: "",
   });
 
+  const [passengers, setPassengers] = useState<PassengerData[]>([]);
+
   useEffect(() => {
     if (!destination) {
       setStep(1);
@@ -75,6 +88,7 @@ const BookingModal = ({
       setAdults(2);
       setChildren(0);
       setCustomer({ name: "", email: "", phone: "" });
+      setPassengers([]);
       setShowErrors(false);
     }
   }, [destination]);
@@ -95,8 +109,10 @@ const BookingModal = ({
   /* 🔒 PRECIO BLINDADO */
   const persons = adults + children;
   const basePrice = Number(destination.precio);
-  const totalPrice =
-    Number.isFinite(basePrice) && basePrice > 0
+  const hasDetailedPricing = (destination.precio_adulto ?? 0) > 0 || (destination.precio_nino ?? 0) > 0;
+  const totalPrice = hasDetailedPricing
+    ? ((destination.precio_adulto || destination.precio) * adults) + ((destination.precio_nino || destination.precio) * children)
+    : Number.isFinite(basePrice) && basePrice > 0
       ? basePrice * persons
       : 0;
 
@@ -114,9 +130,40 @@ const BookingModal = ({
           customer.email.includes("@") &&
           customer.phone.trim().length > 0
         );
+      case 5:
+        return passengers.length === persons && passengers.every(
+          (p) =>
+            p.name.trim().length > 0 &&
+            p.document_number.trim().length > 0 &&
+            p.birth_date.trim().length > 0 &&
+            p.nationality.trim().length > 0
+        );
       default:
         return false;
     }
+  };
+
+  /* Initialize passengers when moving to step 5 */
+  const initPassengers = () => {
+    const newPassengers: PassengerData[] = [];
+    for (let i = 0; i < persons; i++) {
+      newPassengers.push({
+        name: i === 0 ? customer.name : "",
+        document_type: "dni",
+        document_number: "",
+        birth_date: "",
+        nationality: "",
+      });
+    }
+    setPassengers(newPassengers);
+  };
+
+  const updatePassenger = (index: number, field: keyof PassengerData, value: string) => {
+    setPassengers((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], [field]: value };
+      return copy;
+    });
   };
 
   const handlePay = async () => {
@@ -137,7 +184,10 @@ const BookingModal = ({
         fecha_salida: departureDate!.toISOString().slice(0, 10),
         fecha_regreso: returnDate!.toISOString().slice(0, 10),
         personas: persons,
-        total: totalPrice, // 👈 número seguro
+        total: totalPrice,
+        passengers,
+        adults,
+        children,
       }),
     });
 
@@ -198,7 +248,7 @@ const BookingModal = ({
           {/* CONTENT */}
           <div className="p-6 space-y-4">
             <div className="flex items-center justify-between gap-2">
-              {[1, 2, 3, 4].map((s) => {
+              {[1, 2, 3, 4, 5].map((s) => {
                 const isActive = step === s;
                 const isDone = step > s;
                 return (
@@ -221,7 +271,7 @@ const BookingModal = ({
                     >
                       {s}
                     </div>
-                    {s < 4 && (
+                    {s < 5 && (
                       <div
                         className="mx-2 h-[2px] flex-1 rounded-full"
                         style={{
@@ -378,6 +428,73 @@ const BookingModal = ({
                     setCustomer({ ...customer, phone: e.target.value })
                   }
                 />
+              </div>
+            )}
+
+            {step === 5 && (
+              <div className="space-y-4 max-h-[340px] overflow-y-auto pe-1">
+                <div className="text-sm text-white/60">{t('passengerDetails')}</div>
+                {passengers.map((p, i) => (
+                  <div key={i} className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
+                    <div className="text-sm font-semibold text-white/80">
+                      {t('passengerN', { n: i + 1 })}
+                    </div>
+                    <input
+                      className={`w-full bg-slate-800 border p-2.5 rounded-xl text-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30 ${
+                        showErrors && p.name.trim().length === 0
+                          ? "border-red-500"
+                          : "border-white/10"
+                      }`}
+                      placeholder={t('fullName')}
+                      value={p.name}
+                      onChange={(e) => updatePassenger(i, "name", e.target.value)}
+                    />
+                    <div className="grid grid-cols-2 gap-3">
+                      <select
+                        className="bg-slate-800 border border-white/10 p-2.5 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+                        value={p.document_type}
+                        onChange={(e) => updatePassenger(i, "document_type", e.target.value)}
+                      >
+                        <option value="dni">{t('dni')}</option>
+                        <option value="passport">{t('passport')}</option>
+                        <option value="nie">{t('nie')}</option>
+                      </select>
+                      <input
+                        className={`bg-slate-800 border p-2.5 rounded-xl text-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30 ${
+                          showErrors && p.document_number.trim().length === 0
+                            ? "border-red-500"
+                            : "border-white/10"
+                        }`}
+                        placeholder={t('documentNumber')}
+                        value={p.document_number}
+                        onChange={(e) => updatePassenger(i, "document_number", e.target.value)}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <input
+                        type="date"
+                        className={`bg-slate-800 border p-2.5 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/30 ${
+                          showErrors && p.birth_date.trim().length === 0
+                            ? "border-red-500"
+                            : "border-white/10"
+                        }`}
+                        placeholder={t('birthDate')}
+                        value={p.birth_date}
+                        onChange={(e) => updatePassenger(i, "birth_date", e.target.value)}
+                      />
+                      <input
+                        className={`bg-slate-800 border p-2.5 rounded-xl text-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/30 ${
+                          showErrors && p.nationality.trim().length === 0
+                            ? "border-red-500"
+                            : "border-white/10"
+                        }`}
+                        placeholder={t('nationality')}
+                        value={p.nationality}
+                        onChange={(e) => updatePassenger(i, "nationality", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                ))}
 
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                   <div className="text-sm text-white/60 mb-2">
@@ -403,6 +520,27 @@ const BookingModal = ({
                     <span>{t('persons')}</span>
                     <span>{persons}</span>
                   </div>
+                  {hasDetailedPricing && (
+                    <div className="border-t border-white/10 pt-2 mt-2 space-y-1">
+                      <div className="text-xs text-white/50 font-medium">{t('priceBreakdown')}</div>
+                      <div className="flex items-center justify-between text-sm text-white/70">
+                        <span>{adults} x {t('adultPrice')}</span>
+                        <span>{(destination.precio_adulto || destination.precio) * adults} €</span>
+                      </div>
+                      {children > 0 && (
+                        <div className="flex items-center justify-between text-sm text-white/70">
+                          <span>{children} x {t('childPrice')}</span>
+                          <span>{(destination.precio_nino || destination.precio) * children} €</span>
+                        </div>
+                      )}
+                      {(destination.precio_grupo ?? 0) > 0 && (
+                        <div className="flex items-center justify-between text-xs text-white/50">
+                          <span>{t('groupPrice')}</span>
+                          <span>{destination.precio_grupo} €</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <div className="flex items-center justify-between font-semibold text-white">
                     <span>{t('total')}</span>
                     <span>{totalPrice} €</span>
@@ -423,7 +561,7 @@ const BookingModal = ({
               {t('back')}
             </button>
 
-            {step < 4 ? (
+            {step < 5 ? (
               <button
                 onClick={() => {
                   if (!canProceed()) {
@@ -431,6 +569,7 @@ const BookingModal = ({
                     return;
                   }
                   setShowErrors(false);
+                  if (step === 4) initPassengers();
                   setStep((s) => s + 1);
                 }}
                 className={

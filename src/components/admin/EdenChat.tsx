@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Send, Loader2, Bot, User, Sparkles } from "lucide-react";
+import { Send, Loader2, Bot, User, Sparkles, Lock } from "lucide-react";
+import { isAILocked } from "@/lib/plan-gating";
+import Link from "next/link";
 
 interface Message {
   role: "user" | "assistant";
@@ -12,9 +14,10 @@ interface Message {
 interface EdenChatProps {
   clienteId: string;
   agencyContext: string;
+  plan?: string;
 }
 
-export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
+export default function EdenChat({ clienteId, agencyContext, plan }: EdenChatProps) {
   const t = useTranslations("admin.eden");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -26,6 +29,37 @@ export default function EdenChat({ clienteId, agencyContext }: EdenChatProps) {
   }, [messages]);
 
   const suggestions = [t("chip1"), t("chip2"), t("chip3"), t("chip4")];
+
+  if (isAILocked(plan)) {
+    return (
+      <div className="flex flex-col h-full">
+        {/* Eden AI header */}
+        <div className="flex flex-col items-center pt-4 pb-2 px-3">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-drb-turquoise-500 via-drb-turquoise-400 to-drb-lime-500 flex items-center justify-center shadow-lg opacity-50">
+            <Sparkles className="w-8 h-8 text-white" />
+          </div>
+          <span className="text-2xl font-bold bg-gradient-to-r from-drb-turquoise-300 to-drb-lime-400 bg-clip-text text-transparent mt-2 opacity-50">
+            Eden AI
+          </span>
+        </div>
+
+        {/* Locked overlay */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-4">
+            <Lock className="w-7 h-7 text-white/60" />
+          </div>
+          <h4 className="text-sm font-semibold text-white/80 mb-1">{t("lockedTitle")}</h4>
+          <p className="text-xs text-white/50 mb-4">{t("lockedDesc")}</p>
+          <Link
+            href="/admin/stripe"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-drb-turquoise-500 to-drb-turquoise-600 text-white hover:brightness-110 transition-all shadow-md"
+          >
+            {t("upgradePlan")}
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const send = async (text?: string) => {
     const msg = text || input.trim();

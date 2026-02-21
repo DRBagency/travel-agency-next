@@ -139,7 +139,10 @@
       "editProfile": "Edit profile",
       "photoUpdated": "Photo updated",
       "profileSaved": "Profile saved",
-      "phone": "Phone"
+      "phone": "Phone",
+      "lockedTitle": "Eden AI locked",
+      "lockedDesc": "Available from Grow plan",
+      "upgradePlan": "Upgrade plan"
     },
     "dashboard": {
       "greeting": "Hello, {name}!",
@@ -222,7 +225,10 @@
       "activityPrice": "Est. price",
       "activityDuration": "Duration",
       "searchUnsplash": "Search Unsplash",
-      "dayLabel": "Day {n}"
+      "dayLabel": "Day {n}",
+      "pricePerAdult": "Price per adult",
+      "pricePerChild": "Price per child",
+      "pricePerGroup": "Price per group"
     },
     "reservas": {
       "title": "Bookings",
@@ -476,7 +482,15 @@
       "save": "Save",
       "stripeId": "Stripe ID",
       "created": "Created",
-      "backToBookings": "Back to bookings"
+      "backToBookings": "Back to bookings",
+      "passengers": "Passengers",
+      "documentType": "Doc. type",
+      "documentNumber": "Doc. number",
+      "birthDate": "Birth date",
+      "nationality": "Nationality",
+      "adults": "Adults",
+      "children": "Children",
+      "noPassengers": "No passenger data"
     },
     "documentos": {
       "title": "Documents",
@@ -1064,7 +1078,20 @@
     "pay": "Pay",
     "subscriptionInactive": "Your subscription is not active.",
     "paymentsNotEnabled": "This agency cannot accept payments yet.",
-    "paymentError": "Error starting payment"
+    "paymentError": "Error starting payment",
+    "passengerDetails": "Passenger details",
+    "passengerN": "Passenger {n}",
+    "documentType": "Document type",
+    "dni": "National ID",
+    "passport": "Passport",
+    "nie": "Resident ID",
+    "documentNumber": "Document number",
+    "birthDate": "Date of birth",
+    "nationality": "Nationality",
+    "adultPrice": "Adult",
+    "childPrice": "Child",
+    "groupPrice": "Group",
+    "priceBreakdown": "Breakdown"
   },
   "ai": {
     "itinerarios": {
@@ -1305,7 +1332,10 @@
       "weather": "Weather",
       "morning": "Morning",
       "afternoon": "Afternoon",
-      "night": "Night"
+      "night": "Night",
+      "perAdult": "per adult",
+      "perChild": "per child",
+      "perGroup": "per group"
     },
     "testimonials": {
       "badge": "Real Reviews",

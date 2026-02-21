@@ -139,7 +139,10 @@
       "editProfile": "تعديل الملف الشخصي",
       "photoUpdated": "تم تحديث الصورة",
       "profileSaved": "تم حفظ الملف الشخصي",
-      "phone": "الهاتف"
+      "phone": "الهاتف",
+      "lockedTitle": "إيدن AI مقفل",
+      "lockedDesc": "متاح من خطة Grow",
+      "upgradePlan": "ترقية الخطة"
     },
     "dashboard": {
       "greeting": "مرحبًا، {name}!",
@@ -222,7 +225,10 @@
       "activityPrice": "السعر التقديري",
       "activityDuration": "المدة",
       "searchUnsplash": "بحث في Unsplash",
-      "dayLabel": "اليوم {n}"
+      "dayLabel": "اليوم {n}",
+      "pricePerAdult": "السعر للبالغ",
+      "pricePerChild": "السعر للطفل",
+      "pricePerGroup": "سعر المجموعة"
     },
     "reservas": {
       "title": "الحجوزات",
@@ -476,7 +482,15 @@
       "save": "حفظ",
       "stripeId": "معرف Stripe",
       "created": "تم الإنشاء",
-      "backToBookings": "العودة إلى الحجوزات"
+      "backToBookings": "العودة إلى الحجوزات",
+      "passengers": "المسافرون",
+      "documentType": "نوع الوثيقة",
+      "documentNumber": "رقم الوثيقة",
+      "birthDate": "تاريخ الميلاد",
+      "nationality": "الجنسية",
+      "adults": "بالغون",
+      "children": "أطفال",
+      "noPassengers": "لا توجد بيانات مسافرين"
     },
     "documentos": {
       "title": "المستندات",
@@ -1064,7 +1078,20 @@
     "pay": "دفع",
     "subscriptionInactive": "اشتراكك غير نشط.",
     "paymentsNotEnabled": "هذه الوكالة لا يمكنها قبول المدفوعات بعد.",
-    "paymentError": "خطأ في بدء الدفع"
+    "paymentError": "خطأ في بدء الدفع",
+    "passengerDetails": "بيانات المسافرين",
+    "passengerN": "المسافر {n}",
+    "documentType": "نوع الوثيقة",
+    "dni": "بطاقة الهوية",
+    "passport": "جواز السفر",
+    "nie": "بطاقة الإقامة",
+    "documentNumber": "رقم الوثيقة",
+    "birthDate": "تاريخ الميلاد",
+    "nationality": "الجنسية",
+    "adultPrice": "بالغ",
+    "childPrice": "طفل",
+    "groupPrice": "مجموعة",
+    "priceBreakdown": "تفصيل"
   },
   "ai": {
     "itinerarios": {
@@ -1305,7 +1332,10 @@
       "weather": "الطقس",
       "morning": "الصباح",
       "afternoon": "بعد الظهر",
-      "night": "المساء"
+      "night": "المساء",
+      "perAdult": "للبالغ",
+      "perChild": "للطفل",
+      "perGroup": "للمجموعة"
     },
     "testimonials": {
       "badge": "تقييمات حقيقية",

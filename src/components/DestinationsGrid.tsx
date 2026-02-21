@@ -12,6 +12,9 @@ export interface Destination {
   nombre: string;
   descripcion: string;
   precio: number;
+  precio_adulto?: number;
+  precio_nino?: number;
+  precio_grupo?: number;
   imagen_url: string | null;
   itinerario: any | null;
 }
@@ -166,6 +169,21 @@ const DestinationsGrid = ({
                   <p className="text-sm text-white/65 mb-4 line-clamp-2">
                     {d.descripcion}
                   </p>
+
+                  {/* Price breakdown */}
+                  {((d.precio_adulto ?? 0) > 0 || (d.precio_nino ?? 0) > 0) && (
+                    <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-white/55 mb-4">
+                      {(d.precio_adulto ?? 0) > 0 && (
+                        <span>{d.precio_adulto} € {t("perAdult")}</span>
+                      )}
+                      {(d.precio_nino ?? 0) > 0 && (
+                        <span>{d.precio_nino} € {t("perChild")}</span>
+                      )}
+                      {(d.precio_grupo ?? 0) > 0 && (
+                        <span>{d.precio_grupo} € {t("perGroup")}</span>
+                      )}
+                    </div>
+                  )}
 
                   {/* View itinerary button */}
                   {hasItinerary && (

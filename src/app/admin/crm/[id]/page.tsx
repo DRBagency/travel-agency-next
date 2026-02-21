@@ -11,6 +11,7 @@ import {
   DollarSign,
   CalendarDays,
 } from "lucide-react";
+
 import CustomerCRMPanel from "./CustomerCRMPanel";
 
 export const dynamic = "force-dynamic";
@@ -164,7 +165,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                 {reservas.map((r: Record<string, unknown>) => (
                   <Link
                     key={r.id as string}
-                    href={`/admin/reservas/${r.id}`}
+                    href={`/admin/reserva/${r.id}`}
                     className="block panel-card p-3 hover:shadow-200 hover:-translate-y-0.5 transition-all"
                   >
                     <div className="flex items-center justify-between mb-1">

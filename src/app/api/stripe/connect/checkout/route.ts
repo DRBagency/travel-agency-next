@@ -52,6 +52,35 @@ export async function POST(req: Request) {
       );
     }
 
+    /* 📦 Crear reserva en Supabase ANTES del checkout (estado pendiente_pago) */
+    const { data: reserva, error: reservaError } = await supabaseAdmin
+      .from("reservas")
+      .insert({
+        cliente_id: body.cliente_id,
+        destino: body.destino_nombre,
+        nombre: body.nombre,
+        email: body.email,
+        telefono: body.telefono || null,
+        fecha_salida: body.fecha_salida,
+        fecha_regreso: body.fecha_regreso,
+        personas: Number(body.personas),
+        precio: total,
+        estado_pago: "pendiente_pago",
+        passengers: body.passengers || [],
+        adults: Number(body.adults) || 0,
+        children: Number(body.children) || 0,
+      })
+      .select("id")
+      .single();
+
+    if (reservaError || !reserva) {
+      console.error("Supabase insert error:", reservaError);
+      return NextResponse.json(
+        { error: "Error creando reserva" },
+        { status: 500 }
+      );
+    }
+
     const unitAmount = Math.round(total * 100); // céntimos
 
     const sessionParams = {
@@ -72,16 +101,11 @@ export async function POST(req: Request) {
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
       metadata: {
+        reserva_id: reserva.id,
         cliente_id: body.cliente_id,
-        destino_id: body.destino_id,
         destino_nombre: body.destino_nombre,
         nombre: body.nombre,
         email: body.email,
-        telefono: body.telefono,
-        personas: String(body.personas),
-        total: String(total),
-        fecha_salida: body.fecha_salida,
-        fecha_regreso: body.fecha_regreso,
       },
     } as Stripe.Checkout.SessionCreateParams;
 
@@ -98,6 +122,12 @@ export async function POST(req: Request) {
     }
 
     const session = await stripe.checkout.sessions.create(sessionParams);
+
+    /* Guardar stripe_session_id en la reserva */
+    await supabaseAdmin
+      .from("reservas")
+      .update({ stripe_session_id: session.id })
+      .eq("id", reserva.id);
 
     return NextResponse.json({ url: session.url });
   } catch (error: any) {

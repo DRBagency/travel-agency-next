@@ -22,6 +22,9 @@ async function createDestino(formData: FormData) {
     nombre: (formData.get("nombre") as string) || null,
     descripcion: (formData.get("descripcion") as string) || null,
     precio: Number(formData.get("precio") || 0) || 0,
+    precio_adulto: Number(formData.get("precio_adulto") || 0) || 0,
+    precio_nino: Number(formData.get("precio_nino") || 0) || 0,
+    precio_grupo: Number(formData.get("precio_grupo") || 0) || 0,
     imagen_url: (formData.get("imagen_url") as string) || null,
     activo: formData.get("activo") === "on",
     itinerario: itinerarioRaw ? JSON.parse(itinerarioRaw) : null,
@@ -47,6 +50,9 @@ async function updateDestino(formData: FormData) {
     nombre: (formData.get("nombre") as string) || null,
     descripcion: (formData.get("descripcion") as string) || null,
     precio: Number(formData.get("precio") || 0) || 0,
+    precio_adulto: Number(formData.get("precio_adulto") || 0) || 0,
+    precio_nino: Number(formData.get("precio_nino") || 0) || 0,
+    precio_grupo: Number(formData.get("precio_grupo") || 0) || 0,
     imagen_url: (formData.get("imagen_url") as string) || null,
     activo: formData.get("activo") === "on",
     itinerario: itinerarioRaw ? JSON.parse(itinerarioRaw) : null,
@@ -192,8 +198,17 @@ export default async function AdminDestinosPage({
               {/* Bottom info + actions */}
               <div className="p-4">
                 <div className="flex items-center justify-between">
-                  <div className="text-lg font-bold text-gray-900 dark:text-white">
-                    {destino.precio ?? 0} €
+                  <div>
+                    <div className="text-lg font-bold text-gray-900 dark:text-white">
+                      {destino.precio ?? 0} €
+                    </div>
+                    {(destino.precio_adulto > 0 || destino.precio_nino > 0 || destino.precio_grupo > 0) && (
+                      <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-500 dark:text-white/50 mt-0.5">
+                        {destino.precio_adulto > 0 && <span>{t('pricePerAdult')}: {destino.precio_adulto} €</span>}
+                        {destino.precio_nino > 0 && <span>{t('pricePerChild')}: {destino.precio_nino} €</span>}
+                        {destino.precio_grupo > 0 && <span>{t('pricePerGroup')}: {destino.precio_grupo} €</span>}
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <form action={updateDestino}>
@@ -201,6 +216,9 @@ export default async function AdminDestinosPage({
                       <input type="hidden" name="nombre" value={destino.nombre ?? ""} />
                       <input type="hidden" name="descripcion" value={destino.descripcion ?? ""} />
                       <input type="hidden" name="precio" value={destino.precio ?? 0} />
+                      <input type="hidden" name="precio_adulto" value={destino.precio_adulto ?? 0} />
+                      <input type="hidden" name="precio_nino" value={destino.precio_nino ?? 0} />
+                      <input type="hidden" name="precio_grupo" value={destino.precio_grupo ?? 0} />
                       <input type="hidden" name="imagen_url" value={destino.imagen_url ?? ""} />
                       <input type="hidden" name="itinerario" value={destino.itinerario ? JSON.stringify(destino.itinerario) : ""} />
                       {destino.activo ? (

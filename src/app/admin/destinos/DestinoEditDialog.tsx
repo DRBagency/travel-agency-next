@@ -21,6 +21,9 @@ interface DestinoEditDialogProps {
     nombre: string | null;
     descripcion: string | null;
     precio: number | null;
+    precio_adulto?: number | null;
+    precio_nino?: number | null;
+    precio_grupo?: number | null;
     imagen_url: string | null;
     activo: boolean;
     itinerario: any | null;
@@ -37,6 +40,9 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
   const [nombre, setNombre] = useState(destino.nombre ?? "");
   const [descripcion, setDescripcion] = useState(destino.descripcion ?? "");
   const [precio, setPrecio] = useState(destino.precio ?? 0);
+  const [precioAdulto, setPrecioAdulto] = useState(destino.precio_adulto ?? 0);
+  const [precioNino, setPrecioNino] = useState(destino.precio_nino ?? 0);
+  const [precioGrupo, setPrecioGrupo] = useState(destino.precio_grupo ?? 0);
   const [imagenUrl, setImagenUrl] = useState(destino.imagen_url ?? "");
   const [activo, setActivo] = useState(destino.activo);
   const [itinerario, setItinerario] = useState(destino.itinerario);
@@ -105,6 +111,45 @@ export default function DestinoEditDialog({ destino, action }: DestinoEditDialog
               onChange={(e) => setPrecio(Number(e.target.value) || 0)}
               className="panel-input w-full"
             />
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="panel-label">{t("pricePerAdult")}</label>
+              <input
+                name="precio_adulto"
+                type="number"
+                min={0}
+                value={precioAdulto || ""}
+                onChange={(e) => setPrecioAdulto(Number(e.target.value) || 0)}
+                className="panel-input w-full"
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <label className="panel-label">{t("pricePerChild")}</label>
+              <input
+                name="precio_nino"
+                type="number"
+                min={0}
+                value={precioNino || ""}
+                onChange={(e) => setPrecioNino(Number(e.target.value) || 0)}
+                className="panel-input w-full"
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <label className="panel-label">{t("pricePerGroup")}</label>
+              <input
+                name="precio_grupo"
+                type="number"
+                min={0}
+                value={precioGrupo || ""}
+                onChange={(e) => setPrecioGrupo(Number(e.target.value) || 0)}
+                className="panel-input w-full"
+                placeholder="0"
+              />
+            </div>
           </div>
 
           <div>

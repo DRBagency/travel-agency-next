@@ -39,6 +39,9 @@ export default function DestinoCreateForm({
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState(0);
+  const [precioAdulto, setPrecioAdulto] = useState(0);
+  const [precioNino, setPrecioNino] = useState(0);
+  const [precioGrupo, setPrecioGrupo] = useState(0);
   const [imagenUrl, setImagenUrl] = useState("");
   const [itinerario, setItinerario] = useState<any>(null);
   const [activo, setActivo] = useState(true);
@@ -106,6 +109,45 @@ export default function DestinoCreateForm({
                   placeholder={labels.pricePlaceholder}
                 />
               </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="panel-label">{t("pricePerAdult")}</label>
+              <input
+                name="precio_adulto"
+                type="number"
+                min={0}
+                value={precioAdulto || ""}
+                onChange={(e) => setPrecioAdulto(Number(e.target.value) || 0)}
+                className="panel-input w-full"
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <label className="panel-label">{t("pricePerChild")}</label>
+              <input
+                name="precio_nino"
+                type="number"
+                min={0}
+                value={precioNino || ""}
+                onChange={(e) => setPrecioNino(Number(e.target.value) || 0)}
+                className="panel-input w-full"
+                placeholder="0"
+              />
+            </div>
+            <div>
+              <label className="panel-label">{t("pricePerGroup")}</label>
+              <input
+                name="precio_grupo"
+                type="number"
+                min={0}
+                value={precioGrupo || ""}
+                onChange={(e) => setPrecioGrupo(Number(e.target.value) || 0)}
+                className="panel-input w-full"
+                placeholder="0"
+              />
             </div>
           </div>
 
