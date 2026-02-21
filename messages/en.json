@@ -760,6 +760,10 @@
     },
     "clientes": {
       "title": "Clients (Owner)",
+      "subtitle": "Manage all agencies registered on the platform",
+      "activeAgencies": "Active agencies",
+      "withSub": "With subscription",
+      "topPlan": "Most popular plan",
       "newAgency": "New agency",
       "domain": "Domain",
       "commission": "Commission",
@@ -911,6 +915,10 @@
       "executionsHistory": "History of the last 20 executions",
       "automation": "Automation",
       "noExecutions": "No executions recorded"
+    },
+    "calendario": {
+      "title": "Calendar",
+      "subtitle": "Overview of events across all agencies"
     },
     "soporte": {
       "title": "Support",

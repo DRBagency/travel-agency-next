@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import { Key, Tag, Webhook, ExternalLink } from 'lucide-react';
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ export default async function OwnerStripePage() {
   const mode = process.env.STRIPE_SECRET_KEY?.startsWith("sk_live") ? "LIVE" : "TEST";
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
         <p className="text-gray-400 dark:text-white/40">{t('subtitle')}</p>
@@ -26,7 +27,7 @@ export default async function OwnerStripePage() {
       {/* Modo actual */}
       <div className={`${mode === "LIVE" ? "bg-emerald-50 dark:bg-green-500/20 border-emerald-200 dark:border-green-500/30" : "bg-amber-50 dark:bg-yellow-500/20 border-amber-200 dark:border-yellow-500/30"} backdrop-blur-sm rounded-lg p-6 border `}>
         <div className="flex items-center gap-3">
-          <span className="text-3xl">{mode === "LIVE" ? "🟢" : "🟡"}</span>
+          <span className={`w-3 h-3 rounded-full shrink-0 ${mode === "LIVE" ? "bg-emerald-500" : "bg-amber-500"}`} />
           <div>
             <p className="text-xl font-bold text-gray-900 dark:text-white">{t('mode', { mode })}</p>
             <p className="text-sm text-gray-500 dark:text-white/60">
@@ -41,7 +42,10 @@ export default async function OwnerStripePage() {
       {/* API Keys */}
       <div className="panel-card ">
         <div className="p-6 border-b border-gray-100 dark:border-white/10">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('apiKeys')}</h2>
+          <div className="flex items-center gap-2">
+            <Key className="w-5 h-5 text-gray-400 dark:text-white/40" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('apiKeys')}</h2>
+          </div>
         </div>
         <div className="p-6 space-y-4">
           <div>
@@ -56,7 +60,10 @@ export default async function OwnerStripePage() {
       {/* Price IDs */}
       <div className="panel-card ">
         <div className="p-6 border-b border-gray-100 dark:border-white/10">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('priceIds')}</h2>
+          <div className="flex items-center gap-2">
+            <Tag className="w-5 h-5 text-gray-400 dark:text-white/40" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('priceIds')}</h2>
+          </div>
         </div>
         <div className="p-6 space-y-4">
           <div>
@@ -83,7 +90,10 @@ export default async function OwnerStripePage() {
       {/* Webhook Secrets */}
       <div className="panel-card ">
         <div className="p-6 border-b border-gray-100 dark:border-white/10">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('webhookSecrets')}</h2>
+          <div className="flex items-center gap-2">
+            <Webhook className="w-5 h-5 text-gray-400 dark:text-white/40" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('webhookSecrets')}</h2>
+          </div>
         </div>
         <div className="p-6 space-y-4">
           <div>
@@ -110,40 +120,47 @@ export default async function OwnerStripePage() {
       {/* Enlaces útiles */}
       <div className="panel-card">
         <div className="p-6 border-b border-gray-100 dark:border-white/10">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('usefulLinks')}</h2>
+          <div className="flex items-center gap-2">
+            <ExternalLink className="w-5 h-5 text-gray-400 dark:text-white/40" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('usefulLinks')}</h2>
+          </div>
         </div>
         <div className="p-6 space-y-3">
           <a
             href={`https://dashboard.stripe.com/${mode === "TEST" ? "test/" : ""}dashboard`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
+            className="flex items-center gap-2 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
           >
-            → {t('stripeDashboard', { mode })}
+            <ExternalLink className="w-4 h-4" />
+            {t('stripeDashboard', { mode })}
           </a>
           <a
             href={`https://dashboard.stripe.com/${mode === "TEST" ? "test/" : ""}webhooks`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
+            className="flex items-center gap-2 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
           >
-            → {t('webhookConfig')}
+            <ExternalLink className="w-4 h-4" />
+            {t('webhookConfig')}
           </a>
           <a
             href={`https://dashboard.stripe.com/${mode === "TEST" ? "test/" : ""}subscriptions`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
+            className="flex items-center gap-2 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
           >
-            → {t('activeSubscriptions')}
+            <ExternalLink className="w-4 h-4" />
+            {t('activeSubscriptions')}
           </a>
           <a
             href={`https://dashboard.stripe.com/${mode === "TEST" ? "test/" : ""}connect/accounts/overview`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
+            className="flex items-center gap-2 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-500 dark:hover:text-drb-turquoise-300"
           >
-            → {t('connectAccounts')}
+            <ExternalLink className="w-4 h-4" />
+            {t('connectAccounts')}
           </a>
         </div>
       </div>

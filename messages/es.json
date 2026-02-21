@@ -760,6 +760,10 @@
     },
     "clientes": {
       "title": "Clientes (Owner)",
+      "subtitle": "Gestiona todas las agencias registradas en la plataforma",
+      "activeAgencies": "Agencias activas",
+      "withSub": "Con suscripción",
+      "topPlan": "Plan más popular",
       "newAgency": "Nueva agencia",
       "domain": "Dominio",
       "commission": "Comisión",
@@ -911,6 +915,10 @@
       "executionsHistory": "Historial de las ultimas 20 ejecuciones",
       "automation": "Automatizacion",
       "noExecutions": "No hay ejecuciones registradas"
+    },
+    "calendario": {
+      "title": "Calendario",
+      "subtitle": "Vista general de los eventos de todas las agencias"
     },
     "soporte": {
       "title": "Soporte",

@@ -46,6 +46,18 @@ const accentMap: Record<string, { border: string; tint: string; glow: string; ic
     glow: "card-glow-amber",
     iconGradient: "from-amber-500 to-amber-600",
   },
+  blue: {
+    border: "border-s-blue-500",
+    tint: "bg-blue-50/50 dark:bg-blue-500/[0.04]",
+    glow: "card-glow-blue",
+    iconGradient: "from-blue-500 to-blue-600",
+  },
+  red: {
+    border: "border-s-red-500",
+    tint: "bg-red-50/50 dark:bg-red-500/[0.04]",
+    glow: "card-glow-red",
+    iconGradient: "from-red-500 to-red-600",
+  },
 };
 
 export default function KPICard({

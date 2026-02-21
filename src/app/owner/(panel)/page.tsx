@@ -22,7 +22,7 @@ export default async function OwnerDashboardPage() {
   const chartData = await getChartData(locale);
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('greeting')}</h1>
@@ -30,7 +30,7 @@ export default async function OwnerDashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <KPICard
           title={t('totalAgencies')}
           value={metrics.totalClientes}
@@ -73,7 +73,7 @@ export default async function OwnerDashboardPage() {
       </div>
 
       {/* All 5 Charts — compact single row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <MRRChart data={chartData.mrrPorMes} compact />
         <ClientesChart data={chartData.clientesPorMes} compact />
         <ReservasOwnerChart data={chartData.reservasPorMes} compact />

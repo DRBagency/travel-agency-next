@@ -760,6 +760,10 @@
     },
     "clientes": {
       "title": "العملاء (المالك)",
+      "subtitle": "إدارة جميع الوكالات المسجلة على المنصة",
+      "activeAgencies": "الوكالات النشطة",
+      "withSub": "مع اشتراك",
+      "topPlan": "الخطة الأكثر شعبية",
       "newAgency": "وكالة جديدة",
       "domain": "النطاق",
       "commission": "العمولة",
@@ -911,6 +915,10 @@
       "executionsHistory": "سجل آخر 20 عملية تنفيذ",
       "automation": "الأتمتة",
       "noExecutions": "لا توجد عمليات تنفيذ مسجلة"
+    },
+    "calendario": {
+      "title": "التقويم",
+      "subtitle": "نظرة عامة على أحداث جميع الوكالات"
     },
     "soporte": {
       "title": "الدعم",

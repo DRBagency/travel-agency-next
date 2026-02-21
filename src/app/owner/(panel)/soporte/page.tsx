@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { getTranslations } from 'next-intl/server';
 import SoporteTable from "./SoporteTable";
+import KPICard from "@/components/ui/KPICard";
+import { Ticket, CircleDot, Clock, AlertTriangle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -33,31 +35,35 @@ export default async function OwnerSoportePage() {
 
       {/* Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="kpi-card">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">{t('totalTickets')}</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">{tickets.length}</p>
-        </div>
-        <div className="kpi-card">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">{t('open')}</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">
-            {tickets.filter((tk) => tk.status === "open").length}
-          </p>
-        </div>
-        <div className="kpi-card">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">{t('inProgress')}</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">
-            {tickets.filter((tk) => tk.status === "in_progress").length}
-          </p>
-        </div>
-        <div className="kpi-card">
-          <p className="text-gray-500 dark:text-white/60 text-sm mb-1">{t('urgent')}</p>
-          <p className="text-3xl font-bold text-red-600 dark:text-red-400">
-            {tickets.filter((tk) => tk.priority === "urgent").length}
-          </p>
-        </div>
+        <KPICard
+          title={t('totalTickets')}
+          value={tickets.length}
+          icon={<Ticket className="w-5 h-5" />}
+          accentColor="turquoise"
+        />
+        <KPICard
+          title={t('open')}
+          value={tickets.filter((tk) => tk.status === "open").length}
+          icon={<CircleDot className="w-5 h-5" />}
+          accentColor="blue"
+        />
+        <KPICard
+          title={t('inProgress')}
+          value={tickets.filter((tk) => tk.status === "in_progress").length}
+          icon={<Clock className="w-5 h-5" />}
+          accentColor="amber"
+        />
+        <KPICard
+          title={t('urgent')}
+          value={tickets.filter((tk) => tk.priority === "urgent").length}
+          icon={<AlertTriangle className="w-5 h-5" />}
+          accentColor="red"
+        />
       </div>
 
-      <SoporteTable tickets={tickets} />
+      <div className="panel-card overflow-hidden">
+        <SoporteTable tickets={tickets} />
+      </div>
     </div>
   );
 }
