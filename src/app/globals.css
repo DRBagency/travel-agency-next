@@ -116,7 +116,7 @@ html {
 @layer components {
   /* ─── Panel utility classes (DRB Corporate) ─── */
   .panel-card {
-    @apply bg-white dark:bg-white/[0.06] border border-drb-turquoise-200/60 dark:border-drb-turquoise-800/40 rounded-2xl transition-all duration-200;
+    @apply bg-white/95 dark:bg-[#0a2a35]/80 backdrop-blur-sm border border-drb-turquoise-200/60 dark:border-drb-turquoise-800/40 rounded-2xl transition-all duration-200;
     box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 8px 24px rgba(7,35,49,0.08);
   }
   .panel-card:hover {
@@ -132,7 +132,7 @@ html {
   }
 
   .kpi-card {
-    @apply bg-white dark:bg-white/[0.06] border border-drb-turquoise-200/60 dark:border-drb-turquoise-800/40 rounded-2xl p-6 transition-all duration-200;
+    @apply bg-white/95 dark:bg-[#0a2a35]/80 backdrop-blur-sm border border-drb-turquoise-200/60 dark:border-drb-turquoise-800/40 rounded-2xl p-6 transition-all duration-200;
     box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 8px 24px rgba(7,35,49,0.08);
   }
   .kpi-card:hover {
@@ -158,7 +158,7 @@ html {
   }
 
   .panel-input {
-    @apply w-full bg-drb-turquoise-50 dark:bg-white/[0.06] border border-drb-turquoise-200 dark:border-white/[0.1] rounded-xl px-4 py-2.5 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/30 focus:border-drb-turquoise-500 transition-colors;
+    @apply w-full bg-drb-turquoise-50 dark:bg-[#0a2a35]/70 border border-drb-turquoise-200 dark:border-white/[0.1] rounded-xl px-4 py-2.5 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/30 focus:border-drb-turquoise-500 transition-colors;
   }
 
   /* Fix select/option contrast in dark mode */
