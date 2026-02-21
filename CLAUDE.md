@@ -313,9 +313,19 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **Eden AI Visual**: Tried Rive animation (black bg issues), tried Spline 3D (watermark/bg issues) — currently simple icon+gradient header, pending better 3D/animation solution
 
 ### ✅ Fase D — Nuevas Secciones / Features (21 Feb 2026):
-- ✅ **Social Media Integration**: social_connections table (OAuth tokens, cached profile/stats, recent_posts JSONB max 12, RLS), OAuth library (`src/lib/social/` — types, instagram, tiktok), API routes (OAuth start/callback IG+TK, disconnect, sync), Token refresh cron (6h, vercel.json), Admin page + SocialContent UI (3 cards grid, posts grid, filter), Share2 nav item, i18n 27 keys ES/EN/AR. Env vars pending: `INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`
+- ✅ **Social Media Integration**: social_connections table (OAuth tokens, cached profile/stats, recent_posts JSONB max 12, RLS), OAuth library (`src/lib/social/` — types, instagram, tiktok), API routes (OAuth start/callback IG+TK, disconnect, sync), Token refresh cron (daily 3:00 UTC, vercel.json), Admin page + SocialContent UI (3 cards grid, posts grid, filter), Share2 nav item, i18n 27 keys ES/EN/AR. Env vars pending: `INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`
 - ✅ **Más plantillas email**: Bienvenida, Recordatorio de viaje, Seguimiento post-viaje, Promoción (con SendPromocionButton). Total 6 templates (+ reserva_cliente, reserva_agencia)
 - ✅ **Merge Opiniones en Mi Web**: OpinionesManager integrado en `/admin/mi-web`, ruta standalone `/admin/opiniones` eliminada (21 Feb 2026), API routes `/api/admin/opiniones` mantenidas para OpinionesManager
+
+### ✅ Fase E — Owner Panel Premium Upgrade (21 Feb 2026):
+- ✅ **OwnerShell Rewrite**: 3-column layout matching AdminShell — collapsible sidebar (64px/240px) with Framer Motion pin/unpin (`drb_owner_sidebar_pinned`), right column 300px on xl+, DashboardBackground behind main, dynamic CSS variable margins
+- ✅ **OwnerRightColumn**: MountainBackground + glassmorphism profile card (avatar "D", DRB Agency, ownerEmail, "Platform Owner" badge) + OwnerChat
+- ✅ **OwnerChat (Eden AI)**: Platform copilot chat via `/api/ai` with `owner-chat` action, suggestion chips (Analizar MRR, Agencias en riesgo, Redactar email a agencia, Sugerir mejoras), platform metrics context from `getDashboardMetrics()`
+- ✅ **API Route**: `owner-chat` action in `/api/ai/route.ts` — SaaS copilot system prompt (MRR, churn, retention, strategy, emails), MAX_TOKENS 2000
+- ✅ **Mobile/Tablet**: Eden FAB (MessageCircle) in header opens right panel drawer, hamburger sidebar sheet
+- ✅ **i18n**: `owner.eden` namespace (7 keys × 3 languages: welcome, placeholder, chip1-4, platformOwner)
+- ✅ **Layout**: Server-side `getDashboardMetrics()` → `platformContext` string passed to OwnerShell
+- ✅ **No plan-gating**: Owner panel has no `isAILocked` or Lock icons (owner always has full access)
 
 ### ⏳ Pendiente config externa (código listo):
 - **Social Media OAuth**: Crear app en Meta Developer (Instagram) + TikTok Developer, añadir env vars (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`) en Vercel. Redirect URIs: `https://drb.agency/api/admin/social/oauth/{instagram,tiktok}/callback`
@@ -438,6 +448,13 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 | `EdenChat` | Client | Chat AI asistente con /api/ai free-chat |
 | `MountainBackground` | Client | SVG paisaje montañas para columna derecha |
 | `DashboardBackground` | Client | SVG montañas sutiles para area principal |
+
+### Componentes Owner (`src/components/owner/`):
+| Componente | Tipo | Uso |
+|------------|------|-----|
+| `OwnerShell` | Client | Layout principal owner: sidebar colapsable + main + right column |
+| `OwnerRightColumn` | Client | Columna derecha: perfil owner + Eden AI chat |
+| `OwnerChat` | Client | Chat AI copiloto plataforma con /api/ai owner-chat |
 
 ### Patrones UI:
 - **Wrapper pages:** `<div className="space-y-{6,8} animate-fade-in">`
