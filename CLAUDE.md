@@ -101,9 +101,9 @@ travel-agency-next/
 │   │   └── [otros]
 │   ├── components/
 │   │   ├── ui/               # shadcn/ui + DataTable, KPICard, ConfirmDialog, EmptyState, DeleteWithConfirm, AnimatedSection, RiveAnimation
-│   │   ├── ai/               # AI components (ItineraryGenerator, ChatbotConfig, AIDescriptionButton, AIEmailGenerator, AIPricingSuggestion, FreeChat, AIRecommendations, AIInsightsCard)
+│   │   ├── ai/               # AI components (ItineraryGenerator, ChatbotConfig, AIDescriptionButton, AIEmailGenerator, AIPricingSuggestion, FreeChat, AIRecommendations, AIInsightsCard[compact])
 │   │   ├── admin/            # Componentes admin (charts, dashboard, AdminShell, EdenChat, MountainBackground, DashboardBackground, AdminRightColumn)
-│   │   ├── owner/            # Componentes owner (charts, LatestAgenciesTable, ExecutionLogsTable)
+│   │   ├── owner/            # Componentes owner (charts, LatestAgenciesTable, ExecutionLogsTable, OwnerSupportWidget, OwnerCalendarWidget)
 │   │   └── ChatbotWidget.tsx # Widget flotante público para chatbot AI
 │   ├── i18n/
 │   │   └── request.ts        # Config next-intl (cookie NEXT_LOCALE)
@@ -111,7 +111,7 @@ travel-agency-next/
 │   │   ├── emails/           # Sistema de emails
 │   │   ├── billing/          # Funciones de billing
 │   │   ├── social/           # OAuth helpers + API calls (Instagram, TikTok)
-│   │   ├── owner/            # Funciones del owner
+│   │   ├── owner/            # Funciones del owner (get-chart-data: 8 semanas, get-dashboard-metrics)
 │   │   ├── supabase/         # Clients de Supabase
 │   │   └── set-locale.ts     # Server action cambio idioma
 │   └── middleware.ts
@@ -228,7 +228,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ## ESTADO ACTUAL DE FEATURES
 
 ### ✅ Panel OWNER completado:
-- Dashboard con métricas (5 KPIs: clientes, MRR, reservas, comisiones, ticket medio) + 5 gráficas (MRR, clientes, reservas, RevenueBreakdownChart, TopDestinosChart) + LatestAgenciesTable
+- Dashboard compacto sin scroll: 5 KPIs + gráficas semanales (8 semanas: MRR, clientes, reservas, RevenueBreakdown, TopDestinos) + LatestAgenciesTable + AIInsightsCard (compact) + OwnerSupportWidget + OwnerCalendarWidget
 - Gestión de clientes (CRUD + auto-creación templates + tabbed detail: Info/Destinos/Reservas/AI con AIRecommendations)
 - Emails de billing (3 templates + preview en modal) — fully i18n
 - Monetización (MRR, desglose por planes, top comisiones con CommissionsTable DataTable, KPICards, ComparisonChart, ProjectionChart)
@@ -246,7 +246,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - Stripe/Pagos (StripeTabs: Connect/Suscripción/Tarifas + onboarding + cambio plan + cancelar + reactivar)
 - Documentos (presupuestos, contratos, facturas — crear, editar, eliminar, generar PDF con jsPDF + DataTable + DeleteWithConfirm)
 - Soporte (tickets con chat — crear, ver detalle, enviar mensajes, cerrar/reabrir)
-- Analytics (KPIs, charts, filtros de fecha, tabla mensual, exports CSV/PDF)
+- ~~Analytics~~ (eliminado en Fase F — KPIs y charts integrados en dashboard principal)
 - AI (Generador itinerarios + PDF export + Chatbot config + Asistente libre + Dashboard AI card)
 - Social Media (Instagram + TikTok OAuth connect, profile/stats caching, recent posts grid, sync, disconnect. Facebook: URL only via Mi Web)
 
@@ -327,11 +327,26 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **Layout**: Server-side `getDashboardMetrics()` → `platformContext` string passed to OwnerShell
 - ✅ **No plan-gating**: Owner panel has no `isAILocked` or Lock icons (owner always has full access)
 
+### ✅ Fase F completada — Visual / UX Premium (21 Feb 2026):
+- ✅ **F1 — DashboardBackground Rewrite**: SVG widescreen (1600×900) con angular peaked mountains (L-paths, no Q-curves), crescent moon (disc + shadow overlay + craters + lime radial glow), 24 stars, pine tree silhouettes. Dark mode: sky gradient #041820→#0C4551, 4 mountain layers opacity 0.15-0.22. Light mode: sky gradient #FFFFFF→#B3EFF2, 3 mountain layers opacity 0.14-0.30
+- ✅ **F2-owner — Owner Dashboard Compacto**: Layout sin scroll en 3 filas — (1) Header + 5 KPIs, (2) Charts|LatestAgencies|Charts en grid 3 cols, (3) AIInsightsCard compact + OwnerSupportWidget + OwnerCalendarWidget. Queries: support_tickets (últimos 3) + calendar_events (próximos 3)
+- ✅ **F4 — Eden AI Visual Fixes**: Header icon 16→12px, título 2xl→lg, bubbles bg-white/20 + border-white/15, chips text-[11px], typing dots w-1.5, input más compacto
+- ✅ **F5 — Gráficas Semanales**: Admin + Owner charts cambiados de 6 meses a 8 semanas (subWeeks/startOfWeek/endOfWeek con weekStartsOn:1 Lunes). Labels "dd MMM". Proyección: 4 semanas futuras (regresión lineal)
+- ✅ **F6 — Eliminar /admin/analytics**: Página eliminada, nav item eliminado de AdminShell, import BarChart3 limpiado
+- ✅ **F7 — Filtros Reservas Colapsados**: Form de filtros en `<details>/<summary>` (collapsed by default) con icono Filter + i18n key "Filtros"
+- ✅ **Widget Opacity Fix**: panel-card/kpi-card dark mode cambiado de `bg-white/[0.06]` a `bg-[#0a2a35]/80 backdrop-blur-sm`. Light mode `bg-white/95`. panel-input dark `bg-[#0a2a35]/70`. Mejora legibilidad sobre mountain background
+
 ### ⏳ Pendiente config externa (código listo):
 - **Social Media OAuth**: Crear app en Meta Developer (Instagram) + TikTok Developer, añadir env vars (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`) en Vercel. Redirect URIs: `https://drb.agency/api/admin/social/oauth/{instagram,tiktok}/callback`
 
+### 🚧 Próximas tareas (Roadmap activo):
+- **CRM básico** (`/admin/crm`): Gestión de contactos/leads, pipeline, seguimiento — en desarrollo
+- **F8 — Contador de visitas en vivo**: Widget real-time en dashboard (diferido de Fase F)
+- **Opiniones mejoras** (`/admin/opiniones`): Refinamientos UX
+- **Eden AI 3D avatar**: Solución de avatar 3D para chat (pending Rive/Spline sin watermark)
+
 ### 🚫 No implementado (Roadmap futuro):
-CRM, marketing automation, gestión equipo, app nativa, API pública, white-label, multi-moneda, pagos offline, Eden AI 3D avatar (pending better solution)
+Marketing automation, gestión equipo, app nativa, API pública, white-label, multi-moneda, pagos offline
 
 ---
 
@@ -447,7 +462,7 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 | `AdminRightColumn` | Client | Columna derecha: perfil + Eden AI chat |
 | `EdenChat` | Client | Chat AI asistente con /api/ai free-chat |
 | `MountainBackground` | Client | SVG paisaje montañas para columna derecha |
-| `DashboardBackground` | Client | SVG montañas sutiles para area principal |
+| `DashboardBackground` | Client | SVG widescreen montañas angulares + luna + estrellas + pinos (fixed, full viewport) |
 
 ### Componentes Owner (`src/components/owner/`):
 | Componente | Tipo | Uso |
@@ -455,13 +470,17 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 | `OwnerShell` | Client | Layout principal owner: sidebar colapsable + main + right column |
 | `OwnerRightColumn` | Client | Columna derecha: perfil owner + Eden AI chat |
 | `OwnerChat` | Client | Chat AI copiloto plataforma con /api/ai owner-chat |
+| `OwnerSupportWidget` | Server | Widget compacto últimos 3 tickets de soporte (patrón RecentMessagesWidget) |
+| `OwnerCalendarWidget` | Server | Widget compacto próximos 3 eventos calendario (patrón UpcomingEventsWidget) |
+| `OwnerCharts` | Client | 5 gráficas semanales (MRR, clientes, reservas, breakdown, top destinos) |
 
 ### Patrones UI:
 - **Wrapper pages:** `<div className="space-y-{6,8} animate-fade-in">`
 - **Headers:** `<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">`
 - **Subtitles:** `<p className="text-gray-400 dark:text-white/40">`
-- **Cards:** `panel-card` class (border, rounded, dark mode)
-- **Inputs:** `panel-input` class
+- **Cards:** `panel-card` class (light: bg-white/95, dark: bg-[#0a2a35]/80 backdrop-blur-sm, border, rounded)
+- **KPI Cards:** `kpi-card` class (same as panel-card base + hover effects)
+- **Inputs:** `panel-input` class (dark: bg-[#0a2a35]/70)
 - **Badges:** `badge-success`, `badge-warning`, `badge-danger`, `badge-info`
 - **Buttons:** `btn-primary` class
 - **Table rows:** `table-row` class with hover

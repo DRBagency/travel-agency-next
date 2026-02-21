@@ -1,0 +1,43 @@
+# DRB Agency — Project Rules
+
+## Language
+- User communicates in Spanish. Respond in Spanish for explanations, English for code/commit messages.
+- Commit messages in English, concise, conventional commits style.
+
+## Code Style
+- Server Components by default. "use client" only when needed (hooks, event handlers, browser APIs).
+- `export const dynamic = "force-dynamic"` on all pages with real-time data.
+- CSS RTL: Always use logical properties (text-start, ms-, ps-, start-0, end-0). NEVER text-left, ml-, pl-.
+- i18n: Server → `getTranslations()`, Client → `useTranslations()`. Keys in es.json are source of truth.
+- Supabase: Use `supabaseAdmin` (service_role) for server-side queries. Anon key only client-side for auth.
+
+## Design System
+- Cards: `panel-card` class (bg-white/95 dark:bg-[#0a2a35]/80 backdrop-blur-sm)
+- Inputs: `panel-input` class (dark:bg-[#0a2a35]/70)
+- KPIs: `kpi-card` class
+- Buttons: `btn-primary` class
+- Badges: `badge-success`, `badge-warning`, `badge-danger`, `badge-info`
+- Table rows: `table-row` class
+- Delete: Always use `DeleteWithConfirm` component
+- Empty states: Always use `EmptyState` component
+- Pages: `<div className="space-y-6 animate-fade-in">`
+- DRB colors: turquoise (#1CABB0), lime (#D4F24D), magenta (#E91E63)
+
+## Architecture
+- Multi-tenant by domain. Middleware detects domain → loads client.
+- Owner panel: /owner/* (platform management)
+- Client panel: /admin/* (agency management)
+- Charts: Weekly grouping (8 weeks), date-fns with weekStartsOn: 1 (Monday)
+- Mountain backgrounds: Angular L-path peaks, NOT smooth Q-curves
+
+## Workflow
+- Always `npm run build` after changes to verify.
+- Commit + push when user asks or after completing a feature set.
+- Update CLAUDE.md when completing phases/features.
+- i18n: Always add keys in ALL 3 files (es.json, en.json, ar.json).
+
+## Don'ts
+- NEVER access Supabase directly from client components (except auth).
+- NEVER use `text-left`, `ml-`, `pl-`, `left-`, `right-` in new code.
+- NEVER skip i18n — every user-facing string must be translated.
+- NEVER create analytics page (was removed in Fase F).
