@@ -120,7 +120,8 @@
       "aiChatbot": "AI Chatbot",
       "aiAsistente": "AI Assistant",
       "mensajes": "Messages",
-      "social": "Social Media"
+      "social": "Social Media",
+      "crm": "Traveler CRM"
     },
     "shell": {
       "subscriptionInactive": "Your subscription is not active",
@@ -711,6 +712,62 @@
         "red": "Red",
         "green": "Green"
       }
+    },
+    "crm": {
+      "title": "Traveler CRM",
+      "subtitle": "Manage your travelers and sales pipeline",
+      "totalCustomers": "Total travelers",
+      "interested": "Interested",
+      "booked": "Booked",
+      "inactive": "Inactive",
+      "sync": "Sync",
+      "syncing": "Syncing...",
+      "syncSuccess": "Travelers synced",
+      "pipeline": "Pipeline",
+      "stages": {
+        "nuevo": "New",
+        "interesado": "Interested",
+        "presupuesto": "Quote",
+        "reservado": "Booked",
+        "viajado": "Traveled",
+        "inactivo": "Inactive"
+      },
+      "recentActivity": "Recent activity",
+      "noActivities": "No activities recorded",
+      "noCustomersInStage": "No travelers in this stage",
+      "dragToMove": "Drag to move",
+      "lastActivity": "Last activity",
+      "totalBookings": "bookings",
+      "totalSpent": "spent",
+      "firstBooking": "First booking",
+      "lastBooking": "Last booking",
+      "contactInfo": "Contact information",
+      "phone": "Phone",
+      "noPhone": "No phone",
+      "noEmail": "No email",
+      "bookingHistory": "Booking history",
+      "noBookings": "No bookings recorded",
+      "notes": "Notes",
+      "notesPlaceholder": "Write notes about this traveler...",
+      "saveNotes": "Save notes",
+      "notesSaved": "Notes saved",
+      "addActivity": "Log activity",
+      "activityType": "Activity type",
+      "activityContent": "Description",
+      "activityContentPlaceholder": "Describe the activity...",
+      "types": {
+        "note": "Note",
+        "call": "Call",
+        "email": "Email",
+        "meeting": "Meeting",
+        "status_change": "Status change",
+        "booking": "Booking"
+      },
+      "statusChanged": "Status changed",
+      "changeStatus": "Change status",
+      "back": "Back to CRM",
+      "customerDetail": "Traveler detail",
+      "timeline": "Timeline"
     }
   },
   "owner": {

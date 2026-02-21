@@ -120,7 +120,8 @@
       "aiChatbot": "Chatbot IA",
       "aiAsistente": "Asistente IA",
       "mensajes": "Mensajes",
-      "social": "Redes Sociales"
+      "social": "Redes Sociales",
+      "crm": "CRM Viajeros"
     },
     "shell": {
       "subscriptionInactive": "Tu suscripción no está activa",
@@ -711,6 +712,62 @@
         "red": "Rojo",
         "green": "Verde"
       }
+    },
+    "crm": {
+      "title": "CRM de Viajeros",
+      "subtitle": "Gestiona tus viajeros y su pipeline comercial",
+      "totalCustomers": "Total viajeros",
+      "interested": "Interesados",
+      "booked": "Reservados",
+      "inactive": "Inactivos",
+      "sync": "Sincronizar",
+      "syncing": "Sincronizando...",
+      "syncSuccess": "Viajeros sincronizados",
+      "pipeline": "Pipeline",
+      "stages": {
+        "nuevo": "Nuevo",
+        "interesado": "Interesado",
+        "presupuesto": "Presupuesto",
+        "reservado": "Reservado",
+        "viajado": "Viajado",
+        "inactivo": "Inactivo"
+      },
+      "recentActivity": "Actividad reciente",
+      "noActivities": "Sin actividades registradas",
+      "noCustomersInStage": "Sin viajeros en esta etapa",
+      "dragToMove": "Arrastra para mover",
+      "lastActivity": "Última actividad",
+      "totalBookings": "reservas",
+      "totalSpent": "gastado",
+      "firstBooking": "Primera reserva",
+      "lastBooking": "Última reserva",
+      "contactInfo": "Información de contacto",
+      "phone": "Teléfono",
+      "noPhone": "Sin teléfono",
+      "noEmail": "Sin email",
+      "bookingHistory": "Historial de reservas",
+      "noBookings": "Sin reservas registradas",
+      "notes": "Notas",
+      "notesPlaceholder": "Escribe notas sobre este viajero...",
+      "saveNotes": "Guardar notas",
+      "notesSaved": "Notas guardadas",
+      "addActivity": "Registrar actividad",
+      "activityType": "Tipo de actividad",
+      "activityContent": "Descripción",
+      "activityContentPlaceholder": "Describe la actividad...",
+      "types": {
+        "note": "Nota",
+        "call": "Llamada",
+        "email": "Email",
+        "meeting": "Reunión",
+        "status_change": "Cambio de estado",
+        "booking": "Reserva"
+      },
+      "statusChanged": "Estado cambiado",
+      "changeStatus": "Cambiar estado",
+      "back": "Volver al CRM",
+      "customerDetail": "Detalle del viajero",
+      "timeline": "Timeline"
     }
   },
   "owner": {

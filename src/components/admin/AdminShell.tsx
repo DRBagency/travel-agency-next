@@ -25,6 +25,7 @@ import {
   PinOff,
   MessageCircle,
   Share2,
+  Users,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -483,6 +484,7 @@ const AdminShell = ({
     // Operations
     [
       { label: t("nav.reservas"), href: "/admin/reservas", icon: CalendarCheck },
+      { label: t("nav.crm"), href: "/admin/crm", icon: Users },
       { label: t("nav.analytics"), href: "/admin/analytics", icon: BarChart3 },
       { label: t("nav.calendario"), href: "/admin/calendario", icon: Calendar },
     ],

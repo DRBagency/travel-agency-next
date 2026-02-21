@@ -120,7 +120,8 @@
       "aiChatbot": "روبوت المحادثة",
       "aiAsistente": "المساعد الذكي",
       "mensajes": "الرسائل",
-      "social": "التواصل الاجتماعي"
+      "social": "التواصل الاجتماعي",
+      "crm": "إدارة المسافرين"
     },
     "shell": {
       "subscriptionInactive": "اشتراكك غير نشط",
@@ -711,6 +712,62 @@
         "red": "أحمر",
         "green": "أخضر"
       }
+    },
+    "crm": {
+      "title": "إدارة المسافرين",
+      "subtitle": "إدارة المسافرين وخط المبيعات",
+      "totalCustomers": "إجمالي المسافرين",
+      "interested": "مهتمون",
+      "booked": "محجوزون",
+      "inactive": "غير نشطين",
+      "sync": "مزامنة",
+      "syncing": "جاري المزامنة...",
+      "syncSuccess": "تمت مزامنة المسافرين",
+      "pipeline": "خط المبيعات",
+      "stages": {
+        "nuevo": "جديد",
+        "interesado": "مهتم",
+        "presupuesto": "عرض سعر",
+        "reservado": "محجوز",
+        "viajado": "سافر",
+        "inactivo": "غير نشط"
+      },
+      "recentActivity": "النشاط الأخير",
+      "noActivities": "لا توجد أنشطة مسجلة",
+      "noCustomersInStage": "لا يوجد مسافرون في هذه المرحلة",
+      "dragToMove": "اسحب للنقل",
+      "lastActivity": "آخر نشاط",
+      "totalBookings": "حجوزات",
+      "totalSpent": "المصروف",
+      "firstBooking": "أول حجز",
+      "lastBooking": "آخر حجز",
+      "contactInfo": "معلومات الاتصال",
+      "phone": "الهاتف",
+      "noPhone": "بدون هاتف",
+      "noEmail": "بدون بريد إلكتروني",
+      "bookingHistory": "سجل الحجوزات",
+      "noBookings": "لا توجد حجوزات مسجلة",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "اكتب ملاحظات حول هذا المسافر...",
+      "saveNotes": "حفظ الملاحظات",
+      "notesSaved": "تم حفظ الملاحظات",
+      "addActivity": "تسجيل نشاط",
+      "activityType": "نوع النشاط",
+      "activityContent": "الوصف",
+      "activityContentPlaceholder": "صف النشاط...",
+      "types": {
+        "note": "ملاحظة",
+        "call": "مكالمة",
+        "email": "بريد إلكتروني",
+        "meeting": "اجتماع",
+        "status_change": "تغيير الحالة",
+        "booking": "حجز"
+      },
+      "statusChanged": "تم تغيير الحالة",
+      "changeStatus": "تغيير الحالة",
+      "back": "العودة للإدارة",
+      "customerDetail": "تفاصيل المسافر",
+      "timeline": "الجدول الزمني"
     }
   },
   "owner": {
