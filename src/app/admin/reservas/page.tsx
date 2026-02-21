@@ -127,52 +127,57 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
       </div>
 
       {/* Filters */}
-      <div className="panel-card p-4">
-        <form method="get" className="flex flex-wrap items-center gap-3">
-          <Filter className="w-4 h-4 text-gray-400 dark:text-white/30" />
-          <input
-            name="q"
-            defaultValue={q}
-            placeholder={t('searchPlaceholder')}
-            className="panel-input text-sm"
-          />
-          <select
-            name="estado"
-            defaultValue={estado}
-            className="panel-input text-sm"
-          >
-            <option value="todos">{tc('all')}</option>
-            <option value="pagado">{t('paid')}</option>
-            <option value="pendiente">{t('pending')}</option>
-            <option value="revisada">{t('reviewed')}</option>
-            <option value="cancelada">{t('cancelled')}</option>
-          </select>
-          <input
-            type="date"
-            name="from"
-            defaultValue={from}
-            className="panel-input text-sm"
-          />
-          <input
-            type="date"
-            name="to"
-            defaultValue={to}
-            className="panel-input text-sm"
-          />
-          <button className="btn-primary text-sm">
-            {tc('filter')}
-          </button>
-          <div className="ms-auto flex gap-2">
-            <ExportPDFButton estado={estado} q={q} from={from} to={to} />
-            <a
-              href={`/api/admin/export?estado=${estado}&q=${q}&from=${from}&to=${to}`}
-              className="px-4 py-2 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-100 dark:hover:bg-drb-turquoise-500/25 font-semibold text-sm transition-colors"
+      <details className="panel-card">
+        <summary className="flex items-center gap-2 p-4 cursor-pointer list-none text-sm font-medium text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/70 transition-colors [&::-webkit-details-marker]:hidden">
+          <Filter className="w-4 h-4" />
+          {t('filters')}
+        </summary>
+        <div className="px-4 pb-4 border-t border-gray-100 dark:border-white/[0.06]">
+          <form method="get" className="flex flex-wrap items-center gap-3 pt-3">
+            <input
+              name="q"
+              defaultValue={q}
+              placeholder={t('searchPlaceholder')}
+              className="panel-input text-sm"
+            />
+            <select
+              name="estado"
+              defaultValue={estado}
+              className="panel-input text-sm"
             >
-              {tc('exportCSV')}
-            </a>
-          </div>
-        </form>
-      </div>
+              <option value="todos">{tc('all')}</option>
+              <option value="pagado">{t('paid')}</option>
+              <option value="pendiente">{t('pending')}</option>
+              <option value="revisada">{t('reviewed')}</option>
+              <option value="cancelada">{t('cancelled')}</option>
+            </select>
+            <input
+              type="date"
+              name="from"
+              defaultValue={from}
+              className="panel-input text-sm"
+            />
+            <input
+              type="date"
+              name="to"
+              defaultValue={to}
+              className="panel-input text-sm"
+            />
+            <button className="btn-primary text-sm">
+              {tc('filter')}
+            </button>
+            <div className="ms-auto flex gap-2">
+              <ExportPDFButton estado={estado} q={q} from={from} to={to} />
+              <a
+                href={`/api/admin/export?estado=${estado}&q=${q}&from=${from}&to=${to}`}
+                className="px-4 py-2 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-100 dark:hover:bg-drb-turquoise-500/25 font-semibold text-sm transition-colors"
+              >
+                {tc('exportCSV')}
+              </a>
+            </div>
+          </form>
+        </div>
+      </details>
 
       {/* DataTable */}
       <div className="panel-card overflow-hidden">

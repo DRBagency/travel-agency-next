@@ -7,9 +7,10 @@ import { sileo } from "sileo";
 
 interface Props {
   metricsContext: string;
+  compact?: boolean;
 }
 
-export default function AIInsightsCard({ metricsContext }: Props) {
+export default function AIInsightsCard({ metricsContext, compact }: Props) {
   const t = useTranslations("ai.insights");
   const tt = useTranslations("toast");
   const [loading, setLoading] = useState(false);
@@ -39,50 +40,49 @@ export default function AIInsightsCard({ metricsContext }: Props) {
   };
 
   return (
-    <div className="panel-card p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-          <Brain className="w-5 h-5 text-drb-turquoise-500" />
+    <div className={`panel-card ${compact ? "p-4" : "p-6"} h-full`}>
+      <div className={`flex items-center justify-between ${compact ? "mb-2" : "mb-4"}`}>
+        <h2 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white flex items-center gap-2`}>
+          <Brain className={`${compact ? "w-4 h-4" : "w-5 h-5"} text-drb-turquoise-500`} />
           {t("title")}
         </h2>
         <button
           onClick={generate}
           disabled={loading}
-          className="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5"
+          className={`btn-primary ${compact ? "text-[11px] px-2 py-1" : "text-xs px-3 py-1.5"} flex items-center gap-1.5`}
         >
           {loading ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            <Loader2 className="w-3 h-3 animate-spin" />
           ) : result ? (
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-3 h-3" />
           ) : (
-            <Brain className="w-3.5 h-3.5" />
+            <Brain className="w-3 h-3" />
           )}
           {loading ? t("generating") : result ? t("refresh") : t("generateReport")}
         </button>
       </div>
 
       {!result && !loading && (
-        <p className="text-sm text-gray-400 dark:text-white/40">{t("description")}</p>
+        <p className={`${compact ? "text-xs" : "text-sm"} text-gray-400 dark:text-white/40`}>{t("description")}</p>
       )}
 
       {loading && (
-        <div className="space-y-3 animate-pulse">
-          <div className="h-4 bg-gray-200 dark:bg-white/10 rounded w-full" />
-          <div className="h-4 bg-gray-200 dark:bg-white/10 rounded w-3/4" />
-          <div className="h-4 bg-gray-200 dark:bg-white/10 rounded w-1/2" />
-          <div className="h-4 bg-gray-200 dark:bg-white/10 rounded w-5/6" />
+        <div className={`${compact ? "space-y-2" : "space-y-3"} animate-pulse`}>
+          <div className="h-3 bg-gray-200 dark:bg-white/10 rounded w-full" />
+          <div className="h-3 bg-gray-200 dark:bg-white/10 rounded w-3/4" />
+          <div className="h-3 bg-gray-200 dark:bg-white/10 rounded w-1/2" />
         </div>
       )}
 
       {result && !loading && (
-        <div className="prose prose-sm dark:prose-invert max-w-none text-gray-700 dark:text-white/70">
+        <div className={`${compact ? "max-h-[140px] overflow-y-auto" : ""} prose prose-sm dark:prose-invert max-w-none text-gray-700 dark:text-white/70`}>
           {result.split("\n").map((line, i) => {
-            if (line.startsWith("## ")) return <h3 key={i} className="text-base font-semibold text-gray-900 dark:text-white mt-4 mb-2">{line.replace("## ", "")}</h3>;
-            if (line.startsWith("### ")) return <h4 key={i} className="text-sm font-semibold text-gray-800 dark:text-white/80 mt-3 mb-1">{line.replace("### ", "")}</h4>;
-            if (line.startsWith("- ")) return <li key={i} className="text-sm ms-4">{line.replace("- ", "")}</li>;
-            if (line.startsWith("**")) return <p key={i} className="text-sm font-semibold">{line.replace(/\*\*/g, "")}</p>;
+            if (line.startsWith("## ")) return <h3 key={i} className={`${compact ? "text-sm" : "text-base"} font-semibold text-gray-900 dark:text-white mt-3 mb-1`}>{line.replace("## ", "")}</h3>;
+            if (line.startsWith("### ")) return <h4 key={i} className="text-xs font-semibold text-gray-800 dark:text-white/80 mt-2 mb-1">{line.replace("### ", "")}</h4>;
+            if (line.startsWith("- ")) return <li key={i} className="text-xs ms-4">{line.replace("- ", "")}</li>;
+            if (line.startsWith("**")) return <p key={i} className="text-xs font-semibold">{line.replace(/\*\*/g, "")}</p>;
             if (line.trim() === "") return <br key={i} />;
-            return <p key={i} className="text-sm">{line}</p>;
+            return <p key={i} className="text-xs">{line}</p>;
           })}
         </div>
       )}

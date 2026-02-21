@@ -236,6 +236,7 @@
       "paidBookings": "Paid bookings",
       "avgTicket": "Average ticket",
       "searchPlaceholder": "Search name or email",
+      "filters": "Filters",
       "paid": "Paid",
       "pending": "Pending",
       "reviewed": "Reviewed",
@@ -828,7 +829,13 @@
       "registeredCol": "Registered",
       "noClients": "No registered clients",
       "activeStatus": "Active",
-      "pendingStatus": "Pending"
+      "pendingStatus": "Pending",
+      "supportTickets": "Support Tickets",
+      "noTickets": "No recent tickets",
+      "upcomingEvents": "Upcoming Events",
+      "viewCalendar": "View calendar",
+      "noUpcomingEvents": "No upcoming events",
+      "allDay": "All day"
     },
     "clientes": {
       "title": "Clients (Owner)",
@@ -897,6 +904,7 @@
     "charts": {
       "mrrGrowth": "MRR Growth",
       "last6Months": "Last 6 months",
+      "last8Weeks": "Last 8 weeks",
       "newClients": "New clients",
       "platformBookings": "Platform bookings",
       "mrrEur": "MRR (€)",

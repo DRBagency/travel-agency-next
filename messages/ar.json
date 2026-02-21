@@ -236,6 +236,7 @@
       "paidBookings": "الحجوزات المدفوعة",
       "avgTicket": "متوسط التذكرة",
       "searchPlaceholder": "بحث بالاسم أو البريد",
+      "filters": "فلاتر",
       "paid": "مدفوع",
       "pending": "معلق",
       "reviewed": "مراجع",
@@ -828,7 +829,13 @@
       "registeredCol": "التسجيل",
       "noClients": "لا يوجد عملاء مسجلون",
       "activeStatus": "نشط",
-      "pendingStatus": "معلق"
+      "pendingStatus": "معلق",
+      "supportTickets": "تذاكر الدعم",
+      "noTickets": "لا توجد تذاكر حديثة",
+      "upcomingEvents": "الأحداث القادمة",
+      "viewCalendar": "عرض التقويم",
+      "noUpcomingEvents": "لا توجد أحداث قادمة",
+      "allDay": "طوال اليوم"
     },
     "clientes": {
       "title": "العملاء (المالك)",
@@ -897,6 +904,7 @@
     "charts": {
       "mrrGrowth": "نمو MRR",
       "last6Months": "آخر 6 أشهر",
+      "last8Weeks": "آخر 8 أسابيع",
       "newClients": "عملاء جدد",
       "platformBookings": "حجوزات المنصة",
       "mrrEur": "MRR (€)",

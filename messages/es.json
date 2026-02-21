@@ -469,6 +469,7 @@
       "pending": "Pendiente",
       "reviewed": "Revisada",
       "cancelled": "Cancelada",
+      "filters": "Filtros",
       "noBookings": "No hay reservas.",
       "date": "Fecha",
       "client": "Cliente",
@@ -828,7 +829,13 @@
       "registeredCol": "Registrado",
       "noClients": "No hay clientes registrados",
       "activeStatus": "Activo",
-      "pendingStatus": "Pendiente"
+      "pendingStatus": "Pendiente",
+      "supportTickets": "Tickets de soporte",
+      "noTickets": "Sin tickets recientes",
+      "upcomingEvents": "Próximos eventos",
+      "viewCalendar": "Ver calendario",
+      "noUpcomingEvents": "Sin eventos próximos",
+      "allDay": "Todo el día"
     },
     "clientes": {
       "title": "Clientes (Owner)",
@@ -897,6 +904,7 @@
     "charts": {
       "mrrGrowth": "Crecimiento MRR",
       "last6Months": "Últimos 6 meses",
+      "last8Weeks": "Últimas 8 semanas",
       "newClients": "Clientes nuevos",
       "platformBookings": "Reservas plataforma",
       "mrrEur": "MRR (€)",

@@ -11,7 +11,7 @@ import {
 import UpcomingEventsWidget from "@/components/admin/UpcomingEventsWidget";
 import RecentMessagesWidget from "@/components/admin/RecentMessagesWidget";
 import DestinationsMapWrapper from "@/components/admin/DestinationsMapWrapper";
-import { subMonths, addMonths, format, startOfMonth, endOfMonth } from "date-fns";
+import { subWeeks, addWeeks, format, startOfWeek, endOfWeek } from "date-fns";
 import { getTranslations, getLocale } from 'next-intl/server';
 import {
   DollarSign,
@@ -74,30 +74,30 @@ export default async function AdminPage() {
   const numeroReservas = pagadas.length;
   const ticketMedio = numeroReservas > 0 ? Math.round(totalFacturado / numeroReservas) : 0;
 
-  /* Chart data — últimos 6 meses */
+  /* Chart data — últimas 8 semanas */
   const now = new Date();
   const reservasChartData: { month: string; reservas: number }[] = [];
   const ingresosChartData: { month: string; ingresos: number }[] = [];
 
-  for (let i = 5; i >= 0; i--) {
-    const monthDate = subMonths(now, i);
-    const monthStart = startOfMonth(monthDate);
-    const monthEnd = endOfMonth(monthDate);
-    const label = format(monthDate, "MMM yy");
+  for (let i = 7; i >= 0; i--) {
+    const weekDate = subWeeks(now, i);
+    const weekStart = startOfWeek(weekDate, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(weekDate, { weekStartsOn: 1 });
+    const label = format(weekStart, "dd MMM");
 
-    const monthReservas = pagadas.filter((r) => {
+    const weekReservas = pagadas.filter((r) => {
       const d = new Date(r.created_at);
-      return d >= monthStart && d <= monthEnd;
+      return d >= weekStart && d <= weekEnd;
     });
 
-    reservasChartData.push({ month: label, reservas: monthReservas.length });
+    reservasChartData.push({ month: label, reservas: weekReservas.length });
     ingresosChartData.push({
       month: label,
-      ingresos: monthReservas.reduce((sum, r) => sum + Number(r.precio), 0),
+      ingresos: weekReservas.reduce((sum, r) => sum + Number(r.precio), 0),
     });
   }
 
-  /* Revenue projection — linear regression + 3 months forward */
+  /* Revenue projection — linear regression + 4 weeks forward */
   const n = ingresosChartData.length;
   const sumX = ingresosChartData.reduce((s, _, i) => s + i, 0);
   const sumY = ingresosChartData.reduce((s, d) => s + d.ingresos, 0);
@@ -113,11 +113,11 @@ export default async function AdminPage() {
     tipo: "actual" as const,
   }));
 
-  for (let i = 1; i <= 3; i++) {
-    const futureMonth = format(addMonths(now, i), "MMM yy");
+  for (let i = 1; i <= 4; i++) {
+    const futureWeek = format(startOfWeek(addWeeks(now, i), { weekStartsOn: 1 }), "dd MMM");
     const projected = Math.max(0, Math.round(intercept + slope * (n - 1 + i)));
     projectionData.push({
-      month: futureMonth,
+      month: futureWeek,
       ingresos: projected,
       tipo: "proyectado" as const,
     });

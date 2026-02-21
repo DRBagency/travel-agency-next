@@ -46,7 +46,7 @@ export function MRRChart({ data, compact }: { data: { month: string; mrr: number
       <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white mb-1`}>
         {t('mrrGrowth')}
       </h3>
-      {!compact && <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>}
+      {!compact && <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last8Weeks')}</p>}
       <ResponsiveContainer width="100%" height={h}>
         <AreaChart data={data}>
           <defs>
@@ -88,7 +88,7 @@ export function ClientesChart({ data, compact }: { data: { month: string; client
       <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white mb-1`}>
         {t('newClients')}
       </h3>
-      {!compact && <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>}
+      {!compact && <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last8Weeks')}</p>}
       <ResponsiveContainer width="100%" height={h}>
         <AreaChart data={data}>
           <defs>
@@ -126,7 +126,7 @@ export function ReservasOwnerChart({ data, compact }: { data: { month: string; r
       <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white mb-1`}>
         {t('platformBookings')}
       </h3>
-      {!compact && <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last6Months')}</p>}
+      {!compact && <p className="text-sm text-gray-400 dark:text-white/40 mb-4">{t('last8Weeks')}</p>}
       <ResponsiveContainer width="100%" height={h}>
         <AreaChart data={data}>
           <defs>

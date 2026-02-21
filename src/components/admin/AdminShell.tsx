@@ -11,7 +11,6 @@ import {
   Globe,
   MapPin,
   CalendarCheck,
-  BarChart3,
   Calendar,
   FileText,
   Headphones,
@@ -485,7 +484,6 @@ const AdminShell = ({
     [
       { label: t("nav.reservas"), href: "/admin/reservas", icon: CalendarCheck },
       { label: t("nav.crm"), href: "/admin/crm", icon: Users },
-      { label: t("nav.analytics"), href: "/admin/analytics", icon: BarChart3 },
       { label: t("nav.calendario"), href: "/admin/calendario", icon: Calendar },
     ],
     // Management
