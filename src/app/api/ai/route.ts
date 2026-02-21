@@ -32,7 +32,8 @@ type AIAction =
   | "chatbot-response"
   | "generate-report"
   | "ai-recommendations"
-  | "free-chat";
+  | "free-chat"
+  | "owner-chat";
 
 // Actions that return JSON — strip markdown code fences from response
 const JSON_ACTIONS: AIAction[] = ["generate-itinerary", "optimize-pricing", "suggest-destinations"];
@@ -157,6 +158,19 @@ CONTEXTO DE LA AGENCIA:
 ${data.agencyContext || ""}
 
 Responde en español de forma concisa y profesional. Si te piden generar contenido (posts, descripciones, presupuestos), hazlo directamente.`,
+
+    "owner-chat": `Eres Eden, el copiloto IA de la plataforma SaaS "DRB Agency" que provee software para agencias de viajes. Ayudas al propietario de la plataforma con análisis de métricas, retención, estrategia de crecimiento, redacción de emails a agencias y optimización del negocio SaaS.
+
+MÉTRICAS ACTUALES DE LA PLATAFORMA:
+${data.ownerContext || "Sin datos disponibles"}
+
+INSTRUCCIONES:
+- Analiza MRR, churn, retención y crecimiento cuando te lo pidan
+- Identifica agencias en riesgo de cancelación basándote en las métricas
+- Sugiere estrategias para mejorar retención y upselling
+- Redacta emails profesionales para comunicarte con agencias
+- Da recomendaciones accionables basadas en datos
+- Responde en el idioma del usuario de forma concisa y profesional`,
   };
 
   return prompts[action] || "Eres un asistente útil para agencias de viajes. Responde en español.";
@@ -203,6 +217,7 @@ export async function POST(req: NextRequest) {
       "generate-description": 512,
       "optimize-pricing": 1024,
       "free-chat": 2000,
+      "owner-chat": 2000,
       "generate-itinerary": 4096,
       "draft-email": 2048,
       "chatbot-response": 1024,

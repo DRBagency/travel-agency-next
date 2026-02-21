@@ -24,6 +24,7 @@ import {
   Pin,
   PinOff,
   MessageCircle,
+  Share2,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -477,6 +478,7 @@ const AdminShell = ({
     [
       { label: t("nav.miWeb"), href: "/admin/mi-web", icon: Globe },
       { label: t("nav.destinos"), href: "/admin/destinos", icon: MapPin },
+      { label: t("nav.social"), href: "/admin/social", icon: Share2 },
     ],
     // Operations
     [

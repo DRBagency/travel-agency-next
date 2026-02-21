@@ -1,9 +1,10 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { motion } from "framer-motion";
 import {
   Menu,
   LayoutDashboard,
@@ -16,6 +17,10 @@ import {
   Headphones,
   LogOut,
   Sparkles,
+  Pin,
+  PinOff,
+  MessageCircle,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -28,8 +33,18 @@ import PageTransition from "@/components/ui/PageTransition";
 import SearchBar from "@/components/ui/SearchBar";
 import NotificationBell from "@/components/ui/NotificationBell";
 import LanguageSelector from "@/components/ui/LanguageSelector";
+import OwnerRightColumn from "./OwnerRightColumn";
+import DashboardBackground from "../admin/DashboardBackground";
+
+// --- Constants ---
+const SIDEBAR_W_COLLAPSED = 64;
+const SIDEBAR_W_EXPANDED = 240;
+const RIGHT_COL_W = 300;
+const LS_KEY_PINNED = "drb_owner_sidebar_pinned";
 
 interface OwnerShellProps {
+  ownerEmail: string;
+  platformContext: string;
   children: ReactNode;
 }
 
@@ -39,7 +54,11 @@ interface NavItem {
   icon: LucideIcon;
 }
 
-function OwnerSidebarSeparator() {
+// ====================================================================
+// Curved sidebar separator with reflective gradient effect
+// ====================================================================
+function OwnerSidebarSeparator({ expanded }: { expanded: boolean }) {
+  if (!expanded) return <div className="my-1.5" />;
   return (
     <div className="my-1.5 mx-3 overflow-hidden">
       <svg viewBox="0 0 200 8" className="w-full h-2" preserveAspectRatio="none">
@@ -74,16 +93,190 @@ function OwnerSidebarSeparator() {
   );
 }
 
-function SidebarNav({
-  items,
+// ====================================================================
+// DESKTOP SIDEBAR (Collapsible with pin)
+// ====================================================================
+function DesktopSidebar({
+  navGroups,
+  pathname,
+  t,
+  tc,
+  pinned,
+  onTogglePin,
+  expanded,
+  onHoverStart,
+  onHoverEnd,
+}: {
+  navGroups: NavItem[][];
+  pathname: string;
+  t: (key: string) => string;
+  tc: (key: string) => string;
+  pinned: boolean;
+  onTogglePin: () => void;
+  expanded: boolean;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
+}) {
+  const isActive = (href: string) =>
+    href === "/owner" ? pathname === "/owner" : pathname.startsWith(href);
+
+  const showLabels = expanded || pinned;
+
+  return (
+    <motion.aside
+      className="fixed start-0 top-0 bottom-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col"
+      animate={{ width: showLabels ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+    >
+      {/* Logo + pin button */}
+      <div className="flex items-center h-16 border-b border-gray-200/80 dark:border-white/[0.06] px-3 gap-2">
+        <div className="shrink-0 h-9 w-9 rounded-xl bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-sm">
+          D
+        </div>
+        {showLabels && (
+          <motion.div
+            className="min-w-0 flex-1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.05 }}
+          >
+            <div className="font-display text-sm font-semibold text-gray-900 dark:text-white truncate">
+              DRB Agency
+            </div>
+            <div className="text-xs text-gray-400 dark:text-white/40">
+              {t("panelOwner")}
+            </div>
+          </motion.div>
+        )}
+        {showLabels && (
+          <button
+            onClick={onTogglePin}
+            className="shrink-0 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+            title={pinned ? tc("unpin") : tc("pin")}
+          >
+            {pinned ? (
+              <Pin className="w-3.5 h-3.5 text-drb-turquoise-500" />
+            ) : (
+              <PinOff className="w-3.5 h-3.5 text-gray-400 dark:text-white/40" />
+            )}
+          </button>
+        )}
+      </div>
+
+      {/* Nav items with group separators */}
+      <nav className="flex-1 overflow-y-auto px-2 py-3">
+        {navGroups.map((group, gi) => (
+          <div key={gi}>
+            {gi > 0 && <OwnerSidebarSeparator expanded={showLabels} />}
+            <div className="space-y-0.5">
+              {group.map((item) => {
+                const active = isActive(item.href);
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={!showLabels ? item.label : undefined}
+                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
+                      active
+                        ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                        : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    {showLabels && (
+                      <motion.span
+                        className="flex-1 truncate"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.05 }}
+                      >
+                        {item.label}
+                      </motion.span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      {/* CTA banner — only when expanded */}
+      {showLabels && (
+        <motion.div
+          className="p-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="relative rounded-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-drb-turquoise-600 via-drb-turquoise-500 to-drb-lime-500" />
+            <div className="absolute inset-0 opacity-20 bg-[url('/images/sidebar-cta-bg.svg')] bg-cover bg-center" />
+            <div className="relative p-3 text-white">
+              <Sparkles className="w-4 h-4 mb-1.5 text-drb-turquoise-200" />
+              <p className="text-xs font-semibold">{tc("boostPlatform")}</p>
+              <p className="text-[11px] text-white/70 mt-1">
+                {tc("newFeaturesAvailable")}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Logout */}
+      <div className="px-2 pb-2">
+        <a
+          href="/owner/logout"
+          title={!showLabels ? tc("logout") : undefined}
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
+        >
+          <LogOut className="w-[18px] h-[18px] shrink-0" />
+          {showLabels && (
+            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              {tc("logout")}
+            </motion.span>
+          )}
+        </a>
+      </div>
+
+      {/* DRB branding */}
+      {showLabels && (
+        <motion.div
+          className="px-3 pb-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="flex items-center gap-2 px-3 py-1.5">
+            <div className="w-4 h-4 rounded bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-[8px]">
+              D
+            </div>
+            <span className="text-[10px] text-gray-400 dark:text-white/30">
+              {tc("poweredBy")}{" "}
+              <span className="font-semibold text-gray-500 dark:text-white/50">
+                DRB Agency
+              </span>
+            </span>
+          </div>
+        </motion.div>
+      )}
+    </motion.aside>
+  );
+}
+
+// ====================================================================
+// MOBILE SIDEBAR (Sheet-based, full expanded)
+// ====================================================================
+function MobileSidebarNav({
   navGroups,
   pathname,
   onNavigate,
   t,
   tc,
 }: {
-  items: NavItem[];
-  navGroups?: NavItem[][];
+  navGroups: NavItem[][];
   pathname: string;
   onNavigate?: () => void;
   t: (key: string) => string;
@@ -94,13 +287,12 @@ function SidebarNav({
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#041820]">
-      {/* Logo + DRB branding */}
-      <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-100 dark:border-white/[0.06]">
+      <div className="flex items-center gap-3 px-6 h-16 border-b border-gray-200/80 dark:border-white/[0.06]">
         <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-sm">
           D
         </div>
         <div className="min-w-0">
-          <div className="font-display text-sm font-semibold text-gray-900 dark:text-white">
+          <div className="font-display text-sm font-semibold text-gray-900 dark:text-white truncate">
             DRB Agency
           </div>
           <div className="text-xs text-gray-400 dark:text-white/40">
@@ -109,11 +301,10 @@ function SidebarNav({
         </div>
       </div>
 
-      {/* Nav items with group separators */}
       <nav className="flex-1 overflow-y-auto px-3 py-3">
-        {(navGroups || [items]).map((group, gi) => (
+        {navGroups.map((group, gi) => (
           <div key={gi}>
-            {gi > 0 && <OwnerSidebarSeparator />}
+            {gi > 0 && <OwnerSidebarSeparator expanded />}
             <div className="space-y-0.5">
               {group.map((item) => {
                 const active = isActive(item.href);
@@ -130,7 +321,7 @@ function SidebarNav({
                     }`}
                   >
                     <Icon className="w-[18px] h-[18px] shrink-0" />
-                    {item.label}
+                    <span className="flex-1">{item.label}</span>
                   </Link>
                 );
               })}
@@ -139,23 +330,7 @@ function SidebarNav({
         ))}
       </nav>
 
-      {/* CTA banner */}
-      <div className="p-4">
-        <div className="relative rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-drb-turquoise-600 via-drb-turquoise-500 to-drb-lime-500" />
-          <div className="absolute inset-0 opacity-20 bg-[url('/images/sidebar-cta-bg.svg')] bg-cover bg-center" />
-          <div className="relative p-4 text-white">
-            <Sparkles className="w-5 h-5 mb-2 text-drb-turquoise-200" />
-            <p className="text-sm font-semibold">{tc("boostPlatform")}</p>
-            <p className="text-xs text-white/70 mt-1">
-              {tc("newFeaturesAvailable")}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Logout */}
-      <div className="px-3 pb-4">
+      <div className="px-3 pb-2">
         <a
           href="/owner/logout"
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
@@ -164,16 +339,54 @@ function SidebarNav({
           {tc("logout")}
         </a>
       </div>
+
+      <div className="px-4 pb-4">
+        <div className="flex items-center gap-2 px-3 py-2">
+          <div className="w-5 h-5 rounded bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-[9px]">
+            D
+          </div>
+          <span className="text-[11px] text-gray-400 dark:text-white/30">
+            {tc("poweredBy")}{" "}
+            <span className="font-semibold text-gray-500 dark:text-white/50">DRB Agency</span>
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default function OwnerShell({ children }: OwnerShellProps) {
+// ====================================================================
+// MAIN SHELL
+// ====================================================================
+export default function OwnerShell({
+  ownerEmail,
+  platformContext,
+  children,
+}: OwnerShellProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [rightPanelOpen, setRightPanelOpen] = useState(false);
   const t = useTranslations("owner");
   const tc = useTranslations("common");
   const locale = useLocale();
+
+  // Sidebar pin state (persisted in localStorage)
+  const [pinned, setPinned] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(LS_KEY_PINNED);
+    if (stored === "true") setPinned(true);
+  }, []);
+
+  const togglePin = () => {
+    const next = !pinned;
+    setPinned(next);
+    localStorage.setItem(LS_KEY_PINNED, String(next));
+  };
+
+  const sidebarExpanded = pinned || hovered;
+  const sidebarWidth = sidebarExpanded ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED;
 
   const navGroups: NavItem[][] = [
     // Home
@@ -197,23 +410,52 @@ export default function OwnerShell({ children }: OwnerShellProps) {
   ];
   const navItems = navGroups.flat();
 
-
   return (
     <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
-      {/* Desktop sidebar */}
-      <aside className="fixed start-0 top-0 bottom-0 w-[260px] bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col">
-        <SidebarNav
-          items={navItems}
-          navGroups={navGroups}
-          pathname={pathname}
-          t={t}
-          tc={tc}
+      {/* ========== DESKTOP SIDEBAR ========== */}
+      <DesktopSidebar
+        navGroups={navGroups}
+        pathname={pathname}
+        t={t}
+        tc={tc}
+        pinned={pinned}
+        onTogglePin={togglePin}
+        expanded={hovered}
+        onHoverStart={() => setHovered(true)}
+        onHoverEnd={() => setHovered(false)}
+      />
+
+      {/* ========== DESKTOP RIGHT COLUMN (xl only) ========== */}
+      <aside
+        className="fixed end-0 top-0 bottom-0 hidden xl:flex flex-col z-40"
+        style={{ width: RIGHT_COL_W }}
+      >
+        <OwnerRightColumn
+          ownerEmail={ownerEmail}
+          platformContext={platformContext}
         />
       </aside>
 
-      {/* Header */}
-      <header className="sticky top-0 z-30 lg:ms-[260px] bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06]">
-        <div className="flex items-center justify-between px-4 lg:px-8 h-16">
+      {/* ========== HEADER ========== */}
+      <header
+        className="sticky top-0 z-30 bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06] transition-all duration-200"
+        style={{
+          marginInlineStart: `var(--sidebar-w, ${SIDEBAR_W_COLLAPSED}px)`,
+          marginInlineEnd: `var(--right-col-w, 0px)`,
+        }}
+      >
+        <style>{`
+          @media (min-width: 1024px) {
+            header { --sidebar-w: ${sidebarWidth}px; }
+          }
+          @media (max-width: 1023px) {
+            header { --sidebar-w: 0px; }
+          }
+          @media (min-width: 1280px) {
+            header { --right-col-w: ${RIGHT_COL_W}px; }
+          }
+        `}</style>
+        <div className="flex items-center justify-between px-4 lg:px-6 h-16">
           <div className="flex items-center gap-4">
             {/* Mobile hamburger */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -222,9 +464,11 @@ export default function OwnerShell({ children }: OwnerShellProps) {
                   <Menu className="w-5 h-5 text-gray-600 dark:text-white" />
                 </button>
               </SheetTrigger>
-              <SheetContent side={locale === "ar" ? "right" : "left"} className="w-[260px] p-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06]">
-                <SidebarNav
-                  items={navItems}
+              <SheetContent
+                side={locale === "ar" ? "right" : "left"}
+                className="w-[260px] p-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06]"
+              >
+                <MobileSidebarNav
                   navGroups={navGroups}
                   pathname={pathname}
                   onNavigate={() => setMobileOpen(false)}
@@ -234,7 +478,7 @@ export default function OwnerShell({ children }: OwnerShellProps) {
               </SheetContent>
             </Sheet>
 
-            {/* Branding (mobile only) */}
+            {/* Mobile branding */}
             <div className="flex items-center gap-2 lg:hidden">
               <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center text-white font-bold text-xs">
                 D
@@ -243,22 +487,25 @@ export default function OwnerShell({ children }: OwnerShellProps) {
                 DRB Agency
               </span>
             </div>
-
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Functional search bar */}
             <SearchBar navItems={navItems} />
-
             <LanguageSelector />
-
             <ThemeToggle />
-
-            {/* Functional notifications */}
             <NotificationBell isOwner />
 
-            {/* User avatar */}
-            <div className="flex items-center gap-3 ps-3 border-s border-gray-200/80 dark:border-white/[0.06]">
+            {/* Eden FAB for tablet/mobile (opens right panel) */}
+            <button
+              onClick={() => setRightPanelOpen(true)}
+              className="xl:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+              title="Eden"
+            >
+              <MessageCircle className="w-5 h-5 text-drb-turquoise-500" />
+            </button>
+
+            {/* User avatar + info */}
+            <div className="hidden sm:flex xl:hidden items-center gap-3 ps-3 border-s border-gray-200/80 dark:border-white/[0.06]">
               <div className="text-end hidden md:block">
                 <div className="text-sm font-medium text-gray-900 dark:text-white">
                   DRB Agency
@@ -275,10 +522,52 @@ export default function OwnerShell({ children }: OwnerShellProps) {
         </div>
       </header>
 
-      {/* Main content */}
-      <main className="lg:ms-[260px] px-4 lg:px-8 py-6">
-        <PageTransition key={pathname}>{children}</PageTransition>
+      {/* ========== MAIN CONTENT ========== */}
+      <main
+        className="relative px-4 lg:px-6 pt-3 pb-6 transition-all duration-200"
+        style={{
+          marginInlineStart: `var(--main-sidebar-w, 0px)`,
+          marginInlineEnd: `var(--main-right-w, 0px)`,
+        }}
+      >
+        <style>{`
+          @media (min-width: 1024px) {
+            main { --main-sidebar-w: ${sidebarWidth}px; }
+          }
+          @media (min-width: 1280px) {
+            main { --main-right-w: ${RIGHT_COL_W}px; }
+          }
+        `}</style>
+        {/* Subtle mountain landscape background */}
+        <DashboardBackground />
+        <div className="relative z-[1]">
+          <PageTransition key={pathname}>{children}</PageTransition>
+        </div>
       </main>
+
+      {/* ========== MOBILE/TABLET RIGHT PANEL DRAWER ========== */}
+      {rightPanelOpen && (
+        <div className="fixed inset-0 z-50 xl:hidden">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setRightPanelOpen(false)}
+          />
+          <div className="absolute end-0 top-0 bottom-0 w-[320px] max-w-[90vw] animate-slide-in-right">
+            <div className="h-full relative">
+              <button
+                onClick={() => setRightPanelOpen(false)}
+                className="absolute top-3 start-3 z-10 p-1.5 rounded-lg bg-white/80 dark:bg-white/10 hover:bg-gray-100 dark:hover:bg-white/20 transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-600 dark:text-white/70" />
+              </button>
+              <OwnerRightColumn
+                ownerEmail={ownerEmail}
+                platformContext={platformContext}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

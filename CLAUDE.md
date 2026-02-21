@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 20 Febrero 2026
+> **Última actualización:** 21 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -68,7 +68,7 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **Database:** PostgreSQL (Supabase)
 - **ORM:** Supabase Client (@supabase/supabase-js 2.93.2)
 - **Migrations:** Supabase CLI (SQL manual)
-- **RLS:** Habilitado en TODAS las 16 tablas (verificado 18 Feb 2026)
+- **RLS:** Habilitado en TODAS las 17 tablas (verificado 21 Feb 2026)
 - **Service Role:** `supabaseAdmin` para operaciones del servidor (service_role bypasses RLS)
 - **Anon Key:** Solo usado client-side para Supabase Auth login + lectura pública destinos activos
 
@@ -110,6 +110,7 @@ travel-agency-next/
 │   ├── lib/
 │   │   ├── emails/           # Sistema de emails
 │   │   ├── billing/          # Funciones de billing
+│   │   ├── social/           # OAuth helpers + API calls (Instagram, TikTok)
 │   │   ├── owner/            # Funciones del owner
 │   │   ├── supabase/         # Clients de Supabase
 │   │   └── set-locale.ts     # Server action cambio idioma
@@ -183,7 +184,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 | `billing_email_templates` | Owner | `/owner/emails` |
 | `email_templates` | Admin | `/admin/emails` |
 | `destinos` | Admin | `/admin/destinos` |
-| `opiniones` | Admin | `/admin/opiniones` |
+| `opiniones` | Admin | `/admin/mi-web` (OpinionesManager, integrado en Mi Web) |
 | `paginas_legales` | Admin | `/admin/legales` |
 | `calendar_events` | Admin | `/admin/calendario` |
 | `documents` | Admin | `/admin/documentos` (crear, editar, eliminar, PDF) |
@@ -206,6 +207,11 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 |-------|-------|------|
 | `ai_chatbot_config` | Admin | `/admin/ai/chatbot` (configurar chatbot público) |
 | `ai_itinerarios` | Admin | `/admin/ai/itinerarios` (guardar itinerarios generados) |
+
+### Tablas Social (✅):
+| Tabla | Panel | Ruta |
+|-------|-------|------|
+| `social_connections` | Admin | `/admin/social` (OAuth connect/disconnect, sync stats, recent posts) |
 
 ### CHECKLIST AL AÑADIR TABLA NUEVA:
 1. Crear migración SQL en `supabase/migrations/`
@@ -234,14 +240,15 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - Contenido web (hero, nosotros, contacto + AIDescriptionButton en campos de texto)
 - Destinos (CRUD + imágenes + activo/inactivo + visual card grid + DeleteWithConfirm + DestinoDescriptionField AI + DestinoPriceFieldWithAI)
 - Reservas (ReservasTable DataTable con inline StatusCell + filtrado + export CSV/PDF + 3 KPICards + timeline visual en detalle)
-- Opiniones (CRUD + rating + moderación + star distribution chart + DeleteWithConfirm)
-- Emails (2 templates: reserva_cliente, reserva_agencia + preview en modal + EmailBodyWithAI)
+- Opiniones (CRUD + rating + moderación + star distribution chart + DeleteWithConfirm — integrado en Mi Web via OpinionesManager)
+- Emails (6 templates: reserva_cliente, reserva_agencia, bienvenida, recordatorio_viaje, seguimiento, promocion + preview en modal + EmailBodyWithAI + SendPromocionButton)
 - Páginas legales (CRUD collapsible + editor HTML + DeleteWithConfirm)
 - Stripe/Pagos (StripeTabs: Connect/Suscripción/Tarifas + onboarding + cambio plan + cancelar + reactivar)
 - Documentos (presupuestos, contratos, facturas — crear, editar, eliminar, generar PDF con jsPDF + DataTable + DeleteWithConfirm)
 - Soporte (tickets con chat — crear, ver detalle, enviar mensajes, cerrar/reabrir)
 - Analytics (KPIs, charts, filtros de fecha, tabla mensual, exports CSV/PDF)
 - AI (Generador itinerarios + PDF export + Chatbot config + Asistente libre + Dashboard AI card)
+- Social Media (Instagram + TikTok OAuth connect, profile/stats caching, recent posts grid, sync, disconnect. Facebook: URL only via Mi Web)
 
 ### ✅ Sistema de Emails:
 - Emails de reservas (cliente + agencia, templates editables, tokens, branding)
@@ -304,6 +311,14 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **Supabase Migration**: `20260220100000_add_profile_photo_and_storage.sql` — profile_photo column + storage bucket + RLS policies
 - ✅ **i18n Keys**: admin.eden namespace (welcome, chip1-4, placeholder, editProfile, photoUpdated, profileSaved, phone) in ES/EN/AR
 - ✅ **Eden AI Visual**: Tried Rive animation (black bg issues), tried Spline 3D (watermark/bg issues) — currently simple icon+gradient header, pending better 3D/animation solution
+
+### ✅ Fase D — Nuevas Secciones / Features (21 Feb 2026):
+- ✅ **Social Media Integration**: social_connections table (OAuth tokens, cached profile/stats, recent_posts JSONB max 12, RLS), OAuth library (`src/lib/social/` — types, instagram, tiktok), API routes (OAuth start/callback IG+TK, disconnect, sync), Token refresh cron (6h, vercel.json), Admin page + SocialContent UI (3 cards grid, posts grid, filter), Share2 nav item, i18n 27 keys ES/EN/AR. Env vars pending: `INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`
+- ✅ **Más plantillas email**: Bienvenida, Recordatorio de viaje, Seguimiento post-viaje, Promoción (con SendPromocionButton). Total 6 templates (+ reserva_cliente, reserva_agencia)
+- ✅ **Merge Opiniones en Mi Web**: OpinionesManager integrado en `/admin/mi-web`, ruta standalone `/admin/opiniones` eliminada (21 Feb 2026), API routes `/api/admin/opiniones` mantenidas para OpinionesManager
+
+### ⏳ Pendiente config externa (código listo):
+- **Social Media OAuth**: Crear app en Meta Developer (Instagram) + TikTok Developer, añadir env vars (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`) en Vercel. Redirect URIs: `https://drb.agency/api/admin/social/oauth/{instagram,tiktok}/callback`
 
 ### 🚫 No implementado (Roadmap futuro):
 CRM, marketing automation, gestión equipo, app nativa, API pública, white-label, multi-moneda, pagos offline, Eden AI 3D avatar (pending better solution)

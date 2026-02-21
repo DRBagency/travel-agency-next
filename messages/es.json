@@ -119,7 +119,8 @@
       "aiItinerarios": "Itinerarios IA",
       "aiChatbot": "Chatbot IA",
       "aiAsistente": "Asistente IA",
-      "mensajes": "Mensajes"
+      "mensajes": "Mensajes",
+      "social": "Redes Sociales"
     },
     "shell": {
       "subscriptionInactive": "Tu suscripción no está activa",
@@ -318,6 +319,31 @@
       "ctaTextPlaceholder": "Ej: Ver detalles",
       "ctaUrl": "CTA · URL",
       "saveTemplate": "Guardar plantilla"
+    },
+    "social": {
+      "title": "Redes Sociales",
+      "subtitle": "Conecta tus redes sociales para monitorizar seguidores, publicaciones y engagement.",
+      "connect": "Conectar",
+      "disconnect": "Desconectar",
+      "connected": "Conectado",
+      "notConnected": "No conectado",
+      "connectDescription": "Conecta tu cuenta para ver estadísticas y publicaciones recientes.",
+      "disconnectConfirm": "¿Estás seguro de que quieres desconectar esta cuenta?",
+      "disconnected": "Cuenta desconectada",
+      "sync": "Sincronizar",
+      "syncSuccess": "Datos actualizados correctamente",
+      "syncError": "Error al sincronizar datos",
+      "followers": "Seguidores",
+      "following": "Siguiendo",
+      "posts": "Publicaciones",
+      "likes": "Me gusta",
+      "views": "Vistas",
+      "comments": "Comentarios",
+      "recentPosts": "Publicaciones recientes",
+      "all": "Todas",
+      "lastSynced": "Última sincronización",
+      "urlOnly": "Solo URL",
+      "facebookEditInMiWeb": "Editar URL de Facebook en Mi Web"
     },
     "legales": {
       "title": "Legales",
@@ -899,6 +925,15 @@
       "status": "Estado",
       "date": "Fecha",
       "noTickets": "No hay tickets"
+    },
+    "eden": {
+      "welcome": "¡Hola! Soy Eden, tu copiloto de plataforma. Puedo analizar métricas, detectar riesgos y ayudarte a optimizar tu SaaS.",
+      "placeholder": "Pregúntame sobre tu plataforma...",
+      "chip1": "Analizar MRR",
+      "chip2": "Agencias en riesgo",
+      "chip3": "Redactar email a agencia",
+      "chip4": "Sugerir mejoras",
+      "platformOwner": "Platform Owner"
     }
   },
   "booking": {

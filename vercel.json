@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/email-automation",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/social-token-refresh",
+      "schedule": "0 */6 * * *"
     }
   ]
 }
