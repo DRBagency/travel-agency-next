@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { sileo } from "sileo";
 import {
@@ -13,8 +12,6 @@ import {
   ChevronLeft,
   ChevronRight,
   CalendarDays,
-  Unlink,
-  AlertTriangle,
 } from "lucide-react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -236,16 +233,7 @@ interface CalendarEvent {
 }
 
 // --- Main component ---
-interface CalendarioContentProps {
-  googleConnected?: boolean;
-  googleEmail?: string | null;
-}
-
-export default function CalendarioContent({
-  googleConnected = false,
-  googleEmail = null,
-}: CalendarioContentProps) {
-  const router = useRouter();
+export default function CalendarioContent() {
   const t = useTranslations("admin.calendario");
   const tc = useTranslations("common");
   const tt = useTranslations("toast");
@@ -262,8 +250,6 @@ export default function CalendarioContent({
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
-  const [gcConnected, setGcConnected] = useState(googleConnected);
-  const [disconnecting, setDisconnecting] = useState(false);
 
   // Form state
   const [formTitle, setFormTitle] = useState("");
@@ -311,25 +297,6 @@ export default function CalendarioContent({
     observer.observe(container);
     return () => observer.disconnect();
   }, []);
-
-  const handleDisconnectGoogle = async () => {
-    if (!confirm(t("confirmDisconnect"))) return;
-    setDisconnecting(true);
-    try {
-      const res = await fetch("/api/admin/calendar/oauth/disconnect", { method: "POST" });
-      if (res.ok) {
-        setGcConnected(false);
-        sileo.success({ title: t("googleDisconnected") });
-        router.refresh();
-      } else {
-        sileo.error({ title: t("errorDisconnecting") });
-      }
-    } catch {
-      sileo.error({ title: t("errorDisconnecting") });
-    } finally {
-      setDisconnecting(false);
-    }
-  };
 
   const openCreateModal = (startStr?: string) => {
     setEditingEvent(null);
@@ -594,26 +561,6 @@ export default function CalendarioContent({
           {t("newEvent")}
         </button>
       </div>
-
-      {/* Google Calendar disconnect banner */}
-      {gcConnected && (
-        <div className="panel-card p-4 flex items-center gap-3 border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-500/10">
-          <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0" />
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 dark:text-white">
-              {t("googleCalendar")} — {t("connectedAs")} <span className="font-semibold">{googleEmail}</span>
-            </p>
-          </div>
-          <button
-            onClick={handleDisconnectGoogle}
-            disabled={disconnecting}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/25 font-semibold transition-colors shrink-0"
-          >
-            <Unlink className="w-3.5 h-3.5" />
-            {disconnecting ? "..." : t("disconnect")}
-          </button>
-        </div>
-      )}
 
       {/* FullCalendar */}
       <div ref={calendarContainerRef} className="panel-card p-5 overflow-hidden">
