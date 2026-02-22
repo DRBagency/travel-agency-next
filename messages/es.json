@@ -75,7 +75,21 @@
       "errorClient": "No se encontró un cliente con este email.",
       "welcome": "Bienvenido a",
       "brand": "DRB Agency",
-      "tagline": "Tu plataforma de gestión de viajes"
+      "tagline": "Tu plataforma de gestión de viajes",
+      "noAccount": "¿No tienes cuenta?",
+      "register": "Regístrate"
+    },
+    "adminRegister": {
+      "title": "Crear tu agencia",
+      "subtitle": "Regístrate gratis y empieza a gestionar tu agencia.",
+      "namePlaceholder": "Nombre de tu agencia",
+      "emailPlaceholder": "email@agencia.com",
+      "submit": "Crear cuenta",
+      "errorExists": "Ya existe una cuenta con este email.",
+      "errorSlug": "No se pudo generar un identificador único. Intenta con otro nombre.",
+      "errorGeneral": "Error al crear la cuenta. Inténtalo de nuevo.",
+      "hasAccount": "¿Ya tienes cuenta?",
+      "login": "Inicia sesión"
     },
     "ownerLogin": {
       "title": "Acceso Owner",
@@ -127,7 +141,64 @@
       "subscriptionInactive": "Tu suscripción no está activa",
       "subscriptionInactiveDesc": "Activa la suscripción para acceder a todas las funciones del panel.",
       "activateSubscription": "Activar suscripción",
-      "onYourWeb": "en tu web"
+      "onYourWeb": "en tu web",
+      "onboardingIncomplete": "Completa la configuración de tu agencia",
+      "onboardingIncompleteDesc": "Tienes pasos pendientes en el asistente de configuración.",
+      "continueOnboarding": "Continuar"
+    },
+    "onboarding": {
+      "progress": "Paso {current} de {total}",
+      "skip": "Saltar",
+      "skipAll": "Saltar todo",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "finish": "Ir al panel",
+      "welcome": {
+        "title": "¡Bienvenido a DRB Agency!",
+        "subtitle": "Vamos a configurar tu agencia en pocos minutos.",
+        "start": "Empezar"
+      },
+      "agency": {
+        "title": "Datos de tu agencia",
+        "subtitle": "Información de contacto y color de marca.",
+        "phone": "Teléfono",
+        "address": "Dirección",
+        "color": "Color primario"
+      },
+      "plan": {
+        "title": "Elige tu plan",
+        "subtitle": "Podrás cambiar de plan en cualquier momento.",
+        "month": "/mes",
+        "commission": "tarifa por reserva",
+        "activateLater": "Podrás activar tu suscripción desde la sección Stripe."
+      },
+      "domain": {
+        "title": "Conecta tu dominio",
+        "subtitle": "Configura el dominio donde se verá tu web.",
+        "placeholder": "tuagencia.com",
+        "instructions": "Añade un registro CNAME en tu proveedor de dominio:"
+      },
+      "web": {
+        "title": "Personaliza tu web",
+        "subtitle": "Contenido principal de tu página de inicio.",
+        "heroTitle": "Título principal",
+        "heroTitlePlaceholder": "Viaja con nosotros",
+        "heroSubtitle": "Subtítulo",
+        "heroSubtitlePlaceholder": "Descubre destinos únicos",
+        "ctaText": "Texto del botón",
+        "ctaPlaceholder": "Reservar ahora",
+        "aboutTitle": "Título sobre nosotros",
+        "aboutTitlePlaceholder": "Sobre nuestra agencia",
+        "aboutText": "Descripción",
+        "aboutTextPlaceholder": "Cuéntale al mundo de qué trata tu agencia..."
+      },
+      "done": {
+        "title": "¡Tu agencia está lista!",
+        "subtitle": "Ya puedes empezar a gestionar tu agencia.",
+        "reminderStripe": "Recuerda activar tu suscripción en la sección Stripe.",
+        "completed": "Completado",
+        "pending": "Pendiente"
+      }
     },
     "eden": {
       "subtitle": "Tu asistente inteligente",

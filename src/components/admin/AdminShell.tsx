@@ -59,6 +59,7 @@ interface AdminShellProps {
   profilePhoto?: string | null;
   contactPhone?: string | null;
   subscriptionActive?: boolean;
+  onboardingCompleted?: boolean;
   agencyContext?: string;
   children: ReactNode;
 }
@@ -443,6 +444,7 @@ const AdminShell = ({
   profilePhoto,
   contactPhone,
   subscriptionActive = true,
+  onboardingCompleted,
   agencyContext = "",
   children,
 }: AdminShellProps) => {
@@ -503,7 +505,7 @@ const AdminShell = ({
   ];
   const navItems = navGroups.flat();
 
-  const allowWhenInactive = pathname.startsWith("/admin/stripe");
+  const allowWhenInactive = pathname.startsWith("/admin/stripe") || pathname.startsWith("/admin/onboarding");
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
@@ -669,6 +671,24 @@ const AdminShell = ({
         {/* Subtle mountain landscape background */}
         <DashboardBackground />
         <div className="relative z-[1]">
+        {!onboardingCompleted && pathname === "/admin" && (
+          <div className="panel-card p-4 border-drb-turquoise-200 dark:border-drb-turquoise-500/20 bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 mb-6 flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white">
+                {t("shell.onboardingIncomplete")}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-white/70">
+                {t("shell.onboardingIncompleteDesc")}
+              </p>
+            </div>
+            <a
+              href="/admin/onboarding"
+              className="btn-primary px-4 py-2 rounded-xl whitespace-nowrap"
+            >
+              {t("shell.continueOnboarding")}
+            </a>
+          </div>
+        )}
         {subscriptionActive || allowWhenInactive ? (
           <PageTransition key={pathname}>{children}</PageTransition>
         ) : (

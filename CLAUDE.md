@@ -213,6 +213,11 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 |-------|-------|------|
 | `social_connections` | Admin | `/admin/social` (OAuth connect/disconnect, sync stats, recent posts) |
 
+### Tablas Tracking (✅):
+| Tabla | Panel | Ruta |
+|-------|-------|------|
+| `page_visits` | Admin (header badge) | Tracking público via `/api/track`, lectura via `/api/admin/visits/active` + Realtime |
+
 ### CHECKLIST AL AÑADIR TABLA NUEVA:
 1. Crear migración SQL en `supabase/migrations/`
 2. Ejecutar `supabase db push`
@@ -312,10 +317,11 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **i18n Keys**: admin.eden namespace (welcome, chip1-4, placeholder, editProfile, photoUpdated, profileSaved, phone) in ES/EN/AR
 - ✅ **Eden AI Visual**: Tried Rive animation (black bg issues), tried Spline 3D (watermark/bg issues) — currently simple icon+gradient header, pending better 3D/animation solution
 
-### ✅ Fase D — Nuevas Secciones / Features (21 Feb 2026):
-- ✅ **Social Media Integration**: social_connections table (OAuth tokens, cached profile/stats, recent_posts JSONB max 12, RLS), OAuth library (`src/lib/social/` — types, instagram, tiktok), API routes (OAuth start/callback IG+TK, disconnect, sync), Token refresh cron (daily 3:00 UTC, vercel.json), Admin page + SocialContent UI (3 cards grid, posts grid, filter), Share2 nav item, i18n 27 keys ES/EN/AR. Env vars pending: `INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`
+### ⚠️ Fase D — Nuevas Secciones / Integraciones (parcial):
+- ⏳ **D1 — Social Media Integration**: Código OAuth listo (social_connections table, OAuth library, API routes, UI). **Pendiente:** env vars Meta/TikTok (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`), crear apps en Meta Developer + TikTok Developer, gráficas de rendimiento de posts
 - ✅ **Más plantillas email**: Bienvenida, Recordatorio de viaje, Seguimiento post-viaje, Promoción (con SendPromocionButton). Total 6 templates (+ reserva_cliente, reserva_agencia)
 - ✅ **Merge Opiniones en Mi Web**: OpinionesManager integrado en `/admin/mi-web`, ruta standalone `/admin/opiniones` eliminada (21 Feb 2026), API routes `/api/admin/opiniones` mantenidas para OpinionesManager
+- 🚧 D2-D5 pendientes (Coordinadores, Vuelos/hoteles, FAQs por destino, Depósitos/anticipos)
 
 ### ✅ Fase E — Owner Panel Premium Upgrade (21 Feb 2026):
 - ✅ **OwnerShell Rewrite**: 3-column layout matching AdminShell — collapsible sidebar (64px/240px) with Framer Motion pin/unpin (`drb_owner_sidebar_pinned`), right column 300px on xl+, DashboardBackground behind main, dynamic CSS variable margins
@@ -334,19 +340,79 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **F5 — Gráficas Semanales**: Admin + Owner charts cambiados de 6 meses a 8 semanas (subWeeks/startOfWeek/endOfWeek con weekStartsOn:1 Lunes). Labels "dd MMM". Proyección: 4 semanas futuras (regresión lineal)
 - ✅ **F6 — Eliminar /admin/analytics**: Página eliminada, nav item eliminado de AdminShell, import BarChart3 limpiado
 - ✅ **F7 — Filtros Reservas Colapsados**: Form de filtros en `<details>/<summary>` (collapsed by default) con icono Filter + i18n key "Filtros"
+- ✅ **F8 — Contador de Visitas en Vivo**: `page_visits` table + Realtime + RPC `count_active_visitors`, `/api/track` público con rate limiting, `/api/admin/visits/active` auth'd, `LiveVisitorBadge` en header (emerald pill, pulsing dot, Realtime + 60s polling), tracking `useEffect` en `HomeClient.tsx`, i18n `onYourWeb` ES/EN/AR
 - ✅ **Widget Opacity Fix**: panel-card/kpi-card dark mode cambiado de `bg-white/[0.06]` a `bg-[#0a2a35]/80 backdrop-blur-sm`. Light mode `bg-white/95`. panel-input dark `bg-[#0a2a35]/70`. Mejora legibilidad sobre mountain background
 
 ### ⏳ Pendiente config externa (código listo):
 - **Social Media OAuth**: Crear app en Meta Developer (Instagram) + TikTok Developer, añadir env vars (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`) en Vercel. Redirect URIs: `https://drb.agency/api/admin/social/oauth/{instagram,tiktok}/callback`
 
-### 🚧 Próximas tareas (Roadmap activo):
-- **CRM básico** (`/admin/crm`): Gestión de contactos/leads, pipeline, seguimiento — en desarrollo
-- **F8 — Contador de visitas en vivo**: Widget real-time en dashboard (diferido de Fase F)
-- **Opiniones mejoras** (`/admin/opiniones`): Refinamientos UX
-- **Eden AI 3D avatar**: Solución de avatar 3D para chat (pending Rive/Spline sin watermark)
+---
 
-### 🚫 No implementado (Roadmap futuro):
-Marketing automation, gestión equipo, app nativa, API pública, white-label, multi-moneda, pagos offline
+## ROADMAP DE FASES
+
+### Orden sugerido de ejecución:
+1. ~~Fase F (Visual/UX)~~ — **COMPLETADA**
+2. Fase E (Self-service) — Crítico para escalar sin depender del owner
+3. Fase G (Landing rediseño) — Lo más visible para el cliente final
+4. Fase D (Nuevas secciones) — Coordinadores, vuelos, depósitos
+5. Fase H (Técnico) — Notificaciones, búsqueda, RGPD
+6. Fase I (Futuro) — Cuando las anteriores estén sólidas
+
+### Fase D — Nuevas Secciones / Integraciones
+| # | Feature | Descripción | Estado |
+|---|---------|-------------|--------|
+| D1 | Social Media completa | Conectar Instagram, Facebook, TikTok. Estadísticas de cuentas, gráficas de rendimiento de posts, métricas de engagement | Código OAuth listo, faltan env vars Meta/TikTok + gráficas de rendimiento |
+| D2 | Sección de Coordinadores | Panel admin para gestionar coordinadores de viaje de la agencia (nombre, foto, bio, idiomas). Se muestran en landing en los destinos asignados | Nuevo |
+| D3 | Vuelos y hoteles en destinos | Opción para que la agencia añade info de vuelos (aeropuertos recomendados, buscar vuelo) y hoteles a cada destino | Nuevo |
+| D4 | FAQs por destino | Preguntas frecuentes editables por destino, visibles en la landing | Nuevo |
+| D5 | Sistema de depósitos/anticipos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo (ej: 100€) y el resto antes de fecha X | Nuevo |
+
+### Fase E — Plataforma Self-Service (Autonomía Total)
+| # | Feature | Descripción |
+|---|---------|-------------|
+| E1 | Registro público de agencias | drb.agency/admin como URL pública con opción de registrarse por primera vez (email + contraseña), sin depender del owner |
+| E2 | Onboarding wizard | Flujo guiado post-registro: datos agencia → suscripción Stripe → conectar dominio → personalizar web → publicar |
+| E3 | Conexión de dominio self-service | La agencia configura su propio dominio desde el panel (instrucciones CNAME + verificación automática) |
+| E4 | Redirigir /owner | Mover owner a URL definitiva (ej: drb.agency/owner o platform.drb.agency) |
+| E5 | Pago suscripción integrado en registro | Stripe Checkout embebido en el flujo de registro, sin intervención manual |
+| E6 | Setup Stripe Connect autoguiado | Wizard paso a paso para que la agencia conecte Stripe Connect sola |
+
+### Fase G — Landing Page Rediseño Completo
+| # | Feature | Descripción |
+|---|---------|-------------|
+| G1 | Rediseño UX/UI completo | Landing page completamente nueva, premium, inspirada en WeRoad y otras agencias top |
+| G2 | Página de destino individual | /destino/[slug] con toda la info: galería de fotos, características, itinerario visual, incluido/no incluido, coordinador, vuelos, FAQs |
+| G3 | Galería de fotos por destino | Múltiples fotos editables por destino (no solo 1 imagen), carrusel/grid en landing |
+| G4 | Características del destino | Tags editables tipo "¿Es este viaje para mí?": Fiesta y Nightlife, Relax, Naturaleza y Aventura, Ciudad y Culturas, Monumentos e Historia, Esfuerzo Físico (nivel), Tipo de viaje |
+| G5 | Itinerario visual mejorado | Más visible y agradable de leer. Imagen principal por día. Mapa con flechas/rutas del recorrido |
+| G6 | Qué está incluido / No incluido | Secciones editables desde admin: alojamiento, desayunos, transporte, guía, seguro, etc. |
+| G7 | Por qué [nombre agencia] | Sección editable: grupos reducidos, cancelación gratuita, reserva con anticipo, etc. |
+| G8 | Calendario de salidas | Fechas de salida con estado (confirmado, últimas plazas, agotado), franja de edad, precio, botón reservar con anticipo, "avísame" |
+| G9 | Buscar vuelo | Sección con aeropuertos recomendados de llegada/regreso + CTA buscar vuelo |
+| G10 | Página de reserva completa | Flujo: ver destino → reservar → pagar. Cada paso con su propia página/redirección con toda la info |
+| G11 | Espacio personal cliente final | En la landing, el viajero accede con sus datos (email) y ve: sus reservas, itinerarios, documentos, estado de pago, chat con agencia |
+
+### Fase H — Mejoras Técnicas / Infraestructura
+| # | Feature | Descripción |
+|---|---------|-------------|
+| H1 | Notificaciones en tiempo real | Supabase Realtime para notificaciones push en el panel (nueva reserva, nuevo mensaje, etc.) |
+| H2 | Búsqueda global mejorada | Buscador que busca en destinos, reservas, clientes, documentos, todo desde un único input |
+| H3 | Dashboard drag & drop | Widgets del dashboard reorganizables por el usuario, guardar layout en preferencias |
+| H4 | Legal / RGPD | Cumplimiento normativo para datos de clientes en Supabase: consentimiento, derecho al olvido, export de datos, política de privacidad automática |
+
+### Fase I — Futuro (largo plazo)
+| # | Feature | Descripción |
+|---|---------|-------------|
+| I1 | Eden AI 3D avatar | Buscar mejor solución que Spline/Rive para avatar interactivo |
+| I2 | Marketing automation | Campañas de email automáticas + segmentación por pipeline CRM |
+| I3 | Gestión de equipo | Multi-usuario por agencia, roles y permisos |
+| I4 | Multi-moneda | EUR/USD/GBP + monedas LATAM y MENA |
+| I5 | Pagos offline | Marcar reservas como pagadas fuera de Stripe |
+| I6 | App nativa / PWA | Gestión móvil para la agencia |
+| I7 | API pública | REST API documentada para integraciones |
+| I8 | White-label | Branding completo personalizable |
+| I9 | Pricing dinámico AI | AI sugiere precios según demanda/temporada |
+| I10 | Inspiración continua | Revisar plantillas de webs de agencias de viajes, librerías, herramientas (WeRoad, Travelie, etc.) para mejorar continuamente |
 
 ---
 

@@ -75,7 +75,21 @@
       "errorClient": "لم يتم العثور على عميل بهذا البريد الإلكتروني.",
       "welcome": "مرحبًا بك في",
       "brand": "DRB Agency",
-      "tagline": "منصتك لإدارة السفر"
+      "tagline": "منصتك لإدارة السفر",
+      "noAccount": "ليس لديك حساب؟",
+      "register": "سجّل الآن"
+    },
+    "adminRegister": {
+      "title": "إنشاء وكالتك",
+      "subtitle": "سجّل مجانًا وابدأ إدارة وكالتك.",
+      "namePlaceholder": "اسم وكالتك",
+      "emailPlaceholder": "email@agency.com",
+      "submit": "إنشاء حساب",
+      "errorExists": "يوجد حساب بهذا البريد الإلكتروني بالفعل.",
+      "errorSlug": "تعذّر إنشاء معرّف فريد. جرّب اسمًا آخر.",
+      "errorGeneral": "خطأ في إنشاء الحساب. حاول مرة أخرى.",
+      "hasAccount": "هل لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول"
     },
     "ownerLogin": {
       "title": "وصول المالك",
@@ -127,7 +141,64 @@
       "subscriptionInactive": "اشتراكك غير نشط",
       "subscriptionInactiveDesc": "فعّل اشتراكك للوصول إلى جميع ميزات لوحة التحكم.",
       "activateSubscription": "تفعيل الاشتراك",
-      "onYourWeb": "على موقعك"
+      "onYourWeb": "على موقعك",
+      "onboardingIncomplete": "أكمل إعداد وكالتك",
+      "onboardingIncompleteDesc": "لديك خطوات معلقة في معالج الإعداد.",
+      "continueOnboarding": "متابعة"
+    },
+    "onboarding": {
+      "progress": "الخطوة {current} من {total}",
+      "skip": "تخطي",
+      "skipAll": "تخطي الكل",
+      "next": "التالي",
+      "previous": "السابق",
+      "finish": "الذهاب إلى اللوحة",
+      "welcome": {
+        "title": "مرحبًا بك في DRB Agency!",
+        "subtitle": "لنقم بإعداد وكالتك في دقائق قليلة.",
+        "start": "ابدأ"
+      },
+      "agency": {
+        "title": "بيانات وكالتك",
+        "subtitle": "معلومات الاتصال ولون العلامة التجارية.",
+        "phone": "الهاتف",
+        "address": "العنوان",
+        "color": "اللون الأساسي"
+      },
+      "plan": {
+        "title": "اختر خطتك",
+        "subtitle": "يمكنك تغيير خطتك في أي وقت.",
+        "month": "/شهر",
+        "commission": "رسوم لكل حجز",
+        "activateLater": "يمكنك تفعيل اشتراكك من قسم Stripe."
+      },
+      "domain": {
+        "title": "اربط نطاقك",
+        "subtitle": "قم بإعداد النطاق الذي سيظهر عليه موقعك.",
+        "placeholder": "وكالتك.com",
+        "instructions": "أضف سجل CNAME في مزود النطاق الخاص بك:"
+      },
+      "web": {
+        "title": "خصّص موقعك",
+        "subtitle": "المحتوى الرئيسي لصفحتك الرئيسية.",
+        "heroTitle": "العنوان الرئيسي",
+        "heroTitlePlaceholder": "سافر معنا",
+        "heroSubtitle": "العنوان الفرعي",
+        "heroSubtitlePlaceholder": "اكتشف وجهات فريدة",
+        "ctaText": "نص الزر",
+        "ctaPlaceholder": "احجز الآن",
+        "aboutTitle": "عنوان من نحن",
+        "aboutTitlePlaceholder": "عن وكالتنا",
+        "aboutText": "الوصف",
+        "aboutTextPlaceholder": "أخبر العالم عن وكالتك..."
+      },
+      "done": {
+        "title": "وكالتك جاهزة!",
+        "subtitle": "يمكنك الآن البدء في إدارة وكالتك.",
+        "reminderStripe": "تذكر تفعيل اشتراكك في قسم Stripe.",
+        "completed": "مكتمل",
+        "pending": "معلق"
+      }
     },
     "eden": {
       "subtitle": "مساعدك الذكي",
