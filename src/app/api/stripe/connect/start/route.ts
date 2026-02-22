@@ -18,15 +18,9 @@ export async function GET() {
 
   const client = await requireAdminClient();
 
-  const host = (await headers()).get("host");
-  const rawBase =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    process.env.VERCEL_URL ||
-    (host ? `http://${host}` : "");
-
-  if (!rawBase) {
-    return NextResponse.json({}, { status: 500 });
-  }
+  const host = (await headers()).get("host") ?? "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const rawBase = `${protocol}://${host}`;
 
   let stripeAccountId = client.stripe_account_id;
 

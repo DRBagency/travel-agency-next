@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 import { getClientByDomain } from "@/lib/getClientByDomain";
@@ -81,6 +82,11 @@ export async function POST(req: Request) {
       );
     }
 
+    const headersList = await headers();
+    const host = headersList.get("host") ?? "localhost:3000";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
+
     const unitAmount = Math.round(total * 100); // céntimos
 
     const sessionParams = {
@@ -98,8 +104,8 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
+      success_url: `${baseUrl}/success`,
+      cancel_url: `${baseUrl}/cancel`,
       metadata: {
         reserva_id: reserva.id,
         cliente_id: body.cliente_id,

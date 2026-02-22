@@ -100,7 +100,7 @@ export async function POST(req: Request) {
 
       const { data: client } = await supabaseAdmin
         .from("clientes")
-        .select("nombre, logo_url, primary_color, contact_email, contact_phone")
+        .select("nombre, logo_url, primary_color, contact_email, contact_phone, domain")
         .eq("id", m.cliente_id)
         .single();
 
@@ -120,13 +120,10 @@ export async function POST(req: Request) {
       );
 
       if (reserva && client) {
-        const baseUrl =
-          process.env.NEXT_PUBLIC_BASE_URL ||
-          process.env.VERCEL_URL ||
-          "";
-        const adminUrl = baseUrl
-          ? `https://${baseUrl.replace(/^https?:\/\//, "")}/admin/reserva/${reserva.id}`
-          : null;
+        const clientDomain = (client as any).domain;
+        const fallbackBase = process.env.NEXT_PUBLIC_BASE_URL || "https://drb.agency";
+        const adminBase = clientDomain ? `https://${clientDomain}` : fallbackBase;
+        const adminUrl = `${adminBase}/admin/reserva/${reserva.id}`;
 
         const branding = {
           clientName: client.nombre,

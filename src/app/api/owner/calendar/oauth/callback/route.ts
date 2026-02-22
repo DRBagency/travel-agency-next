@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   const state = searchParams.get("state");
   const error = searchParams.get("error");
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const baseUrl = new URL(req.url).origin;
 
   if (error || !code || !state) {
     return NextResponse.redirect(new URL("/owner/calendario?error=oauth_denied", baseUrl));

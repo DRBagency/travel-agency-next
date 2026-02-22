@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { getAuthUrl, getOwnerRedirectUri } from "@/lib/google-calendar";
 
 export async function GET() {
@@ -7,7 +7,9 @@ export async function GET() {
   const owner = cookieStore.get("owner")?.value;
 
   if (!owner) {
-    return NextResponse.redirect(new URL("/owner/login", process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"));
+    const host = (await headers()).get("host") ?? "localhost:3000";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    return NextResponse.redirect(new URL("/owner/login", `${protocol}://${host}`));
   }
 
   const state = Buffer.from(JSON.stringify({ role: "owner", ts: Date.now() })).toString("base64url");

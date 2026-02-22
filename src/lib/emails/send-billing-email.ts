@@ -105,7 +105,7 @@ export async function sendBillingEmail({
     // 3. Preparar tokens dinámicos
     // ========================================
     const adminUrl =
-      data.adminUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/admin`;
+      data.adminUrl || `${process.env.NEXT_PUBLIC_BASE_URL || "https://drb.agency"}/admin`;
 
     const tokens: Record<string, string | number | null | undefined> = {
       clientName: data.clientName,

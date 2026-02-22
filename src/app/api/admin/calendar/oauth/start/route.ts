@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { getAuthUrl } from "@/lib/google-calendar";
 
 export async function GET() {
@@ -7,7 +7,9 @@ export async function GET() {
   const clienteId = cookieStore.get("cliente_id")?.value;
 
   if (!clienteId) {
-    return NextResponse.redirect(new URL("/admin/login", process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"));
+    const host = (await headers()).get("host") ?? "localhost:3000";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    return NextResponse.redirect(new URL("/admin/login", `${protocol}://${host}`));
   }
 
   // Use clienteId as state for CSRF protection (simple approach matching project patterns)

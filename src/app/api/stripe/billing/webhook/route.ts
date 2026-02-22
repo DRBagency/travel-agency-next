@@ -45,6 +45,11 @@ async function getClienteByStripeCustomerId(
   return data || null;
 }
 
+function getAdminUrl(cliente: { domain?: string | null }) {
+  if (cliente.domain) return `https://${cliente.domain}/admin`;
+  return `${process.env.NEXT_PUBLIC_BASE_URL || "https://drb.agency"}/admin`;
+}
+
 // ============================================================================
 // MAIN WEBHOOK HANDLER
 // ============================================================================
@@ -124,7 +129,7 @@ export async function POST(req: Request) {
         : undefined;
 
       // URL del admin panel
-      const adminUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/admin`;
+      const adminUrl = getAdminUrl(cliente);
 
       // Enviar email de bienvenida
       const result = await sendBillingEmail({
@@ -209,7 +214,7 @@ export async function POST(req: Request) {
       const newCommission = COMMISSION_BY_PLAN[newPlanName] || undefined;
 
       // URL del admin panel
-      const adminUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/admin`;
+      const adminUrl = getAdminUrl(cliente);
 
       // Enviar email de cambio de plan
       const result = await sendBillingEmail({

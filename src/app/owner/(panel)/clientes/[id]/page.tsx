@@ -45,19 +45,11 @@ async function connectStripe(formData: FormData) {
   const t = await getTranslations('owner.clientes');
   const id = formData.get("id") as string;
 
-  const host = (await headers()).get("host");
-  const rawBase =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    process.env.VERCEL_URL ||
-    (host ? `http://${host}` : "");
+  const host = (await headers()).get("host") ?? "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const baseUrl = `${protocol}://${host}`;
 
-  if (!rawBase) {
-    throw new Error(t('baseUrlError'));
-  }
-
-  const createUrl = rawBase.startsWith("http")
-    ? `${rawBase}/api/stripe/connect/create-account`
-    : `https://${rawBase}/api/stripe/connect/create-account`;
+  const createUrl = `${baseUrl}/api/stripe/connect/create-account`;
   const res = await fetch(createUrl, { method: "GET" });
   const data = await res.json();
 
