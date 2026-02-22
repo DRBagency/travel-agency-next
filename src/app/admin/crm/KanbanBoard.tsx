@@ -11,6 +11,7 @@ interface CustomerForKanban {
   email: string | null;
   lead_status: string | null;
   total_bookings: number;
+  tags?: string[];
   last_activity_at?: string | null;
 }
 

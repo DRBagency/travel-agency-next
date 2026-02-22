@@ -222,3 +222,17 @@ export async function createCustomerActivity(
   revalidatePath("/admin/crm");
   revalidatePath(`/admin/crm/${customerId}`);
 }
+
+export async function updateCustomerTags(customerId: string, tags: string[]) {
+  const clienteId = await getClienteId();
+  if (!clienteId) return;
+
+  await supabaseAdmin
+    .from("agency_customers")
+    .update({ tags })
+    .eq("id", customerId)
+    .eq("cliente_id", clienteId);
+
+  revalidatePath("/admin/crm");
+  revalidatePath(`/admin/crm/${customerId}`);
+}

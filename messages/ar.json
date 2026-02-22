@@ -782,7 +782,21 @@
       "changeStatus": "تغيير الحالة",
       "back": "العودة للإدارة",
       "customerDetail": "تفاصيل المسافر",
-      "timeline": "الجدول الزمني"
+      "timeline": "الجدول الزمني",
+      "searchAndFilter": "بحث وتصفية",
+      "searchPlaceholder": "بحث بالاسم أو البريد الإلكتروني...",
+      "allStages": "جميع المراحل",
+      "clearFilters": "مسح الفلاتر",
+      "exportCSV": "CSV",
+      "tags": "العلامات",
+      "addTag": "إضافة",
+      "tagPlaceholder": "علامة جديدة...",
+      "suggestedTags": "مقترحة",
+      "removeTag": "إزالة العلامة",
+      "funnelTitle": "قمع التحويل",
+      "funnelSubtitle": "العملاء حسب مرحلة المبيعات",
+      "conversionRate": "معدل التحويل",
+      "customers": "عملاء"
     }
   },
   "owner": {

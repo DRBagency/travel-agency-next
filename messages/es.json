@@ -782,7 +782,21 @@
       "changeStatus": "Cambiar estado",
       "back": "Volver al CRM",
       "customerDetail": "Detalle del viajero",
-      "timeline": "Timeline"
+      "timeline": "Timeline",
+      "searchAndFilter": "Buscar y filtrar",
+      "searchPlaceholder": "Buscar por nombre o email...",
+      "allStages": "Todas las etapas",
+      "clearFilters": "Limpiar filtros",
+      "exportCSV": "CSV",
+      "tags": "Tags",
+      "addTag": "Añadir",
+      "tagPlaceholder": "Nuevo tag...",
+      "suggestedTags": "Sugeridos",
+      "removeTag": "Eliminar tag",
+      "funnelTitle": "Embudo de conversión",
+      "funnelSubtitle": "Clientes por etapa del pipeline",
+      "conversionRate": "Tasa de conversión",
+      "customers": "clientes"
     }
   },
   "owner": {

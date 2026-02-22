@@ -9,9 +9,18 @@ interface KanbanCardProps {
     nombre: string;
     email: string | null;
     total_bookings: number;
+    tags?: string[];
     last_activity_at?: string | null;
   };
 }
+
+const TAG_COLORS: Record<string, string> = {
+  VIP: "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400",
+  Repetidor: "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400",
+  Corporativo: "bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400",
+  Grupo: "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400",
+  Urgente: "bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400",
+};
 
 function getRelativeTime(dateStr: string | null | undefined, locale: string): string | null {
   if (!dateStr) return null;
@@ -65,6 +74,25 @@ export default function KanbanCard({ customer }: KanbanCardProps) {
           {customer.nombre}
         </span>
       </div>
+      {customer.tags && customer.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 mb-1">
+          {customer.tags.slice(0, 2).map((tag) => (
+            <span
+              key={tag}
+              className={`px-1.5 py-0.5 rounded-full text-[9px] font-medium ${
+                TAG_COLORS[tag] || "bg-gray-100 dark:bg-white/[0.08] text-gray-500 dark:text-white/50"
+              }`}
+            >
+              {tag}
+            </span>
+          ))}
+          {customer.tags.length > 2 && (
+            <span className="text-[9px] text-gray-400 dark:text-white/30">
+              +{customer.tags.length - 2}
+            </span>
+          )}
+        </div>
+      )}
       <div className="flex items-center justify-between gap-2">
         {customer.total_bookings > 0 && (
           <span className="badge-info text-[10px]">

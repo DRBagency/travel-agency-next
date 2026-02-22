@@ -782,7 +782,21 @@
       "changeStatus": "Change status",
       "back": "Back to CRM",
       "customerDetail": "Traveler detail",
-      "timeline": "Timeline"
+      "timeline": "Timeline",
+      "searchAndFilter": "Search and filter",
+      "searchPlaceholder": "Search by name or email...",
+      "allStages": "All stages",
+      "clearFilters": "Clear filters",
+      "exportCSV": "CSV",
+      "tags": "Tags",
+      "addTag": "Add",
+      "tagPlaceholder": "New tag...",
+      "suggestedTags": "Suggested",
+      "removeTag": "Remove tag",
+      "funnelTitle": "Conversion funnel",
+      "funnelSubtitle": "Customers by pipeline stage",
+      "conversionRate": "Conversion rate",
+      "customers": "customers"
     }
   },
   "owner": {

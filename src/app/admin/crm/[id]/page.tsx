@@ -149,6 +149,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
           customerId={customer.id}
           notes={customer.notes || ""}
           leadStatus={customer.lead_status || "nuevo"}
+          tags={(customer.tags as string[] | null) || []}
           activities={activities || []}
         />
 
