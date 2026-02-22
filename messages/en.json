@@ -1393,6 +1393,104 @@
       "upgrade": "Upgrade my plan"
     }
   },
+  "corporate": {
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "howItWorks": "How it works",
+      "login": "Log in",
+      "register": "Start free"
+    },
+    "hero": {
+      "tagline": "Professional software for travel agencies",
+      "headline": "Everything your agency needs, in one panel.",
+      "subheadline": "The all-in-one platform designed for travel agencies. Centralize your operations, control your business, and scale without complications.",
+      "cta": "Start free",
+      "ctaSecondary": "See pricing"
+    },
+    "features": {
+      "tagline": "The solution",
+      "headline": "DRB Agency: everything in one place",
+      "items": {
+        "web": { "title": "Professional website", "desc": "Your online presence ready to sell." },
+        "bookings": { "title": "Booking management", "desc": "All your operations in one panel." },
+        "payments": { "title": "Integrated payments", "desc": "Billing, invoicing and financial control." },
+        "clients": { "title": "Client database", "desc": "CRM designed for travel agencies." },
+        "automations": { "title": "Automations", "desc": "Less manual work, more efficiency." },
+        "support": { "title": "Real support", "desc": "You're never alone. We're always here." }
+      }
+    },
+    "benefits": {
+      "tagline": "Real benefits",
+      "headline": "What DRB changes in your agency",
+      "items": {
+        "control": { "title": "Total control", "desc": "View your agency status in real time." },
+        "efficiency": { "title": "Less manual work", "desc": "Automate repetitive tasks and focus on selling." },
+        "professional": { "title": "Professional operations", "desc": "Convey trust from the first contact." },
+        "time": { "title": "Time savings", "desc": "Reduce management hours and focus on growth." },
+        "scale": { "title": "Real scalability", "desc": "Grow without changing systems. DRB grows with you." },
+        "guidance": { "title": "Real guidance", "desc": "You're not a number. We truly help you." }
+      }
+    },
+    "how": {
+      "tagline": "Simple and direct",
+      "headline": "How it works",
+      "steps": {
+        "0": { "title": "Sign up free", "desc": "Create your account in 1 minute and access the management panel." },
+        "1": { "title": "Set up your agency", "desc": "Customize your website, add destinations and connect Stripe." },
+        "2": { "title": "Start selling", "desc": "Publish your site, receive bookings and manage everything from one place." }
+      }
+    },
+    "pricing": {
+      "tagline": "Plans & pricing",
+      "headline": "Same software. The support you need.",
+      "subtitle": "All plans include the same complete software. What changes is the level of support.",
+      "popular": "Most popular",
+      "perMonth": "/mo",
+      "feeLabel": "fee per booking",
+      "cta": "Start free",
+      "plans": {
+        "0": {
+          "desc": "For agencies starting their digital journey.",
+          "features": {
+            "0": "Complete all-in-one software",
+            "1": "Professional website included",
+            "2": "Booking and client management",
+            "3": "Email support",
+            "4": "Guided onboarding"
+          }
+        },
+        "1": {
+          "desc": "For agencies that want to professionalize and grow.",
+          "features": {
+            "0": "Everything in Start",
+            "1": "Personalized advice",
+            "2": "Close guidance",
+            "3": "DRB creates your initial website",
+            "4": "Priority support"
+          }
+        },
+        "2": {
+          "desc": "For agencies seeking maximum support.",
+          "features": {
+            "0": "Everything in Grow",
+            "1": "Advanced strategic advice",
+            "2": "Dedicated support",
+            "3": "DRB creates and optimizes your website",
+            "4": "VIP support"
+          }
+        }
+      }
+    },
+    "cta": {
+      "headline": "Your agency deserves one panel for everything.",
+      "subheadline": "Join the agencies already managing everything from DRB Agency.",
+      "register": "Create my agency free"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
+  },
   "landing": {
     "navbar": {
       "destinations": "Destinations",

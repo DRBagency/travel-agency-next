@@ -1393,6 +1393,104 @@
       "upgrade": "Actualizar mi plan"
     }
   },
+  "corporate": {
+    "nav": {
+      "features": "Funcionalidades",
+      "pricing": "Precios",
+      "howItWorks": "Cmo funciona",
+      "login": "Iniciar sesin",
+      "register": "Empezar gratis"
+    },
+    "hero": {
+      "tagline": "Software profesional para agencias de viajes",
+      "headline": "Todo lo que tu agencia necesita, en un solo panel.",
+      "subheadline": "La plataforma all-in-one diseada para agencias de viajes. Centraliza tu operativa, controla tu negocio y escala sin complicaciones.",
+      "cta": "Empezar gratis",
+      "ctaSecondary": "Ver precios"
+    },
+    "features": {
+      "tagline": "La solucin",
+      "headline": "DRB Agency: todo en un solo lugar",
+      "items": {
+        "web": { "title": "Web profesional", "desc": "Tu presencia online lista para vender." },
+        "bookings": { "title": "Gestin de reservas", "desc": "Toda tu operativa en un solo panel." },
+        "payments": { "title": "Pagos integrados", "desc": "Cobros, facturacin y control financiero." },
+        "clients": { "title": "Base de clientes", "desc": "CRM pensado para agencias de viajes." },
+        "automations": { "title": "Automatizaciones", "desc": "Menos trabajo manual, ms eficiencia." },
+        "support": { "title": "Soporte real", "desc": "Nunca ests solo. Te ayudamos siempre." }
+      }
+    },
+    "benefits": {
+      "tagline": "Beneficios reales",
+      "headline": "Lo que DRB cambia en tu agencia",
+      "items": {
+        "control": { "title": "Control total", "desc": "Visualiza el estado de tu agencia en tiempo real." },
+        "efficiency": { "title": "Menos trabajo manual", "desc": "Automatiza tareas repetitivas y dedica tu tiempo a vender." },
+        "professional": { "title": "Operativa profesional", "desc": "Transmite confianza desde el primer contacto." },
+        "time": { "title": "Ahorro de tiempo", "desc": "Reduce horas de gestin y enfcate en crecer." },
+        "scale": { "title": "Escalabilidad real", "desc": "Crece sin cambiar de sistema. DRB crece contigo." },
+        "guidance": { "title": "Acompaamiento real", "desc": "No eres un nmero. Te ayudamos de verdad." }
+      }
+    },
+    "how": {
+      "tagline": "Simple y directo",
+      "headline": "Cmo funciona",
+      "steps": {
+        "0": { "title": "Regstrate gratis", "desc": "Crea tu cuenta en 1 minuto y accede al panel de gestin." },
+        "1": { "title": "Configura tu agencia", "desc": "Personaliza tu web, aade destinos y conecta Stripe." },
+        "2": { "title": "Empieza a vender", "desc": "Publica tu web, recibe reservas y gestiona todo desde un solo lugar." }
+      }
+    },
+    "pricing": {
+      "tagline": "Planes y precios",
+      "headline": "El mismo software. El acompaamiento que necesitas.",
+      "subtitle": "Todos los planes incluyen el mismo software completo. Lo que cambia es el nivel de acompaamiento.",
+      "popular": "Ms popular",
+      "perMonth": "/mes",
+      "feeLabel": "tarifa por reserva",
+      "cta": "Empezar gratis",
+      "plans": {
+        "0": {
+          "desc": "Para agencias que estn empezando.",
+          "features": {
+            "0": "Software completo all-in-one",
+            "1": "Web profesional incluida",
+            "2": "Gestin de reservas y clientes",
+            "3": "Soporte por email",
+            "4": "Onboarding guiado"
+          }
+        },
+        "1": {
+          "desc": "Para agencias que quieren profesionalizar y crecer.",
+          "features": {
+            "0": "Todo lo de Start",
+            "1": "Asesora personalizada",
+            "2": "Acompaamiento cercano",
+            "3": "DRB crea tu web inicial",
+            "4": "Soporte prioritario"
+          }
+        },
+        "2": {
+          "desc": "Para agencias que buscan el mximo acompaamiento.",
+          "features": {
+            "0": "Todo lo de Grow",
+            "1": "Asesora estratgica avanzada",
+            "2": "Acompaamiento dedicado",
+            "3": "DRB crea y optimiza tu web",
+            "4": "Soporte VIP"
+          }
+        }
+      }
+    },
+    "cta": {
+      "headline": "Tu agencia merece un solo panel para todo.",
+      "subheadline": "nete a las agencias que ya gestionan todo desde DRB Agency.",
+      "register": "Crear mi agencia gratis"
+    },
+    "footer": {
+      "rights": "Todos los derechos reservados."
+    }
+  },
   "landing": {
     "navbar": {
       "destinations": "Destinos",

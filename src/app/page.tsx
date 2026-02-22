@@ -1,13 +1,37 @@
 import { headers } from "next/headers";
+import { cookies } from "next/headers";
 import { getClientByDomain } from "@/lib/getClientByDomain";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { NextIntlClientProvider } from "next-intl";
 import HomeClient from "./HomeClient";
+import CorporateLanding from "@/components/corporate/CorporateLanding";
 
 const VALID_LOCALES = ["es", "en", "ar"] as const;
 
+const PLATFORM_HOSTS = [
+  "drb.agency",
+  "www.drb.agency",
+  "localhost:3000",
+  "travel-agency-next-ten.vercel.app",
+];
+
 export default async function HomePage() {
   const host = (await headers()).get("host") ?? "localhost";
+  const isPlatform = PLATFORM_HOSTS.some((h) => host.includes(h));
+
+  if (isPlatform) {
+    const cookieStore = await cookies();
+    const locale = (cookieStore.get("NEXT_LOCALE")?.value ?? "es") as string;
+    const safeLocale = VALID_LOCALES.includes(locale as any) ? locale : "es";
+    const messages = await import(`../../messages/${safeLocale}.json`).then((m) => m.default);
+
+    return (
+      <NextIntlClientProvider locale={safeLocale} messages={messages}>
+        <CorporateLanding />
+      </NextIntlClientProvider>
+    );
+  }
+
   const client = await getClientByDomain();
 
   if (!client) {
