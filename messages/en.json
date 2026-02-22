@@ -126,7 +126,8 @@
     "shell": {
       "subscriptionInactive": "Your subscription is not active",
       "subscriptionInactiveDesc": "Activate your subscription to access all panel features.",
-      "activateSubscription": "Activate subscription"
+      "activateSubscription": "Activate subscription",
+      "onYourWeb": "on your site"
     },
     "eden": {
       "subtitle": "Your smart assistant",

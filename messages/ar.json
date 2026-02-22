@@ -126,7 +126,8 @@
     "shell": {
       "subscriptionInactive": "اشتراكك غير نشط",
       "subscriptionInactiveDesc": "فعّل اشتراكك للوصول إلى جميع ميزات لوحة التحكم.",
-      "activateSubscription": "تفعيل الاشتراك"
+      "activateSubscription": "تفعيل الاشتراك",
+      "onYourWeb": "على موقعك"
     },
     "eden": {
       "subtitle": "مساعدك الذكي",

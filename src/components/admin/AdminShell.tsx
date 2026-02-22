@@ -41,6 +41,7 @@ import LanguageSelector from "@/components/ui/LanguageSelector";
 import NotificationBell from "@/components/ui/NotificationBell";
 import AdminRightColumn from "./AdminRightColumn";
 import DashboardBackground from "./DashboardBackground";
+import LiveVisitorBadge from "./LiveVisitorBadge";
 
 // --- Constants ---
 const SIDEBAR_W_COLLAPSED = 64;
@@ -614,6 +615,7 @@ const AdminShell = ({
           </div>
 
           <div className="flex items-center gap-3">
+            {clienteId && <LiveVisitorBadge clienteId={clienteId} />}
             <SearchBar navItems={navItems} />
             <LanguageSelector />
             <ThemeToggle />

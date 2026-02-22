@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import DestinationsGrid, {
@@ -24,6 +24,26 @@ export default function HomeClient({
 }) {
   const [selectedDestination, setSelectedDestination] =
     useState<Destination | null>(null);
+
+  // Track page visit for live visitor counter
+  useEffect(() => {
+    if (!client?.id) return;
+    let sid = sessionStorage.getItem("drb_sid");
+    if (!sid) {
+      sid = crypto.randomUUID();
+      sessionStorage.setItem("drb_sid", sid);
+    }
+    fetch("/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        clienteId: client.id,
+        sessionId: sid,
+        pagePath: window.location.pathname,
+        referrer: document.referrer || null,
+      }),
+    }).catch(() => {});
+  }, [client?.id]);
 
   return (
     <main className="relative pt-20 min-h-screen bg-slate-950 text-white">
