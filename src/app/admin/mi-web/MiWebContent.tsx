@@ -21,6 +21,9 @@ import {
   Star,
   Scale,
   MapPin,
+  Globe,
+  RefreshCw,
+  AlertCircle,
   type LucideIcon,
 } from "lucide-react";
 import UnsplashPicker from "./UnsplashPicker";
@@ -32,6 +35,7 @@ interface ClientData {
   id: string;
   nombre: string;
   domain: string;
+  domain_verified?: boolean | null;
   logo_url: string | null;
   primary_color: string | null;
   hero_title: string | null;
@@ -91,6 +95,7 @@ interface MiWebContentProps {
 }
 
 type SectionKey =
+  | "domain"
   | "marca"
   | "hero"
   | "stats"
@@ -142,6 +147,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     new Set()
   );
   const [saveStates, setSaveStates] = useState<Record<SectionKey, SaveState>>({
+    domain: { loading: false, success: false, error: null },
     marca: { loading: false, success: false, error: null },
     hero: { loading: false, success: false, error: null },
     stats: { loading: false, success: false, error: null },
@@ -152,6 +158,13 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     opiniones: { loading: false, success: false, error: null },
     legales: { loading: false, success: false, error: null },
   });
+
+  // Domain state
+  const [domainValue, setDomainValue] = useState(client.domain ?? "");
+  const [domainVerified, setDomainVerified] = useState(Boolean(client.domain_verified));
+  const [domainVerifying, setDomainVerifying] = useState(false);
+  const [domainSaving, setDomainSaving] = useState(false);
+  const [vercelVerification, setVercelVerification] = useState<Array<{type: string; domain: string; value: string}> | null>(null);
 
   const [unsplash, setUnsplash] = useState<{
     open: boolean;
@@ -222,6 +235,65 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
 
   function handleUnsplashSelect(url: string) {
     updateField(unsplash.field, url);
+  }
+
+  async function saveDomain() {
+    if (!domainValue.trim()) return;
+    setDomainSaving(true);
+    try {
+      const previousDomain = client.domain;
+      // 1. Remove previous domain from Vercel if changed
+      if (previousDomain && previousDomain !== domainValue.trim().toLowerCase()) {
+        await fetch("/api/admin/domain/remove", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ domain: previousDomain }),
+        });
+      }
+      // 2. Save new domain to DB
+      const saveRes = await fetch("/api/admin/domain/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain: domainValue }),
+      });
+      const saveData = await saveRes.json();
+      if (!saveData.saved) throw new Error("save_failed");
+
+      // 3. Add to Vercel
+      const addRes = await fetch("/api/admin/domain/add", { method: "POST" });
+      const addData = await addRes.json();
+      if (addData.verification?.length) {
+        setVercelVerification(addData.verification);
+      } else {
+        setVercelVerification(null);
+      }
+
+      setDomainVerified(false);
+      sileo.success({ title: tt("savedSuccessfully") });
+    } catch {
+      sileo.error({ title: tt("errorSaving") });
+    } finally {
+      setDomainSaving(false);
+    }
+  }
+
+  async function handleVerifyDomain() {
+    setDomainVerifying(true);
+    try {
+      const res = await fetch("/api/admin/domain/verify", { method: "POST" });
+      const data = await res.json();
+      if (data.verified) {
+        setDomainVerified(true);
+        setVercelVerification(null);
+        sileo.success({ title: t("domainVerified") });
+      } else {
+        sileo.error({ title: t("domainPending") });
+      }
+    } catch {
+      sileo.error({ title: tt("errorSaving") });
+    } finally {
+      setDomainVerifying(false);
+    }
   }
 
   function renderSaveButton(section: SectionKey, fieldKeys: string[]) {
@@ -301,6 +373,131 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
           {t("viewMyWeb")}
         </a>
       </div>
+
+      {/* Dominio */}
+      <section className="panel-card p-5 space-y-3">
+        <SectionHeader
+          sectionKey="domain"
+          icon={Globe}
+          title={t("domainSection")}
+          subtitle={t("domainSectionSub")}
+        />
+        {openSections.has("domain") && (
+          <div className="space-y-4 pt-2">
+            {/* Current domain with badge */}
+            {client.domain && (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-700 dark:text-white/80 font-mono">{client.domain}</span>
+                {domainVerified ? (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">
+                    <Check className="w-3 h-3" />
+                    {t("domainVerified")}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400">
+                    <AlertCircle className="w-3 h-3" />
+                    {t("domainPending")}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Input for new/change domain */}
+            <div>
+              <label className="panel-label block mb-1">{t("changeDomain")}</label>
+              <input
+                value={domainValue}
+                onChange={(e) => setDomainValue(e.target.value)}
+                className="panel-input w-full"
+                placeholder={t("domainPlaceholder")}
+              />
+            </div>
+
+            {/* CNAME instructions */}
+            <div className="bg-gray-50 dark:bg-white/[0.04] rounded-xl p-4 text-sm space-y-2">
+              <p className="text-gray-600 dark:text-white/60">
+                {t("domainCnameInstructions")}
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-start text-gray-500 dark:text-white/50 border-b border-gray-200 dark:border-white/10">
+                      <th className="py-2 pe-4 font-medium text-start">Type</th>
+                      <th className="py-2 pe-4 font-medium text-start">Name</th>
+                      <th className="py-2 font-medium text-start">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="text-gray-900 dark:text-white">
+                      <td className="py-2 pe-4 font-mono text-xs">CNAME</td>
+                      <td className="py-2 pe-4 font-mono text-xs">@</td>
+                      <td className="py-2 font-mono text-xs text-drb-turquoise-600 dark:text-drb-turquoise-400">
+                        cname.vercel-dns.com
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Vercel TXT verification if needed */}
+            {vercelVerification && vercelVerification.length > 0 && (
+              <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-xl p-4 text-sm space-y-2">
+                <p className="font-medium text-amber-700 dark:text-amber-300">
+                  {t("txtRecord")}
+                </p>
+                <p className="text-amber-600 dark:text-amber-400 text-xs">
+                  {t("txtInstructions")}
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-start text-gray-500 dark:text-white/50 border-b border-gray-200 dark:border-white/10">
+                        <th className="py-2 pe-4 font-medium text-start">Type</th>
+                        <th className="py-2 pe-4 font-medium text-start">Name</th>
+                        <th className="py-2 font-medium text-start">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {vercelVerification.map((v, i) => (
+                        <tr key={i} className="text-gray-900 dark:text-white">
+                          <td className="py-2 pe-4 font-mono text-xs">{v.type}</td>
+                          <td className="py-2 pe-4 font-mono text-xs">{v.domain}</td>
+                          <td className="py-2 font-mono text-xs text-drb-turquoise-600 dark:text-drb-turquoise-400 break-all">
+                            {v.value}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex items-center gap-3 justify-end pt-2">
+              <button
+                onClick={saveDomain}
+                disabled={domainSaving || !domainValue.trim()}
+                className="btn-primary disabled:opacity-50 flex items-center gap-2"
+              >
+                {domainSaving && <Loader2 className="w-4 h-4 animate-spin" />}
+                {t("saveDomain")}
+              </button>
+              {client.domain && (
+                <button
+                  onClick={handleVerifyDomain}
+                  disabled={domainVerifying}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-drb-turquoise-200 dark:border-drb-turquoise-500/20 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-50 dark:hover:bg-drb-turquoise-500/10 transition-colors text-sm font-medium"
+                >
+                  <RefreshCw className={`w-4 h-4 ${domainVerifying ? "animate-spin" : ""}`} />
+                  {t("verifyDomain")}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </section>
 
       {/* Marca y Estilo */}
       <section className="panel-card p-5 space-y-3">

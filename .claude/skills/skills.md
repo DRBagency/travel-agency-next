@@ -210,3 +210,66 @@ export default function MiComponente({ ...props }: Props) {
   );
 }
 ```
+
+---
+
+## Skill: Añadir Dominio a Vercel via API
+
+```typescript
+// Helper: src/lib/vercel/domains.ts
+import { addDomainToVercel, verifyDomainOnVercel, removeDomainFromVercel } from "@/lib/vercel/domains";
+
+// Añadir dominio:
+const result = await addDomainToVercel("tuagencia.com");
+// → { added: true, verified: false, verification: [{ type: "TXT", domain: "_vercel.tuagencia.com", value: "vc-..." }] }
+
+// Verificar:
+const verify = await verifyDomainOnVercel("tuagencia.com");
+// → { verified: true/false }
+
+// Eliminar:
+const remove = await removeDomainFromVercel("tuagencia.com");
+// → { removed: true }
+
+// Env vars necesarias: VERCEL_TOKEN, VERCEL_PROJECT_ID, VERCEL_TEAM_ID
+```
+
+---
+
+## Skill: SubmitButton para Server Action Forms
+
+```tsx
+"use client";
+import { useFormStatus } from "react-dom";
+import { Loader2 } from "lucide-react";
+
+function SubmitButton({ children }: { children: React.ReactNode }) {
+  const { pending } = useFormStatus();
+  return (
+    <button type="submit" disabled={pending} className="btn-primary disabled:opacity-50 flex items-center gap-2">
+      {pending && <Loader2 className="w-4 h-4 animate-spin" />}
+      {children}
+    </button>
+  );
+}
+```
+
+---
+
+## Skill: Domain Verification Flow (DNS + Vercel)
+
+```typescript
+// 1. Save domain to DB (reset domain_verified)
+// POST /api/admin/domain/save { domain: "new.com" }
+
+// 2. Add domain to Vercel project
+// POST /api/admin/domain/add → calls Vercel API POST /v10/projects/{id}/domains
+
+// 3. If not auto-verified, show TXT/CNAME instructions to user
+
+// 4. User configures DNS, clicks "Verify"
+// POST /api/admin/domain/verify → dns.resolveCname() + Vercel API POST /v9/projects/{id}/domains/{domain}/verify
+
+// 5. If changing domain: remove old from Vercel first
+// POST /api/admin/domain/remove { domain: "old.com" } → Vercel API DELETE /v9/projects/{id}/domains/{domain}
+```

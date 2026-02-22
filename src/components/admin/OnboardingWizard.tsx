@@ -102,6 +102,8 @@ export default function OnboardingWizard({
   const [domainVerified, setDomainVerified] = useState(client.domain_verified ?? false);
   const [verifying, setVerifying] = useState(false);
   const [verifyError, setVerifyError] = useState("");
+  const [addingToVercel, setAddingToVercel] = useState(false);
+  const [vercelVerification, setVercelVerification] = useState<Array<{type: string; domain: string; value: string}> | null>(null);
 
   // Step 4
   const [heroTitle, setHeroTitle] = useState(client.hero_title ?? "");
@@ -179,6 +181,21 @@ export default function OnboardingWizard({
     setSaving(true);
     try {
       await updateOnboardingData({ domain, onboarding_step: 3 });
+      // Add domain to Vercel automatically
+      if (domain) {
+        setAddingToVercel(true);
+        try {
+          const res = await fetch("/api/admin/domain/add", { method: "POST" });
+          const data = await res.json();
+          if (data.verification?.length) {
+            setVercelVerification(data.verification);
+          }
+        } catch {
+          // Non-blocking: domain can be verified later
+        } finally {
+          setAddingToVercel(false);
+        }
+      }
       setStep(4);
     } finally {
       setSaving(false);
@@ -530,6 +547,48 @@ export default function OnboardingWizard({
                     </p>
                   </>
                 )}
+              </div>
+            )}
+
+            {/* Vercel TXT verification (if needed) */}
+            {vercelVerification && vercelVerification.length > 0 && (
+              <div className="panel-card p-4 space-y-3 border-amber-200 dark:border-amber-500/20">
+                <p className="text-sm font-medium text-gray-700 dark:text-white/70">
+                  {t("domain.txtRecord")}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-white/50">
+                  {t("domain.txtInstructions")}
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-start text-gray-500 dark:text-white/50 border-b border-gray-200 dark:border-white/10">
+                        <th className="py-2 pe-4 font-medium text-start">Type</th>
+                        <th className="py-2 pe-4 font-medium text-start">Name</th>
+                        <th className="py-2 font-medium text-start">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {vercelVerification.map((v, i) => (
+                        <tr key={i} className="text-gray-900 dark:text-white">
+                          <td className="py-2 pe-4 font-mono text-xs">{v.type}</td>
+                          <td className="py-2 pe-4 font-mono text-xs">{v.domain}</td>
+                          <td className="py-2 font-mono text-xs text-drb-turquoise-600 dark:text-drb-turquoise-400 break-all">
+                            {v.value}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Adding to Vercel indicator */}
+            {addingToVercel && (
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-white/50">
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                {t("domain.addingToVercel")}
               </div>
             )}
           </div>

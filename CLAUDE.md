@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 21 Febrero 2026
+> **Última actualización:** 22 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -113,6 +113,7 @@ travel-agency-next/
 │   │   ├── social/           # OAuth helpers + API calls (Instagram, TikTok)
 │   │   ├── owner/            # Funciones del owner (get-chart-data: 8 semanas, get-dashboard-metrics)
 │   │   ├── supabase/         # Clients de Supabase
+│   │   ├── vercel/          # Vercel API helpers (domain management)
 │   │   └── set-locale.ts     # Server action cambio idioma
 │   └── middleware.ts
 ├── messages/
@@ -179,7 +180,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ### Tablas con CRUD completo (✅):
 | Tabla | Panel | Ruta |
 |-------|-------|------|
-| `clientes` | Owner | `/owner/clientes` |
+| `clientes` | Owner | `/owner/clientes` — Columnas notables: `domain_verified`, `profile_photo`, `onboarding_completed`, `onboarding_step`, `slug` |
 | `platform_settings` | Owner | `/owner/emails` |
 | `billing_email_templates` | Owner | `/owner/emails` |
 | `email_templates` | Admin | `/admin/emails` |
@@ -323,7 +324,14 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **Merge Opiniones en Mi Web**: OpinionesManager integrado en `/admin/mi-web`, ruta standalone `/admin/opiniones` eliminada (21 Feb 2026), API routes `/api/admin/opiniones` mantenidas para OpinionesManager
 - 🚧 D2-D5 pendientes (Coordinadores, Vuelos/hoteles, FAQs por destino, Depósitos/anticipos)
 
-### ✅ Fase E — Owner Panel Premium Upgrade (21 Feb 2026):
+### ✅ Fase E — Plataforma Self-Service COMPLETADA (E1-E7) (22 Feb 2026):
+- ✅ **E1 — Registro público**: drb.agency/admin como URL pública con opción de registrarse (email + contraseña), sin depender del owner
+- ✅ **E2 — Onboarding wizard**: Flujo guiado post-registro: datos agencia → suscripción Stripe → conectar dominio → personalizar web → publicar
+- ✅ **E3 — Conexión dominio self-service**: La agencia configura su propio dominio desde el panel (instrucciones CNAME + verificación automática)
+- ✅ **E4 — Redirigir /owner**: Owner en URL definitiva
+- ✅ **E5 — Pago suscripción integrado**: Stripe Checkout embebido en el flujo de registro, sin intervención manual
+- ✅ **E6 — Setup Stripe Connect autoguiado**: Wizard paso a paso para que la agencia conecte Stripe Connect sola
+- ✅ **E7 — Automatización Dominio Vercel**: API route `/api/admin/domain/add` + `/api/admin/domain/remove` + `/api/admin/domain/save` + `/api/admin/domain/verify` con Vercel API integration. Helper `src/lib/vercel/domains.ts` centraliza add/verify/remove/get. OnboardingWizard integra auto-add dominio en step 3. Editar dominio post-onboarding en `/admin/mi-web` (nueva sección Dominio). Env vars: VERCEL_TOKEN, VERCEL_PROJECT_ID, VERCEL_TEAM_ID. i18n: 15+ keys en ES/EN/AR
 - ✅ **OwnerShell Rewrite**: 3-column layout matching AdminShell — collapsible sidebar (64px/240px) with Framer Motion pin/unpin (`drb_owner_sidebar_pinned`), right column 300px on xl+, DashboardBackground behind main, dynamic CSS variable margins
 - ✅ **OwnerRightColumn**: MountainBackground + glassmorphism profile card (avatar "D", DRB Agency, ownerEmail, "Platform Owner" badge) + OwnerChat
 - ✅ **OwnerChat (Eden AI)**: Platform copilot chat via `/api/ai` with `owner-chat` action, suggestion chips (Analizar MRR, Agencias en riesgo, Redactar email a agencia, Sugerir mejoras), platform metrics context from `getDashboardMetrics()`
@@ -352,7 +360,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 
 ### Orden sugerido de ejecución:
 1. ~~Fase F (Visual/UX)~~ — **COMPLETADA**
-2. Fase E (Self-service) — Crítico para escalar sin depender del owner
+2. ~~Fase E (Self-service)~~ — **COMPLETADA (E1-E7)** — 22 Feb 2026
 3. Fase G (Landing rediseño) — Lo más visible para el cliente final
 4. Fase D (Nuevas secciones) — Coordinadores, vuelos, depósitos
 5. Fase H (Técnico) — Notificaciones, búsqueda, RGPD
@@ -367,16 +375,16 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 | D4 | FAQs por destino | Preguntas frecuentes editables por destino, visibles en la landing | Nuevo |
 | D5 | Sistema de depósitos/anticipos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo (ej: 100€) y el resto antes de fecha X | Nuevo |
 
-### Fase E — Plataforma Self-Service (Autonomía Total)
-| # | Feature | Descripción |
-|---|---------|-------------|
-| E1 | Registro público de agencias | drb.agency/admin como URL pública con opción de registrarse por primera vez (email + contraseña), sin depender del owner |
-| E2 | Onboarding wizard | Flujo guiado post-registro: datos agencia → suscripción Stripe → conectar dominio → personalizar web → publicar |
-| E3 | Conexión de dominio self-service | La agencia configura su propio dominio desde el panel (instrucciones CNAME + verificación automática) |
-| E4 | Redirigir /owner | Mover owner a URL definitiva (ej: drb.agency/owner o platform.drb.agency) |
-| E5 | Pago suscripción integrado en registro | Stripe Checkout embebido en el flujo de registro, sin intervención manual |
-| E6 | Setup Stripe Connect autoguiado | Wizard paso a paso para que la agencia conecte Stripe Connect sola |
-| E7 | Automatización dominio Vercel | Cuando la agencia conecta un dominio, llamar automáticamente a la API de Vercel para añadir el dominio al proyecto y configurar SSL. Eliminar paso manual de CNAME |
+### ~~Fase E — Plataforma Self-Service (Autonomía Total)~~ — COMPLETADA (E1-E7) — 22 Feb 2026
+| # | Feature | Descripción | Estado |
+|---|---------|-------------|--------|
+| E1 | Registro público de agencias | drb.agency/admin como URL pública con opción de registrarse por primera vez (email + contraseña), sin depender del owner | ✅ |
+| E2 | Onboarding wizard | Flujo guiado post-registro: datos agencia → suscripción Stripe → conectar dominio → personalizar web → publicar | ✅ |
+| E3 | Conexión de dominio self-service | La agencia configura su propio dominio desde el panel (instrucciones CNAME + verificación automática) | ✅ |
+| E4 | Redirigir /owner | Mover owner a URL definitiva (ej: drb.agency/owner o platform.drb.agency) | ✅ |
+| E5 | Pago suscripción integrado en registro | Stripe Checkout embebido en el flujo de registro, sin intervención manual | ✅ |
+| E6 | Setup Stripe Connect autoguiado | Wizard paso a paso para que la agencia conecte Stripe Connect sola | ✅ |
+| E7 | Automatización dominio Vercel | API route `/api/admin/domain/add` + `/remove` + `/save` + `/verify` con Vercel API integration. Helper `src/lib/vercel/domains.ts`. OnboardingWizard auto-add dominio step 3. Editar dominio post-onboarding en `/admin/mi-web`. Env vars: VERCEL_TOKEN, VERCEL_PROJECT_ID, VERCEL_TEAM_ID | ✅ |
 
 ### Fase G — Landing Page Rediseño Completo
 | # | Feature | Descripción |

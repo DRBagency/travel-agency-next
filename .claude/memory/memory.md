@@ -42,6 +42,29 @@
 - Colapsados por defecto con `<details>/<summary>`.
 - Usar `[&::-webkit-details-marker]:hidden` para limpiar el marker del summary.
 
+### Vercel Domain Automation (Fase E7, 22 Feb 2026)
+- Helper centralizado en `src/lib/vercel/domains.ts` — NO usar @vercel/sdk, solo `fetch()` directo.
+- Env vars: `VERCEL_TOKEN` (bearer token), `VERCEL_PROJECT_ID`, `VERCEL_TEAM_ID`.
+- Flujo: guardar dominio en DB → POST `/api/admin/domain/add` (Vercel API) → si no verificado, mostrar TXT record → verificar con `/api/admin/domain/verify` (DNS + Vercel).
+- Cambio de dominio: eliminar anterior de Vercel (`/api/admin/domain/remove`) → guardar nuevo → añadir a Vercel.
+- `domain_verified` se resetea a `false` cada vez que se cambia el dominio.
+
+### SubmitButton Pattern (Fase E, 22 Feb 2026)
+- Para server action forms, usar `useFormStatus` de `react-dom`.
+- Patrón: `<SubmitButton>` que muestra spinner cuando `pending` es true.
+
+### Dynamic Host URLs (Fase E, 22 Feb 2026)
+- NO usar `NEXT_PUBLIC_BASE_URL` para construir URLs dinámicas.
+- En su lugar, usar `headers()` de next para obtener host dinámicamente.
+
+### Bug: revalidatePath en render (22 Feb 2026)
+- `revalidatePath()` NO se puede llamar durante render. Solo en server actions o API routes.
+- Si necesitas revalidar tras un fetch del cliente, hacerlo en la API route del servidor.
+
+### Bug: Owner calendar_events (22 Feb 2026)
+- Owner calendar NO debe leer `calendar_events` — esa es la tabla del admin.
+- Owner tiene sus propios eventos via Google Calendar.
+
 ---
 
 ## Patrones Recurrentes del Usuario
@@ -80,7 +103,7 @@
 | Fase 5 (Landing Premium + i18n) | ✅ Completada | — |
 | Fase 6 (Admin Layout + Eden AI) | ✅ Completada | — |
 | Fase D (Social, Emails, Opiniones merge) | ✅ Completada | 21 Feb 2026 |
-| Fase E (Owner Panel Premium) | ✅ Completada | 21 Feb 2026 |
+| Fase E (Self-Service Platform, E1-E7) | ✅ Completada | 22 Feb 2026 |
 | Fase F (Visual / UX Premium) | ✅ Completada | 21 Feb 2026 |
 
 ---

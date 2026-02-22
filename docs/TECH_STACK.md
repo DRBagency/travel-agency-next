@@ -1,7 +1,7 @@
 # Tech Stack - DRB Agency
 
-> **Ultima actualizacion:** 18 Febrero 2026
-> **Estado:** Produccion estable - Fase 4 completada
+> **Ultima actualizacion:** 22 Febrero 2026
+> **Estado:** Produccion estable - Fases 1-6 + D + E + F completadas
 
 ## Stack Tecnologico
 
@@ -10,17 +10,19 @@
 - **React:** 19.2.3
 - **Styling:** Tailwind CSS (custom shadows, glassmorphism, DRB color palette)
 - **UI Components:** shadcn/ui + custom design system (DataTable, KPICard, ConfirmDialog, EmptyState, AnimatedSection, DeleteWithConfirm)
-- **i18n:** next-intl (cookie-based, ES/EN/AR, 800+ keys, RTL support)
+- **i18n:** next-intl (cookie-based, ES/EN/AR, 1000+ keys, RTL support for Arabic with CSS logical properties)
 - **Charts:** Recharts
 - **Calendar:** FullCalendar (Google Calendar integration)
 - **Icons:** Lucide React
-- **Animations:** framer-motion (AnimatedSection), CSS animate-fade-in
+- **Animations:** Framer Motion (framer-motion@12.29.2) + Lottie (lottie-react) + CSS animations (fade-in, float, shimmer, marquee)
+- **Rive:** @rive-app/react-canvas (login animations)
 
 ### Backend
 - **Runtime:** Node.js (Edge Runtime en algunas rutas)
 - **API Routes:** Next.js App Router API
 - **Authentication:** Supabase Auth + Custom cookies (NO NextAuth)
 - **AI:** Anthropic Claude API (@anthropic-ai/sdk) - itineraries, recommendations, chatbot
+- **Vercel API:** Domain management (add, verify, remove domains via REST API)
 
 ### Base de Datos
 - **Database:** PostgreSQL (Supabase)
@@ -61,7 +63,13 @@ src/
   components/
     ui/                # shadcn/ui + DataTable, KPICard, ConfirmDialog, EmptyState, DeleteWithConfirm, AnimatedSection, SearchBar, StarRating, LanguageSelector
     admin/             # Componentes admin (charts, dashboard client components, AI)
+      AdminShell      # 3-column layout (sidebar | main | right column)
+      EdenChat        # AI assistant chat
+      MountainBackground # SVG landscape for right column
+      DashboardBackground # SVG widescreen mountains for main area
     owner/             # Componentes owner (charts)
+      OwnerShell      # 3-column layout matching AdminShell
+      OwnerChat       # AI platform copilot
   i18n/
     request.ts         # Config next-intl (cookie NEXT_LOCALE)
   lib/
@@ -69,10 +77,11 @@ src/
     billing/           # Funciones de billing
     owner/             # Funciones del owner
     supabase/          # Clients de Supabase
+    vercel/            # Vercel API helpers (domain management)
     set-locale.ts      # Server action cambio idioma
   middleware.ts
 messages/
-  es.json              # Espanol (fuente de verdad, ~800 keys)
+  es.json              # Espanol (fuente de verdad, ~1000 keys)
   en.json              # English
   ar.json              # Arabic (RTL)
 public/
@@ -138,3 +147,5 @@ const t = useTranslations('admin.destinos');
 - **Cookies:** Sistema custom de sesiones para admin (`cliente_id`) y owner (`owner_id`)
 - **RTL:** `<html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>` + CSS logical properties everywhere
 - **Loading states:** `loading.tsx` en admin/ y owner/(panel)/ con skeleton pulse animation
+- **Vercel API:** VERCEL_TOKEN + VERCEL_PROJECT_ID + VERCEL_TEAM_ID env vars for domain management
+- **Stripe:** Billing (subscriptions) + Connect (booking commissions) with separate webhooks

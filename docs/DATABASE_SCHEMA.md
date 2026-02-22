@@ -1,7 +1,7 @@
 # Database Schema - Supabase PostgreSQL
 
-> **Última actualización:** 10 Febrero 2026
-> **Estado:** Schema estable - Extensible
+> **Última actualización:** 22 Febrero 2026
+> **Estado:** Schema estable - 17+ tablas con RLS
 
 ## ⚠️ PRINCIPIO FUNDAMENTAL
 
@@ -32,6 +32,15 @@ Cuando se crea una tabla nueva, SIEMPRE seguir estos pasos:
 ### `clientes`
 **Editable desde:** `/owner/clientes` | **Estado:** ✅ CRUD completo
 
+**Columnas importantes añadidas:**
+- `onboarding_completed` (boolean) — onboarding wizard completion
+- `onboarding_step` (integer) — current wizard step
+- `domain_verified` (boolean) — domain DNS verification status
+- `profile_photo` (text) — admin profile photo URL (Supabase Storage)
+- `slug` (text) — URL slug for public registration
+- `plan` (text) — subscription plan (start/grow/pro)
+- `stripe_subscription_id`, `stripe_account_id`, `stripe_charges_enabled` — Stripe integration fields
+
 ### `platform_settings`
 **Editable desde:** `/owner/emails` | **Estado:** ✅ Formulario completo
 
@@ -45,49 +54,50 @@ Cuando se crea una tabla nueva, SIEMPRE seguir estos pasos:
 **Editable desde:** `/admin/destinos` | **Estado:** ✅ CRUD completo
 
 ### `reservas`
-**Editable desde:** `/admin/reservas` | **Estado:** ⚠️ Solo lectura
+**Editable desde:** `/admin/reservas` | **Estado:** ⚠️ Lectura + cambio estado inline
 
 ### `opiniones`
-**Editable desde:** `/admin/opiniones` | **Estado:** ✅ CRUD completo
+**Editable desde:** `/admin/mi-web` (OpinionesManager) | **Estado:** ✅ CRUD completo
 
 ### `paginas_legales`
 **Editable desde:** `/admin/legales` | **Estado:** ✅ CRUD completo
 
 ### `calendar_events`
-**Editable desde:** `/admin/calendario` | **Estado:** 🔄 En desarrollo
+**Editable desde:** `/admin/calendario` + `/owner/calendario` | **Estado:** ✅ CRUD completo
 
 ### `documents`
-**Editable desde:** `/admin/documentos` | **Estado:** 🔄 En desarrollo
+**Editable desde:** `/admin/documentos` | **Estado:** ✅ CRUD completo (with PDF generation)
 
 ### `support_tickets`
-**Editable desde:** `/admin/soporte` y `/owner/soporte` | **Estado:** 🔄 En desarrollo
+**Editable desde:** `/admin/soporte` y `/owner/soporte` | **Estado:** ✅ CRUD completo (with real-time chat)
 
 ### `ticket_messages`
-**Editable desde:** Mismo que support_tickets | **Estado:** 🔄 En desarrollo
+**Editable desde:** Mismo que support_tickets | **Estado:** ✅ CRUD completo (real-time messages)
 
 ### `automations`
-**Editable desde:** `/owner/automatizaciones` | **Estado:** ❌ Sin UI funcional
+**Editable desde:** `/owner/automatizaciones` | **Estado:** ✅ CRUD completo (with execution logs)
 
 ### `automation_executions`
-**Editable desde:** N/A (solo logs) | **Estado:** ❌ Sin UI
+**Editable desde:** N/A (solo logs) | **Estado:** ✅ Lectura (logs)
 
-## 🌍 PREPARACIÓN MULTI-IDIOMA
+## 🤖 TABLAS AI
 
-### Tabla propuesta: `translations`
+### `ai_chatbot_config`
+**Editable desde:** `/admin/ai/chatbot` | **Estado:** ✅ CRUD completo
 
-CREATE TABLE translations (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  table_name TEXT NOT NULL,
-  record_id UUID NOT NULL,
-  field_name TEXT NOT NULL,
-  language TEXT NOT NULL,
-  value TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(table_name, record_id, field_name, language)
-);
+### `ai_itinerarios`
+**Editable desde:** `/admin/ai/itinerarios` | **Estado:** ✅ CRUD completo
 
-**Uso:**
-- Campos traducibles: `nombre`, `descripcion`, `titulo`, `contenido`, etc.
-- Idioma por defecto: español (guardado en tabla principal)
-- Otros idiomas: guardados en `translations`
+## 📱 TABLAS SOCIAL
+
+### `social_connections`
+**Editable desde:** `/admin/social` | **Estado:** ✅ OAuth connect/disconnect
+
+## 📈 TABLAS TRACKING
+
+### `page_visits`
+**Auto-tracked via:** `/api/track` | **Estado:** ✅ Tracking automático
+
+## 🌍 MULTI-IDIOMA
+
+> **Nota:** El sistema multi-idioma fue implementado usando **next-intl** con archivos JSON (`messages/es.json`, `messages/en.json`, `messages/ar.json`), no con una tabla `translations` en base de datos. No se necesita tabla de traducciones en Supabase.

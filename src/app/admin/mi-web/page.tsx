@@ -44,6 +44,7 @@ export default async function MiWebPage() {
         id: client.id,
         nombre: client.nombre,
         domain: client.domain,
+        domain_verified: client.domain_verified,
         logo_url: client.logo_url,
         primary_color: client.primary_color,
         hero_title: client.hero_title,
