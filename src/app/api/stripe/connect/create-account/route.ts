@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import { supabaseAdmin } from "@/lib/supabase-server";
@@ -41,10 +42,15 @@ export async function POST() {
       stripeAccountId = account.id;
     }
 
+    const headersList = await headers();
+    const host = headersList.get("host") ?? "localhost:3000";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
+
     const accountLink = await stripe.accountLinks.create({
       account: stripeAccountId,
-      refresh_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/stripe`,
-      return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/stripe`,
+      refresh_url: `${baseUrl}/admin/stripe`,
+      return_url: `${baseUrl}/admin/stripe`,
       type: "account_onboarding",
     });
 

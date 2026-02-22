@@ -6,6 +6,7 @@ import { getTranslations } from 'next-intl/server';
 import Image from "next/image";
 import RiveAnimation from "@/components/ui/RiveAnimation";
 import LanguageSelector from "@/components/ui/LanguageSelector";
+import SubmitButton from "@/components/ui/SubmitButton";
 
 async function handleLogin(formData: FormData) {
   "use server";
@@ -148,12 +149,7 @@ export default async function AdminLoginPage({
                 />
               </div>
 
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold py-3 transition-colors shadow-lg shadow-drb-turquoise-500/30"
-              >
-                {t('submit')}
-              </button>
+              <SubmitButton label={t('submit')} loadingLabel={tc('loading')} />
             </form>
 
             <p className="text-center text-sm text-white/50 mt-4">

@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import Image from "next/image";
 import RiveAnimation from "@/components/ui/RiveAnimation";
 import LanguageSelector from "@/components/ui/LanguageSelector";
+import SubmitButton from "@/components/ui/SubmitButton";
 
 async function handleRegister(formData: FormData) {
   "use server";
@@ -157,7 +158,8 @@ export default async function AdminRegisterPage({
           className="mb-4 drop-shadow-2xl"
         />
         <h1 className="font-display text-4xl md:text-5xl font-bold text-white drop-shadow-2xl">
-          {t('title')}
+          {t('heroTitle')}{" "}
+          <span className="bg-gradient-to-r from-drb-turquoise-200 to-drb-lime-300 bg-clip-text text-transparent" style={{ WebkitTextStroke: "1px rgba(255,255,255,0.15)" }}>{t('heroBrand')}</span>
         </h1>
         <p className="mt-3 text-base md:text-lg text-white/80 drop-shadow-lg font-medium">
           {t('subtitle')}
@@ -226,12 +228,7 @@ export default async function AdminRegisterPage({
                 />
               </div>
 
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold py-3 transition-colors shadow-lg shadow-drb-turquoise-500/30"
-              >
-                {t('submit')}
-              </button>
+              <SubmitButton label={t('submit')} loadingLabel={tc('loading')} />
             </form>
 
             <p className="text-center text-sm text-white/50 mt-4">

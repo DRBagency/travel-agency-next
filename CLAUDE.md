@@ -376,6 +376,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 | E4 | Redirigir /owner | Mover owner a URL definitiva (ej: drb.agency/owner o platform.drb.agency) |
 | E5 | Pago suscripción integrado en registro | Stripe Checkout embebido en el flujo de registro, sin intervención manual |
 | E6 | Setup Stripe Connect autoguiado | Wizard paso a paso para que la agencia conecte Stripe Connect sola |
+| E7 | Automatización dominio Vercel | Cuando la agencia conecta un dominio, llamar automáticamente a la API de Vercel para añadir el dominio al proyecto y configurar SSL. Eliminar paso manual de CNAME |
 
 ### Fase G — Landing Page Rediseño Completo
 | # | Feature | Descripción |

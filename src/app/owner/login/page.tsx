@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import Image from "next/image";
 import RiveAnimation from "@/components/ui/RiveAnimation";
 import LanguageSelector from "@/components/ui/LanguageSelector";
+import SubmitButton from "@/components/ui/SubmitButton";
 
 function getAllowedOwnerEmail() {
   return (process.env.OWNER_EMAIL || "").trim().toLowerCase();
@@ -148,12 +149,7 @@ export default async function OwnerLoginPage({
                 />
               </div>
 
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-drb-turquoise-500 hover:bg-drb-turquoise-600 text-white font-bold py-3 transition-colors shadow-lg shadow-drb-turquoise-500/30"
-              >
-                {t('submit')}
-              </button>
+              <SubmitButton label={t('submit')} loadingLabel={tc('loading')} />
             </form>
           </div>
         </div>

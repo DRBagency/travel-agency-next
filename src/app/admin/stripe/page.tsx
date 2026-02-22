@@ -40,7 +40,7 @@ export default async function AdminStripePage() {
         : "border-emerald-500/30 text-emerald-600 dark:text-emerald-300 bg-emerald-500/10";
 
   const buttonLabel =
-    stripeStatus === "none" ? t('connectStripe') : t('completeVerification');
+    stripeStatus === "pending" ? t('completeVerification') : t('connectStripe');
 
   const planKey = (client.plan || "start").toString().toLowerCase();
   const planMeta: Record<string, { label: string; price: string; fee: string }> = {
@@ -95,11 +95,11 @@ export default async function AdminStripePage() {
                 </div>
               </div>
 
-              {stripeStatus === "pending" && (
+              {(stripeStatus === "none" || stripeStatus === "pending") && (
                 <div className="flex justify-end">
                   <ConnectStripeButton
                     label={buttonLabel}
-                    disabled={stripeStatus !== "pending"}
+                    disabled={false}
                   />
                 </div>
               )}

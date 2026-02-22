@@ -12,7 +12,7 @@ export default async function OwnerCalendarioPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
         <p className="text-gray-400 dark:text-white/40">{t('subtitle')}</p>
       </div>
-      <CalendarioContent />
+      <CalendarioContent apiBasePath="/api/owner/calendar" />
     </div>
   );
 }

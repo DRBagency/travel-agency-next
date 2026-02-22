@@ -81,6 +81,8 @@
     },
     "adminRegister": {
       "title": "Crear tu agencia",
+      "heroTitle": "Crea tu agencia con",
+      "heroBrand": "DRB Agency",
       "subtitle": "Regístrate gratis y empieza a gestionar tu agencia.",
       "namePlaceholder": "Nombre de tu agencia",
       "emailPlaceholder": "email@agencia.com",
@@ -182,7 +184,8 @@
         "verified": "¡Dominio verificado correctamente!",
         "notFound": "El registro CNAME aún no se ha detectado. Puede tardar hasta 48h en propagarse.",
         "verifyError": "Error al verificar. Inténtalo de nuevo más tarde.",
-        "verifyLater": "Puedes verificar el dominio más tarde desde tu panel."
+        "verifyLater": "Puedes verificar el dominio más tarde desde tu panel.",
+        "explanation": "Tu dominio personalizado es la dirección web donde tus clientes verán la página de tu agencia. Una vez verificado, tu web estará disponible en esa dirección."
       },
       "web": {
         "title": "Personaliza tu web",

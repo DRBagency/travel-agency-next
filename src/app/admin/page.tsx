@@ -227,9 +227,7 @@ export default async function AdminPage() {
         {/* Right — 2 charts stacked */}
         <div className="space-y-2">
           <RevenueProjectionChart data={projectionData} compact />
-          {destinosChartData.length > 0 && (
-            <DestinosChart data={destinosChartData} compact />
-          )}
+          <DestinosChart data={destinosChartData.length > 0 ? destinosChartData : [{ destino: "—", value: 0 }]} compact />
         </div>
       </div>
 

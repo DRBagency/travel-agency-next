@@ -81,6 +81,8 @@
     },
     "adminRegister": {
       "title": "Create your agency",
+      "heroTitle": "Create your agency with",
+      "heroBrand": "DRB Agency",
       "subtitle": "Sign up for free and start managing your agency.",
       "namePlaceholder": "Your agency name",
       "emailPlaceholder": "email@agency.com",
@@ -182,7 +184,8 @@
         "verified": "Domain verified successfully!",
         "notFound": "CNAME record not detected yet. It may take up to 48h to propagate.",
         "verifyError": "Verification error. Please try again later.",
-        "verifyLater": "You can verify your domain later from your panel."
+        "verifyLater": "You can verify your domain later from your panel.",
+        "explanation": "Your custom domain is the web address where your clients will see your agency's website. Once verified, your site will be available at that address."
       },
       "web": {
         "title": "Customize your website",

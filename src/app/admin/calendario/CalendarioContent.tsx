@@ -233,7 +233,7 @@ interface CalendarEvent {
 }
 
 // --- Main component ---
-export default function CalendarioContent() {
+export default function CalendarioContent({ apiBasePath = "/api/admin/calendar" }: { apiBasePath?: string } = {}) {
   const t = useTranslations("admin.calendario");
   const tc = useTranslations("common");
   const tt = useTranslations("toast");
@@ -266,7 +266,7 @@ export default function CalendarioContent() {
   const fetchEvents = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/calendar/events");
+      const res = await fetch(`${apiBasePath}/events`);
       if (res.ok) {
         const data = await res.json();
         setEvents(data.events || []);
@@ -326,7 +326,7 @@ export default function CalendarioContent() {
 
     try {
       if (editingEvent) {
-        const res = await fetch(`/api/admin/calendar/events/${editingEvent.id}`, {
+        const res = await fetch(`${apiBasePath}/events/${editingEvent.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -341,7 +341,7 @@ export default function CalendarioContent() {
         if (!res.ok) throw new Error("Error updating");
         sileo.success({ title: tt("eventUpdated") });
       } else {
-        const res = await fetch("/api/admin/calendar/events", {
+        const res = await fetch(`${apiBasePath}/events`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -370,7 +370,7 @@ export default function CalendarioContent() {
     if (!confirm(t("confirmDelete"))) return;
 
     try {
-      const res = await fetch(`/api/admin/calendar/events?id=${eventId}`, {
+      const res = await fetch(`${apiBasePath}/events?id=${eventId}`, {
         method: "DELETE",
       });
       if (res.ok) {

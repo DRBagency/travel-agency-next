@@ -258,8 +258,8 @@ export default function OnboardingWizard({
     }
   }
 
-  // --- Progress Bar ---
-  function ProgressBar() {
+  // --- Progress Bar (called as function, NOT as <Component />) ---
+  function renderProgressBar() {
     return (
       <div className="flex items-center justify-center gap-2 mb-8">
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => {
@@ -297,8 +297,8 @@ export default function OnboardingWizard({
     );
   }
 
-  // --- Step Content ---
-  function StepContent() {
+  // --- Step Content (called as function, NOT as <Component />) ---
+  function renderStepContent() {
     switch (step) {
       case 0:
         return (
@@ -377,12 +377,17 @@ export default function OnboardingWizard({
                   <input
                     type="color"
                     value={primaryColor}
+                    onInput={(e) => setPrimaryColor((e.target as HTMLInputElement).value)}
                     onChange={(e) => setPrimaryColor(e.target.value)}
-                    className="w-12 h-10 rounded-lg border border-gray-200 dark:border-white/10 cursor-pointer"
+                    className="w-12 h-10 rounded-lg border border-gray-200 dark:border-white/10 cursor-pointer appearance-none bg-transparent [&::-webkit-color-swatch-wrapper]:p-1 [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch]:border-none"
                   />
-                  <span className="text-sm text-gray-500 dark:text-white/50">
-                    {primaryColor}
-                  </span>
+                  <input
+                    type="text"
+                    value={primaryColor}
+                    onChange={(e) => setPrimaryColor(e.target.value)}
+                    className="panel-input px-3 py-1.5 rounded-lg text-sm w-28 font-mono"
+                    placeholder="#1CABB0"
+                  />
                 </div>
               </div>
             </div>
@@ -449,6 +454,9 @@ export default function OnboardingWizard({
               <p className="text-sm text-gray-500 dark:text-white/60">
                 {t("domain.subtitle")}
               </p>
+            </div>
+            <div className="rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 border border-drb-turquoise-200 dark:border-drb-turquoise-500/20 p-4 text-sm text-gray-700 dark:text-white/70">
+              {t("domain.explanation")}
             </div>
             <div>
               <input
@@ -618,12 +626,12 @@ export default function OnboardingWizard({
 
             {/* Summary checklist */}
             <div className="max-w-sm mx-auto text-start space-y-2">
-              <SummaryItem done={!!contactEmail || !!contactPhone} label={t("agency.title")} />
-              <SummaryItem done={!!selectedPlan} label={t("plan.title")} />
-              <SummaryItem done={!!domain} label={t("domain.title")} />
-              <SummaryItem done={!!heroTitle || !!aboutTitle} label={t("web.title")} />
-              <SummaryItem done={!!client.stripe_subscription_id} label={t("done.subscription")} />
-              <SummaryItem done={!!client.stripe_account_id} label={t("done.stripeConnect")} />
+              {renderSummaryItem(!!contactEmail || !!contactPhone, t("agency.title"))}
+              {renderSummaryItem(!!selectedPlan, t("plan.title"))}
+              {renderSummaryItem(!!domain, t("domain.title"))}
+              {renderSummaryItem(!!heroTitle || !!aboutTitle, t("web.title"))}
+              {renderSummaryItem(!!client.stripe_subscription_id, t("done.subscription"))}
+              {renderSummaryItem(!!client.stripe_account_id, t("done.stripeConnect"))}
             </div>
 
             {/* Stripe Subscription CTA */}
@@ -708,7 +716,7 @@ export default function OnboardingWizard({
     }
   }
 
-  function SummaryItem({ done, label }: { done: boolean; label: string }) {
+  function renderSummaryItem(done: boolean, label: string) {
     return (
       <div className="flex items-center gap-3">
         <div
@@ -773,7 +781,7 @@ export default function OnboardingWizard({
       )}
 
       {/* Progress bar */}
-      <ProgressBar />
+      {renderProgressBar()}
 
       {/* Step label */}
       {step > 0 && step < 5 && (
@@ -784,7 +792,7 @@ export default function OnboardingWizard({
 
       {/* Content card */}
       <div className="w-full max-w-2xl panel-card p-8 rounded-2xl">
-        <StepContent />
+        {renderStepContent()}
 
         {/* Navigation */}
         {(showPrevious || showNext) && (
@@ -809,8 +817,8 @@ export default function OnboardingWizard({
               </button>
               <button
                 onClick={handleNext}
-                disabled={saving}
-                className="btn-primary px-6 py-2.5 rounded-xl flex items-center gap-2"
+                disabled={saving || (step === 3 && !!domain && !domainVerified)}
+                className="btn-primary px-6 py-2.5 rounded-xl flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? (
                   <Clock className="w-4 h-4 animate-spin" />
