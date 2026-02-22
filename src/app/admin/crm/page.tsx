@@ -1,7 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireAdminClient } from "@/lib/requireAdminClient";
 import { getTranslations } from "next-intl/server";
-import { syncCustomers } from "./actions";
 import {
   Users,
   Sparkles,
@@ -49,15 +48,8 @@ export default async function CRMPage({ searchParams }: CRMPageProps) {
   const tc = await getTranslations("common");
   const clienteId = client.id;
 
-  // Auto-sync on first visit (when no customers exist yet)
-  const { count } = await supabaseAdmin
-    .from("agency_customers")
-    .select("id", { count: "exact", head: true })
-    .eq("cliente_id", clienteId);
-
-  if (count === 0) {
-    await syncCustomers();
-  }
+  // Note: auto-sync removed from render — syncCustomers() calls revalidatePath
+  // which is not allowed during render. Users can click the Sync button instead.
 
   // Fetch customers with filters
   let query = supabaseAdmin

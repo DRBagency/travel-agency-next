@@ -32,13 +32,9 @@ export default async function OwnerDashboardPage() {
     .order("created_at", { ascending: false })
     .limit(3);
 
-  /* Calendar events — próximos 3 */
-  const { data: calendarEvents } = await supabaseAdmin
-    .from("calendar_events")
-    .select("id, title, start_time, end_time, all_day, color")
-    .gte("start_time", new Date().toISOString())
-    .order("start_time", { ascending: true })
-    .limit(3);
+  /* Calendar events — owner events are in Google Calendar, not in local table.
+     The calendar_events table only stores agency (admin) events. */
+  const calendarEvents: any[] = [];
 
   const ticketsSafe = (supportTickets ?? []).map((t: any) => ({
     ...t,
