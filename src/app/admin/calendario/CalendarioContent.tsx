@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { sileo } from "sileo";
 import {
@@ -244,6 +245,7 @@ export default function CalendarioContent({
   googleConnected = false,
   googleEmail = null,
 }: CalendarioContentProps) {
+  const router = useRouter();
   const t = useTranslations("admin.calendario");
   const tc = useTranslations("common");
   const tt = useTranslations("toast");
@@ -318,6 +320,7 @@ export default function CalendarioContent({
       if (res.ok) {
         setGcConnected(false);
         sileo.success({ title: t("googleDisconnected") });
+        router.refresh();
       } else {
         sileo.error({ title: t("errorDisconnecting") });
       }
