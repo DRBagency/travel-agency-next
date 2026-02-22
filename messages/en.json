@@ -680,6 +680,7 @@
       "errorDeleting": "Error deleting event",
       "confirmDisconnect": "Disconnect Google Calendar? Synced events will be removed.",
       "errorDisconnecting": "Error disconnecting",
+      "googleDisconnected": "Google Calendar disconnected",
       "errorSavingUrl": "Error saving URL",
       "connectedAs": "Connected as",
       "disconnect": "Disconnect",

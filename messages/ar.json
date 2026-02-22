@@ -680,6 +680,7 @@
       "errorDeleting": "خطأ في حذف الحدث",
       "confirmDisconnect": "فصل تقويم Google؟ سيتم حذف الأحداث المتزامنة.",
       "errorDisconnecting": "خطأ في الفصل",
+      "googleDisconnected": "تم فصل تقويم Google",
       "errorSavingUrl": "خطأ في حفظ الرابط",
       "connectedAs": "متصل كـ",
       "disconnect": "فصل",

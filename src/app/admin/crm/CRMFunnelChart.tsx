@@ -56,7 +56,7 @@ export default function CRMFunnelChart({ data }: CRMFunnelChartProps) {
             const convIdx = conversionStages.findIndex((c) => c.stage === item.stage);
             if (convIdx > 0) {
               const prev = conversionStages[convIdx - 1];
-              conversionPct = prev.count > 0 ? Math.round((item.count / prev.count) * 100) : 0;
+              conversionPct = prev.count > 0 ? Math.round((item.count / prev.count) * 100) : null;
             }
           }
 
