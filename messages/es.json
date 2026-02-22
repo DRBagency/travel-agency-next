@@ -176,7 +176,13 @@
         "title": "Conecta tu dominio",
         "subtitle": "Configura el dominio donde se verá tu web.",
         "placeholder": "tuagencia.com",
-        "instructions": "Añade un registro CNAME en tu proveedor de dominio:"
+        "instructions": "Añade un registro CNAME en tu proveedor de dominio:",
+        "verify": "Verificar DNS",
+        "verifying": "Verificando...",
+        "verified": "¡Dominio verificado correctamente!",
+        "notFound": "El registro CNAME aún no se ha detectado. Puede tardar hasta 48h en propagarse.",
+        "verifyError": "Error al verificar. Inténtalo de nuevo más tarde.",
+        "verifyLater": "Puedes verificar el dominio más tarde desde tu panel."
       },
       "web": {
         "title": "Personaliza tu web",
@@ -197,7 +203,17 @@
         "subtitle": "Ya puedes empezar a gestionar tu agencia.",
         "reminderStripe": "Recuerda activar tu suscripción en la sección Stripe.",
         "completed": "Completado",
-        "pending": "Pendiente"
+        "pending": "Pendiente",
+        "subscription": "Suscripción",
+        "stripeConnect": "Stripe Connect",
+        "activateSubscription": "Activa tu suscripción",
+        "activateSubscriptionDesc": "Activa el plan {plan} para desbloquear todas las funcionalidades.",
+        "activateNow": "Activar ahora",
+        "activateLater": "También puedes activarlo después desde Stripe en tu panel.",
+        "subscriptionActive": "Tu suscripción está activa.",
+        "connectStripe": "Conecta Stripe para cobrar",
+        "connectStripeDesc": "Conecta tu cuenta de Stripe para poder recibir pagos de tus clientes por reservas.",
+        "setupConnect": "Configurar Stripe Connect"
       }
     },
     "eden": {

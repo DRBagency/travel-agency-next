@@ -13,6 +13,11 @@ import {
   Rocket,
   Building2,
   Clock,
+  AlertCircle,
+  RefreshCw,
+  ExternalLink,
+  Zap,
+  Link2,
 } from "lucide-react";
 
 interface OnboardingWizardProps {
@@ -26,12 +31,16 @@ interface OnboardingWizardProps {
     primary_color?: string | null;
     plan?: string | null;
     domain?: string | null;
+    domain_verified?: boolean | null;
     hero_title?: string | null;
     hero_subtitle?: string | null;
     hero_cta_text?: string | null;
     about_title?: string | null;
     about_text_1?: string | null;
     onboarding_step?: number | null;
+    stripe_subscription_id?: string | null;
+    stripe_account_id?: string | null;
+    stripe_charges_enabled?: boolean | null;
   };
   updateOnboardingData: (data: {
     plan?: string;
@@ -89,12 +98,20 @@ export default function OnboardingWizard({
   // Step 3
   const [domain, setDomain] = useState(client.domain ?? "");
 
+  // Step 3 — domain verification
+  const [domainVerified, setDomainVerified] = useState(client.domain_verified ?? false);
+  const [verifying, setVerifying] = useState(false);
+  const [verifyError, setVerifyError] = useState("");
+
   // Step 4
   const [heroTitle, setHeroTitle] = useState(client.hero_title ?? "");
   const [heroSubtitle, setHeroSubtitle] = useState(client.hero_subtitle ?? "");
   const [heroCtaText, setHeroCtaText] = useState(client.hero_cta_text ?? "");
   const [aboutTitle, setAboutTitle] = useState(client.about_title ?? "");
   const [aboutText1, setAboutText1] = useState(client.about_text_1 ?? "");
+
+  // Stripe state
+  const [stripeLoading, setStripeLoading] = useState(false);
 
   const stepIcons = [Rocket, Building2, CreditCard, Globe, Palette, Check];
   const stepLabels = [
@@ -136,6 +153,28 @@ export default function OnboardingWizard({
     }
   }
 
+  async function verifyDomain() {
+    if (!domain) return;
+    setVerifying(true);
+    setVerifyError("");
+    try {
+      const res = await fetch("/api/admin/domain/verify", { method: "POST" });
+      const data = await res.json();
+      if (data.verified) {
+        setDomainVerified(true);
+        setVerifyError("");
+      } else if (data.error === "dns_not_found") {
+        setVerifyError(t("domain.notFound"));
+      } else {
+        setVerifyError(t("domain.verifyError"));
+      }
+    } catch {
+      setVerifyError(t("domain.verifyError"));
+    } finally {
+      setVerifying(false);
+    }
+  }
+
   async function saveStep3() {
     setSaving(true);
     try {
@@ -164,6 +203,38 @@ export default function OnboardingWizard({
       setStep(5);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleStripeCheckout() {
+    setStripeLoading(true);
+    try {
+      const res = await fetch("/api/stripe/billing/create-subscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ returnTo: "/admin/onboarding" }),
+      });
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } finally {
+      setStripeLoading(false);
+    }
+  }
+
+  async function handleStripeConnect() {
+    setStripeLoading(true);
+    try {
+      const res = await fetch("/api/stripe/connect/create-account", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } finally {
+      setStripeLoading(false);
     }
   }
 
@@ -383,7 +454,11 @@ export default function OnboardingWizard({
               <input
                 type="text"
                 value={domain}
-                onChange={(e) => setDomain(e.target.value)}
+                onChange={(e) => {
+                  setDomain(e.target.value);
+                  setDomainVerified(false);
+                  setVerifyError("");
+                }}
                 className="panel-input w-full px-4 py-2.5 rounded-xl"
                 placeholder={t("domain.placeholder")}
               />
@@ -413,6 +488,42 @@ export default function OnboardingWizard({
                 </table>
               </div>
             </div>
+
+            {/* Domain verification */}
+            {domain && (
+              <div className="space-y-3">
+                {domainVerified ? (
+                  <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20">
+                    <Check className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
+                      {t("domain.verified")}
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      onClick={verifyDomain}
+                      disabled={verifying}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-drb-turquoise-200 dark:border-drb-turquoise-500/20 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-50 dark:hover:bg-drb-turquoise-500/10 transition-colors text-sm font-medium"
+                    >
+                      <RefreshCw className={`w-4 h-4 ${verifying ? "animate-spin" : ""}`} />
+                      {verifying ? t("domain.verifying") : t("domain.verify")}
+                    </button>
+                    {verifyError && (
+                      <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20">
+                        <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
+                        <span className="text-sm text-amber-700 dark:text-amber-300">
+                          {verifyError}
+                        </span>
+                      </div>
+                    )}
+                    <p className="text-xs text-center text-gray-400 dark:text-white/40">
+                      {t("domain.verifyLater")}
+                    </p>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         );
 
@@ -511,11 +622,74 @@ export default function OnboardingWizard({
               <SummaryItem done={!!selectedPlan} label={t("plan.title")} />
               <SummaryItem done={!!domain} label={t("domain.title")} />
               <SummaryItem done={!!heroTitle || !!aboutTitle} label={t("web.title")} />
+              <SummaryItem done={!!client.stripe_subscription_id} label={t("done.subscription")} />
+              <SummaryItem done={!!client.stripe_account_id} label={t("done.stripeConnect")} />
             </div>
 
-            {selectedPlan && !client.domain && (
-              <p className="text-sm text-amber-600 dark:text-amber-400">
-                {t("done.reminderStripe")}
+            {/* Stripe Subscription CTA */}
+            {selectedPlan && !client.stripe_subscription_id && (
+              <div className="max-w-sm mx-auto panel-card p-4 space-y-3 border-drb-turquoise-200 dark:border-drb-turquoise-500/20">
+                <div className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {t("done.activateSubscription")}
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-white/50 text-start">
+                  {t("done.activateSubscriptionDesc", { plan: selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1) })}
+                </p>
+                <button
+                  onClick={handleStripeCheckout}
+                  disabled={stripeLoading}
+                  className="w-full btn-primary py-2.5 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold"
+                >
+                  {stripeLoading ? (
+                    <Clock className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Zap className="w-4 h-4" />
+                      {t("done.activateNow")}
+                    </>
+                  )}
+                </button>
+                <p className="text-xs text-gray-400 dark:text-white/30">
+                  {t("done.activateLater")}
+                </p>
+              </div>
+            )}
+
+            {/* Stripe Connect CTA */}
+            {!client.stripe_account_id && (
+              <div className="max-w-sm mx-auto panel-card p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Link2 className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {t("done.connectStripe")}
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-white/50 text-start">
+                  {t("done.connectStripeDesc")}
+                </p>
+                <button
+                  onClick={handleStripeConnect}
+                  disabled={stripeLoading}
+                  className="w-full py-2.5 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.04] transition-colors text-sm font-medium text-gray-700 dark:text-white/70 flex items-center justify-center gap-2"
+                >
+                  {stripeLoading ? (
+                    <Clock className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <ExternalLink className="w-4 h-4" />
+                      {t("done.setupConnect")}
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+
+            {client.stripe_subscription_id && (
+              <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                {t("done.subscriptionActive")}
               </p>
             )}
 

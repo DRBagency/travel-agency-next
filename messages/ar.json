@@ -176,7 +176,13 @@
         "title": "اربط نطاقك",
         "subtitle": "قم بإعداد النطاق الذي سيظهر عليه موقعك.",
         "placeholder": "وكالتك.com",
-        "instructions": "أضف سجل CNAME في مزود النطاق الخاص بك:"
+        "instructions": "أضف سجل CNAME في مزود النطاق الخاص بك:",
+        "verify": "تحقق من DNS",
+        "verifying": "جاري التحقق...",
+        "verified": "تم التحقق من النطاق بنجاح!",
+        "notFound": "لم يتم اكتشاف سجل CNAME بعد. قد يستغرق الأمر حتى 48 ساعة للانتشار.",
+        "verifyError": "خطأ في التحقق. يرجى المحاولة لاحقاً.",
+        "verifyLater": "يمكنك التحقق من النطاق لاحقاً من لوحة التحكم."
       },
       "web": {
         "title": "خصّص موقعك",
@@ -197,7 +203,17 @@
         "subtitle": "يمكنك الآن البدء في إدارة وكالتك.",
         "reminderStripe": "تذكر تفعيل اشتراكك في قسم Stripe.",
         "completed": "مكتمل",
-        "pending": "معلق"
+        "pending": "معلق",
+        "subscription": "الاشتراك",
+        "stripeConnect": "Stripe Connect",
+        "activateSubscription": "فعّل اشتراكك",
+        "activateSubscriptionDesc": "فعّل خطة {plan} لفتح جميع الميزات.",
+        "activateNow": "تفعيل الآن",
+        "activateLater": "يمكنك أيضاً تفعيله لاحقاً من قسم Stripe في لوحتك.",
+        "subscriptionActive": "اشتراكك نشط.",
+        "connectStripe": "اربط Stripe للدفعات",
+        "connectStripeDesc": "اربط حساب Stripe الخاص بك لتلقي المدفوعات من عملائك للحجوزات.",
+        "setupConnect": "إعداد Stripe Connect"
       }
     },
     "eden": {

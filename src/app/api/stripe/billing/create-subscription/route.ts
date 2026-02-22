@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
-import { getClientByDomain } from "@/lib/getClientByDomain";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
+import { requireAdminClient } from "@/lib/requireAdminClient";
 import { supabaseAdmin } from "@/lib/supabase-server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -14,16 +14,18 @@ const PRICE_BY_PLAN: Record<string, string | undefined> = {
   pro: process.env.STRIPE_PRICE_PRO,
 };
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     await requireValidApiDomain();
   } catch {
     return NextResponse.json({}, { status: 403 });
   }
 
-  const client = await getClientByDomain();
-  if (!client) {
-    return NextResponse.json({}, { status: 404 });
+  let client;
+  try {
+    client = await requireAdminClient();
+  } catch {
+    return NextResponse.json({}, { status: 401 });
   }
 
   const plan = (client.plan || "").toString().toLowerCase();
@@ -64,12 +66,22 @@ export async function POST() {
     console.log(`ℹ️ [Create Subscription] Reusing existing Stripe customer: ${customerId}`);
   }
 
+  // Support returnTo param for onboarding flow
+  let returnTo = "/admin/stripe";
+  try {
+    const body = await request.json().catch(() => ({}));
+    if (body.returnTo && typeof body.returnTo === "string" && body.returnTo.startsWith("/admin/")) {
+      returnTo = body.returnTo;
+    }
+  } catch {}
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     customer: customerId,
     line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/stripe`,
-    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/stripe`,
+    success_url: `${baseUrl}${returnTo}?stripe_success=1`,
+    cancel_url: `${baseUrl}${returnTo}?stripe_cancelled=1`,
     metadata: {
       cliente_id: client.id,
       plan,

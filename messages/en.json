@@ -176,7 +176,13 @@
         "title": "Connect your domain",
         "subtitle": "Set up the domain where your site will be visible.",
         "placeholder": "youragency.com",
-        "instructions": "Add a CNAME record in your domain provider:"
+        "instructions": "Add a CNAME record in your domain provider:",
+        "verify": "Verify DNS",
+        "verifying": "Verifying...",
+        "verified": "Domain verified successfully!",
+        "notFound": "CNAME record not detected yet. It may take up to 48h to propagate.",
+        "verifyError": "Verification error. Please try again later.",
+        "verifyLater": "You can verify your domain later from your panel."
       },
       "web": {
         "title": "Customize your website",
@@ -197,7 +203,17 @@
         "subtitle": "You can now start managing your agency.",
         "reminderStripe": "Remember to activate your subscription in the Stripe section.",
         "completed": "Completed",
-        "pending": "Pending"
+        "pending": "Pending",
+        "subscription": "Subscription",
+        "stripeConnect": "Stripe Connect",
+        "activateSubscription": "Activate your subscription",
+        "activateSubscriptionDesc": "Activate the {plan} plan to unlock all features.",
+        "activateNow": "Activate now",
+        "activateLater": "You can also activate it later from Stripe in your panel.",
+        "subscriptionActive": "Your subscription is active.",
+        "connectStripe": "Connect Stripe for payments",
+        "connectStripeDesc": "Connect your Stripe account to receive payments from your clients for bookings.",
+        "setupConnect": "Set up Stripe Connect"
       }
     },
     "eden": {

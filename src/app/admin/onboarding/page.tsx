@@ -40,7 +40,7 @@ export default async function OnboardingPage() {
   const { data: client } = await supabaseAdmin
     .from("clientes")
     .select(
-      "id, nombre, email, contact_email, contact_phone, contact_address, primary_color, plan, domain, hero_title, hero_subtitle, hero_cta_text, about_title, about_text_1, onboarding_completed, onboarding_step"
+      "id, nombre, email, contact_email, contact_phone, contact_address, primary_color, plan, domain, domain_verified, hero_title, hero_subtitle, hero_cta_text, about_title, about_text_1, onboarding_completed, onboarding_step, stripe_subscription_id, stripe_account_id, stripe_charges_enabled"
     )
     .eq("id", clienteId)
     .single();
