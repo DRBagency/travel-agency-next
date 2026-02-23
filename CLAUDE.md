@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 22 Febrero 2026
+> **Última actualización:** 23 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -49,8 +49,10 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 ### Frontend
 - **Framework:** Next.js 16.1.6 (App Router)
 - **React:** 19.2.3
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS + CSS variables (landing theme) + inline styles (template port)
 - **UI Components:** shadcn/ui + custom design system (DataTable, KPICard, ConfirmDialog, EmptyState)
+- **Theme:** next-themes (dark/light mode toggle, SSR-safe, CSS variable injection)
+- **Fonts:** Syne (display headings) + DM Sans (body) via next/font/google
 - **i18n:** next-intl (cookie-based, sin prefijo URL)
 - **Charts:** Recharts
 - **Calendar:** FullCalendar
@@ -97,9 +99,11 @@ travel-agency-next/
 │   │   ├── admin/             # Panel CLIENTE (agencia)
 │   │   ├── owner/             # Panel OWNER (DRB Agency)
 │   │   ├── api/               # API routes
+│   │   ├── destino/[slug]/    # Destination detail page (public)
 │   │   ├── legal/             # Páginas legales dinámicas
 │   │   └── [otros]
 │   ├── components/
+│   │   ├── landing/          # Landing components: 9 sections (Navbar, Hero, Stats, Destinations, WhyUs, Testimonials, CTABanner, Contact, Footer) + 7 micro-components (AnimateIn, Img, Accordion, TagChip, StatusBadge, EffortDots, GlowOrb) + theme (LandingThemeProvider, LandingGlobalStyles)
 │   │   ├── ui/               # shadcn/ui + DataTable, KPICard, ConfirmDialog, EmptyState, DeleteWithConfirm, AnimatedSection, RiveAnimation
 │   │   ├── ai/               # AI components (ItineraryGenerator, ChatbotConfig, AIDescriptionButton, AIEmailGenerator, AIPricingSuggestion, FreeChat, AIRecommendations, AIInsightsCard[compact])
 │   │   ├── admin/            # Componentes admin (charts, dashboard, AdminShell, EdenChat, MountainBackground, DashboardBackground, AdminRightColumn)
@@ -114,6 +118,7 @@ travel-agency-next/
 │   │   ├── owner/            # Funciones del owner (get-chart-data: 8 semanas, get-dashboard-metrics)
 │   │   ├── supabase/         # Clients de Supabase
 │   │   ├── vercel/          # Vercel API helpers (domain management)
+│   │   ├── landing-theme.ts  # Theme palettes (light/dark) with CSS variable mapping
 │   │   └── set-locale.ts     # Server action cambio idioma
 │   └── middleware.ts
 ├── messages/
@@ -180,12 +185,12 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ### Tablas con CRUD completo (✅):
 | Tabla | Panel | Ruta |
 |-------|-------|------|
-| `clientes` | Owner | `/owner/clientes` — Columnas notables: `domain_verified`, `profile_photo`, `onboarding_completed`, `onboarding_step`, `slug` |
+| `clientes` | Owner | `/owner/clientes` — Columnas notables: `domain_verified`, `profile_photo`, `onboarding_completed`, `onboarding_step`, `slug`, `hero_badge`, `hero_cta_text_secondary`, `hero_cta_link_secondary`, `whyus_items` (JSONB), `cta_banner_*`, `footer_description`, `dark_mode_enabled`, `meta_title`, `meta_description` |
 | `platform_settings` | Owner | `/owner/emails` |
 | `billing_email_templates` | Owner | `/owner/emails` |
 | `email_templates` | Admin | `/admin/emails` |
-| `destinos` | Admin | `/admin/destinos` |
-| `opiniones` | Admin | `/admin/mi-web` (OpinionesManager, integrado en Mi Web) |
+| `destinos` | Admin | `/admin/destinos` (card grid) + `/admin/destinos/[id]` (tabbed editor: 11 tabs). Expanded columns: `slug`, `subtitle`, `tagline`, `badge`, `descripcion_larga`, `galeria` (JSONB), `coordinador` (JSONB), `hotel` (JSONB), `vuelos` (JSONB), `incluido` (JSONB), `no_incluido` (JSONB), `salidas` (JSONB), `faqs` (JSONB), `clima` (JSONB), `tags` (JSONB), `highlights` (JSONB), `esfuerzo`, `grupo_max`, `edad_min`, `edad_max`, `precio_original`, `moneda`, `duracion`, `continente`, `dificultad`, `categoria` |
+| `opiniones` | Admin | `/admin/mi-web` (OpinionesManager, integrado en Mi Web). Expanded: `avatar_url`, `fecha_display` |
 | `paginas_legales` | Admin | `/admin/legales` |
 | `calendar_events` | Admin | `/admin/calendario` |
 | `documents` | Admin | `/admin/documentos` (crear, editar, eliminar, PDF) |
@@ -322,7 +327,10 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ⏳ **D1 — Social Media Integration**: Código OAuth listo (social_connections table, OAuth library, API routes, UI). **Pendiente:** env vars Meta/TikTok (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`), crear apps en Meta Developer + TikTok Developer, gráficas de rendimiento de posts
 - ✅ **Más plantillas email**: Bienvenida, Recordatorio de viaje, Seguimiento post-viaje, Promoción (con SendPromocionButton). Total 6 templates (+ reserva_cliente, reserva_agencia)
 - ✅ **Merge Opiniones en Mi Web**: OpinionesManager integrado en `/admin/mi-web`, ruta standalone `/admin/opiniones` eliminada (21 Feb 2026), API routes `/api/admin/opiniones` mantenidas para OpinionesManager
-- 🚧 D2-D5 pendientes (Coordinadores, Vuelos/hoteles, FAQs por destino, Depósitos/anticipos)
+- ✅ **D2 — Coordinadores**: Integrado en destinos tabbed editor (tab Coordinador) — coordinador JSONB (nombre, avatar, rol, descripcion, idiomas[])
+- ✅ **D3 — Vuelos y hoteles**: Integrado en destinos tabbed editor (tabs Vuelos + Hotel) — vuelos JSONB (arrival/return airports, note) + hotel JSONB (nombre, estrellas, imagen, descripcion, amenidades[])
+- ✅ **D4 — FAQs por destino**: Integrado en destinos tabbed editor (tab FAQs) — faqs JSONB (question/answer pairs CRUD)
+- 🚧 D5 pendiente (Depósitos/anticipos)
 
 ### ✅ Fase E — Plataforma Self-Service COMPLETADA (E1-E7) (22 Feb 2026):
 - ✅ **E1 — Registro público**: drb.agency/admin como URL pública con opción de registrarse (email + contraseña), sin depender del owner
@@ -351,6 +359,15 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **F8 — Contador de Visitas en Vivo**: `page_visits` table + Realtime + RPC `count_active_visitors`, `/api/track` público con rate limiting, `/api/admin/visits/active` auth'd, `LiveVisitorBadge` en header (emerald pill, pulsing dot, Realtime + 60s polling), tracking `useEffect` en `HomeClient.tsx`, i18n `onYourWeb` ES/EN/AR
 - ✅ **Widget Opacity Fix**: panel-card/kpi-card dark mode cambiado de `bg-white/[0.06]` a `bg-[#0a2a35]/80 backdrop-blur-sm`. Light mode `bg-white/95`. panel-input dark `bg-[#0a2a35]/70`. Mejora legibilidad sobre mountain background
 
+### ✅ Fase G completada — Landing Page Rediseño Completo (23 Feb 2026):
+- ✅ **G1-G3 — 100% Landing Replacement**: Entire G2 landing replaced with new template port. 9 landing sections (LandingNavbar, LandingHero, LandingStats, LandingDestinations, LandingWhyUs, LandingTestimonials, LandingCTABanner, LandingContact, LandingFooter). 7 UI micro-components (AnimateIn, Img, Accordion, TagChip, StatusBadge, EffortDots, GlowOrb). Typography: Syne (display) + DM Sans (body) via next/font/google. Theme: next-themes + CSS variables + LandingThemeProvider + LandingGlobalStyles. Dark/light toggle in navbar
+- ✅ **Database Migrations (4)**: `expand_destinos_v2` (25+ new columns: slug, subtitle, tagline, badge, descripcion_larga, galeria, coordinador, hotel, vuelos, incluido, no_incluido, salidas, faqs, clima, tags, highlights — all JSONB), `expand_clientes_v2` (hero_badge, hero_cta_text_secondary, whyus_items, cta_banner_*, footer_description, dark_mode_enabled, meta_title/description), `expand_opiniones_v2` (avatar_url, fecha_display), `auto_generate_destino_slug` (trigger function)
+- ✅ **Destination Detail Page**: `/destino/[slug]/page.tsx` (server) + `DestinoDetail.tsx` (client). 8-tab layout: Itinerary, Hotel, Flight, Gallery, Included, Departures, Coordinator, FAQ. Hero gallery carousel, quick stats bar, tags + effort dots, bottom CTA. Preview route at `/preview/[slug]/destino/[destinoSlug]`
+- ✅ **Admin Destinos Tabbed Editor**: `/admin/destinos/[id]/page.tsx` + `DestinoEditor.tsx` (1460-line client component). 11 tabs: General, Pricing, Gallery, Itinerary, Hotel, Flights, Included, Departures, FAQs, Coordinator, Tags+Clima. API route `/api/admin/destinos/[id]/update` with typed field handling (STRING/NUMBER/BOOLEAN/JSONB). Unsplash picker integration. "Edit full page" link in destinos list
+- ✅ **Mi Web Admin Expansion**: New sections in MiWebContent.tsx — WhyUs editor (6 cards × icon/title/desc, add/remove/reorder), CTA Banner (title/desc/cta), expanded Hero (badge + secondary CTA), expanded Footer (description), Global Config (dark_mode_enabled toggle, meta_title, meta_description). ALLOWED_FIELDS + JSONB/boolean handling in update route
+- ✅ **i18n Expansion**: ~170 new keys across ES/EN/AR — `landing.*` namespace (stats, destinations, whyus, testimonials, ctaBanner, contact, destino detail), `admin.destinos` (76 keys for tabbed editor), `admin.miWeb` (new sections)
+- ✅ **Cleanup**: Deleted 24 old G2 landing components (Hero, About, Contact, Footer, Navbar, Testimonials, DestinationsGrid, DestinationsBento, DestinationsFiltered, EditorialText, FullWidthBreak, NewsletterForm, StatsBar, ImageSlider, HomeClient + 9 landing sub-components: CursorGlow, GradientMesh, FloatingShapes, FloatingParticles, ScrollReveal, SectionDivider, TypewriterText, WordReveal, MagneticButton)
+
 ### ⏳ Pendiente config externa (código listo):
 - **Social Media OAuth**: Crear app en Meta Developer (Instagram) + TikTok Developer, añadir env vars (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`) en Vercel. Redirect URIs: `https://drb.agency/api/admin/social/oauth/{instagram,tiktok}/callback`
 
@@ -361,7 +378,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ### Orden sugerido de ejecución:
 1. ~~Fase F (Visual/UX)~~ — **COMPLETADA**
 2. ~~Fase E (Self-service)~~ — **COMPLETADA (E1-E7)** — 22 Feb 2026
-3. Fase G (Landing rediseño) — Lo más visible para el cliente final
+3. ~~Fase G (Landing rediseño)~~ — **COMPLETADA (G1-G9)** — 23 Feb 2026
 4. Fase D (Nuevas secciones) — Coordinadores, vuelos, depósitos
 5. Fase H (Técnico) — Notificaciones, búsqueda, RGPD
 6. Fase I (Futuro) — Cuando las anteriores estén sólidas
@@ -370,9 +387,9 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 | # | Feature | Descripción | Estado |
 |---|---------|-------------|--------|
 | D1 | Social Media completa | Conectar Instagram, Facebook, TikTok. Estadísticas de cuentas, gráficas de rendimiento de posts, métricas de engagement | Código OAuth listo, faltan env vars Meta/TikTok + gráficas de rendimiento |
-| D2 | Sección de Coordinadores | Panel admin para gestionar coordinadores de viaje de la agencia (nombre, foto, bio, idiomas). Se muestran en landing en los destinos asignados | Nuevo |
-| D3 | Vuelos y hoteles en destinos | Opción para que la agencia añade info de vuelos (aeropuertos recomendados, buscar vuelo) y hoteles a cada destino | Nuevo |
-| D4 | FAQs por destino | Preguntas frecuentes editables por destino, visibles en la landing | Nuevo |
+| D2 | Sección de Coordinadores | Panel admin para gestionar coordinadores de viaje de la agencia (nombre, foto, bio, idiomas). Se muestran en landing en los destinos asignados | ✅ Integrado en destinos tabbed editor (tab Coordinador) |
+| D3 | Vuelos y hoteles en destinos | Opción para que la agencia añade info de vuelos (aeropuertos recomendados, buscar vuelo) y hoteles a cada destino | ✅ Integrado en destinos tabbed editor (tabs Vuelos + Hotel) |
+| D4 | FAQs por destino | Preguntas frecuentes editables por destino, visibles en la landing | ✅ Integrado en destinos tabbed editor (tab FAQs) |
 | D5 | Sistema de depósitos/anticipos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo (ej: 100€) y el resto antes de fecha X | Nuevo |
 
 ### ~~Fase E — Plataforma Self-Service (Autonomía Total)~~ — COMPLETADA (E1-E7) — 22 Feb 2026
@@ -386,20 +403,20 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 | E6 | Setup Stripe Connect autoguiado | Wizard paso a paso para que la agencia conecte Stripe Connect sola | ✅ |
 | E7 | Automatización dominio Vercel | API route `/api/admin/domain/add` + `/remove` + `/save` + `/verify` con Vercel API integration. Helper `src/lib/vercel/domains.ts`. OnboardingWizard auto-add dominio step 3. Editar dominio post-onboarding en `/admin/mi-web`. Env vars: VERCEL_TOKEN, VERCEL_PROJECT_ID, VERCEL_TEAM_ID | ✅ |
 
-### Fase G — Landing Page Rediseño Completo
-| # | Feature | Descripción |
-|---|---------|-------------|
-| G1 | Rediseño UX/UI completo | Landing page completamente nueva, premium, inspirada en WeRoad y otras agencias top |
-| G2 | Página de destino individual | /destino/[slug] con toda la info: galería de fotos, características, itinerario visual, incluido/no incluido, coordinador, vuelos, FAQs |
-| G3 | Galería de fotos por destino | Múltiples fotos editables por destino (no solo 1 imagen), carrusel/grid en landing |
-| G4 | Características del destino | Tags editables tipo "¿Es este viaje para mí?": Fiesta y Nightlife, Relax, Naturaleza y Aventura, Ciudad y Culturas, Monumentos e Historia, Esfuerzo Físico (nivel), Tipo de viaje |
-| G5 | Itinerario visual mejorado | Más visible y agradable de leer. Imagen principal por día. Mapa con flechas/rutas del recorrido |
-| G6 | Qué está incluido / No incluido | Secciones editables desde admin: alojamiento, desayunos, transporte, guía, seguro, etc. |
-| G7 | Por qué [nombre agencia] | Sección editable: grupos reducidos, cancelación gratuita, reserva con anticipo, etc. |
-| G8 | Calendario de salidas | Fechas de salida con estado (confirmado, últimas plazas, agotado), franja de edad, precio, botón reservar con anticipo, "avísame" |
-| G9 | Buscar vuelo | Sección con aeropuertos recomendados de llegada/regreso + CTA buscar vuelo |
-| G10 | Página de reserva completa | Flujo: ver destino → reservar → pagar. Cada paso con su propia página/redirección con toda la info |
-| G11 | Espacio personal cliente final | En la landing, el viajero accede con sus datos (email) y ve: sus reservas, itinerarios, documentos, estado de pago, chat con agencia |
+### ~~Fase G — Landing Page Rediseño Completo~~ — COMPLETADA (G1-G9) — 23 Feb 2026
+| # | Feature | Descripción | Estado |
+|---|---------|-------------|--------|
+| G1 | Rediseño UX/UI completo | 100% landing replacement: new template port (Syne + DM Sans, dark/light mode, glass-morphism navbar, parallax hero, glow orbs, 9 sections). next-themes + CSS variables + LandingThemeProvider | ✅ |
+| G2 | Página de destino individual | /destino/[slug] with 8-tab detail page (Itinerary, Hotel, Flight, Gallery, Included, Departures, Coordinator, FAQ). Hero gallery, quick stats bar, tags + effort dots, bottom CTA | ✅ |
+| G3 | Galería de fotos por destino | `galeria` JSONB column on destinos. Admin tabbed editor (tab Gallery). Carousel in destination detail page | ✅ |
+| G4 | Características del destino | `tags` + `highlights` + `esfuerzo` JSONB/int columns. TagChip + EffortDots components. Admin tabbed editor (tab Tags + Clima) | ✅ |
+| G5 | Itinerario visual mejorado | Enhanced itinerary tab in detail page with day-by-day timeline. Admin tabbed editor (tab Itinerario) | ✅ |
+| G6 | Qué está incluido / No incluido | `incluido` + `no_incluido` JSONB columns. Admin tabbed editor (tab Incluido). Included/NotIncluded tab in detail page | ✅ |
+| G7 | Por qué [nombre agencia] | `whyus_items` JSONB on clientes. LandingWhyUs section (6-card grid). Editable from Mi Web admin (WhyUs section editor with add/remove/reorder) | ✅ |
+| G8 | Calendario de salidas | `salidas` JSONB column. Admin tabbed editor (tab Salidas with CRUD rows: date, status, price, spots). StatusBadge (confirmed/lastSpots/soldOut) in detail page Departures tab | ✅ |
+| G9 | Vuelos + Hotel info | `vuelos` + `hotel` JSONB columns. Admin tabbed editor (tabs Vuelos + Hotel). Detail page tabs with airport info, hotel amenities | ✅ |
+| G10 | Página de reserva completa | Flujo: ver destino → reservar → pagar. Cada paso con su propia página/redirección con toda la info | Pendiente (using existing BookingModal with Stripe) |
+| G11 | Espacio personal cliente final | En la landing, el viajero accede con sus datos (email) y ve: sus reservas, itinerarios, documentos, estado de pago, chat con agencia | Pendiente |
 
 ### Fase H — Mejoras Técnicas / Infraestructura
 | # | Feature | Descripción |
@@ -529,6 +546,28 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 | `AnimatedSection` | Client | Viewport-triggered animation (framer-motion) |
 | `DashboardCard` | Server | Card de navegación con icon + hover |
 | `NotificationBell` | Client | Campana de notificaciones con badge count |
+
+### Componentes Landing (`src/components/landing/`):
+| Componente | Tipo | Uso |
+|------------|------|-----|
+| `LandingNavbar` | Client | Fixed glass-morphism navbar: logo + links + lang/theme toggles + CTA |
+| `LandingHero` | Client | Full-viewport centered hero: parallax bg, glow orbs, gradient text, dual CTAs, scroll indicator |
+| `LandingStats` | Client | 4 stat cards (emoji + animated counter + label) |
+| `LandingDestinations` | Client | Card grid with overlay text + tags + price. Click → `/destino/[slug]` |
+| `LandingWhyUs` | Client | 6-card grid from `whyus_items` JSONB or i18n defaults |
+| `LandingTestimonials` | Client | Carousel (1 at a time, auto-advance, dots navigation) |
+| `LandingCTABanner` | Client | Full-width gradient card with heading + desc + lime CTA |
+| `LandingContact` | Client | Centered card with form (name, email, phone, destination select, message) |
+| `LandingFooter` | Client | 4-column (brand+desc, destinations, company, legal) + bottom bar |
+| `LandingThemeProvider` | Client | next-themes wrapper + CSS variable injection from `landing-theme.ts` palettes |
+| `LandingGlobalStyles` | Client | Template CSS classes (.navl, .dcard, .tab-btn, .glow, .floating, .noise-bg) as `<style>` tag |
+| `AnimateIn` | Client | IntersectionObserver scroll animation wrapper (delay, from: bottom/left/right/scale) |
+| `Img` | Client | Image with gradient fallback on error |
+| `Accordion` | Client | FAQ accordion with chevron, max-height transition |
+| `TagChip` | Client | Color-coded tag pill (label→color map) |
+| `StatusBadge` | Client | Departure status (confirmed/lastSpots/soldOut) |
+| `EffortDots` | Client | 5-dot physical effort indicator |
+| `GlowOrb` | Client | Absolute-positioned blurred gradient circle |
 
 ### Componentes Admin (`src/components/admin/`):
 | Componente | Tipo | Uso |
