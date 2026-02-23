@@ -1,7 +1,6 @@
 "use client";
 
-import { Plane } from "lucide-react";
-import { motion } from "framer-motion";
+import { Plane, Mail, Phone, MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface FooterProps {
@@ -13,6 +12,9 @@ interface FooterProps {
   facebookUrl?: string | null;
   tiktokUrl?: string | null;
   legalPages?: any[];
+  email?: string | null;
+  phone?: string | null;
+  address?: string | null;
 }
 
 const Footer = ({
@@ -24,8 +26,10 @@ const Footer = ({
   facebookUrl,
   tiktokUrl,
   legalPages = [],
+  email,
+  phone,
+  address,
 }: FooterProps) => {
-  const t = useTranslations("landing");
   const tn = useTranslations("landing.navbar");
   const tf = useTranslations("landing.footer");
   const currentYear = new Date().getFullYear();
@@ -66,19 +70,10 @@ const Footer = ({
   ];
 
   return (
-    <footer className="relative border-t border-white/10 bg-slate-950">
-      {/* Glow accent */}
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }} />
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute -top-20 start-1/3 h-64 w-64 rounded-full blur-[120px]"
-          style={{ backgroundColor: `color-mix(in srgb, ${accentColor} 18%, transparent)` }}
-        />
-      </div>
-
+    <footer className="relative bg-slate-900 text-slate-300">
       <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="grid md:grid-cols-4 gap-10 mb-12">
-          {/* Brand */}
+          {/* Brand — 2 cols */}
           <div className="md:col-span-2">
             <a href="#" className="flex items-center gap-3 mb-4 group">
               {safeLogoUrl ? (
@@ -98,41 +93,29 @@ const Footer = ({
                 </div>
               )}
               {clientName && (
-                <span className="font-display text-xl font-bold">{clientName}</span>
+                <span className="font-display text-xl font-bold text-white">{clientName}</span>
               )}
             </a>
             {footerText && (
-              <p className="text-white/55 max-w-sm mb-6 leading-relaxed">{footerText}</p>
+              <p className="text-slate-400 max-w-sm mb-6 leading-relaxed">{footerText}</p>
             )}
 
-            {/* Social Links with hover glow */}
+            {/* Social Links */}
             {socials.length > 0 && (
               <div className="flex gap-3">
                 {socials.map((s) => (
-                  <motion.a
+                  <a
                     key={s.label}
                     href={s.url!}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border border-white/10 hover:border-white/20"
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.05)",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = `color-mix(in srgb, ${accentColor} 20%, transparent)`;
-                      (e.currentTarget as HTMLElement).style.boxShadow = `0 4px 20px color-mix(in srgb, ${accentColor} 30%, transparent)`;
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.05)";
-                      (e.currentTarget as HTMLElement).style.boxShadow = "none";
-                    }}
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border border-slate-700 hover:border-slate-500 bg-slate-800 hover:bg-slate-700"
                     aria-label={s.label}
                   >
-                    <svg className="w-[18px] h-[18px] text-white/60" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-[18px] h-[18px] text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                       <path d={s.path} />
                     </svg>
-                  </motion.a>
+                  </a>
                 ))}
               </div>
             )}
@@ -140,54 +123,70 @@ const Footer = ({
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-display font-semibold mb-5 text-white/90">{tf("navigation")}</h4>
+            <h4 className="font-semibold mb-5 text-white text-sm uppercase tracking-wider">{tf("navigation")}</h4>
             <ul className="space-y-3">
               {navItems.map((item) => (
                 <li key={item.label}>
                   <a
                     href={item.href}
-                    className="text-white/55 hover:text-white transition-colors duration-200 text-sm"
+                    className="text-slate-400 hover:text-white transition-colors duration-200 text-sm"
                   >
                     {item.label}
                   </a>
                 </li>
               ))}
+              {legalPages.map((item: any) => {
+                const slug = item?.slug ?? "";
+                const label = item?.titulo ?? item?.title ?? slug;
+                if (!slug) return null;
+                return (
+                  <li key={slug}>
+                    <a
+                      href={`/legal/${slug}`}
+                      className="text-slate-400 hover:text-white transition-colors duration-200 text-sm"
+                    >
+                      {label}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
-          {/* Legal */}
-          {legalPages.length > 0 && (
-            <div>
-              <h4 className="font-display font-semibold mb-5 text-white/90">{tf("legal")}</h4>
-              <ul className="space-y-3">
-                {legalPages.map((item: any) => {
-                  const slug = item?.slug ?? "";
-                  const label = item?.titulo ?? item?.title ?? slug;
-                  if (!slug) return null;
-                  return (
-                    <li key={slug}>
-                      <a
-                        href={`/legal/${slug}`}
-                        className="text-white/55 hover:text-white transition-colors duration-200 text-sm"
-                      >
-                        {label}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
+          {/* Contact */}
+          <div>
+            <h4 className="font-semibold mb-5 text-white text-sm uppercase tracking-wider">{tn("contact")}</h4>
+            <ul className="space-y-3">
+              {phone && (
+                <li className="flex items-center gap-2 text-sm text-slate-400">
+                  <Phone className="w-4 h-4 flex-shrink-0" style={{ color: accentColor }} />
+                  {phone}
+                </li>
+              )}
+              {email && (
+                <li className="flex items-center gap-2 text-sm text-slate-400">
+                  <Mail className="w-4 h-4 flex-shrink-0" style={{ color: accentColor }} />
+                  {email}
+                </li>
+              )}
+              {address && (
+                <li className="flex items-start gap-2 text-sm text-slate-400">
+                  <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: accentColor }} />
+                  {address}
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-sm">
-            © {currentYear} {clientName || "Travel Agency"}. {tf("rights")}
+        <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-slate-500 text-sm">
+            &copy; {currentYear} {clientName || "Travel Agency"}. {tf("rights")}
           </p>
-          <div className="flex items-center gap-2 text-white/30 text-xs">
+          <div className="flex items-center gap-2 text-slate-600 text-xs">
             <span>{tf("poweredBy")}</span>
-            <span className="font-semibold text-white/50">DRB Agency</span>
+            <span className="font-semibold text-slate-400">DRB Agency</span>
           </div>
         </div>
       </div>

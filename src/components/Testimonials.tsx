@@ -25,19 +25,17 @@ function TestimonialCard({
   primaryColor?: string | null;
 }) {
   return (
-    <div className="flex-shrink-0 w-[380px] md:w-[420px] glass-card p-7 rounded-3xl border border-white/10 hover:border-white/25 transition-all duration-300 group">
+    <div className="flex-shrink-0 w-[380px] md:w-[420px] bg-white p-7 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group border border-slate-100">
       {/* Quote Icon */}
       <Quote
         className="w-8 h-8 mb-3 transition-transform duration-300 group-hover:scale-110"
         style={{
-          color: primaryColor
-            ? `color-mix(in srgb, ${primaryColor} 60%, transparent)`
-            : "rgba(255,255,255,0.20)",
+          color: primaryColor || "rgba(148,163,184,0.5)",
         }}
       />
 
       {/* Comment */}
-      <p className="text-white/75 text-[15px] mb-5 leading-relaxed line-clamp-4">
+      <p className="text-slate-600 text-[15px] mb-5 leading-relaxed line-clamp-4">
         &ldquo;{testimonial.comment}&rdquo;
       </p>
 
@@ -47,18 +45,14 @@ function TestimonialCard({
           {Array.from({ length: testimonial.rating }).map((_, i) => (
             <Star
               key={i}
-              className="w-4 h-4"
-              style={{
-                color: primaryColor || "hsl(var(--gold))",
-                fill: primaryColor || "hsl(var(--gold))",
-              }}
+              className="w-4 h-4 fill-amber-400 text-amber-400"
             />
           ))}
         </div>
       )}
 
       {/* Author */}
-      <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
+      <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
         {testimonial.avatarText && (
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold"
@@ -73,10 +67,10 @@ function TestimonialCard({
         )}
         <div>
           {testimonial.name && (
-            <div className="font-semibold text-white text-sm">{testimonial.name}</div>
+            <div className="font-semibold text-slate-800 text-sm">{testimonial.name}</div>
           )}
           {testimonial.location && (
-            <div className="text-xs text-white/50">{testimonial.location}</div>
+            <div className="text-xs text-slate-400">{testimonial.location}</div>
           )}
         </div>
       </div>
@@ -86,6 +80,7 @@ function TestimonialCard({
 
 const Testimonials = ({ primaryColor, opinions }: TestimonialsProps) => {
   const t = useTranslations("landing.testimonials");
+  const accentColor = primaryColor || "#1CABB0";
   const normalized: NormalizedTestimonial[] = (opinions || [])
     .map((item, index) => {
       const name =
@@ -123,12 +118,8 @@ const Testimonials = ({ primaryColor, opinions }: TestimonialsProps) => {
   return (
     <section
       id="opiniones"
-      className="py-24 md:py-28 lg:py-32 relative overflow-hidden scroll-mt-24"
+      className="py-24 md:py-28 lg:py-32 relative overflow-hidden scroll-mt-24 bg-white"
     >
-      {/* Background decoration */}
-      <div className="absolute top-0 start-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl animate-float-slow" />
-      <div className="absolute bottom-0 end-1/4 w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl animate-float-slower" />
-
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
@@ -139,23 +130,21 @@ const Testimonials = ({ primaryColor, opinions }: TestimonialsProps) => {
           className="text-center mb-14"
         >
           <span
-            className="inline-block px-4 py-1.5 rounded-full glass-card text-sm text-white/70 mb-4"
-            style={
-              primaryColor
-                ? {
-                    borderColor: `color-mix(in srgb, ${primaryColor} 35%, transparent)`,
-                    backgroundColor: `color-mix(in srgb, ${primaryColor} 12%, transparent)`,
-                  }
-                : undefined
-            }
+            className="inline-block px-4 py-1.5 rounded-full text-sm mb-4 font-semibold"
+            style={{
+              borderColor: `color-mix(in srgb, ${accentColor} 30%, transparent)`,
+              backgroundColor: `color-mix(in srgb, ${accentColor} 8%, transparent)`,
+              color: accentColor,
+              border: "1px solid",
+            }}
           >
             {t("badge")}
           </span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4 text-slate-900">
             {t("title")}{" "}
-            <span className="gradient-text-ocean">{t("titleHighlight")}</span>
+            <span className="gradient-text-ocean-light">{t("titleHighlight")}</span>
           </h2>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto">
+          <p className="text-slate-500 text-lg max-w-2xl mx-auto">
             {t("subtitle")}
           </p>
         </motion.div>
@@ -169,8 +158,8 @@ const Testimonials = ({ primaryColor, opinions }: TestimonialsProps) => {
             className="flex gap-6 animate-marquee"
             style={{ "--marquee-duration": `${Math.max(30, normalized.length * 8)}s` } as React.CSSProperties}
           >
-            {row1.map((t, i) => (
-              <TestimonialCard key={`r1-${i}`} testimonial={t} primaryColor={primaryColor} />
+            {row1.map((testimonial, i) => (
+              <TestimonialCard key={`r1-${i}`} testimonial={testimonial} primaryColor={primaryColor} />
             ))}
           </div>
         </div>
@@ -182,8 +171,8 @@ const Testimonials = ({ primaryColor, opinions }: TestimonialsProps) => {
               className="flex gap-6 animate-marquee-reverse"
               style={{ "--marquee-duration": `${Math.max(35, normalized.length * 9)}s` } as React.CSSProperties}
             >
-              {row2.map((t, i) => (
-                <TestimonialCard key={`r2-${i}`} testimonial={t} primaryColor={primaryColor} />
+              {row2.map((testimonial, i) => (
+                <TestimonialCard key={`r2-${i}`} testimonial={testimonial} primaryColor={primaryColor} />
               ))}
             </div>
           </div>

@@ -283,6 +283,24 @@ html {
     background: rgba(255, 255, 255, 0.05);
   }
 
+  /* ─── Landing light-theme gradient text (dark bg fallback preserved) ─── */
+  .gradient-text-ocean-light {
+    @apply bg-gradient-to-r from-drb-turquoise-500 via-drb-turquoise-600 to-drb-turquoise-700 bg-clip-text text-transparent;
+  }
+
+  /* ─── Hero subtle zoom ─── */
+  .hero-zoom {
+    animation: subtleZoom 20s ease-in-out infinite alternate;
+  }
+
+  /* ─── Slider scrollbar hide ─── */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* ─── Slider snap ─── */
+  .slider-snap { scroll-snap-type: x mandatory; }
+  .slide-snap { scroll-snap-align: start; }
+
   /* ─── Landing premium effects ─── */
   .shimmer-text {
     background-size: 200% auto;

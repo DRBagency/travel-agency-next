@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, Plane } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -34,32 +34,20 @@ const Navbar = ({
 
   const safeLogoUrl = (() => {
     if (typeof logoUrl !== "string") return null;
-
     const cleaned = logoUrl.trim();
-
     if (!cleaned) return null;
-
-    // URL absoluta válida
-    if (cleaned.startsWith("http://") || cleaned.startsWith("https://")) {
-      return cleaned;
-    }
-
-    // Path local válido (/logo.png)
-    if (cleaned.startsWith("/")) {
-      return cleaned;
-    }
-
-    // Todo lo demás → inválido
+    if (cleaned.startsWith("http://") || cleaned.startsWith("https://")) return cleaned;
+    if (cleaned.startsWith("/")) return cleaned;
     return null;
   })();
 
   const shouldRenderCta = Boolean(ctaText && ctaLink);
+  const accentColor = primaryColor || "#1CABB0";
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 8);
+      setIsScrolled(window.scrollY > 50);
     };
-
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -67,15 +55,12 @@ const Navbar = ({
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+      <nav
         className={cn(
-          "sticky top-0 start-0 end-0 z-50 transition-all duration-300",
+          "fixed top-0 start-0 end-0 z-50 transition-all duration-300",
           isScrolled
-            ? "bg-slate-950/85 backdrop-blur-xl border-b border-white/10 shadow-[0_10px_30px_rgba(2,6,23,0.55)]"
-            : "bg-slate-950/60 backdrop-blur-md"
+            ? "bg-white/90 backdrop-blur-md shadow-sm"
+            : "bg-transparent"
         )}
       >
         <div className="container mx-auto px-4">
@@ -91,11 +76,16 @@ const Navbar = ({
                   className="rounded-lg object-contain"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-                  <Plane className="w-5 h-5 text-foreground" />
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                  <Plane className="w-5 h-5 text-slate-600" />
                 </div>
               )}
-              <span className="font-display text-xl font-bold">
+              <span
+                className={cn(
+                  "font-display text-xl font-bold transition-colors duration-300",
+                  isScrolled ? "text-slate-900" : "text-white"
+                )}
+              >
                 {clientName}
               </span>
             </a>
@@ -106,50 +96,48 @@ const Navbar = ({
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-white/70 hover:text-white transition-colors relative group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded-sm"
+                  className={cn(
+                    "text-sm font-medium transition-colors duration-300 relative group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 rounded-sm",
+                    isScrolled
+                      ? "text-slate-600 hover:text-slate-900"
+                      : "text-white/80 hover:text-white"
+                  )}
                 >
                   {link.label}
                   <span
-                    className="absolute -bottom-1 start-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full"
-                    style={{
-                      backgroundColor: primaryColor || "currentColor",
-                    }}
+                    className="absolute -bottom-1 start-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full rounded-full"
+                    style={{ backgroundColor: accentColor }}
                   />
                 </a>
               ))}
             </div>
 
-            {/* CTA */}
+            {/* CTA pill */}
             {shouldRenderCta && (
               <div className="hidden md:block">
                 <a
                   href={ctaLink ?? undefined}
-                  className={
-                    primaryColor
-                      ? "px-6 py-2.5 rounded-xl font-semibold text-sm text-white shadow-[0_10px_24px_rgba(0,0,0,0.35)] hover:brightness-110 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                      : "px-6 py-2.5 rounded-xl font-semibold text-sm bg-white text-slate-950 shadow-[0_10px_24px_rgba(0,0,0,0.35)] hover:-translate-y-0.5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                  }
-                  style={
-                    primaryColor
-                      ? { backgroundColor: primaryColor }
-                      : undefined
-                  }
+                  className="px-6 py-2.5 rounded-full font-semibold text-sm text-white shadow-lg hover:brightness-110 hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                  style={{ backgroundColor: accentColor }}
                 >
                   {ctaText}
                 </a>
               </div>
             )}
 
-            {/* Mobile */}
+            {/* Mobile hamburger */}
             <button
-              className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              className={cn(
+                "md:hidden p-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400",
+                isScrolled ? "hover:bg-slate-100 text-slate-900" : "hover:bg-white/10 text-white"
+              )}
               onClick={() => setIsMobileMenuOpen(true)}
             >
               <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -161,7 +149,7 @@ const Navbar = ({
             className="fixed inset-0 z-50 md:hidden"
           >
             <div
-              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div
@@ -169,27 +157,27 @@ const Navbar = ({
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute end-0 top-0 bottom-0 w-80 bg-slate-950 border-s border-white/10 p-6"
+              className="absolute end-0 top-0 bottom-0 w-80 bg-white p-6 shadow-2xl"
             >
               <div className="flex items-center justify-between mb-8">
-                <span className="font-display text-xl font-bold">
+                <span className="font-display text-xl font-bold text-slate-900">
                   {clientName}
                 </span>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-lg hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                  className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {navLinks.map((link) => (
                   <a
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 rounded-xl text-lg text-white/80 hover:text-white hover:bg-white/10 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                    className="block px-4 py-3 rounded-xl text-lg text-slate-700 hover:text-slate-900 hover:bg-slate-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
                   >
                     {link.label}
                   </a>
@@ -198,16 +186,8 @@ const Navbar = ({
                 {shouldRenderCta && (
                   <a
                     href={ctaLink ?? undefined}
-                    className={
-                      primaryColor
-                        ? "block mt-6 px-4 py-3 rounded-xl text-center font-semibold text-white shadow-[0_10px_24px_rgba(0,0,0,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                        : "block mt-6 px-4 py-3 rounded-xl text-center font-semibold bg-white text-slate-950 shadow-[0_10px_24px_rgba(0,0,0,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                    }
-                    style={
-                      primaryColor
-                        ? { backgroundColor: primaryColor }
-                        : undefined
-                    }
+                    className="block mt-6 px-4 py-3 rounded-full text-center font-semibold text-white shadow-lg"
+                    style={{ backgroundColor: accentColor }}
                   >
                     {ctaText}
                   </a>

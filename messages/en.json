@@ -1540,7 +1540,10 @@
       "badgeSafe": "Secure Booking",
       "badgeInstant": "Instant Payment",
       "badgeSupport": "24/7 Support",
+      "badge": "Explore the Unseen",
       "viewDestinations": "View Destinations",
+      "ctaSecondary": "View Destinations",
+      "scrollDown": "Scroll down",
       "statsYears": "Years",
       "statsDestinations": "Destinations",
       "statsTravelers": "Travelers",
@@ -1566,7 +1569,14 @@
       "night": "Night",
       "perAdult": "per adult",
       "perChild": "per child",
-      "perGroup": "per group"
+      "perGroup": "per group",
+      "viewDetails": "View Details",
+      "days": "{n} Days",
+      "person": "Per person"
+    },
+    "slider": {
+      "title": "Visual Journeys",
+      "subtitle": "Swipe to explore our destinations"
     },
     "testimonials": {
       "badge": "Real Reviews",
@@ -1594,6 +1604,10 @@
       "title": "Have any",
       "titleHighlight": "questions",
       "subtitle": "We're here to help. Send us a message and we'll get back to you as soon as possible.",
+      "readyTitle": "Ready for your next adventure?",
+      "readySubtitle": "Fill out the form and our specialists will contact you within 24 hours",
+      "quote": "Traveling leaves you speechless, then turns you into a storyteller",
+      "quoteAuthor": "Ibn Battuta",
       "infoTitle": "Contact Information",
       "emailLabel": "Email",
       "phoneLabel": "Phone",

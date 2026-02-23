@@ -1540,7 +1540,10 @@
       "badgeSafe": "Reserva segura",
       "badgeInstant": "Pago instantáneo",
       "badgeSupport": "Soporte 24/7",
+      "badge": "Explora lo desconocido",
       "viewDestinations": "Ver destinos",
+      "ctaSecondary": "Ver destinos",
+      "scrollDown": "Desliza hacia abajo",
       "statsYears": "Años",
       "statsDestinations": "Destinos",
       "statsTravelers": "Viajeros",
@@ -1566,7 +1569,14 @@
       "night": "Noche",
       "perAdult": "por adulto",
       "perChild": "por niño",
-      "perGroup": "por grupo"
+      "perGroup": "por grupo",
+      "viewDetails": "Ver detalles",
+      "days": "{n} Días",
+      "person": "Por persona"
+    },
+    "slider": {
+      "title": "Viajes visuales",
+      "subtitle": "Desliza para explorar nuestros destinos"
     },
     "testimonials": {
       "badge": "Opiniones reales",
@@ -1594,6 +1604,10 @@
       "title": "¿Tienes alguna",
       "titleHighlight": "duda",
       "subtitle": "Estamos aquí para ayudarte. Envíanos un mensaje y te responderemos lo antes posible.",
+      "readyTitle": "¿Listo para tu próxima aventura?",
+      "readySubtitle": "Rellena el formulario y nuestros especialistas te contactarán en 24 horas",
+      "quote": "Viajar te deja sin palabras y luego te convierte en un narrador de historias",
+      "quoteAuthor": "Ibn Battuta",
       "infoTitle": "Información de contacto",
       "emailLabel": "Email",
       "phoneLabel": "Teléfono",

@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Mail, Phone, MapPin, CheckCircle } from "lucide-react";
+import { Send, CheckCircle } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 interface ContactProps {
@@ -9,9 +10,10 @@ interface ContactProps {
   email?: string | null;
   phone?: string | null;
   address?: string | null;
+  heroImageUrl?: string | null;
 }
 
-const Contact = ({ primaryColor, email, phone, address }: ContactProps) => {
+const Contact = ({ primaryColor, email, phone, address, heroImageUrl }: ContactProps) => {
   const t = useTranslations("landing.contact");
   const accentColor = primaryColor || "#1CABB0";
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -38,138 +40,100 @@ const Contact = ({ primaryColor, email, phone, address }: ContactProps) => {
     }
   };
 
-  const contactItems = [
-    { icon: Mail, label: t("emailLabel"), value: email, color: accentColor },
-    { icon: Phone, label: t("phoneLabel"), value: phone, color: accentColor },
-    { icon: MapPin, label: t("addressLabel"), value: address, color: accentColor },
-  ].filter((c) => c.value);
+  const safeImageUrl = (() => {
+    if (typeof heroImageUrl !== "string") return null;
+    const cleaned = heroImageUrl.trim();
+    if (!cleaned) return null;
+    if (cleaned.startsWith("http://") || cleaned.startsWith("https://")) return cleaned;
+    if (cleaned.startsWith("/")) return cleaned;
+    return null;
+  })();
 
   return (
     <section id="contacto" className="py-24 md:py-28 lg:py-32 relative scroll-mt-24">
-      {/* Background decoration */}
-      <div className="absolute top-1/2 start-0 w-96 h-96 rounded-full blur-3xl -translate-y-1/2 animate-float-slow" style={{ backgroundColor: `color-mix(in srgb, ${accentColor} 12%, transparent)` }} />
-
       <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <span
-            className="inline-block px-4 py-1.5 rounded-full glass-card text-sm text-white/70 mb-4"
-            style={{
-              borderColor: `color-mix(in srgb, ${accentColor} 35%, transparent)`,
-              backgroundColor: `color-mix(in srgb, ${accentColor} 12%, transparent)`,
-            }}
-          >
-            {t("badge")}
-          </span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            {t("title")} <span className="gradient-text-sunset">{t("titleHighlight")}</span>?
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4 text-slate-900">
+            {t("readyTitle")}
           </h2>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            {t("subtitle")}
+          <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+            {t("readySubtitle")}
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="space-y-6"
-          >
-            {contactItems.length > 0 && (
-              <div className="glass-card p-6 rounded-3xl border border-white/10 space-y-5">
-                <h3 className="font-display text-xl font-semibold">
-                  {t("infoTitle")}
-                </h3>
-                {contactItems.map((item) => (
-                  <motion.div
-                    key={item.label}
-                    whileHover={{ x: 4 }}
-                    className="flex items-start gap-4 group cursor-default"
-                  >
-                    <div
-                      className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-                      style={{ background: `color-mix(in srgb, ${item.color} 18%, transparent)` }}
-                    >
-                      <item.icon className="w-5 h-5" style={{ color: item.color }} />
-                    </div>
-                    <div>
-                      <div className="font-medium text-white text-sm">{item.label}</div>
-                      <div className="text-white/60 text-sm whitespace-pre-line">{item.value}</div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            )}
+        {/* Split card */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="max-w-6xl mx-auto rounded-3xl overflow-hidden shadow-2xl"
+          style={{ backgroundColor: `color-mix(in srgb, ${accentColor} 90%, #0f172a)` }}
+        >
+          <div className="grid lg:grid-cols-2">
+            {/* Form side */}
+            <div className="p-8 md:p-12 text-white">
+              {/* Contact info */}
+              {(email || phone || address) && (
+                <div className="flex flex-wrap gap-4 text-sm text-white/70 mb-8">
+                  {email && <span>{email}</span>}
+                  {phone && <span>{phone}</span>}
+                  {address && <span>{address}</span>}
+                </div>
+              )}
 
-            <div
-              className="p-6 rounded-3xl border border-white/10 transition-all duration-300 hover:border-white/20"
-              style={{
-                background: `linear-gradient(135deg, color-mix(in srgb, ${accentColor} 16%, transparent), color-mix(in srgb, ${accentColor} 6%, transparent))`,
-              }}
-            >
-              <h4 className="font-semibold text-white mb-2">
-                {t("helpTitle")}
-              </h4>
-              <p className="text-white/70 text-sm">
-                {t("helpText")}
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <form
-              onSubmit={handleSubmit}
-              className="glass-card p-8 rounded-3xl border border-white/10"
-            >
-              <div className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 {isSubmitted && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300 flex items-center gap-2"
+                    className="rounded-xl border border-emerald-400/30 bg-emerald-500/15 px-4 py-3 text-sm text-emerald-200 flex items-center gap-2"
                   >
                     <CheckCircle className="w-4 h-4" />
                     {t("successMessage")}
                   </motion.div>
                 )}
 
-                {[
-                  { id: "name", label: t("nameLabel"), type: "text", placeholder: t("namePlaceholder") },
-                  { id: "email", label: t("emailLabel"), type: "email", placeholder: t("emailPlaceholder") },
-                ].map((field) => (
-                  <div key={field.id}>
-                    <label htmlFor={field.id} className="block text-sm font-medium text-white mb-2">
-                      {field.label}
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-2">
+                      {t("nameLabel")}
                     </label>
                     <input
-                      type={field.type}
-                      id={field.id}
-                      value={(formData as any)[field.id]}
-                      onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
+                      type="text"
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-900/80 border border-white/10 text-white placeholder:text-white/40 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
-                      placeholder={field.placeholder}
+                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                      placeholder={t("namePlaceholder")}
                     />
                   </div>
-                ))}
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">
+                      {t("emailLabel")}
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                      placeholder={t("emailPlaceholder")}
+                    />
+                  </div>
+                </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium text-white/80 mb-2">
                     {t("messageLabel")}
                   </label>
                   <textarea
@@ -177,8 +141,8 @@ const Contact = ({ primaryColor, email, phone, address }: ContactProps) => {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     required
-                    rows={5}
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-900/80 border border-white/10 text-white placeholder:text-white/40 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all resize-none"
+                    rows={4}
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all resize-none"
                     placeholder={t("messagePlaceholder")}
                   />
                 </div>
@@ -186,8 +150,7 @@ const Contact = ({ primaryColor, email, phone, address }: ContactProps) => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="hero-glow-btn w-full py-4 rounded-2xl font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-                  style={{ backgroundColor: accentColor }}
+                  className="w-full py-4 rounded-xl font-semibold bg-white text-slate-900 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
                 >
                   {isSubmitting ? (
                     t("sending")
@@ -198,10 +161,37 @@ const Contact = ({ primaryColor, email, phone, address }: ContactProps) => {
                     </>
                   )}
                 </button>
+              </form>
+            </div>
+
+            {/* Image/quote side — hidden on mobile */}
+            <div className="relative hidden lg:block">
+              {safeImageUrl ? (
+                <Image
+                  src={safeImageUrl}
+                  alt=""
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+              )}
+              <div className="absolute inset-0 bg-black/40" />
+
+              {/* Quote */}
+              <div className="absolute inset-0 flex items-end p-12">
+                <div>
+                  <p className="text-white/90 text-xl italic leading-relaxed mb-4">
+                    &ldquo;{t("quote")}&rdquo;
+                  </p>
+                  <span className="text-white/60 text-sm font-semibold">
+                    — {t("quoteAuthor")}
+                  </span>
+                </div>
               </div>
-            </form>
-          </motion.div>
-        </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -3,9 +3,11 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import StatsBar from "@/components/StatsBar";
 import DestinationsGrid, {
   Destination,
 } from "@/components/DestinationsGrid";
+import ImageSlider from "@/components/ImageSlider";
 import BookingModal from "@/components/BookingModal";
 import Testimonials from "@/components/Testimonials";
 import About from "@/components/About";
@@ -25,7 +27,7 @@ export default function HomeClient({
     useState<Destination | null>(null);
 
   return (
-    <>
+    <main className="relative min-h-screen bg-slate-50 text-slate-800 antialiased">
       <Navbar
         clientName={client.nombre}
         logoUrl={client.logo_url}
@@ -37,21 +39,28 @@ export default function HomeClient({
       <Hero
         title={client.hero_title}
         subtitle={client.hero_subtitle}
-        imageUrl={client.hero_image_url}
         ctaText={client.hero_cta_text}
         ctaLink={client.hero_cta_link}
+        imageUrl={client.hero_image_url}
         primaryColor={client.primary_color}
+      />
+
+      <StatsBar
         statsYears={client.stats_years}
         statsDestinations={client.stats_destinations}
         statsTravelers={client.stats_travelers}
         statsRating={client.stats_rating}
+        primaryColor={client.primary_color}
       />
 
       <DestinationsGrid
         clienteId={client.id}
-        onReserve={(destination) =>
-          setSelectedDestination(destination)
-        }
+        primaryColor={client.primary_color}
+        onReserve={setSelectedDestination}
+      />
+
+      <ImageSlider
+        clienteId={client.id}
         primaryColor={client.primary_color}
       />
 
@@ -76,6 +85,7 @@ export default function HomeClient({
         email={client.contact_email}
         phone={client.contact_phone}
         address={client.contact_address}
+        heroImageUrl={client.hero_image_url}
       />
 
       <Footer
@@ -87,14 +97,19 @@ export default function HomeClient({
         facebookUrl={client.facebook_url}
         tiktokUrl={client.tiktok_url}
         legalPages={paginasLegales}
+        email={client.contact_email}
+        phone={client.contact_phone}
+        address={client.contact_address}
       />
 
       <BookingModal
         destination={selectedDestination}
         clienteId={client.id}
         primaryColor={client.primary_color}
+        paymentsEnabled={client.stripe_charges_enabled === true}
+        subscriptionActive={Boolean(client.stripe_subscription_id)}
         onClose={() => setSelectedDestination(null)}
       />
-    </>
+    </main>
   );
 }

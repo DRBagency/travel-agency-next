@@ -1540,7 +1540,10 @@
       "badgeSafe": "حجز آمن",
       "badgeInstant": "دفع فوري",
       "badgeSupport": "دعم ٢٤/٧",
+      "badge": "اكتشف المجهول",
       "viewDestinations": "عرض الوجهات",
+      "ctaSecondary": "عرض الوجهات",
+      "scrollDown": "مرر للأسفل",
       "statsYears": "سنوات",
       "statsDestinations": "وجهات",
       "statsTravelers": "مسافرين",
@@ -1566,7 +1569,14 @@
       "night": "المساء",
       "perAdult": "للبالغ",
       "perChild": "للطفل",
-      "perGroup": "للمجموعة"
+      "perGroup": "للمجموعة",
+      "viewDetails": "عرض التفاصيل",
+      "days": "{n} أيام",
+      "person": "للشخص"
+    },
+    "slider": {
+      "title": "رحلات بصرية",
+      "subtitle": "اسحب لاستكشاف وجهاتنا"
     },
     "testimonials": {
       "badge": "تقييمات حقيقية",
@@ -1594,6 +1604,10 @@
       "title": "هل لديك أي",
       "titleHighlight": "أسئلة",
       "subtitle": "نحن هنا لمساعدتك. أرسل لنا رسالة وسنرد عليك في أقرب وقت.",
+      "readyTitle": "هل أنت مستعد لمغامرتك القادمة؟",
+      "readySubtitle": "املأ النموذج وسيتواصل معك متخصصونا خلال 24 ساعة",
+      "quote": "السفر يتركك بلا كلمات ثم يحولك إلى راوي قصص",
+      "quoteAuthor": "ابن بطوطة",
       "infoTitle": "معلومات الاتصال",
       "emailLabel": "البريد الإلكتروني",
       "phoneLabel": "الهاتف",

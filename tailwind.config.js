@@ -118,6 +118,7 @@ module.exports = {
         'marquee-reverse': 'marqueeReverse var(--marquee-duration, 40s) linear infinite',
         'gradient-shift': 'gradientShift 8s ease infinite',
         'spin-slow': 'spin 20s linear infinite',
+        'subtle-zoom': 'subtleZoom 20s ease-in-out infinite alternate',
       },
       keyframes: {
         slideInRight: {
@@ -164,6 +165,10 @@ module.exports = {
         gradientShift: {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
+        },
+        subtleZoom: {
+          '0%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(1.05)' },
         },
       },
     },
