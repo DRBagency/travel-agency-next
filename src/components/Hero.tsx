@@ -1,9 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRef } from "react";
+import GradientMesh from "@/components/landing/GradientMesh";
+import FloatingParticles from "@/components/landing/FloatingParticles";
+import TypewriterText from "@/components/landing/TypewriterText";
+import WordReveal from "@/components/landing/WordReveal";
 
 interface HeroProps {
   title?: string | null;
@@ -24,6 +29,17 @@ const Hero = ({
 }: HeroProps) => {
   const t = useTranslations("landing.hero");
   const accentColor = primaryColor || "#1CABB0";
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.2]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 0.5], [0, -60]);
 
   const safeImageUrl = (() => {
     if (typeof imageUrl !== "string") return null;
@@ -40,16 +56,22 @@ const Hero = ({
       }
     : undefined;
 
-  // Split title to highlight last word with primaryColor
+  // Split title to highlight last word
   const titleWords = (title || "").split(" ");
   const lastWord = titleWords.length > 1 ? titleWords.pop() : null;
   const mainTitle = titleWords.join(" ");
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image with subtle zoom or fallback */}
+    <section
+      ref={sectionRef}
+      className="relative h-screen flex items-center justify-center overflow-hidden"
+    >
+      {/* Parallax background image */}
       {safeImageUrl ? (
-        <div className="absolute inset-0 hero-zoom">
+        <motion.div
+          className="absolute inset-0"
+          style={{ y: imageY, scale: imageScale }}
+        >
           <Image
             src={safeImageUrl}
             alt={title ?? ""}
@@ -57,7 +79,7 @@ const Hero = ({
             priority
             className="object-cover"
           />
-        </div>
+        </motion.div>
       ) : (
         <div
           className={fallbackStyle ? "absolute inset-0" : "absolute inset-0 bg-gradient-to-br from-slate-200 via-slate-100 to-slate-50"}
@@ -65,11 +87,20 @@ const Hero = ({
         />
       )}
 
-      {/* Gradient overlay — fades into slate-50 page bg */}
+      {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-slate-50" />
 
+      {/* Animated gradient mesh overlay */}
+      <GradientMesh primaryColor={accentColor} opacity={0.35} />
+
+      {/* Floating particles */}
+      <FloatingParticles count={28} color="white" />
+
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4">
+      <motion.div
+        className="relative z-10 container mx-auto px-4"
+        style={{ opacity: contentOpacity, y: contentY }}
+      >
         <div className="max-w-4xl text-center mx-auto">
           {/* Badge */}
           <motion.span
@@ -81,32 +112,45 @@ const Hero = ({
             {t("badge")}
           </motion.span>
 
-          {/* Title */}
+          {/* Typewriter title */}
           {title && (
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
               className="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-[1.05] text-white"
             >
-              {mainTitle}{" "}
+              <TypewriterText text={mainTitle} delay={0.3} speed={0.05} />{" "}
               {lastWord && (
-                <span className="italic" style={{ color: accentColor }}>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 + mainTitle.length * 0.05 + 0.2, duration: 0.5 }}
+                  className="italic inline-block"
+                  style={{
+                    background: `linear-gradient(135deg, ${accentColor}, color-mix(in srgb, ${accentColor} 60%, #a855f7), #06b6d4)`,
+                    backgroundSize: "200% 200%",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    animation: "meshShift 4s ease infinite",
+                  }}
+                >
                   {lastWord}
-                </span>
+                </motion.span>
               )}
             </motion.h1>
           )}
 
-          {/* Subtitle */}
+          {/* Word-by-word subtitle */}
           {subtitle && (
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.3 }}
               className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed"
             >
-              {subtitle}
+              <WordReveal text={subtitle} delay={0.8} />
             </motion.p>
           )}
 
@@ -114,7 +158,7 @@ const Hero = ({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
             className="flex flex-wrap items-center justify-center gap-4"
           >
             {ctaText && ctaLink && (
@@ -135,13 +179,13 @@ const Hero = ({
             </a>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.6 }}
+        transition={{ delay: 2, duration: 0.6 }}
         className="absolute bottom-8 start-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
       >
         <span className="text-xs text-white/60 uppercase tracking-widest">{t("scrollDown")}</span>

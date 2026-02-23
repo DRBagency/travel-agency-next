@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import FloatingShapes from "@/components/landing/FloatingShapes";
 
 interface StatsBarProps {
   statsYears?: string | number | null;
@@ -85,8 +86,11 @@ const StatsBar = ({
 
   return (
     <div className="relative z-20 -mt-16 mx-4 md:mx-auto max-w-5xl">
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-100">
-        <div className={`grid grid-cols-2 ${stats.length >= 4 ? "sm:grid-cols-4" : stats.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"} divide-y sm:divide-y-0 sm:divide-x divide-slate-100`}>
+      <div className="relative overflow-hidden bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40">
+        {/* Floating decorative shapes */}
+        <FloatingShapes count={4} primaryColor={accentColor} />
+
+        <div className={`relative z-10 grid grid-cols-2 ${stats.length >= 4 ? "sm:grid-cols-4" : stats.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"} divide-y sm:divide-y-0 sm:divide-x divide-slate-100/50`}>
           {stats.map((stat) => (
             <div key={stat.label} className="px-6 py-8 text-center">
               <div className="text-3xl md:text-4xl font-bold" style={{ color: accentColor }}>

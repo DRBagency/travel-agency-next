@@ -6,6 +6,9 @@ import { motion } from "framer-motion";
 import { ArrowRight, MapPin, Loader2, Clock, Users, Star } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useTranslations } from "next-intl";
+import Tilt from "react-parallax-tilt";
+import CursorGlow from "@/components/landing/CursorGlow";
+import GradientMesh from "@/components/landing/GradientMesh";
 
 export interface Destination {
   id: string;
@@ -26,12 +29,13 @@ interface DestinationsGridProps {
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  hidden: { opacity: 0, y: 40, scale: 0.95, filter: "blur(10px)" },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.5, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] as const },
+    filter: "blur(0px)",
+    transition: { duration: 0.6, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] as const },
   }),
 };
 
@@ -76,7 +80,10 @@ const DestinationsGrid = ({
   }
 
   return (
-    <section id="destinos" className="py-24 md:py-28 lg:py-32 relative scroll-mt-24">
+    <section id="destinos" className="py-24 md:py-28 lg:py-32 relative scroll-mt-24 overflow-hidden">
+      {/* Subtle gradient mesh background */}
+      <GradientMesh primaryColor={accentColor} opacity={0.08} />
+
       <div className="container mx-auto px-4 relative z-10">
         {/* Section header */}
         <motion.div
@@ -120,82 +127,96 @@ const DestinationsGrid = ({
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
-                className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
               >
-                {/* Image container */}
-                <div className="relative h-72 overflow-hidden">
-                  {d.imagen_url ? (
-                    <Image
-                      src={d.imagen_url}
-                      alt={d.nombre}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="h-full flex items-center justify-center bg-slate-100 text-slate-400">
-                      {t("noImage")}
+                <Tilt
+                  tiltMaxAngleX={8}
+                  tiltMaxAngleY={8}
+                  glareEnable
+                  glareMaxOpacity={0.15}
+                  glareColor="white"
+                  glarePosition="all"
+                  glareBorderRadius="16px"
+                  className="h-full"
+                >
+                  <CursorGlow color={`color-mix(in srgb, ${accentColor} 20%, transparent)`}>
+                    <div className="group bg-white/70 backdrop-blur-lg border border-white/50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 h-full">
+                      {/* Image container */}
+                      <div className="relative h-72 overflow-hidden">
+                        {d.imagen_url ? (
+                          <Image
+                            src={d.imagen_url}
+                            alt={d.nombre}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                        ) : (
+                          <div className="h-full flex items-center justify-center bg-slate-100 text-slate-400">
+                            {t("noImage")}
+                          </div>
+                        )}
+
+                        {/* Rating badge top-right */}
+                        <div className="absolute top-4 end-4 flex items-center gap-1 rounded-full bg-white/90 backdrop-blur-sm px-3 py-1.5 text-sm font-semibold text-slate-800 shadow-md">
+                          <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                          4.9
+                        </div>
+
+                        {/* Price badge */}
+                        <div
+                          className="absolute bottom-4 end-4 rounded-full px-4 py-1.5 text-sm font-bold text-white shadow-lg"
+                          style={{ backgroundColor: accentColor }}
+                        >
+                          {d.precio} €
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold mb-1 text-slate-900">
+                          {d.nombre}
+                        </h3>
+                        <p className="text-sm text-slate-500 mb-4 line-clamp-2">
+                          {d.descripcion}
+                        </p>
+
+                        {/* Metadata row */}
+                        <div className="flex items-center gap-4 text-xs text-slate-400 mb-5">
+                          {daysCount > 0 && (
+                            <span className="inline-flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5" />
+                              {t("days", { n: daysCount })}
+                            </span>
+                          )}
+                          <span className="inline-flex items-center gap-1">
+                            <Users className="w-3.5 h-3.5" />
+                            {t("person")}
+                          </span>
+                        </div>
+
+                        {/* CTA button */}
+                        <button
+                          onClick={() => onReserve(d)}
+                          className="w-full py-3 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2"
+                          style={{
+                            borderColor: accentColor,
+                            color: accentColor,
+                          }}
+                          onMouseEnter={(e) => {
+                            (e.currentTarget as HTMLElement).style.backgroundColor = accentColor;
+                            (e.currentTarget as HTMLElement).style.color = "white";
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                            (e.currentTarget as HTMLElement).style.color = accentColor;
+                          }}
+                        >
+                          {t("viewDetails")}
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                  )}
-
-                  {/* Rating badge top-right */}
-                  <div className="absolute top-4 end-4 flex items-center gap-1 rounded-full bg-white/90 backdrop-blur-sm px-3 py-1.5 text-sm font-semibold text-slate-800 shadow-md">
-                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    4.9
-                  </div>
-
-                  {/* Price badge */}
-                  <div
-                    className="absolute bottom-4 end-4 rounded-full px-4 py-1.5 text-sm font-bold text-white shadow-lg"
-                    style={{ backgroundColor: accentColor }}
-                  >
-                    {d.precio} €
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-1 text-slate-900">
-                    {d.nombre}
-                  </h3>
-                  <p className="text-sm text-slate-500 mb-4 line-clamp-2">
-                    {d.descripcion}
-                  </p>
-
-                  {/* Metadata row */}
-                  <div className="flex items-center gap-4 text-xs text-slate-400 mb-5">
-                    {daysCount > 0 && (
-                      <span className="inline-flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5" />
-                        {t("days", { n: daysCount })}
-                      </span>
-                    )}
-                    <span className="inline-flex items-center gap-1">
-                      <Users className="w-3.5 h-3.5" />
-                      {t("person")}
-                    </span>
-                  </div>
-
-                  {/* CTA button — full width outlined */}
-                  <button
-                    onClick={() => onReserve(d)}
-                    className="w-full py-3 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2"
-                    style={{
-                      borderColor: accentColor,
-                      color: accentColor,
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = accentColor;
-                      (e.currentTarget as HTMLElement).style.color = "white";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                      (e.currentTarget as HTMLElement).style.color = accentColor;
-                    }}
-                  >
-                    {t("viewDetails")}
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
+                  </CursorGlow>
+                </Tilt>
               </motion.div>
             );
           })}

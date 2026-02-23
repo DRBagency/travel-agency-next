@@ -1,7 +1,9 @@
 "use client";
 
 import { Plane, Mail, Phone, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import MagneticButton from "@/components/landing/MagneticButton";
 
 interface FooterProps {
   primaryColor?: string | null;
@@ -71,6 +73,15 @@ const Footer = ({
 
   return (
     <footer className="relative bg-slate-900 text-slate-300">
+      {/* Animated gradient top border */}
+      <div
+        className="h-[2px] w-full animate-gradient-shift"
+        style={{
+          backgroundImage: `linear-gradient(90deg, transparent, ${accentColor}, color-mix(in srgb, ${accentColor} 50%, #a855f7), ${accentColor}, transparent)`,
+          backgroundSize: "200% 100%",
+        }}
+      />
+
       <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="grid md:grid-cols-4 gap-10 mb-12">
           {/* Brand — 2 cols */}
@@ -100,22 +111,23 @@ const Footer = ({
               <p className="text-slate-400 max-w-sm mb-6 leading-relaxed">{footerText}</p>
             )}
 
-            {/* Social Links */}
+            {/* Social Links with magnetic hover */}
             {socials.length > 0 && (
               <div className="flex gap-3">
                 {socials.map((s) => (
-                  <a
-                    key={s.label}
-                    href={s.url!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border border-slate-700 hover:border-slate-500 bg-slate-800 hover:bg-slate-700"
-                    aria-label={s.label}
-                  >
-                    <svg className="w-[18px] h-[18px] text-slate-400" fill="currentColor" viewBox="0 0 24 24">
-                      <path d={s.path} />
-                    </svg>
-                  </a>
+                  <MagneticButton key={s.label} strength={0.3}>
+                    <a
+                      href={s.url!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border border-slate-700 hover:border-slate-500 bg-slate-800 hover:bg-slate-700"
+                      aria-label={s.label}
+                    >
+                      <svg className="w-[18px] h-[18px] text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d={s.path} />
+                      </svg>
+                    </a>
+                  </MagneticButton>
                 ))}
               </div>
             )}

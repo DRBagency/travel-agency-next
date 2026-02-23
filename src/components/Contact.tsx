@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Send, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import MagneticButton from "@/components/landing/MagneticButton";
+import FloatingParticles from "@/components/landing/FloatingParticles";
 
 interface ContactProps {
   primaryColor?: string | null;
@@ -74,10 +76,22 @@ const Contact = ({ primaryColor, email, phone, address, heroImageUrl }: ContactP
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="max-w-6xl mx-auto rounded-3xl overflow-hidden shadow-2xl"
+          className="max-w-6xl mx-auto rounded-3xl overflow-hidden shadow-2xl relative"
           style={{ backgroundColor: `color-mix(in srgb, ${accentColor} 90%, #0f172a)` }}
         >
-          <div className="grid lg:grid-cols-2">
+          {/* Light beam effect */}
+          <div
+            className="absolute inset-0 pointer-events-none overflow-hidden"
+          >
+            <div
+              className="absolute top-0 start-0 w-[200%] h-full opacity-0 animate-beam-sweep"
+              style={{
+                background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.08) 55%, transparent 100%)`,
+              }}
+            />
+          </div>
+
+          <div className="grid lg:grid-cols-2 relative z-10">
             {/* Form side */}
             <div className="p-8 md:p-12 text-white">
               {/* Contact info */}
@@ -112,7 +126,18 @@ const Contact = ({ primaryColor, email, phone, address, heroImageUrl }: ContactP
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:outline-none transition-all"
+                      style={{
+                        boxShadow: "none",
+                      }}
+                      onFocus={(e) => {
+                        (e.currentTarget as HTMLElement).style.borderColor = `color-mix(in srgb, ${accentColor} 60%, white)`;
+                        (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 3px color-mix(in srgb, ${accentColor} 25%, transparent)`;
+                      }}
+                      onBlur={(e) => {
+                        (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                      }}
                       placeholder={t("namePlaceholder")}
                     />
                   </div>
@@ -126,7 +151,18 @@ const Contact = ({ primaryColor, email, phone, address, heroImageUrl }: ContactP
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:outline-none transition-all"
+                      style={{
+                        boxShadow: "none",
+                      }}
+                      onFocus={(e) => {
+                        (e.currentTarget as HTMLElement).style.borderColor = `color-mix(in srgb, ${accentColor} 60%, white)`;
+                        (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 3px color-mix(in srgb, ${accentColor} 25%, transparent)`;
+                      }}
+                      onBlur={(e) => {
+                        (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                      }}
                       placeholder={t("emailPlaceholder")}
                     />
                   </div>
@@ -142,29 +178,42 @@ const Contact = ({ primaryColor, email, phone, address, heroImageUrl }: ContactP
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     required
                     rows={4}
-                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:outline-none transition-all resize-none"
+                    style={{
+                      boxShadow: "none",
+                    }}
+                    onFocus={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = `color-mix(in srgb, ${accentColor} 60%, white)`;
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 3px color-mix(in srgb, ${accentColor} 25%, transparent)`;
+                    }}
+                    onBlur={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
+                      (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                    }}
                     placeholder={t("messagePlaceholder")}
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 rounded-xl font-semibold bg-white text-slate-900 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-                >
-                  {isSubmitting ? (
-                    t("sending")
-                  ) : (
-                    <>
-                      <Send className="w-5 h-5" />
-                      {t("send")}
-                    </>
-                  )}
-                </button>
+                <MagneticButton strength={0.2} className="w-full">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-4 rounded-xl font-semibold bg-white text-slate-900 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                  >
+                    {isSubmitting ? (
+                      t("sending")
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5" />
+                        {t("send")}
+                      </>
+                    )}
+                  </button>
+                </MagneticButton>
               </form>
             </div>
 
-            {/* Image/quote side — hidden on mobile */}
+            {/* Image/quote side with floating particles */}
             <div className="relative hidden lg:block">
               {safeImageUrl ? (
                 <Image
@@ -178,8 +227,11 @@ const Contact = ({ primaryColor, email, phone, address, heroImageUrl }: ContactP
               )}
               <div className="absolute inset-0 bg-black/40" />
 
+              {/* Floating particles on image side */}
+              <FloatingParticles count={12} color="white" />
+
               {/* Quote */}
-              <div className="absolute inset-0 flex items-end p-12">
+              <div className="absolute inset-0 flex items-end p-12 z-10">
                 <div>
                   <p className="text-white/90 text-xl italic leading-relaxed mb-4">
                     &ldquo;{t("quote")}&rdquo;

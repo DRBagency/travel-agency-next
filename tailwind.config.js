@@ -119,6 +119,10 @@ module.exports = {
         'gradient-shift': 'gradientShift 8s ease infinite',
         'spin-slow': 'spin 20s linear infinite',
         'subtle-zoom': 'subtleZoom 20s ease-in-out infinite alternate',
+        'mesh-shift': 'meshShift 12s ease infinite',
+        'beam-sweep': 'beamSweep 6s ease-in-out infinite',
+        'pulse-ring': 'pulseRing 3s ease-out infinite',
+        'float-particle': 'floatParticle 8s ease-in-out infinite',
       },
       keyframes: {
         slideInRight: {
@@ -169,6 +173,26 @@ module.exports = {
         subtleZoom: {
           '0%': { transform: 'scale(1)' },
           '100%': { transform: 'scale(1.05)' },
+        },
+        meshShift: {
+          '0%': { backgroundPosition: '0% 0%' },
+          '50%': { backgroundPosition: '100% 100%' },
+          '100%': { backgroundPosition: '0% 0%' },
+        },
+        beamSweep: {
+          '0%': { transform: 'translateX(-100%) rotate(-35deg)', opacity: '0' },
+          '50%': { opacity: '0.5' },
+          '100%': { transform: 'translateX(100%) rotate(-35deg)', opacity: '0' },
+        },
+        pulseRing: {
+          '0%': { transform: 'scale(0.8)', opacity: '0.6' },
+          '100%': { transform: 'scale(1.5)', opacity: '0' },
+        },
+        floatParticle: {
+          '0%, 100%': { transform: 'translateY(0) translateX(0)' },
+          '25%': { transform: 'translateY(-30px) translateX(10px)' },
+          '50%': { transform: 'translateY(-15px) translateX(-10px)' },
+          '75%': { transform: 'translateY(-25px) translateX(5px)' },
         },
       },
     },

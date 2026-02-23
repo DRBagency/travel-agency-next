@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { Menu, X, Plane } from "lucide-react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
 interface NavbarProps {
@@ -29,8 +28,8 @@ const Navbar = ({
     { href: "#nosotros", label: t("about") },
     { href: "#contacto", label: t("contact") },
   ];
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const safeLogoUrl = (() => {
     if (typeof logoUrl !== "string") return null;
@@ -44,24 +43,27 @@ const Navbar = ({
   const shouldRenderCta = Boolean(ctaText && ctaLink);
   const accentColor = primaryColor || "#1CABB0";
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { scrollY } = useScroll();
+
+  // Continuous interpolation values
+  const bgOpacity = useTransform(scrollY, [0, 150], [0, 0.92]);
+  const blurPx = useTransform(scrollY, [0, 150], [0, 12]);
+  const shadowOpacity = useTransform(scrollY, [0, 150], [0, 0.08]);
+
+  useMotionValueEvent(scrollY, "change", (v) => {
+    setScrolled(v > 50);
+  });
 
   return (
     <>
-      <nav
-        className={cn(
-          "fixed top-0 start-0 end-0 z-50 transition-all duration-300",
-          isScrolled
-            ? "bg-white/90 backdrop-blur-md shadow-sm"
-            : "bg-transparent"
-        )}
+      <motion.nav
+        className="fixed top-0 start-0 end-0 z-50"
+        style={{
+          backgroundColor: useTransform(bgOpacity, (v) => `rgba(255,255,255,${v})`),
+          backdropFilter: useTransform(blurPx, (v) => `blur(${v}px)`),
+          WebkitBackdropFilter: useTransform(blurPx, (v) => `blur(${v}px)`),
+          boxShadow: useTransform(shadowOpacity, (v) => `0 1px 3px rgba(0,0,0,${v})`),
+        }}
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
@@ -81,10 +83,8 @@ const Navbar = ({
                 </div>
               )}
               <span
-                className={cn(
-                  "font-display text-xl font-bold transition-colors duration-300",
-                  isScrolled ? "text-slate-900" : "text-white"
-                )}
+                className="font-display text-xl font-bold transition-colors duration-500"
+                style={{ color: scrolled ? "#0f172a" : "#ffffff" }}
               >
                 {clientName}
               </span>
@@ -96,12 +96,16 @@ const Navbar = ({
                 <a
                   key={link.href}
                   href={link.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors duration-300 relative group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 rounded-sm",
-                    isScrolled
-                      ? "text-slate-600 hover:text-slate-900"
-                      : "text-white/80 hover:text-white"
-                  )}
+                  className="text-sm font-medium transition-colors duration-500 relative group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 rounded-sm"
+                  style={{
+                    color: scrolled ? "#475569" : "rgba(255,255,255,0.8)",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.color = scrolled ? "#0f172a" : "#ffffff";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.color = scrolled ? "#475569" : "rgba(255,255,255,0.8)";
+                  }}
                 >
                   {link.label}
                   <span
@@ -127,17 +131,17 @@ const Navbar = ({
 
             {/* Mobile hamburger */}
             <button
-              className={cn(
-                "md:hidden p-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400",
-                isScrolled ? "hover:bg-slate-100 text-slate-900" : "hover:bg-white/10 text-white"
-              )}
+              className="md:hidden p-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+              style={{
+                color: scrolled ? "#0f172a" : "#ffffff",
+              }}
               onClick={() => setIsMobileMenuOpen(true)}
             >
               <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Mobile Menu */}
       <AnimatePresence>

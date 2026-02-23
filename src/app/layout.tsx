@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Manrope, Sora, Noto_Sans_Arabic } from "next/font/google";
+import { Manrope, Playfair_Display, Noto_Sans_Arabic } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -11,7 +11,7 @@ const manrope = Manrope({
   variable: "--font-sans",
 });
 
-const sora = Sora({
+const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-display",
 });
@@ -37,7 +37,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className={`${manrope.variable} ${sora.variable} ${notoArabic.variable}`}
+        className={`${manrope.variable} ${playfair.variable} ${notoArabic.variable}`}
       >
         <ThemeProvider
           attribute="class"

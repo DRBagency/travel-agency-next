@@ -3,6 +3,9 @@
 import { motion } from "framer-motion";
 import { Shield, Globe, Heart, Award, Users, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Tilt from "react-parallax-tilt";
+import FloatingShapes from "@/components/landing/FloatingShapes";
+import WordReveal from "@/components/landing/WordReveal";
 
 interface AboutProps {
   primaryColor?: string | null;
@@ -31,9 +34,13 @@ const About = ({
   text2,
 }: AboutProps) => {
   const t = useTranslations("landing.about");
+  const accentColor = primaryColor || "#1CABB0";
 
   return (
     <section id="nosotros" className="py-24 md:py-28 lg:py-32 relative overflow-hidden scroll-mt-24 bg-slate-50">
+      {/* Floating decorative shapes */}
+      <FloatingShapes count={5} primaryColor={accentColor} />
+
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <motion.div
@@ -46,9 +53,9 @@ const About = ({
           <span
             className="inline-block px-4 py-1.5 rounded-full text-sm mb-4 font-semibold"
             style={{
-              backgroundColor: `color-mix(in srgb, ${primaryColor || "#1CABB0"} 8%, transparent)`,
-              color: primaryColor || "#1CABB0",
-              border: `1px solid color-mix(in srgb, ${primaryColor || "#1CABB0"} 30%, transparent)`,
+              backgroundColor: `color-mix(in srgb, ${accentColor} 8%, transparent)`,
+              color: accentColor,
+              border: `1px solid color-mix(in srgb, ${accentColor} 30%, transparent)`,
             }}
           >
             {t("badge")}
@@ -65,7 +72,7 @@ const About = ({
 
         {/* Content grid */}
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Text */}
+          {/* Text with WordReveal */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -74,14 +81,18 @@ const About = ({
             className="space-y-6"
           >
             {text1 && (
-              <p className="text-lg text-slate-600 leading-relaxed">{text1}</p>
+              <p className="text-lg text-slate-600 leading-relaxed">
+                <WordReveal text={text1} delay={0.1} />
+              </p>
             )}
             {text2 && (
-              <p className="text-slate-500 leading-relaxed">{text2}</p>
+              <p className="text-slate-500 leading-relaxed">
+                <WordReveal text={text2} delay={0.3} />
+              </p>
             )}
           </motion.div>
 
-          {/* Feature icons grid */}
+          {/* Feature icons grid with Tilt */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -96,16 +107,22 @@ const About = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="bg-white rounded-2xl p-5 border border-slate-100 text-center group cursor-default shadow-sm hover:shadow-lg transition-shadow duration-300"
               >
-                <div
-                  className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
-                  style={{ backgroundColor: f.bg }}
+                <Tilt
+                  tiltMaxAngleX={5}
+                  tiltMaxAngleY={5}
+                  glareEnable={false}
                 >
-                  <f.icon className="w-6 h-6" style={{ color: f.color }} />
-                </div>
-                <span className="text-sm font-medium text-slate-700">{t(f.key)}</span>
+                  <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-5 border border-white/50 text-center group cursor-default shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <div
+                      className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                      style={{ backgroundColor: f.bg }}
+                    >
+                      <f.icon className="w-6 h-6" style={{ color: f.color }} />
+                    </div>
+                    <span className="text-sm font-medium text-slate-700">{t(f.key)}</span>
+                  </div>
+                </Tilt>
               </motion.div>
             ))}
           </motion.div>
