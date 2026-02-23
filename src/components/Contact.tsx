@@ -5,7 +5,6 @@ import { Send, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import MagneticButton from "@/components/landing/MagneticButton";
-import FloatingParticles from "@/components/landing/FloatingParticles";
 
 interface ContactProps {
   primaryColor?: string | null;
@@ -226,9 +225,6 @@ const Contact = ({ primaryColor, email, phone, address, heroImageUrl }: ContactP
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
               )}
               <div className="absolute inset-0 bg-black/40" />
-
-              {/* Floating particles on image side */}
-              <FloatingParticles count={12} color="white" />
 
               {/* Quote */}
               <div className="absolute inset-0 flex items-end p-12 z-10">

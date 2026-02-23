@@ -12,6 +12,7 @@ interface NavbarProps {
   primaryColor?: string | null;
   ctaText?: string | null;
   ctaLink?: string | null;
+  hasBlog?: boolean;
 }
 
 const Navbar = ({
@@ -20,6 +21,7 @@ const Navbar = ({
   primaryColor,
   ctaText,
   ctaLink,
+  hasBlog,
 }: NavbarProps) => {
   const t = useTranslations("landing.navbar");
   const navLinks = [
@@ -27,6 +29,7 @@ const Navbar = ({
     { href: "#opiniones", label: t("reviews") },
     { href: "#nosotros", label: t("about") },
     { href: "#contacto", label: t("contact") },
+    ...(hasBlog ? [{ href: "#blog", label: t("blog") }] : []),
   ];
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);

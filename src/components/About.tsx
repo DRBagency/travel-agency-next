@@ -4,8 +4,6 @@ import { motion } from "framer-motion";
 import { Shield, Globe, Heart, Award, Users, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Tilt from "react-parallax-tilt";
-import FloatingShapes from "@/components/landing/FloatingShapes";
-import WordReveal from "@/components/landing/WordReveal";
 
 interface AboutProps {
   primaryColor?: string | null;
@@ -38,9 +36,6 @@ const About = ({
 
   return (
     <section id="nosotros" className="py-24 md:py-28 lg:py-32 relative overflow-hidden scroll-mt-24 bg-slate-50">
-      {/* Floating decorative shapes */}
-      <FloatingShapes count={5} primaryColor={accentColor} />
-
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <motion.div
@@ -82,12 +77,12 @@ const About = ({
           >
             {text1 && (
               <p className="text-lg text-slate-600 leading-relaxed">
-                <WordReveal text={text1} delay={0.1} />
+                {text1}
               </p>
             )}
             {text2 && (
               <p className="text-slate-500 leading-relaxed">
-                <WordReveal text={text2} delay={0.3} />
+                {text2}
               </p>
             )}
           </motion.div>

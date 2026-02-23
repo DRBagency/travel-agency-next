@@ -1534,7 +1534,8 @@
       "destinations": "Destinos",
       "reviews": "Opiniones",
       "about": "Nosotros",
-      "contact": "Contacto"
+      "contact": "Contacto",
+      "blog": "Blog"
     },
     "hero": {
       "badgeSafe": "Reserva segura",
@@ -1577,6 +1578,41 @@
     "slider": {
       "title": "Viajes visuales",
       "subtitle": "Desliza para explorar nuestros destinos"
+    },
+    "bento": {
+      "title": "Destinos destacados",
+      "description": "Descubre los lugares más impresionantes seleccionados por nuestros expertos en viajes.",
+      "cta": "Ver todos los destinos",
+      "explore": "Explorar"
+    },
+    "editorial": {
+      "defaultText": "Cada viaje es una historia esperando ser contada. Descubrimos rincones del mundo que transforman perspectivas, crean recuerdos imborrables y conectan culturas de maneras inesperadas."
+    },
+    "filtered": {
+      "title": "Explora nuestros destinos",
+      "subtitle": "Filtra por categoría y encuentra tu próximo viaje perfecto.",
+      "all": "Todos",
+      "from": "Desde",
+      "reserve": "Reservar"
+    },
+    "break": {
+      "discover": "Descubrir"
+    },
+    "blog": {
+      "title": "Nuestro blog",
+      "description": "Historias, guías y consejos para inspirar tu próximo viaje.",
+      "cta": "Ver todos los artículos",
+      "readMore": "Leer más"
+    },
+    "categories": {
+      "aventura": "Aventura",
+      "cultural": "Cultural",
+      "playa": "Playa",
+      "naturaleza": "Naturaleza",
+      "gastronomia": "Gastronomía",
+      "relax": "Relax",
+      "lujo": "Lujo",
+      "ciudad": "Ciudad"
     },
     "testimonials": {
       "badge": "Opiniones reales",
@@ -1625,6 +1661,14 @@
     },
     "footer": {
       "navigation": "Navegación",
+      "links": "Enlaces",
+      "support": "Soporte",
+      "newsletter": "Newsletter",
+      "newsletterDesc": "Recibe las mejores ofertas y novedades directamente en tu email.",
+      "newsletterPlaceholder": "Tu email",
+      "newsletterButton": "Suscribirse",
+      "newsletterSuccess": "¡Gracias por suscribirte!",
+      "newsletterError": "Error al suscribirse. Inténtalo de nuevo.",
       "legal": "Legal",
       "rights": "Todos los derechos reservados.",
       "poweredBy": "Powered by"

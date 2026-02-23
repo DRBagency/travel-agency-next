@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CursorGlow from "@/components/landing/CursorGlow";
-import GradientMesh from "@/components/landing/GradientMesh";
 
 interface TestimonialsProps {
   primaryColor?: string | null;
@@ -125,9 +124,6 @@ const Testimonials = ({ primaryColor, opinions }: TestimonialsProps) => {
       id="opiniones"
       className="py-24 md:py-28 lg:py-32 relative overflow-hidden scroll-mt-24 bg-white"
     >
-      {/* Subtle gradient mesh background */}
-      <GradientMesh primaryColor={accentColor} opacity={0.06} />
-
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div

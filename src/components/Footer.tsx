@@ -1,13 +1,14 @@
 "use client";
 
 import { Plane, Mail, Phone, MapPin } from "lucide-react";
-import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import MagneticButton from "@/components/landing/MagneticButton";
+import NewsletterForm from "@/components/NewsletterForm";
 
 interface FooterProps {
   primaryColor?: string | null;
   clientName?: string | null;
+  clienteId?: string;
   logoUrl?: string | null;
   footerText?: string | null;
   instagramUrl?: string | null;
@@ -22,6 +23,7 @@ interface FooterProps {
 const Footer = ({
   primaryColor,
   clientName,
+  clienteId,
   logoUrl,
   footerText,
   instagramUrl,
@@ -83,9 +85,9 @@ const Footer = ({
       />
 
       <div className="container mx-auto px-4 py-16 relative z-10">
-        <div className="grid md:grid-cols-4 gap-10 mb-12">
-          {/* Brand — 2 cols */}
-          <div className="md:col-span-2">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+          {/* Column 1: About / Brand */}
+          <div>
             <a href="#" className="flex items-center gap-3 mb-4 group">
               {safeLogoUrl ? (
                 <img
@@ -108,7 +110,7 @@ const Footer = ({
               )}
             </a>
             {footerText && (
-              <p className="text-slate-400 max-w-sm mb-6 leading-relaxed">{footerText}</p>
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">{footerText}</p>
             )}
 
             {/* Social Links with magnetic hover */}
@@ -133,9 +135,9 @@ const Footer = ({
             )}
           </div>
 
-          {/* Quick Links */}
+          {/* Column 2: Quick Links */}
           <div>
-            <h4 className="font-semibold mb-5 text-white text-sm uppercase tracking-wider">{tf("navigation")}</h4>
+            <h4 className="font-semibold mb-5 text-white text-sm uppercase tracking-wider">{tf("links")}</h4>
             <ul className="space-y-3">
               {navItems.map((item) => (
                 <li key={item.label}>
@@ -147,27 +149,12 @@ const Footer = ({
                   </a>
                 </li>
               ))}
-              {legalPages.map((item: any) => {
-                const slug = item?.slug ?? "";
-                const label = item?.titulo ?? item?.title ?? slug;
-                if (!slug) return null;
-                return (
-                  <li key={slug}>
-                    <a
-                      href={`/legal/${slug}`}
-                      className="text-slate-400 hover:text-white transition-colors duration-200 text-sm"
-                    >
-                      {label}
-                    </a>
-                  </li>
-                );
-              })}
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Column 3: Support / Contact + Legal */}
           <div>
-            <h4 className="font-semibold mb-5 text-white text-sm uppercase tracking-wider">{tn("contact")}</h4>
+            <h4 className="font-semibold mb-5 text-white text-sm uppercase tracking-wider">{tf("support")}</h4>
             <ul className="space-y-3">
               {phone && (
                 <li className="flex items-center gap-2 text-sm text-slate-400">
@@ -188,6 +175,40 @@ const Footer = ({
                 </li>
               )}
             </ul>
+
+            {/* Legal pages */}
+            {legalPages.length > 0 && (
+              <div className="mt-6">
+                <h4 className="font-semibold mb-3 text-white text-sm uppercase tracking-wider">{tf("legal")}</h4>
+                <ul className="space-y-2">
+                  {legalPages.map((item: any) => {
+                    const slug = item?.slug ?? "";
+                    const label = item?.titulo ?? item?.title ?? slug;
+                    if (!slug) return null;
+                    return (
+                      <li key={slug}>
+                        <a
+                          href={`/legal/${slug}`}
+                          className="text-slate-400 hover:text-white transition-colors duration-200 text-sm"
+                        >
+                          {label}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Column 4: Newsletter */}
+          <div>
+            <h4 className="font-semibold mb-5 text-white text-sm uppercase tracking-wider">{tf("newsletter")}</h4>
+            {clienteId ? (
+              <NewsletterForm clienteId={clienteId} primaryColor={primaryColor} />
+            ) : (
+              <p className="text-slate-400 text-sm">{tf("newsletterDesc")}</p>
+            )}
           </div>
         </div>
 

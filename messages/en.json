@@ -1534,7 +1534,8 @@
       "destinations": "Destinations",
       "reviews": "Reviews",
       "about": "About Us",
-      "contact": "Contact"
+      "contact": "Contact",
+      "blog": "Blog"
     },
     "hero": {
       "badgeSafe": "Secure Booking",
@@ -1577,6 +1578,41 @@
     "slider": {
       "title": "Visual Journeys",
       "subtitle": "Swipe to explore our destinations"
+    },
+    "bento": {
+      "title": "Featured Destinations",
+      "description": "Discover the most stunning locations handpicked by our travel experts.",
+      "cta": "View all destinations",
+      "explore": "Explore"
+    },
+    "editorial": {
+      "defaultText": "Every journey is a story waiting to be told. We uncover corners of the world that shift perspectives, create lasting memories, and connect cultures in unexpected ways."
+    },
+    "filtered": {
+      "title": "Explore our destinations",
+      "subtitle": "Filter by category and find your perfect next trip.",
+      "all": "All",
+      "from": "From",
+      "reserve": "Book Now"
+    },
+    "break": {
+      "discover": "Discover"
+    },
+    "blog": {
+      "title": "Our Blog",
+      "description": "Stories, guides and tips to inspire your next journey.",
+      "cta": "View all articles",
+      "readMore": "Read more"
+    },
+    "categories": {
+      "aventura": "Adventure",
+      "cultural": "Cultural",
+      "playa": "Beach",
+      "naturaleza": "Nature",
+      "gastronomia": "Gastronomy",
+      "relax": "Relax",
+      "lujo": "Luxury",
+      "ciudad": "City"
     },
     "testimonials": {
       "badge": "Real Reviews",
@@ -1625,6 +1661,14 @@
     },
     "footer": {
       "navigation": "Navigation",
+      "links": "Links",
+      "support": "Support",
+      "newsletter": "Newsletter",
+      "newsletterDesc": "Get the best deals and updates straight to your inbox.",
+      "newsletterPlaceholder": "Your email",
+      "newsletterButton": "Subscribe",
+      "newsletterSuccess": "Thanks for subscribing!",
+      "newsletterError": "Error subscribing. Please try again.",
       "legal": "Legal",
       "rights": "All rights reserved.",
       "poweredBy": "Powered by"

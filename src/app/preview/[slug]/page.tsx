@@ -29,7 +29,7 @@ export default async function PreviewPage({
     ? (client.preferred_language as string)
     : "es";
 
-  const [{ data: opiniones }, { data: paginasLegales }, messages] =
+  const [{ data: opiniones }, { data: paginasLegales }, { data: blogPosts }, { data: featuredDestinos }, messages] =
     await Promise.all([
       supabaseAdmin
         .from("opiniones")
@@ -41,6 +41,20 @@ export default async function PreviewPage({
         .select("*")
         .eq("cliente_id", client.id)
         .eq("activo", true),
+      supabaseAdmin
+        .from("blog_posts")
+        .select("*")
+        .eq("cliente_id", client.id)
+        .eq("publicado", true)
+        .order("published_at", { ascending: false })
+        .limit(4),
+      supabaseAdmin
+        .from("destinos")
+        .select("*")
+        .eq("cliente_id", client.id)
+        .eq("activo", true)
+        .eq("destacado", true)
+        .limit(4),
       import(`../../../../messages/${clientLocale}.json`).then(
         (m) => m.default
       ),
@@ -53,6 +67,8 @@ export default async function PreviewPage({
           client={client}
           opiniones={opiniones ?? []}
           paginasLegales={paginasLegales ?? []}
+          blogPosts={blogPosts ?? []}
+          featuredDestinos={featuredDestinos ?? []}
         />
       </div>
     </NextIntlClientProvider>
