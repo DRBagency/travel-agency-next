@@ -234,6 +234,12 @@ export default async function AdminDestinosPage({
                         </>
                       )}
                     </form>
+                    <a
+                      href={`/admin/destinos/${destino.id}`}
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-100 dark:hover:bg-drb-turquoise-500/25 transition-colors"
+                    >
+                      {t('editFullPage')}
+                    </a>
                     <DestinoEditDialog
                       destino={destino}
                       action={updateDestino}

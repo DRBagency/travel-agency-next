@@ -31,6 +31,12 @@ import AIDescriptionButton from "@/components/ai/AIDescriptionButton";
 import OpinionesManager from "./OpinionesManager";
 import LegalesManager from "./LegalesManager";
 
+interface WhyUsItem {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
 interface ClientData {
   id: string;
   nombre: string;
@@ -44,10 +50,18 @@ interface ClientData {
   hero_cta_text: string | null;
   hero_cta_link: string | null;
   hero_image_url: string | null;
+  hero_badge: string | null;
+  hero_cta_text_secondary: string | null;
+  hero_cta_link_secondary: string | null;
   stats_years: string | null;
   stats_destinations: string | null;
   stats_travelers: string | null;
   stats_rating: string | null;
+  whyus_items: WhyUsItem[] | string | null;
+  cta_banner_title: string | null;
+  cta_banner_description: string | null;
+  cta_banner_cta_text: string | null;
+  cta_banner_cta_link: string | null;
   about_title: string | null;
   about_text_1: string | null;
   about_text_2: string | null;
@@ -58,6 +72,10 @@ interface ClientData {
   facebook_url: string | null;
   tiktok_url: string | null;
   footer_text: string | null;
+  footer_description: string | null;
+  dark_mode_enabled: boolean | null;
+  meta_title: string | null;
+  meta_description: string | null;
   preferred_language: string | null;
 }
 
@@ -100,10 +118,13 @@ type SectionKey =
   | "marca"
   | "hero"
   | "stats"
+  | "whyus"
+  | "ctabanner"
   | "about"
   | "contact"
   | "social"
   | "footer"
+  | "global"
   | "opiniones"
   | "legales";
 
@@ -119,6 +140,19 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
   const tc = useTranslations('common');
   const tt = useTranslations("toast");
 
+  // Parse whyus_items from client data (could be JSON string or array)
+  function parseWhyUsItems(data: WhyUsItem[] | string | null): WhyUsItem[] {
+    if (!data) return [];
+    if (typeof data === "string") {
+      try {
+        return JSON.parse(data) as WhyUsItem[];
+      } catch {
+        return [];
+      }
+    }
+    return data;
+  }
+
   const [fields, setFields] = useState({
     logo_url: client.logo_url ?? "",
     primary_color: client.primary_color ?? "#1CABB0",
@@ -127,10 +161,17 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     hero_cta_text: client.hero_cta_text ?? "",
     hero_cta_link: client.hero_cta_link ?? "",
     hero_image_url: client.hero_image_url ?? "",
+    hero_badge: client.hero_badge ?? "",
+    hero_cta_text_secondary: client.hero_cta_text_secondary ?? "",
+    hero_cta_link_secondary: client.hero_cta_link_secondary ?? "",
     stats_years: client.stats_years ?? "",
     stats_destinations: client.stats_destinations ?? "",
     stats_travelers: client.stats_travelers ?? "",
     stats_rating: client.stats_rating ?? "",
+    cta_banner_title: client.cta_banner_title ?? "",
+    cta_banner_description: client.cta_banner_description ?? "",
+    cta_banner_cta_text: client.cta_banner_cta_text ?? "",
+    cta_banner_cta_link: client.cta_banner_cta_link ?? "",
     about_title: client.about_title ?? "",
     about_text_1: client.about_text_1 ?? "",
     about_text_2: client.about_text_2 ?? "",
@@ -141,8 +182,14 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     facebook_url: client.facebook_url ?? "",
     tiktok_url: client.tiktok_url ?? "",
     footer_text: client.footer_text ?? "",
+    footer_description: client.footer_description ?? "",
+    meta_title: client.meta_title ?? "",
+    meta_description: client.meta_description ?? "",
     preferred_language: client.preferred_language ?? "es",
   });
+
+  const [whyusItems, setWhyusItems] = useState<WhyUsItem[]>(parseWhyUsItems(client.whyus_items));
+  const [darkModeEnabled, setDarkModeEnabled] = useState(client.dark_mode_enabled ?? false);
 
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(
     new Set()
@@ -152,10 +199,13 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     marca: { loading: false, success: false, error: null },
     hero: { loading: false, success: false, error: null },
     stats: { loading: false, success: false, error: null },
+    whyus: { loading: false, success: false, error: null },
+    ctabanner: { loading: false, success: false, error: null },
     about: { loading: false, success: false, error: null },
     contact: { loading: false, success: false, error: null },
     social: { loading: false, success: false, error: null },
     footer: { loading: false, success: false, error: null },
+    global: { loading: false, success: false, error: null },
     opiniones: { loading: false, success: false, error: null },
     legales: { loading: false, success: false, error: null },
   });
@@ -186,15 +236,18 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     setFields((prev) => ({ ...prev, [key]: value }));
   }
 
-  async function saveSection(section: SectionKey, fieldKeys: string[]) {
+  async function saveSection(section: SectionKey, fieldKeys: string[], extraPayload?: Record<string, unknown>) {
     setSaveStates((prev) => ({
       ...prev,
       [section]: { loading: true, success: false, error: null },
     }));
 
-    const payload: Record<string, string> = {};
+    const payload: Record<string, unknown> = {};
     for (const key of fieldKeys) {
       payload[key] = fields[key as keyof typeof fields];
+    }
+    if (extraPayload) {
+      Object.assign(payload, extraPayload);
     }
 
     try {
@@ -297,7 +350,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     }
   }
 
-  function renderSaveButton(section: SectionKey, fieldKeys: string[]) {
+  function renderSaveButton(section: SectionKey, fieldKeys: string[], extraPayload?: Record<string, unknown>) {
     const state = saveStates[section];
     return (
       <div className="flex items-center gap-3 justify-end pt-2">
@@ -310,7 +363,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
           </span>
         )}
         <button
-          onClick={() => saveSection(section, fieldKeys)}
+          onClick={() => saveSection(section, fieldKeys, extraPayload)}
           disabled={state.loading}
           className="btn-primary disabled:opacity-50 flex items-center gap-2"
         >
@@ -352,6 +405,63 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
         )}
       </button>
     );
+  }
+
+  function SectionHeaderEmoji({
+    sectionKey,
+    emoji,
+    title,
+    subtitle,
+  }: {
+    sectionKey: SectionKey;
+    emoji: string;
+    title: string;
+    subtitle: string;
+  }) {
+    const isOpen = openSections.has(sectionKey);
+    return (
+      <button
+        onClick={() => toggleSection(sectionKey)}
+        className="w-full flex items-center gap-2.5 text-start"
+      >
+        <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-sm">
+          {emoji}
+        </div>
+        <h2 className="text-base font-semibold text-gray-900 dark:text-white flex-1">{title}</h2>
+        {!isOpen && (
+          <span className="text-xs text-gray-400 dark:text-white/40 hidden sm:block">{subtitle}</span>
+        )}
+        {isOpen ? (
+          <ChevronDown className="w-4 h-4 text-gray-400 dark:text-white/50" />
+        ) : (
+          <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/50" />
+        )}
+      </button>
+    );
+  }
+
+  // WhyUs items helpers
+  function updateWhyUsItem(index: number, key: keyof WhyUsItem, value: string) {
+    setWhyusItems((prev) => prev.map((item, i) => (i === index ? { ...item, [key]: value } : item)));
+  }
+
+  function removeWhyUsItem(index: number) {
+    setWhyusItems((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function moveWhyUsItem(index: number, direction: "up" | "down") {
+    setWhyusItems((prev) => {
+      const next = [...prev];
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= next.length) return prev;
+      [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
+      return next;
+    });
+  }
+
+  function addWhyUsItem() {
+    if (whyusItems.length >= 6) return;
+    setWhyusItems((prev) => [...prev, { icon: "✨", title: "", desc: "" }]);
   }
 
   return (
@@ -700,12 +810,52 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               )}
             </div>
 
+            <div>
+              <label className="panel-label block mb-1">
+                {t("heroBadge")}
+              </label>
+              <input
+                value={fields.hero_badge}
+                onChange={(e) => updateField("hero_badge", e.target.value)}
+                className="panel-input w-full"
+                placeholder={t("heroBadgePlaceholder")}
+              />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("secondaryCtaText")}
+                </label>
+                <input
+                  value={fields.hero_cta_text_secondary}
+                  onChange={(e) => updateField("hero_cta_text_secondary", e.target.value)}
+                  className="panel-input w-full"
+                  placeholder={t("secondaryCtaTextPlaceholder")}
+                />
+              </div>
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("secondaryCtaLink")}
+                </label>
+                <input
+                  value={fields.hero_cta_link_secondary}
+                  onChange={(e) => updateField("hero_cta_link_secondary", e.target.value)}
+                  className="panel-input w-full"
+                  placeholder={t("secondaryCtaLinkPlaceholder")}
+                />
+              </div>
+            </div>
+
             {renderSaveButton("hero", [
               "hero_title",
               "hero_subtitle",
               "hero_cta_text",
               "hero_cta_link",
               "hero_image_url",
+              "hero_badge",
+              "hero_cta_text_secondary",
+              "hero_cta_link_secondary",
             ])}
           </div>
         )}
@@ -777,6 +927,175 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               "stats_destinations",
               "stats_travelers",
               "stats_rating",
+            ])}
+          </div>
+        )}
+      </section>
+
+      {/* Por que nosotros */}
+      <section className="panel-card p-5 space-y-3">
+        <SectionHeaderEmoji
+          sectionKey="whyus"
+          emoji="✦"
+          title={t("whyUsSection")}
+          subtitle={t("whyUsSubtitle")}
+        />
+        {openSections.has("whyus") && (
+          <div className="space-y-4 pt-2">
+            {whyusItems.map((item, index) => (
+              <div
+                key={index}
+                className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/[0.04] p-4 space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-500 dark:text-white/50">
+                    {t("whyUsSection")} #{index + 1}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => moveWhyUsItem(index, "up")}
+                      disabled={index === 0}
+                      className="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-sm"
+                      title="Move up"
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveWhyUsItem(index, "down")}
+                      disabled={index === whyusItems.length - 1}
+                      className="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-sm"
+                      title="Move down"
+                    >
+                      ↓
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeWhyUsItem(index)}
+                      className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-500/20 text-red-500 transition-colors text-sm"
+                      title="Remove"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+                <div className="grid md:grid-cols-[60px_1fr] gap-3">
+                  <div>
+                    <label className="panel-label block mb-1 text-xs">Icon</label>
+                    <input
+                      value={item.icon}
+                      onChange={(e) => updateWhyUsItem(index, "icon", e.target.value)}
+                      className="panel-input w-full text-center text-lg"
+                      placeholder="✨"
+                      maxLength={4}
+                    />
+                  </div>
+                  <div>
+                    <label className="panel-label block mb-1 text-xs">{tc("title")}</label>
+                    <input
+                      value={item.title}
+                      onChange={(e) => updateWhyUsItem(index, "title", e.target.value)}
+                      className="panel-input w-full"
+                      placeholder={t("whyUsCardTitlePlaceholder")}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="panel-label block mb-1 text-xs">{tc("description")}</label>
+                  <textarea
+                    value={item.desc}
+                    onChange={(e) => updateWhyUsItem(index, "desc", e.target.value)}
+                    className="panel-input w-full min-h-[60px]"
+                    placeholder={t("whyUsCardDescPlaceholder")}
+                  />
+                </div>
+              </div>
+            ))}
+
+            {whyusItems.length < 6 && (
+              <button
+                type="button"
+                onClick={addWhyUsItem}
+                className="w-full py-2.5 rounded-xl border-2 border-dashed border-gray-300 dark:border-white/20 text-sm font-medium text-gray-500 dark:text-white/50 hover:border-drb-turquoise-400 hover:text-drb-turquoise-600 dark:hover:border-drb-turquoise-500 dark:hover:text-drb-turquoise-400 transition-colors"
+              >
+                + {t("addCard")}
+              </button>
+            )}
+
+            {whyusItems.length >= 6 && (
+              <p className="text-xs text-gray-400 dark:text-white/40 text-center">
+                {t("maxCardsReached")}
+              </p>
+            )}
+
+            {renderSaveButton("whyus", [], { whyus_items: whyusItems })}
+          </div>
+        )}
+      </section>
+
+      {/* Banner CTA */}
+      <section className="panel-card p-5 space-y-3">
+        <SectionHeaderEmoji
+          sectionKey="ctabanner"
+          emoji="📢"
+          title={t("ctaBannerSection")}
+          subtitle={t("ctaBannerSubtitle")}
+        />
+        {openSections.has("ctabanner") && (
+          <div className="space-y-4 pt-2">
+            <div>
+              <label className="panel-label block mb-1">
+                {t("ctaBannerTitle")}
+              </label>
+              <input
+                value={fields.cta_banner_title}
+                onChange={(e) => updateField("cta_banner_title", e.target.value)}
+                className="panel-input w-full"
+                placeholder={t("ctaBannerTitlePlaceholder")}
+              />
+            </div>
+            <div>
+              <label className="panel-label block mb-1">
+                {t("ctaBannerDescription")}
+              </label>
+              <textarea
+                value={fields.cta_banner_description}
+                onChange={(e) => updateField("cta_banner_description", e.target.value)}
+                className="panel-input w-full min-h-[80px]"
+                placeholder={t("ctaBannerDescriptionPlaceholder")}
+              />
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("ctaBannerCtaText")}
+                </label>
+                <input
+                  value={fields.cta_banner_cta_text}
+                  onChange={(e) => updateField("cta_banner_cta_text", e.target.value)}
+                  className="panel-input w-full"
+                  placeholder={t("ctaBannerCtaTextPlaceholder")}
+                />
+              </div>
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("ctaBannerCtaLink")}
+                </label>
+                <input
+                  value={fields.cta_banner_cta_link}
+                  onChange={(e) => updateField("cta_banner_cta_link", e.target.value)}
+                  className="panel-input w-full"
+                  placeholder={t("ctaBannerCtaLinkPlaceholder")}
+                />
+              </div>
+            </div>
+
+            {renderSaveButton("ctabanner", [
+              "cta_banner_title",
+              "cta_banner_description",
+              "cta_banner_cta_text",
+              "cta_banner_cta_link",
             ])}
           </div>
         )}
@@ -992,8 +1311,19 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
                 placeholder={t("footerTextPlaceholder")}
               />
             </div>
+            <div>
+              <label className="panel-label block mb-1">
+                {t("footerDescription")}
+              </label>
+              <textarea
+                value={fields.footer_description}
+                onChange={(e) => updateField("footer_description", e.target.value)}
+                className="panel-input w-full min-h-[80px]"
+                placeholder={t("footerDescPlaceholder")}
+              />
+            </div>
 
-            {renderSaveButton("footer", ["footer_text"])}
+            {renderSaveButton("footer", ["footer_text", "footer_description"])}
           </div>
         )}
       </section>
@@ -1028,6 +1358,64 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
             legales={legales}
             clientId={client.id}
           />
+        )}
+      </section>
+
+      {/* Configuracion Global */}
+      <section className="panel-card p-5 space-y-3">
+        <SectionHeaderEmoji
+          sectionKey="global"
+          emoji="⚙️"
+          title={t("globalSection")}
+          subtitle={t("globalSubtitle")}
+        />
+        {openSections.has("global") && (
+          <div className="space-y-4 pt-2">
+            <div className="flex items-center gap-3">
+              <label className="panel-label flex-1">
+                {t("darkModeEnabled")}
+              </label>
+              <button
+                type="button"
+                onClick={() => setDarkModeEnabled((prev) => !prev)}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  darkModeEnabled
+                    ? "bg-drb-turquoise-600"
+                    : "bg-gray-200 dark:bg-white/20"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    darkModeEnabled ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+            <div>
+              <label className="panel-label block mb-1">
+                {t("metaTitle")}
+              </label>
+              <input
+                value={fields.meta_title}
+                onChange={(e) => updateField("meta_title", e.target.value)}
+                className="panel-input w-full"
+                placeholder={t("metaTitlePlaceholder")}
+              />
+            </div>
+            <div>
+              <label className="panel-label block mb-1">
+                {t("metaDescription")}
+              </label>
+              <textarea
+                value={fields.meta_description}
+                onChange={(e) => updateField("meta_description", e.target.value)}
+                className="panel-input w-full min-h-[80px]"
+                placeholder={t("metaDescriptionPlaceholder")}
+              />
+            </div>
+
+            {renderSaveButton("global", ["meta_title", "meta_description"], { dark_mode_enabled: darkModeEnabled })}
+          </div>
         )}
       </section>
 

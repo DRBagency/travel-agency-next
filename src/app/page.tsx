@@ -49,7 +49,7 @@ export default async function HomePage() {
     ? (client.preferred_language as string)
     : "es";
 
-  const [{ data: opiniones }, { data: paginasLegales }, { data: blogPosts }, { data: featuredDestinos }, messages] = await Promise.all([
+  const [{ data: opiniones }, { data: paginasLegales }, { data: blogPosts }, { data: allDestinos }, messages] = await Promise.all([
     supabaseAdmin
       .from("opiniones")
       .select("*")
@@ -71,9 +71,7 @@ export default async function HomePage() {
       .from("destinos")
       .select("*")
       .eq("cliente_id", client.id)
-      .eq("activo", true)
-      .eq("destacado", true)
-      .limit(4),
+      .eq("activo", true),
     import(`../../messages/${clientLocale}.json`).then((m) => m.default),
   ]);
 
@@ -85,7 +83,7 @@ export default async function HomePage() {
           opiniones={opiniones ?? []}
           paginasLegales={paginasLegales ?? []}
           blogPosts={blogPosts ?? []}
-          featuredDestinos={featuredDestinos ?? []}
+          allDestinos={allDestinos ?? []}
         />
       </div>
     </NextIntlClientProvider>

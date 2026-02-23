@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Manrope, Playfair_Display, Noto_Sans_Arabic } from "next/font/google";
+import { Manrope, Playfair_Display, Noto_Sans_Arabic, Syne, DM_Sans } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -22,6 +22,18 @@ const notoArabic = Noto_Sans_Arabic({
   weight: ["400", "500", "600", "700"],
 });
 
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-syne",
+  weight: ["400", "600", "700", "800"],
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm",
+  weight: ["300", "400", "500", "700"],
+});
+
 export default async function RootLayout({
   children,
 }: {
@@ -37,7 +49,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className={`${manrope.variable} ${playfair.variable} ${notoArabic.variable}`}
+        className={`${manrope.variable} ${playfair.variable} ${notoArabic.variable} ${syne.variable} ${dmSans.variable}`}
       >
         <ThemeProvider
           attribute="class"

@@ -11,6 +11,9 @@ const ALLOWED_FIELDS = new Set([
   "hero_cta_text",
   "hero_cta_link",
   "hero_image_url",
+  "hero_badge",
+  "hero_cta_text_secondary",
+  "hero_cta_link_secondary",
   "stats_years",
   "stats_destinations",
   "stats_travelers",
@@ -25,8 +28,21 @@ const ALLOWED_FIELDS = new Set([
   "facebook_url",
   "tiktok_url",
   "footer_text",
+  "footer_description",
   "preferred_language",
+  "whyus_items",
+  "cta_banner_title",
+  "cta_banner_description",
+  "cta_banner_cta_text",
+  "cta_banner_cta_link",
+  "dark_mode_enabled",
+  "meta_title",
+  "meta_description",
 ]);
+
+/** Fields that should NOT be trimmed/stringified — they're JSONB or boolean */
+const JSONB_FIELDS = new Set(["whyus_items"]);
+const BOOLEAN_FIELDS = new Set(["dark_mode_enabled"]);
 
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
@@ -37,10 +53,18 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
 
-  // Filter to only allowed fields
-  const payload: Record<string, string | null> = {};
+  // Filter to only allowed fields with proper type handling
+  const payload: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(body)) {
-    if (ALLOWED_FIELDS.has(key)) {
+    if (!ALLOWED_FIELDS.has(key)) continue;
+
+    if (JSONB_FIELDS.has(key)) {
+      // Pass JSONB as-is (array/object)
+      payload[key] = value ?? [];
+    } else if (BOOLEAN_FIELDS.has(key)) {
+      payload[key] = Boolean(value);
+    } else {
+      // Strings: trim + empty → null
       payload[key] = typeof value === "string" && value.trim() !== "" ? value.trim() : null;
     }
   }

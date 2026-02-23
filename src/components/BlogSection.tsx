@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ArrowRight, Calendar } from "lucide-react";
 import { useTranslations } from "next-intl";
-import ScrollReveal from "@/components/landing/ScrollReveal";
+import { AnimateIn } from "@/components/landing/AnimateIn";
 
 interface BlogPost {
   id: string;
@@ -34,7 +34,7 @@ const BlogSection = ({ posts, primaryColor }: BlogSectionProps) => {
     <section className="py-24 md:py-28 lg:py-32 bg-white">
       <div className="container mx-auto px-4">
         {/* Split header */}
-        <ScrollReveal>
+        <AnimateIn>
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-6 mb-12">
             <h2 className="font-display text-4xl md:text-5xl font-bold text-slate-900 max-w-lg">
               {t("title")}
@@ -52,10 +52,10 @@ const BlogSection = ({ posts, primaryColor }: BlogSectionProps) => {
               </span>
             </div>
           </div>
-        </ScrollReveal>
+        </AnimateIn>
 
         {/* Blog cards grid */}
-        <ScrollReveal delay={0.15}>
+        <AnimateIn delay={0.15}>
           <div className="grid md:grid-cols-2 gap-8">
             {displayPosts.map((post) => (
               <article
@@ -136,7 +136,7 @@ const BlogSection = ({ posts, primaryColor }: BlogSectionProps) => {
               </article>
             ))}
           </div>
-        </ScrollReveal>
+        </AnimateIn>
       </div>
     </section>
   );
