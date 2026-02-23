@@ -34,6 +34,7 @@ import LegalesManager from "./LegalesManager";
 interface ClientData {
   id: string;
   nombre: string;
+  slug: string;
   domain: string;
   domain_verified?: boolean | null;
   logo_url: string | null;
@@ -364,7 +365,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
           </p>
         </div>
         <a
-          href={`https://${client.domain}`}
+          href={`/preview/${client.slug}`}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/20 hover:bg-gray-50 dark:hover:bg-white/10 text-sm font-medium text-gray-700 dark:text-white transition-colors shrink-0"

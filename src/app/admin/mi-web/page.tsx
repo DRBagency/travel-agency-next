@@ -43,6 +43,7 @@ export default async function MiWebPage() {
       client={{
         id: client.id,
         nombre: client.nombre,
+        slug: client.slug,
         domain: client.domain,
         domain_verified: client.domain_verified,
         logo_url: client.logo_url,
