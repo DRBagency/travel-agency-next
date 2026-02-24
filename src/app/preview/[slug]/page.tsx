@@ -67,6 +67,8 @@ export default async function PreviewPage({
           paginasLegales={paginasLegales ?? []}
           blogPosts={blogPosts ?? []}
           allDestinos={allDestinos ?? []}
+          lang={clientLocale}
+          legalBasePath={`/preview/${slug}/legal`}
         />
       </div>
     </NextIntlClientProvider>

@@ -29,7 +29,16 @@ export default async function DestinoDetailPage({
 
   return (
     <div className="animate-fade-in">
-      <DestinoEditor destino={destino} />
+      <DestinoEditor
+        destino={destino}
+        plan={client.plan ?? undefined}
+        preferredLanguage={client.preferred_language || "es"}
+        availableLanguages={
+          Array.isArray(client.available_languages) && client.available_languages.length > 0
+            ? client.available_languages
+            : ["es"]
+        }
+      />
     </div>
   );
 }

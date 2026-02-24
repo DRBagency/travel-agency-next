@@ -52,6 +52,7 @@ const JSONB_FIELDS = new Set([
   "salidas",
   "faqs",
   "clima",
+  "translations",
 ]);
 
 export async function POST(

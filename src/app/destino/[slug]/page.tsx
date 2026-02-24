@@ -7,6 +7,7 @@ import { DestinationDetail } from "@/components/landing/destination/DestinationD
 import { LandingThemeProvider } from "@/components/landing/LandingThemeProvider";
 import { LandingGlobalStyles } from "@/components/landing/LandingGlobalStyles";
 import { BgMesh } from "@/components/landing/ui/BgMesh";
+import Navbar from "@/components/landing/sections/Navbar";
 
 export default async function DestinoPage({
   params,
@@ -58,7 +59,22 @@ export default async function DestinoPage({
       >
         <LandingGlobalStyles />
         <BgMesh />
-        <DestinationDetail destino={destino} />
+        <Navbar
+          clientName={client.nombre || client.name || ""}
+          logoUrl={client.logo_url}
+          primaryColor={client.primary_color}
+          darkModeEnabled={client.dark_mode_enabled ?? true}
+          availableLanguages={
+            Array.isArray(client.available_languages) && client.available_languages.length > 0
+              ? client.available_languages
+              : [locale]
+          }
+        />
+        <DestinationDetail
+          destino={destino}
+          lang={locale}
+          preferredLanguage={client.preferred_language || "es"}
+        />
       </LandingThemeProvider>
     </NextIntlClientProvider>
   );

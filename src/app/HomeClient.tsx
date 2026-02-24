@@ -15,6 +15,7 @@ import ContactForm from "@/components/landing/sections/ContactForm";
 import Footer from "@/components/landing/sections/Footer";
 import BlogSection from "@/components/BlogSection";
 import ChatbotWidget from "@/components/ChatbotWidget";
+import { makeTr, tr } from "@/lib/translations";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -25,6 +26,7 @@ export default function HomeClient({
   blogPosts = [],
   allDestinos = [],
   lang = "es",
+  legalBasePath = "/legal",
 }: {
   client: any;
   opiniones: any[];
@@ -32,10 +34,38 @@ export default function HomeClient({
   blogPosts?: any[];
   allDestinos?: any[];
   lang?: string;
+  legalBasePath?: string;
 }) {
-  const [currentLang, setCurrentLang] = useState<"es" | "en">(
-    lang === "en" ? "en" : "es"
-  );
+  const [currentLang, setCurrentLang] = useState<string>(lang);
+  const preferredLang = client.preferred_language || "es";
+
+  // Translation helpers
+  const clientTr = makeTr(client, currentLang, preferredLang);
+
+  // Translate destinos
+  const translatedDestinos = allDestinos.map((d: any) => {
+    const dTr = makeTr(d, currentLang, preferredLang);
+    return {
+      ...d,
+      nombre: dTr("nombre"),
+      descripcion: dTr("descripcion"),
+      descripcion_larga: dTr("descripcion_larga"),
+      subtitle: dTr("subtitle"),
+      tagline: dTr("tagline"),
+      badge: dTr("badge"),
+      categoria: dTr("categoria"),
+      duracion: dTr("duracion"),
+    };
+  });
+
+  // Translate opiniones
+  const translatedOpiniones = opiniones.map((o: any) => ({
+    ...o,
+    comentario: tr(o, "comentario", currentLang, preferredLang),
+  }));
+
+  // Translate whyus_items
+  const translatedWhyUsItems = clientTr("whyus_items");
 
   // Track page visit for live visitor counter
   useEffect(() => {
@@ -77,19 +107,24 @@ export default function HomeClient({
           ctaLink={client.hero_cta_link}
           darkModeEnabled={client.dark_mode_enabled ?? true}
           lang={currentLang}
-          onLangChange={(l) => setCurrentLang(l.toLowerCase() === "en" ? "en" : "es")}
+          availableLanguages={
+            Array.isArray(client.available_languages) && client.available_languages.length > 0
+              ? client.available_languages
+              : ["es"]
+          }
+          onLangChange={(l) => setCurrentLang(l.toLowerCase())}
         />
 
         {/* 2. Hero — split layout */}
         <Hero
-          badge={client.hero_badge}
-          title={client.hero_title}
-          subtitle={client.hero_subtitle}
-          description={client.hero_description}
+          badge={clientTr("hero_badge")}
+          title={clientTr("hero_title")}
+          subtitle={clientTr("hero_subtitle")}
+          description={clientTr("hero_description")}
           imageUrl={client.hero_image_url}
-          ctaText={client.hero_cta_text}
+          ctaText={clientTr("hero_cta_text")}
           ctaLink={client.hero_cta_link}
-          ctaTextSecondary={client.hero_cta_text_secondary}
+          ctaTextSecondary={clientTr("hero_cta_text_secondary")}
           ctaLinkSecondary={client.hero_cta_link_secondary}
           primaryColor={client.primary_color}
           stats={{
@@ -107,10 +142,10 @@ export default function HomeClient({
         />
 
         {/* 4. Destinations Grid */}
-        <DestinationsGrid destinos={allDestinos} />
+        <DestinationsGrid destinos={translatedDestinos} />
 
         {/* 5. Why Us — 4 cards */}
-        <WhyUs items={client.whyus_items} />
+        <WhyUs items={translatedWhyUsItems} />
 
         {/* 6. Blog Section — conditional */}
         {hasBlog && (
@@ -121,13 +156,13 @@ export default function HomeClient({
         )}
 
         {/* 7. Testimonials */}
-        <Testimonials opiniones={opiniones} />
+        <Testimonials opiniones={translatedOpiniones} />
 
         {/* 8. CTA Banner */}
         <CtaBanner
-          title={client.cta_banner_title}
-          description={client.cta_banner_description}
-          ctaText={client.cta_banner_cta_text}
+          title={clientTr("cta_banner_title")}
+          description={clientTr("cta_banner_description")}
+          ctaText={clientTr("cta_banner_cta_text")}
           ctaLink={client.cta_banner_cta_link}
         />
 
@@ -144,9 +179,10 @@ export default function HomeClient({
         <Footer
           clientName={client.nombre}
           logoUrl={client.logo_url}
-          footerDescription={client.footer_description}
-          destinos={allDestinos}
+          footerDescription={clientTr("footer_description")}
+          destinos={translatedDestinos}
           paginasLegales={paginasLegales}
+          legalBasePath={legalBasePath}
           instagramUrl={client.instagram_url}
           facebookUrl={client.facebook_url}
           tiktokUrl={client.tiktok_url}

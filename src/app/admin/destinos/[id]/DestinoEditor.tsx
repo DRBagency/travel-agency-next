@@ -26,6 +26,8 @@ import {
 } from "lucide-react";
 import ItineraryEditor from "../ItineraryEditor";
 import UnsplashPicker from "@/app/admin/mi-web/UnsplashPicker";
+import { useAutoTranslate } from "@/hooks/useAutoTranslate";
+import { TRANSLATABLE_DESTINO_FIELDS } from "@/lib/translations";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -33,6 +35,9 @@ import UnsplashPicker from "@/app/admin/mi-web/UnsplashPicker";
 
 interface Props {
   destino: any;
+  plan?: string;
+  preferredLanguage?: string;
+  availableLanguages?: string[];
 }
 
 interface SalidaItem {
@@ -53,6 +58,7 @@ interface HotelData {
   imagen: string;
   descripcion: string;
   amenidades: string[];
+  direccion: string;
 }
 
 interface VuelosData {
@@ -97,8 +103,16 @@ const TABS = [
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export default function DestinoEditor({ destino }: Props) {
+export default function DestinoEditor({ destino, plan, preferredLanguage = "es", availableLanguages = ["es"] }: Props) {
   const t = useTranslations("admin.destinos");
+
+  const { translating, translationError, isEligible: translationEligible, translate: triggerTranslation } = useAutoTranslate({
+    table: "destinos",
+    recordId: destino.id,
+    sourceLang: preferredLanguage,
+    availableLangs: availableLanguages,
+    plan,
+  });
 
   /* --- Active tab --- */
   const [tab, setTab] = useState<string>("general");
@@ -150,7 +164,7 @@ export default function DestinoEditor({ destino }: Props) {
   const [galeria, setGaleria] = useState<string[]>(destino.galeria ?? []);
   const [itinerario, setItinerario] = useState<any>(destino.itinerario ?? null);
   const [hotel, setHotel] = useState<HotelData>(
-    destino.hotel ?? { nombre: "", estrellas: 0, imagen: "", descripcion: "", amenidades: [] }
+    destino.hotel ?? { nombre: "", estrellas: 0, imagen: "", descripcion: "", amenidades: [], direccion: "" }
   );
   const [vuelos, setVuelos] = useState<VuelosData>(
     destino.vuelos ?? { aeropuerto_llegada: "", aeropuerto_regreso: "", nota: "" }
@@ -223,6 +237,24 @@ export default function DestinoEditor({ destino }: Props) {
       setSaved(true);
       sileo.success({ title: "Guardado correctamente" });
       setTimeout(() => setSaved(false), 2500);
+
+      // Fire-and-forget auto-translation
+      if (translationEligible) {
+        const allFields: Record<string, unknown> = {
+          nombre, subtitle, tagline, badge, descripcion,
+          descripcion_larga: descripcionLarga, categoria, continente, pais,
+          dificultad, duracion, itinerario, hotel, vuelos, coordinador,
+          incluido, no_incluido: noIncluido, faqs, clima, highlights, tags,
+        };
+        const translatablePayload: Record<string, unknown> = {};
+        for (const key of Object.keys(TRANSLATABLE_DESTINO_FIELDS)) {
+          const mappedKey = key === "descripcion_larga" ? "descripcion_larga" : key;
+          if (mappedKey in allFields && allFields[mappedKey] != null && allFields[mappedKey] !== "") {
+            translatablePayload[key] = allFields[mappedKey];
+          }
+        }
+        triggerTranslation(translatablePayload);
+      }
     } catch (err) {
       sileo.error({ title: err instanceof Error ? err.message : "Error al guardar" });
     } finally {
@@ -346,6 +378,19 @@ export default function DestinoEditor({ destino }: Props) {
         </div>
         <SaveButton />
       </div>
+
+      {/* Translation status banners */}
+      {translating && (
+        <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 text-sm text-blue-700 dark:text-blue-300 mb-4">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Translating content to other languages...
+        </div>
+      )}
+      {translationError && (
+        <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-sm text-amber-700 dark:text-amber-300 mb-4">
+          Translation failed. Content saved successfully.
+        </div>
+      )}
 
       {/* ============================================================ */}
       {/*  TAB BAR (horizontally scrollable)                            */}
@@ -841,6 +886,19 @@ export default function DestinoEditor({ destino }: Props) {
                   onChange={(e) => setHotel((p) => ({ ...p, descripcion: e.target.value }))}
                   className="panel-input w-full"
                 />
+              </div>
+              <div className="md:col-span-2">
+                <label className="panel-label">Direccion / Google Maps</label>
+                <input
+                  type="text"
+                  value={hotel.direccion || ""}
+                  onChange={(e) => setHotel((p) => ({ ...p, direccion: e.target.value }))}
+                  className="panel-input w-full"
+                  placeholder="Ej: Calle Gran Via 1, Madrid, Espana o URL de Google Maps"
+                />
+                <p className="text-xs text-gray-400 dark:text-white/30 mt-1">
+                  Introduce la direccion o un enlace de Google Maps para mostrar en la landing
+                </p>
               </div>
             </div>
 

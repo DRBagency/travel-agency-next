@@ -82,6 +82,7 @@ export default async function MiWebPage() {
         meta_title: client.meta_title,
         meta_description: client.meta_description,
         preferred_language: client.preferred_language,
+        available_languages: client.available_languages,
       }}
       counts={counts}
       opiniones={opiniones}

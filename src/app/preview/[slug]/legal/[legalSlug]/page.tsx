@@ -1,19 +1,18 @@
 import { notFound } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabase-server";
-import { getLocale, getMessages } from "next-intl/server";
+import { getMessages, getLocale } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { DestinationDetail } from "@/components/landing/destination/DestinationDetail";
 import { LandingThemeProvider } from "@/components/landing/LandingThemeProvider";
 import { LandingGlobalStyles } from "@/components/landing/LandingGlobalStyles";
 import { BgMesh } from "@/components/landing/ui/BgMesh";
 import Navbar from "@/components/landing/sections/Navbar";
 
-export default async function PreviewDestinoPage({
+export default async function PreviewLegalPage({
   params,
 }: {
-  params: Promise<{ slug: string; destinoSlug: string }>;
+  params: Promise<{ slug: string; legalSlug: string }>;
 }) {
-  const { slug, destinoSlug } = await params;
+  const { slug, legalSlug } = await params;
 
   const { data: client } = await supabaseAdmin
     .from("clientes")
@@ -24,33 +23,20 @@ export default async function PreviewDestinoPage({
 
   if (!client) return notFound();
 
-  // Try destino by slug first, then by id
-  let destino;
-  const { data: bySlug } = await supabaseAdmin
-    .from("destinos")
+  const { data } = await supabaseAdmin
+    .from("paginas_legales")
     .select("*")
     .eq("cliente_id", client.id)
-    .eq("slug", destinoSlug)
+    .eq("slug", legalSlug)
     .eq("activo", true)
     .single();
 
-  if (bySlug) {
-    destino = bySlug;
-  } else {
-    const { data: byId } = await supabaseAdmin
-      .from("destinos")
-      .select("*")
-      .eq("cliente_id", client.id)
-      .eq("id", destinoSlug)
-      .eq("activo", true)
-      .single();
-    if (byId) destino = byId;
-  }
-
-  if (!destino) return notFound();
+  if (!data) return notFound();
 
   const locale = client.preferred_language || (await getLocale());
   const messages = await getMessages();
+  const title = data.titulo ?? data.title ?? legalSlug;
+  const content = data.contenido ?? data.content ?? "";
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
@@ -65,18 +51,38 @@ export default async function PreviewDestinoPage({
           logoUrl={client.logo_url}
           primaryColor={client.primary_color}
           darkModeEnabled={client.dark_mode_enabled ?? true}
-          availableLanguages={
-            Array.isArray(client.available_languages) && client.available_languages.length > 0
-              ? client.available_languages
-              : [locale]
-          }
         />
-        <DestinationDetail
-          destino={destino}
-          backUrl={`/preview/${slug}`}
-          lang={locale}
-          preferredLanguage={client.preferred_language || "es"}
-        />
+        <div
+          style={{
+            paddingTop: 100,
+            paddingBottom: 80,
+            maxWidth: 800,
+            margin: "0 auto",
+            padding: "100px 24px 80px",
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: "var(--font-syne), Syne, sans-serif",
+              fontSize: "clamp(26px, 4vw, 38px)",
+              fontWeight: 800,
+              marginBottom: 24,
+            }}
+          >
+            {title}
+          </h1>
+          {content && (
+            <div
+              style={{
+                fontFamily: "var(--font-dm), DM Sans, sans-serif",
+                fontSize: 15,
+                lineHeight: 1.8,
+                opacity: 0.85,
+              }}
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          )}
+        </div>
       </LandingThemeProvider>
     </NextIntlClientProvider>
   );

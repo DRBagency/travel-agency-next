@@ -15,6 +15,7 @@ import { TabDepartures } from "./TabDepartures";
 import { TabCoordinator } from "./TabCoordinator";
 import { TabFaqs } from "./TabFaqs";
 import BookingModal from "../booking/BookingModal";
+import { makeTr } from "@/lib/translations";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -23,14 +24,20 @@ const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
 
 interface DestinationDetailProps {
   destino: any;
+  backUrl?: string;
+  lang?: string;
+  preferredLanguage?: string;
 }
 
-export function DestinationDetail({ destino }: DestinationDetailProps) {
+export function DestinationDetail({ destino, backUrl = "/", lang, preferredLanguage }: DestinationDetailProps) {
   const T = useLandingTheme();
   const [tab, setTab] = useState("itinerary");
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [initialDeparture, setInitialDeparture] = useState<any>(null);
+
+  // Translation helper
+  const dTr = makeTr(destino, lang || preferredLanguage || "es", preferredLanguage);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -102,15 +109,15 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
 
   return (
     <div style={{ minHeight: "100vh", color: T.text }}>
-      {/* ═══════════════════ TOP BAR ═══════════════════ */}
+      {/* ═══════════════════ SUB-NAV BAR (below main Navbar) ═══════════════════ */}
       <div
         style={{
           position: "fixed",
-          top: 0,
+          top: 70,
           left: 0,
           right: 0,
           zIndex: 100,
-          padding: "12px 28px",
+          padding: "10px 28px",
           background: T.glass,
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
@@ -122,7 +129,7 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
       >
         {/* Back button */}
         <a
-          href="/"
+          href={backUrl}
           style={{
             fontFamily: FONT2,
             color: T.sub,
@@ -141,7 +148,7 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
             e.currentTarget.style.color = T.sub;
           }}
         >
-          {"\u2190"} Volver
+          {"←"} Volver
         </a>
 
         {/* Destination name (center) */}
@@ -156,7 +163,7 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
             transform: "translateX(-50%)",
           }}
         >
-          {destino.nombre}
+          {dTr("nombre")}
         </span>
 
         {/* CTA button */}
@@ -183,247 +190,178 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
             e.currentTarget.style.boxShadow = "none";
           }}
         >
-          Reservar ahora {"\u2192"}
+          Reservar ahora {"→"}
         </button>
       </div>
 
-      <div style={{ paddingTop: 64 }}>
+      <div style={{ paddingTop: 116 }}>
         {/* ═══════════════════ HERO SECTION ═══════════════════ */}
-        <div style={{ position: "relative", height: "54vh", minHeight: 380 }}>
+        <div style={{ position: "relative" }}>
+          {/* Main image */}
           {gallery.length > 0 && (
-            <Img
-              src={gallery[galleryIndex]}
-              alt={destino.nombre}
-              isDark={T.mode === "dark"}
-              style={{ width: "100%", height: "100%" }}
-            />
-          )}
-
-          {/* Dark overlay */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: T.darkOverlay,
-            }}
-          />
-
-          {/* Gallery navigation */}
-          {gallery.length > 1 && (
-            <>
-              {/* Dots */}
+            <div style={{ position: "relative", height: 420, overflow: "hidden", borderRadius: "0 0 24px 24px" }}>
+              <Img
+                src={gallery[galleryIndex]}
+                alt={destino.nombre}
+                isDark={T.mode === "dark"}
+                style={{ width: "100%", height: "100%" }}
+              />
+              {/* Dark overlay */}
               <div
                 style={{
                   position: "absolute",
-                  bottom: 100,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  display: "flex",
-                  gap: 8,
+                  inset: 0,
+                  background: T.darkOverlay,
+                }}
+              />
+
+              {/* Price badge — solid dark background for readability */}
+              {destino.precio && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 20,
+                    right: 24,
+                    padding: "10px 20px",
+                    borderRadius: 14,
+                    background: "rgba(15,23,42,.82)",
+                    backdropFilter: "blur(12px)",
+                    border: `1px solid rgba(255,255,255,.12)`,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    zIndex: 2,
+                  }}
+                >
+                  {destino.precio_original && destino.precio_original > destino.precio && (
+                    <span
+                      style={{
+                        fontFamily: FONT2,
+                        fontSize: 13,
+                        color: "rgba(255,255,255,.55)",
+                        textDecoration: "line-through",
+                      }}
+                    >
+                      {destino.precio_original}{"€"}
+                    </span>
+                  )}
+                  <span
+                    style={{
+                      fontFamily: FONT,
+                      fontWeight: 800,
+                      fontSize: 22,
+                      color: T.lime,
+                    }}
+                  >
+                    {destino.precio}{"€"}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: FONT2,
+                      fontSize: 11,
+                      color: "rgba(255,255,255,.6)",
+                    }}
+                  >
+                    por persona
+                  </span>
+                </div>
+              )}
+
+              {/* Title overlay at bottom */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 20,
+                  left: 0,
+                  right: 0,
+                  padding: "0 36px",
                   zIndex: 2,
                 }}
               >
-                {gallery.map((_: string, i: number) => (
-                  <button
-                    key={i}
-                    onClick={() => setGalleryIndex(i)}
+                {destino.pais && (
+                  <span
                     style={{
-                      width: galleryIndex === i ? 32 : 10,
-                      height: 10,
-                      borderRadius: 5,
-                      border: "none",
-                      cursor: "pointer",
-                      background:
-                        galleryIndex === i
-                          ? T.accent
-                          : "rgba(255,255,255,.45)",
-                      transition: "all .3s",
+                      fontFamily: FONT2,
+                      color: T.accent,
+                      fontSize: 13,
+                      letterSpacing: 3,
+                      textTransform: "uppercase",
+                      fontWeight: 600,
                     }}
-                  />
-                ))}
-              </div>
-
-              {/* Prev arrow */}
-              <button
-                onClick={() =>
-                  setGalleryIndex((p) =>
-                    p > 0 ? p - 1 : gallery.length - 1
-                  )
-                }
-                style={{
-                  position: "absolute",
-                  left: 16,
-                  top: "40%",
-                  width: 44,
-                  height: 44,
-                  borderRadius: "50%",
-                  background: T.glass,
-                  backdropFilter: "blur(8px)",
-                  border: `1px solid ${T.border}`,
-                  cursor: "pointer",
-                  fontSize: 20,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: T.text,
-                  transition: "all .3s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = T.accent;
-                  e.currentTarget.style.color = "#fff";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = T.glass;
-                  e.currentTarget.style.color = T.text;
-                }}
-              >
-                {"\u2039"}
-              </button>
-
-              {/* Next arrow */}
-              <button
-                onClick={() =>
-                  setGalleryIndex((p) =>
-                    p < gallery.length - 1 ? p + 1 : 0
-                  )
-                }
-                style={{
-                  position: "absolute",
-                  right: 16,
-                  top: "40%",
-                  width: 44,
-                  height: 44,
-                  borderRadius: "50%",
-                  background: T.glass,
-                  backdropFilter: "blur(8px)",
-                  border: `1px solid ${T.border}`,
-                  cursor: "pointer",
-                  fontSize: 20,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: T.text,
-                  transition: "all .3s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = T.accent;
-                  e.currentTarget.style.color = "#fff";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = T.glass;
-                  e.currentTarget.style.color = T.text;
-                }}
-              >
-                {"\u203A"}
-              </button>
-            </>
-          )}
-
-          {/* Price badge */}
-          {destino.precio && (
-            <div
-              style={{
-                position: "absolute",
-                top: 80,
-                right: 24,
-                padding: "10px 20px",
-                borderRadius: 14,
-                background: T.glass,
-                backdropFilter: "blur(12px)",
-                border: `1px solid ${T.border}`,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                zIndex: 2,
-              }}
-            >
-              {destino.precio_original && destino.precio_original > destino.precio && (
-                <span
+                  >
+                    {destino.continente ? `${destino.continente} · ` : ""}
+                    {destino.pais}
+                  </span>
+                )}
+                <h1
                   style={{
-                    fontFamily: FONT2,
-                    fontSize: 13,
-                    color: T.muted,
-                    textDecoration: "line-through",
+                    fontFamily: FONT,
+                    fontSize: "clamp(28px, 4.5vw, 48px)",
+                    color: "#fff",
+                    margin: "4px 0",
+                    fontWeight: 800,
+                    textShadow: "0 2px 20px rgba(0,0,0,.4)",
                   }}
                 >
-                  {destino.precio_original}
-                  {destino.moneda || "\u20AC"}
-                </span>
-              )}
-              <span
-                style={{
-                  fontFamily: FONT,
-                  fontWeight: 800,
-                  fontSize: 22,
-                  color: T.lime,
-                }}
-              >
-                {destino.precio}
-                {destino.moneda || "\u20AC"}
-              </span>
-              <span
-                style={{
-                  fontFamily: FONT2,
-                  fontSize: 11,
-                  color: T.muted,
-                }}
-              >
-                por persona
-              </span>
+                  {dTr("nombre")}
+                </h1>
+                {(dTr("tagline") || destino.tagline) && (
+                  <p
+                    style={{
+                      fontFamily: FONT2,
+                      color: "rgba(255,255,255,.75)",
+                      fontSize: 16,
+                      margin: 0,
+                    }}
+                  >
+                    {dTr("tagline")}
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
-          {/* Title overlay at bottom */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: 20,
-              left: 0,
-              right: 0,
-              padding: "0 36px",
-              zIndex: 2,
-            }}
-          >
-            {destino.pais && (
-              <span
-                style={{
-                  fontFamily: FONT2,
-                  color: T.accent,
-                  fontSize: 13,
-                  letterSpacing: 3,
-                  textTransform: "uppercase",
-                  fontWeight: 600,
-                }}
-              >
-                {destino.continente ? `${destino.continente} \u00B7 ` : ""}
-                {destino.pais}
-              </span>
-            )}
-            <h1
+          {/* Thumbnail strip */}
+          {gallery.length > 1 && (
+            <div
               style={{
-                fontFamily: FONT,
-                fontSize: "clamp(30px, 5vw, 52px)",
-                color: "#fff",
-                margin: "4px 0",
-                fontWeight: 800,
-                textShadow: "0 2px 20px rgba(0,0,0,.3)",
+                display: "flex",
+                gap: 8,
+                padding: "12px 24px",
+                overflowX: "auto",
+                WebkitOverflowScrolling: "touch",
               }}
             >
-              {destino.nombre}
-            </h1>
-            {destino.tagline && (
-              <p
-                style={{
-                  fontFamily: FONT2,
-                  color: "rgba(255,255,255,.75)",
-                  fontSize: 16,
-                  margin: 0,
-                }}
-              >
-                {destino.tagline}
-              </p>
-            )}
-          </div>
+              {gallery.map((url: string, i: number) => (
+                <button
+                  key={i}
+                  onClick={() => setGalleryIndex(i)}
+                  style={{
+                    flexShrink: 0,
+                    width: 80,
+                    height: 56,
+                    borderRadius: 10,
+                    overflow: "hidden",
+                    border: galleryIndex === i
+                      ? `2.5px solid ${T.accent}`
+                      : `1.5px solid ${T.border}`,
+                    cursor: "pointer",
+                    opacity: galleryIndex === i ? 1 : 0.65,
+                    transition: "all .25s",
+                    padding: 0,
+                    background: "none",
+                  }}
+                >
+                  <Img
+                    src={url}
+                    alt={`${destino.nombre} ${i + 1}`}
+                    isDark={T.mode === "dark"}
+                    style={{ width: "100%", height: "100%", borderRadius: 0 }}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* ═══════════════════ MAIN CONTENT ═══════════════════ */}
@@ -487,6 +425,10 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
                       flex: 1,
                       minWidth: 100,
                       textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     <p
@@ -577,7 +519,7 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
           )}
 
           {/* ── Description ── */}
-          {(destino.descripcion_larga || destino.descripcion_corta) && (
+          {(dTr("descripcion_larga") || dTr("descripcion") || destino.descripcion_larga || destino.descripcion_corta) && (
             <p
               style={{
                 fontFamily: FONT2,
@@ -587,7 +529,7 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
                 marginBottom: 32,
               }}
             >
-              {destino.descripcion_larga || destino.descripcion_corta}
+              {dTr("descripcion_larga") || dTr("descripcion") || destino.descripcion_larga || destino.descripcion_corta}
             </p>
           )}
 
@@ -596,11 +538,9 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
             <div
               style={{
                 display: "flex",
-                gap: 6,
+                flexWrap: "wrap",
+                gap: 8,
                 marginBottom: 28,
-                overflowX: "auto",
-                paddingBottom: 6,
-                WebkitOverflowScrolling: "touch",
               }}
             >
               {allTabs.map((tb) => {
@@ -610,7 +550,7 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
                     key={tb.id}
                     onClick={() => setTab(tb.id)}
                     style={{
-                      padding: "10px 20px",
+                      padding: "9px 16px",
                       borderRadius: 50,
                       border: isActive
                         ? `2px solid ${T.accent}`
@@ -622,11 +562,10 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
                       fontSize: 13,
                       cursor: "pointer",
                       whiteSpace: "nowrap",
-                      flexShrink: 0,
                       transition: "all .3s",
                       display: "flex",
                       alignItems: "center",
-                      gap: 6,
+                      gap: 5,
                     }}
                     onMouseEnter={(e) => {
                       if (!isActive) {
@@ -735,7 +674,7 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
                     position: "relative",
                   }}
                 >
-                  {"\u00BF"}Listo para {destino.nombre}?
+                  {"¿"}Listo para {dTr("nombre")}?
                 </h2>
                 <p
                   style={{
@@ -746,12 +685,12 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
                     position: "relative",
                   }}
                 >
-                  Por persona {"\u00B7"}{" "}
+                  Por persona {"·"}{" "}
                   <strong style={{ color: T.lime }}>
                     {destino.precio}
-                    {destino.moneda || "\u20AC"}
+                    {destino.moneda || "€"}
                   </strong>{" "}
-                  {"\u00B7"} {destino.duracion}
+                  {"·"} {destino.duracion}
                 </p>
                 <button
                   onClick={() => openBooking()}
@@ -780,7 +719,7 @@ export function DestinationDetail({ destino }: DestinationDetailProps) {
                       "0 4px 24px rgba(212,242,77,.4)";
                   }}
                 >
-                  Reservar ahora {"\u2192"}
+                  Reservar ahora {"→"}
                 </button>
               </div>
             </AnimateIn>

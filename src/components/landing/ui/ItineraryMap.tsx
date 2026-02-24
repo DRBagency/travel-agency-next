@@ -30,14 +30,14 @@ export function ItineraryMap({ itinerary }: { itinerary: ItineraryDay[] }) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              minWidth: 80,
+              minWidth: 100,
               flexShrink: 0,
             }}
           >
             <div
               style={{
-                width: 36,
-                height: 36,
+                width: 44,
+                height: 44,
                 borderRadius: "50%",
                 background: `linear-gradient(135deg, ${T.accent}, ${T.accent}bb)`,
                 color: "#fff",
@@ -46,7 +46,7 @@ export function ItineraryMap({ itinerary }: { itinerary: ItineraryDay[] }) {
                 justifyContent: "center",
                 fontFamily: "var(--font-syne), Syne, sans-serif",
                 fontWeight: 800,
-                fontSize: 14,
+                fontSize: 16,
                 boxShadow: `0 2px 10px ${T.accent}35`,
               }}
             >
@@ -55,13 +55,13 @@ export function ItineraryMap({ itinerary }: { itinerary: ItineraryDay[] }) {
             <p
               style={{
                 fontFamily: "var(--font-dm), DM Sans, sans-serif",
-                fontSize: 10,
+                fontSize: 12,
                 fontWeight: 600,
                 color: T.sub,
-                marginTop: 6,
+                marginTop: 8,
                 textAlign: "center",
-                maxWidth: 80,
-                lineHeight: 1.25,
+                maxWidth: 100,
+                lineHeight: 1.3,
               }}
             >
               {day.title}
@@ -73,7 +73,7 @@ export function ItineraryMap({ itinerary }: { itinerary: ItineraryDay[] }) {
                 flex: "0 0 36px",
                 height: 2,
                 background: `linear-gradient(90deg, ${T.accent}, ${T.accent}30)`,
-                marginTop: 17,
+                marginTop: 21,
                 position: "relative",
               }}
             >

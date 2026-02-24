@@ -12,6 +12,7 @@ interface Hotel {
   imagen?: string;
   descripcion?: string;
   amenidades?: string[];
+  direccion?: string;
 }
 
 interface TabHotelProps {
@@ -28,6 +29,7 @@ export function TabHotel({ hotel }: TabHotelProps) {
   const imagen = hotel.imagen || h.image;
   const descripcion = hotel.descripcion || h.description;
   const amenidades: string[] = hotel.amenidades || h.amenities || [];
+  const direccion = hotel.direccion || h.address || "";
 
   return (
     <div
@@ -86,7 +88,7 @@ export function TabHotel({ hotel }: TabHotelProps) {
 
         {/* Amenities as pill badges */}
         {amenidades.length > 0 && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: direccion ? 20 : 0 }}>
             {amenidades.map((amenity, i) => (
               <span
                 key={i}
@@ -104,6 +106,60 @@ export function TabHotel({ hotel }: TabHotelProps) {
                 {amenity}
               </span>
             ))}
+          </div>
+        )}
+
+        {/* Address / Google Maps */}
+        {direccion && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "14px 18px",
+              borderRadius: 14,
+              background: T.bg,
+              border: `1px solid ${T.border}`,
+            }}
+          >
+            <span style={{ fontSize: 18 }}>{"📍"}</span>
+            <div style={{ flex: 1 }}>
+              <p
+                style={{
+                  fontFamily: FONT2,
+                  fontSize: 14,
+                  color: T.text,
+                  margin: 0,
+                  fontWeight: 600,
+                }}
+              >
+                {direccion.startsWith("http") ? "Ver ubicacion" : direccion}
+              </p>
+            </div>
+            <a
+              href={
+                direccion.startsWith("http")
+                  ? direccion
+                  : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion)}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: "6px 14px",
+                borderRadius: 50,
+                background: T.accent + "15",
+                color: T.accent,
+                fontFamily: FONT2,
+                fontSize: 12,
+                fontWeight: 700,
+                textDecoration: "none",
+                border: `1px solid ${T.accent}25`,
+                transition: "all .3s",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {"🗺️"} Ver en Maps
+            </a>
           </div>
         )}
       </div>

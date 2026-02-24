@@ -15,12 +15,13 @@ interface NavbarProps {
   ctaLink?: string;
   darkModeEnabled?: boolean;
   lang?: string;
+  availableLanguages?: string[];
   onLangChange?: (lang: string) => void;
 }
 
 const NAV_LINKS = [
   { label: "Destinos", href: "#destinos" },
-  { label: "Why Us", href: "#why" },
+  { label: "Por qué nosotros", href: "#why" },
   { label: "Testimonios", href: "#testimonials" },
   { label: "Contacto", href: "#contact" },
 ];
@@ -33,12 +34,17 @@ export default function Navbar({
   ctaLink = "#contact",
   darkModeEnabled = true,
   lang = "ES",
+  availableLanguages = ["es"],
   onLangChange,
 }: NavbarProps) {
   const T = useLandingTheme();
   const { mode, toggleTheme } = useLandingMode();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+
+  const LANG_LABELS: Record<string, string> = { es: "ES", en: "EN", ar: "AR" };
+  const showLangDropdown = availableLanguages.length > 1;
 
   const accent = primaryColor || T.accent;
 
@@ -162,34 +168,93 @@ export default function Navbar({
               gap: 12,
             }}
           >
-            {/* Language toggle */}
-            <button
-              onClick={() => onLangChange?.(lang === "ES" ? "EN" : "ES")}
-              style={{
-                background: T.bg3,
-                border: `1px solid ${T.border}`,
-                borderRadius: 8,
-                padding: "6px 12px",
-                fontFamily: FONT,
-                fontWeight: 700,
-                fontSize: 13,
-                color: T.sub,
-                cursor: "pointer",
-                transition: "all .3s",
-                letterSpacing: ".5px",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = accent;
-                e.currentTarget.style.color = accent;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = T.border;
-                e.currentTarget.style.color = T.sub;
-              }}
-              className="navbar-desktop-only"
-            >
-              {lang === "ES" ? "EN" : "ES"}
-            </button>
+            {/* Language selector */}
+            {showLangDropdown && (
+              <div style={{ position: "relative" }} className="navbar-desktop-only">
+                <button
+                  onClick={() => setLangOpen((o) => !o)}
+                  style={{
+                    background: T.bg3,
+                    border: `1px solid ${T.border}`,
+                    borderRadius: 8,
+                    padding: "6px 12px",
+                    fontFamily: FONT,
+                    fontWeight: 700,
+                    fontSize: 13,
+                    color: T.sub,
+                    cursor: "pointer",
+                    transition: "all .3s",
+                    letterSpacing: ".5px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 4,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = accent;
+                    e.currentTarget.style.color = accent;
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!langOpen) {
+                      e.currentTarget.style.borderColor = T.border;
+                      e.currentTarget.style.color = T.sub;
+                    }
+                  }}
+                >
+                  {LANG_LABELS[lang.toLowerCase()] || lang.toUpperCase()}
+                  <span style={{ fontSize: 10, marginLeft: 2 }}>{"▾"}</span>
+                </button>
+                {langOpen && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "calc(100% + 6px)",
+                      right: 0,
+                      background: T.bg2,
+                      border: `1px solid ${T.border}`,
+                      borderRadius: 10,
+                      overflow: "hidden",
+                      boxShadow: `0 8px 24px ${T.shadow}`,
+                      zIndex: 50,
+                      minWidth: 60,
+                    }}
+                  >
+                    {availableLanguages.map((l) => (
+                      <button
+                        key={l}
+                        onClick={() => {
+                          onLangChange?.(l);
+                          setLangOpen(false);
+                        }}
+                        style={{
+                          display: "block",
+                          width: "100%",
+                          padding: "8px 16px",
+                          border: "none",
+                          background: l.toLowerCase() === lang.toLowerCase() ? `${accent}15` : "transparent",
+                          color: l.toLowerCase() === lang.toLowerCase() ? accent : T.text,
+                          fontFamily: FONT,
+                          fontWeight: 700,
+                          fontSize: 13,
+                          cursor: "pointer",
+                          textAlign: "center",
+                          transition: "background .2s",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (l.toLowerCase() !== lang.toLowerCase())
+                            e.currentTarget.style.background = T.bg3;
+                        }}
+                        onMouseLeave={(e) => {
+                          if (l.toLowerCase() !== lang.toLowerCase())
+                            e.currentTarget.style.background = "transparent";
+                        }}
+                      >
+                        {LANG_LABELS[l] || l.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Dark mode toggle */}
             {darkModeEnabled && (
@@ -371,22 +436,28 @@ export default function Navbar({
           ))}
 
           <div style={{ display: "flex", gap: 12, marginTop: 16, alignItems: "center" }}>
-            <button
-              onClick={() => onLangChange?.(lang === "ES" ? "EN" : "ES")}
-              style={{
-                background: T.bg3,
-                border: `1px solid ${T.border}`,
-                borderRadius: 8,
-                padding: "8px 16px",
-                fontFamily: FONT,
-                fontWeight: 700,
-                fontSize: 14,
-                color: T.sub,
-                cursor: "pointer",
-              }}
-            >
-              {lang === "ES" ? "EN" : "ES"}
-            </button>
+            {showLangDropdown && availableLanguages.map((l) => (
+              <button
+                key={l}
+                onClick={() => {
+                  onLangChange?.(l);
+                  setMobileOpen(false);
+                }}
+                style={{
+                  background: l.toLowerCase() === lang.toLowerCase() ? `${accent}20` : T.bg3,
+                  border: `1px solid ${l.toLowerCase() === lang.toLowerCase() ? accent : T.border}`,
+                  borderRadius: 8,
+                  padding: "8px 16px",
+                  fontFamily: FONT,
+                  fontWeight: 700,
+                  fontSize: 14,
+                  color: l.toLowerCase() === lang.toLowerCase() ? accent : T.sub,
+                  cursor: "pointer",
+                }}
+              >
+                {LANG_LABELS[l] || l.toUpperCase()}
+              </button>
+            ))}
 
             {darkModeEnabled && (
               <button

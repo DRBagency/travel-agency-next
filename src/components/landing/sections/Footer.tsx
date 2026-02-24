@@ -22,6 +22,7 @@ interface FooterProps {
   footerDescription?: string;
   destinos?: DestinoLink[];
   paginasLegales?: LegalPage[];
+  legalBasePath?: string;
   instagramUrl?: string;
   facebookUrl?: string;
   tiktokUrl?: string;
@@ -33,6 +34,7 @@ export default function Footer({
   footerDescription = "Tu agencia de viajes de confianza. Experiencias unicas en los mejores destinos del mundo.",
   destinos = [],
   paginasLegales = [],
+  legalBasePath = "/legal",
   instagramUrl,
   facebookUrl,
   tiktokUrl,
@@ -41,7 +43,7 @@ export default function Footer({
   const year = new Date().getFullYear();
 
   const navLinks = [
-    { label: "Why Us", href: "#why" },
+    { label: "Por qué nosotros", href: "#why" },
     { label: "Testimonios", href: "#testimonials" },
     { label: "Contacto", href: "#contact" },
   ];
@@ -392,7 +394,7 @@ export default function Footer({
               {paginasLegales.map((page) => (
                 <Link
                   key={page.slug}
-                  href={`/legal/${page.slug}`}
+                  href={`${legalBasePath}/${page.slug}`}
                   style={{
                     fontFamily: FONT2,
                     fontSize: 13,

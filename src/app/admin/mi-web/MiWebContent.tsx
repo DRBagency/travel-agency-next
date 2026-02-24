@@ -30,6 +30,8 @@ import UnsplashPicker from "./UnsplashPicker";
 import AIDescriptionButton from "@/components/ai/AIDescriptionButton";
 import OpinionesManager from "./OpinionesManager";
 import LegalesManager from "./LegalesManager";
+import { useAutoTranslate } from "@/hooks/useAutoTranslate";
+import { MIWEB_SECTION_TRANSLATABLE_FIELDS, TRANSLATABLE_CLIENT_FIELDS } from "@/lib/translations";
 
 interface WhyUsItem {
   icon: string;
@@ -79,6 +81,7 @@ interface ClientData {
   meta_title: string | null;
   meta_description: string | null;
   preferred_language: string | null;
+  available_languages: string[] | null;
 }
 
 interface Counts {
@@ -142,6 +145,16 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
   const tc = useTranslations('common');
   const tt = useTranslations("toast");
 
+  const { translating, translationError, isEligible: translationEligible, translate: triggerTranslation } = useAutoTranslate({
+    table: "clientes",
+    recordId: client.id,
+    sourceLang: client.preferred_language || "es",
+    availableLangs: Array.isArray(client.available_languages) && client.available_languages.length > 0
+      ? client.available_languages
+      : ["es"],
+    plan,
+  });
+
   // Parse whyus_items from client data (could be JSON string or array)
   function parseWhyUsItems(data: WhyUsItem[] | string | null): WhyUsItem[] {
     if (!data) return [];
@@ -194,6 +207,11 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
 
   const [whyusItems, setWhyusItems] = useState<WhyUsItem[]>(parseWhyUsItems(client.whyus_items));
   const [darkModeEnabled, setDarkModeEnabled] = useState(client.dark_mode_enabled ?? false);
+  const [availableLangs, setAvailableLangs] = useState<string[]>(
+    Array.isArray(client.available_languages) && client.available_languages.length > 0
+      ? client.available_languages
+      : ["es"]
+  );
 
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(
     new Set()
@@ -274,6 +292,23 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
           [section]: { ...prev[section], success: false },
         }));
       }, 2500);
+
+      // Fire-and-forget auto-translation
+      if (translationEligible) {
+        const sectionFields = MIWEB_SECTION_TRANSLATABLE_FIELDS[section];
+        if (sectionFields && sectionFields.length > 0) {
+          const translatablePayload: Record<string, unknown> = {};
+          for (const f of sectionFields) {
+            const fieldType = TRANSLATABLE_CLIENT_FIELDS[f];
+            if (fieldType === "jsonb" && extraPayload && f in extraPayload) {
+              translatablePayload[f] = extraPayload[f];
+            } else if (f in fields) {
+              translatablePayload[f] = fields[f as keyof typeof fields];
+            }
+          }
+          triggerTranslation(translatablePayload);
+        }
+      }
     } catch (err) {
       setSaveStates((prev) => ({
         ...prev,
@@ -488,6 +523,20 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
           {t("viewMyWeb")}
         </a>
       </div>
+
+      {/* Translation status banners */}
+      {translating && (
+        <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 text-sm text-blue-700 dark:text-blue-300">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Translating content to other languages...
+        </div>
+      )}
+      {translationError && (
+        <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-sm text-amber-700 dark:text-amber-300">
+          <AlertCircle className="w-4 h-4" />
+          Translation failed. Content saved successfully.
+        </div>
+      )}
 
       {/* Dominio */}
       <section className="panel-card p-5 space-y-3">
@@ -705,9 +754,46 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
                   {t("landingLanguageHint")}
                 </p>
               </div>
+
+              <div>
+                <label className="panel-label block mb-1">
+                  Idiomas disponibles en la landing
+                </label>
+                <div className="flex flex-wrap gap-3 mt-1">
+                  {[
+                    { code: "es", label: "Español" },
+                    { code: "en", label: "English" },
+                    { code: "ar", label: "العربية" },
+                  ].map((lang) => (
+                    <label
+                      key={lang.code}
+                      className="flex items-center gap-2 cursor-pointer select-none"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={availableLangs.includes(lang.code)}
+                        onChange={(e) => {
+                          setAvailableLangs((prev) =>
+                            e.target.checked
+                              ? [...prev, lang.code]
+                              : prev.filter((l) => l !== lang.code)
+                          );
+                        }}
+                        className="rounded border-gray-300 dark:border-white/30 text-[var(--primary)] focus:ring-[var(--primary)]"
+                      />
+                      <span className="text-sm text-gray-700 dark:text-white/70">
+                        {lang.label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
+                  El visitante podrá cambiar entre estos idiomas en la navbar.
+                </p>
+              </div>
             </div>
 
-            {renderSaveButton("marca", ["logo_url", "primary_color", "preferred_language"])}
+            {renderSaveButton("marca", ["logo_url", "primary_color", "preferred_language"], { available_languages: availableLangs })}
           </div>
         )}
       </section>

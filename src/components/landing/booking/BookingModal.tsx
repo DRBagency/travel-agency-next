@@ -114,11 +114,23 @@ const translations = {
 
 /* ─── Types ─── */
 interface Departure {
-  date: string;
-  status: string;
+  /* Spanish (source of truth) */
+  fecha?: string;
+  estado?: string;
+  precio?: number;
+  plazas?: number;
+  /* English (backwards-compat) */
+  date?: string;
+  status?: string;
   price?: number;
   spots?: number;
 }
+
+/* Normalise departure fields (Spanish takes precedence) */
+function depDate(d: Departure) { return d.fecha || d.date || ""; }
+function depStatus(d: Departure) { return d.estado || d.status || "confirmed"; }
+function depPrice(d: Departure) { return d.precio ?? d.price; }
+function depSpots(d: Departure) { return d.plazas ?? d.spots; }
 
 interface Passenger {
   fullName: string;
@@ -217,23 +229,28 @@ export default function BookingModal({
 
   /* ── Derived values ── */
   const salidas: Departure[] = destination?.salidas || [];
-  const availableDeps = salidas.filter((s: Departure) => s.status !== "soldOut");
-  const unitPrice = selectedDep?.price || destination?.precio || 0;
+  const availableDeps = salidas.filter((s: Departure) => {
+    const st = depStatus(s);
+    return st !== "soldOut" && st !== "agotado";
+  });
+  const unitPrice = (selectedDep ? depPrice(selectedDep) : undefined) ?? destination?.precio ?? 0;
   const totalTravelers = adults + children;
   const totalPrice = unitPrice * totalTravelers;
   const deposit = 200 * totalTravelers;
 
   /* ── Helpers ── */
   const statusLabel = (status: string) => {
-    if (status === "confirmed") return t.conf;
-    if (status === "lastSpots") return t.last;
-    if (status === "soldOut") return t.sold;
+    if (status === "confirmed" || status === "confirmado") return t.conf;
+    if (status === "lastSpots" || status === "ultimas_plazas") return t.last;
+    if (status === "soldOut" || status === "agotado") return t.sold;
     return status;
   };
 
   const formatDate = (dateStr: string) => {
+    if (!dateStr) return "—";
     try {
       const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr; // already formatted or unparseable
       return d.toLocaleDateString(lang === "en" ? "en-GB" : "es-ES", {
         day: "numeric",
         month: "short",
@@ -449,7 +466,7 @@ export default function BookingModal({
                   whiteSpace: "nowrap",
                 }}
               >
-                {unitPrice.toLocaleString("es-ES")}\u20ac
+                {unitPrice.toLocaleString("es-ES")}{"€"}
               </div>
             </div>
           </div>
@@ -572,9 +589,12 @@ export default function BookingModal({
                     </p>
                   )}
                   {availableDeps.map((dep: Departure, i: number) => {
+                    const dDate = depDate(dep);
+                    const dStatus = depStatus(dep);
+                    const dPrice = depPrice(dep);
+                    const dSpots = depSpots(dep);
                     const isSelected =
-                      selectedDep?.date === dep.date &&
-                      selectedDep?.status === dep.status;
+                      selectedDep && depDate(selectedDep) === dDate;
                     return (
                       <button
                         key={i}
@@ -615,7 +635,7 @@ export default function BookingModal({
                               color: T.text,
                             }}
                           >
-                            {formatDate(dep.date)}
+                            {formatDate(dDate)}
                           </span>
                           <span
                             style={{
@@ -624,13 +644,13 @@ export default function BookingModal({
                               color: T.sub,
                             }}
                           >
-                            {dep.spots != null
-                              ? `${dep.spots} ${t.sSp}`
+                            {dSpots != null
+                              ? `${dSpots} ${t.sSp}`
                               : ""}
                           </span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          {dep.price != null && (
+                          {dPrice != null && (
                             <span
                               style={{
                                 fontFamily: FONT,
@@ -639,12 +659,12 @@ export default function BookingModal({
                                 color: T.text,
                               }}
                             >
-                              {dep.price.toLocaleString("es-ES")}\u20ac
+                              {dPrice.toLocaleString("es-ES")}{"€"}
                             </span>
                           )}
                           <StatusBadge
-                            status={dep.status}
-                            label={statusLabel(dep.status)}
+                            status={dStatus}
+                            label={statusLabel(dStatus)}
                           />
                         </div>
                       </button>
@@ -786,7 +806,7 @@ export default function BookingModal({
                   disabled={!selectedDep}
                   style={selectedDep ? primaryBtn : primaryBtnDisabled}
                 >
-                  {t.sNx} \u2192
+                  {t.sNx} {"→"}
                 </button>
               </div>
             )}
@@ -936,14 +956,27 @@ export default function BookingModal({
                 ))}
 
                 {/* Navigation */}
-                <div style={{ display: "flex", gap: 12, marginTop: 6 }}>
-                  <button onClick={() => setStep(1)} style={secondaryBtn}>
-                    {t.sBk}
-                  </button>
-                  <button onClick={() => setStep(3)} style={{ ...primaryBtn, flex: 1 }}>
-                    {t.sNx} \u2192
-                  </button>
-                </div>
+                {(() => {
+                  const contactValid = contactName.trim() && contactEmail.trim() && contactPhone.trim();
+                  const passengersValid = passengers.every(
+                    (p) => p.fullName.trim() && p.docNumber.trim()
+                  );
+                  const canContinue = !!(contactValid && passengersValid);
+                  return (
+                    <div style={{ display: "flex", gap: 12, marginTop: 6 }}>
+                      <button onClick={() => setStep(1)} style={secondaryBtn}>
+                        {t.sBk}
+                      </button>
+                      <button
+                        onClick={() => canContinue && setStep(3)}
+                        disabled={!canContinue}
+                        style={canContinue ? { ...primaryBtn, flex: 1 } : { ...primaryBtnDisabled, flex: 1 }}
+                      >
+                        {t.sNx} {"→"}
+                      </button>
+                    </div>
+                  );
+                })()}
               </div>
             )}
 
@@ -957,7 +990,7 @@ export default function BookingModal({
                   <SummaryRow label={t.sDs} value={destination?.nombre || ""} T={T} />
                   <SummaryRow
                     label={t.sFd}
-                    value={selectedDep ? formatDate(selectedDep.date) : ""}
+                    value={selectedDep ? formatDate(depDate(selectedDep)) : ""}
                     T={T}
                   />
                   <SummaryRow
@@ -998,7 +1031,7 @@ export default function BookingModal({
                         color: T.sub,
                       }}
                     >
-                      {t.sUnit}: {unitPrice.toLocaleString("es-ES")}\u20ac x{" "}
+                      {t.sUnit}: {unitPrice.toLocaleString("es-ES")}{"€"} x{" "}
                       {totalTravelers}
                     </span>
                     <span
@@ -1009,7 +1042,7 @@ export default function BookingModal({
                         color: T.text,
                       }}
                     >
-                      {totalPrice.toLocaleString("es-ES")}\u20ac
+                      {totalPrice.toLocaleString("es-ES")}{"€"}
                     </span>
                   </div>
 
@@ -1046,7 +1079,7 @@ export default function BookingModal({
                         color: T.sub,
                       }}
                     >
-                      {totalPrice.toLocaleString("es-ES")}\u20ac
+                      {totalPrice.toLocaleString("es-ES")}{"€"}
                     </span>
                   </div>
 
@@ -1075,7 +1108,7 @@ export default function BookingModal({
                         color: T.accent,
                       }}
                     >
-                      {deposit.toLocaleString("es-ES")}\u20ac
+                      {deposit.toLocaleString("es-ES")}{"€"}
                     </span>
                   </div>
                 </div>
@@ -1115,7 +1148,7 @@ export default function BookingModal({
                     onClick={() => setStep(4)}
                     style={{ ...primaryBtn, flex: 1 }}
                   >
-                    {t.sPy} {deposit.toLocaleString("es-ES")}\u20ac \u2192
+                    {t.sPy} {deposit.toLocaleString("es-ES")}{"€ →"}
                   </button>
                 </div>
               </div>
@@ -1154,7 +1187,7 @@ export default function BookingModal({
                       letterSpacing: "-1px",
                     }}
                   >
-                    {deposit.toLocaleString("es-ES")}\u20ac
+                    {deposit.toLocaleString("es-ES")}{"€"}
                   </span>
                 </div>
 
@@ -1231,20 +1264,27 @@ export default function BookingModal({
                 </div>
 
                 {/* Navigation */}
-                <div style={{ display: "flex", gap: 12 }}>
-                  <button onClick={() => setStep(3)} style={secondaryBtn}>
-                    {t.sBk}
-                  </button>
-                  <button
-                    onClick={() => {
-                      // In production: call /api/stripe/connect/checkout
-                      setStep(5);
-                    }}
-                    style={{ ...primaryBtn, flex: 1 }}
-                  >
-                    {t.sPy} {deposit.toLocaleString("es-ES")}\u20ac
-                  </button>
-                </div>
+                {(() => {
+                  const payValid = cardHolder.trim() && cardNumber.replace(/\s/g, "").length >= 15 && cardExpiry.length >= 5 && cardCvv.length >= 3;
+                  return (
+                    <div style={{ display: "flex", gap: 12 }}>
+                      <button onClick={() => setStep(3)} style={secondaryBtn}>
+                        {t.sBk}
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (!payValid) return;
+                          // In production: call /api/stripe/connect/checkout
+                          setStep(5);
+                        }}
+                        disabled={!payValid}
+                        style={payValid ? { ...primaryBtn, flex: 1 } : { ...primaryBtnDisabled, flex: 1 }}
+                      >
+                        {t.sPy} {deposit.toLocaleString("es-ES")}{"€"}
+                      </button>
+                    </div>
+                  );
+                })()}
               </div>
             )}
 
@@ -1334,7 +1374,7 @@ export default function BookingModal({
                   <SummaryRow label={t.sDs} value={destination?.nombre || ""} T={T} />
                   <SummaryRow
                     label={t.sFd}
-                    value={selectedDep ? formatDate(selectedDep.date) : ""}
+                    value={selectedDep ? formatDate(depDate(selectedDep)) : ""}
                     T={T}
                   />
                   <SummaryRow
@@ -1344,13 +1384,13 @@ export default function BookingModal({
                   />
                   <SummaryRow
                     label={t.sDeposit}
-                    value={`${deposit.toLocaleString("es-ES")}\u20ac`}
+                    value={`${deposit.toLocaleString("es-ES")}€`}
                     T={T}
                     accent
                   />
                   <SummaryRow
                     label={t.sTt}
-                    value={`${totalPrice.toLocaleString("es-ES")}\u20ac`}
+                    value={`${totalPrice.toLocaleString("es-ES")}€`}
                     T={T}
                     isLast
                     accent

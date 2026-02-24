@@ -40,10 +40,12 @@ const ALLOWED_FIELDS = new Set([
   "dark_mode_enabled",
   "meta_title",
   "meta_description",
+  "available_languages",
+  "translations",
 ]);
 
 /** Fields that should NOT be trimmed/stringified — they're JSONB or boolean */
-const JSONB_FIELDS = new Set(["whyus_items"]);
+const JSONB_FIELDS = new Set(["whyus_items", "available_languages", "translations"]);
 const BOOLEAN_FIELDS = new Set(["dark_mode_enabled"]);
 
 export async function POST(req: NextRequest) {
