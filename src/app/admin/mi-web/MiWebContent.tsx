@@ -51,12 +51,14 @@ interface ClientData {
   hero_cta_link: string | null;
   hero_image_url: string | null;
   hero_badge: string | null;
+  hero_description: string | null;
   hero_cta_text_secondary: string | null;
   hero_cta_link_secondary: string | null;
   stats_years: string | null;
   stats_destinations: string | null;
   stats_travelers: string | null;
   stats_rating: string | null;
+  stats_repeat: string | null;
   whyus_items: WhyUsItem[] | string | null;
   cta_banner_title: string | null;
   cta_banner_description: string | null;
@@ -162,12 +164,14 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     hero_cta_link: client.hero_cta_link ?? "",
     hero_image_url: client.hero_image_url ?? "",
     hero_badge: client.hero_badge ?? "",
+    hero_description: client.hero_description ?? "",
     hero_cta_text_secondary: client.hero_cta_text_secondary ?? "",
     hero_cta_link_secondary: client.hero_cta_link_secondary ?? "",
     stats_years: client.stats_years ?? "",
     stats_destinations: client.stats_destinations ?? "",
     stats_travelers: client.stats_travelers ?? "",
     stats_rating: client.stats_rating ?? "",
+    stats_repeat: client.stats_repeat ?? "",
     cta_banner_title: client.cta_banner_title ?? "",
     cta_banner_description: client.cta_banner_description ?? "",
     cta_banner_cta_text: client.cta_banner_cta_text ?? "",
@@ -460,7 +464,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
   }
 
   function addWhyUsItem() {
-    if (whyusItems.length >= 6) return;
+    if (whyusItems.length >= 4) return;
     setWhyusItems((prev) => [...prev, { icon: "✨", title: "", desc: "" }]);
   }
 
@@ -752,6 +756,18 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               />
             </div>
 
+            <div>
+              <label className="panel-label block mb-1">
+                {t("heroDescription")}
+              </label>
+              <textarea
+                value={fields.hero_description}
+                onChange={(e) => updateField("hero_description", e.target.value)}
+                className="panel-input w-full min-h-[80px]"
+                placeholder="Experiencias a medida con hoteles excepcionales..."
+              />
+            </div>
+
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label block mb-1">
@@ -850,6 +866,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
             {renderSaveButton("hero", [
               "hero_title",
               "hero_subtitle",
+              "hero_description",
               "hero_cta_text",
               "hero_cta_link",
               "hero_image_url",
@@ -920,6 +937,17 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
                   placeholder="Ej: 4.9"
                 />
               </div>
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("repeatRate")}
+                </label>
+                <input
+                  value={fields.stats_repeat}
+                  onChange={(e) => updateField("stats_repeat", e.target.value)}
+                  className="panel-input w-full"
+                  placeholder="Ej: 98%"
+                />
+              </div>
             </div>
 
             {renderSaveButton("stats", [
@@ -927,6 +955,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               "stats_destinations",
               "stats_travelers",
               "stats_rating",
+              "stats_repeat",
             ])}
           </div>
         )}
@@ -1013,7 +1042,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               </div>
             ))}
 
-            {whyusItems.length < 6 && (
+            {whyusItems.length < 4 && (
               <button
                 type="button"
                 onClick={addWhyUsItem}
@@ -1023,7 +1052,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               </button>
             )}
 
-            {whyusItems.length >= 6 && (
+            {whyusItems.length >= 4 && (
               <p className="text-xs text-gray-400 dark:text-white/40 text-center">
                 {t("maxCardsReached")}
               </p>

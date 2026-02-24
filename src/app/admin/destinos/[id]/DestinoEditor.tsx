@@ -128,9 +128,11 @@ export default function DestinoEditor({ destino }: Props) {
   const [dificultad, setDificultad] = useState<string>(destino.dificultad ?? "");
   const [duracion, setDuracion] = useState<string>(destino.duracion ?? "");
   const [moneda, setMoneda] = useState<string>(destino.moneda ?? "EUR");
+  const [pais, setPais] = useState<string>(destino.pais ?? "");
   const [imagenUrl, setImagenUrl] = useState<string>(destino.imagen_url ?? "");
 
   // Numbers
+  const [reviews, setReviews] = useState<number>(destino.reviews ?? 0);
   const [esfuerzo, setEsfuerzo] = useState<number>(destino.esfuerzo ?? 1);
   const [grupoMax, setGrupoMax] = useState<number>(destino.grupo_max ?? 0);
   const [edadMin, setEdadMin] = useState<number>(destino.edad_min ?? 0);
@@ -186,10 +188,12 @@ export default function DestinoEditor({ destino }: Props) {
           descripcion_larga: descripcionLarga,
           categoria,
           continente,
+          pais,
           dificultad,
           duracion,
           moneda,
           imagen_url: imagenUrl,
+          reviews,
           esfuerzo,
           grupo_max: grupoMax,
           edad_min: edadMin,
@@ -442,6 +446,17 @@ export default function DestinoEditor({ destino }: Props) {
                   className="panel-input w-full"
                 />
               </div>
+              {/* pais */}
+              <div>
+                <label className="panel-label">Pais</label>
+                <input
+                  type="text"
+                  value={pais}
+                  onChange={(e) => setPais(e.target.value)}
+                  className="panel-input w-full"
+                  placeholder="Ej: Grecia"
+                />
+              </div>
               {/* continente */}
               <div>
                 <label className="panel-label">Continente</label>
@@ -450,6 +465,18 @@ export default function DestinoEditor({ destino }: Props) {
                   value={continente}
                   onChange={(e) => setContinente(e.target.value)}
                   className="panel-input w-full"
+                />
+              </div>
+              {/* reviews */}
+              <div>
+                <label className="panel-label">Reviews (opiniones)</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={reviews}
+                  onChange={(e) => setReviews(Number(e.target.value) || 0)}
+                  className="panel-input w-full"
+                  placeholder="Ej: 234"
                 />
               </div>
               {/* dificultad */}

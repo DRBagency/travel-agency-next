@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ArrowRight, Calendar } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { AnimateIn } from "@/components/landing/AnimateIn";
+import { AnimateIn } from "@/components/landing/ui/AnimateIn";
 
 interface BlogPost {
   id: string;

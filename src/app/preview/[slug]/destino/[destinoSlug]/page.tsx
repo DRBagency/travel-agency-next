@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { getLocale, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { DestinoDetail } from "@/app/destino/[slug]/DestinoDetail";
+import { DestinationDetail } from "@/components/landing/destination/DestinationDetail";
+import { LandingThemeProvider } from "@/components/landing/LandingThemeProvider";
+import { LandingGlobalStyles } from "@/components/landing/LandingGlobalStyles";
+import { BgMesh } from "@/components/landing/ui/BgMesh";
 
 export default async function PreviewDestinoPage({
   params,
@@ -50,7 +53,14 @@ export default async function PreviewDestinoPage({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <DestinoDetail destino={destino} client={client} />
+      <LandingThemeProvider
+        primaryColor={client.primary_color}
+        darkModeEnabled={client.dark_mode_enabled ?? true}
+      >
+        <LandingGlobalStyles />
+        <BgMesh />
+        <DestinationDetail destino={destino} />
+      </LandingThemeProvider>
     </NextIntlClientProvider>
   );
 }

@@ -18,6 +18,7 @@ const STRING_FIELDS = new Set([
   "dificultad",
   "duracion",
   "moneda",
+  "pais",
 ]);
 
 const NUMBER_FIELDS = new Set([
@@ -31,6 +32,7 @@ const NUMBER_FIELDS = new Set([
   "edad_min",
   "edad_max",
   "rating",
+  "reviews",
   "latitude",
   "longitude",
 ]);
