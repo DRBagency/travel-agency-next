@@ -6,16 +6,11 @@ import { StatusBadge } from "../ui/StatusBadge";
 const FONT = `var(--font-syne), Syne, sans-serif`;
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
 
-interface Departure {
-  date: string;
-  status: string;
-  price?: number;
-  spots?: number;
-}
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface TabDeparturesProps {
-  departures: Departure[];
-  onBook: (departure: Departure) => void;
+  departures: any[];
+  onBook: (departure: any) => void;
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -61,7 +56,12 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
 
       {/* Departure rows */}
       {departures.map((dep, i) => {
-        const isSoldOut = dep.status === "soldOut";
+        const date = dep.fecha || dep.date;
+        const status = dep.estado || dep.status || "confirmed";
+        const price = dep.precio ?? dep.price;
+        const spots = dep.plazas ?? dep.spots;
+        const isSoldOut = status === "soldOut" || status === "agotado";
+
         return (
           <div
             key={i}
@@ -93,14 +93,14 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                 color: T.text,
               }}
             >
-              {dep.date}
+              {date}
             </span>
 
             {/* Status badge */}
             <span>
               <StatusBadge
-                status={dep.status || "confirmed"}
-                label={STATUS_LABELS[dep.status] || dep.status}
+                status={status}
+                label={STATUS_LABELS[status] || status}
               />
             </span>
 
@@ -112,7 +112,7 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                 color: T.sub,
               }}
             >
-              {dep.spots != null ? `${dep.spots} plazas` : "\u2014"}
+              {spots != null ? `${spots} plazas` : "\u2014"}
             </span>
 
             {/* Price */}
@@ -124,7 +124,7 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                 color: T.accent,
               }}
             >
-              {dep.price != null ? `${dep.price}\u20AC` : "\u2014"}
+              {price != null ? `${price}\u20AC` : "\u2014"}
             </span>
 
             {/* Action button */}
@@ -179,8 +179,8 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                   }}
                 >
                   Reservar
-                  {dep.spots != null && dep.spots <= 3
-                    ? ` (${dep.spots})`
+                  {spots != null && spots <= 3
+                    ? ` (${spots})`
                     : ""}
                 </button>
               )}

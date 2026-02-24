@@ -7,11 +7,11 @@ const FONT = `var(--font-syne), Syne, sans-serif`;
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
 
 interface Hotel {
-  name: string;
-  stars?: number;
-  image?: string;
-  description?: string;
-  amenities?: string[];
+  nombre: string;
+  estrellas?: number;
+  imagen?: string;
+  descripcion?: string;
+  amenidades?: string[];
 }
 
 interface TabHotelProps {
@@ -20,6 +20,14 @@ interface TabHotelProps {
 
 export function TabHotel({ hotel }: TabHotelProps) {
   const T = useLandingTheme();
+
+  /* backwards compat with English-keyed seed data */
+  const h = hotel as any;
+  const nombre = hotel.nombre || h.name || "";
+  const estrellas = hotel.estrellas ?? h.stars ?? 0;
+  const imagen = hotel.imagen || h.image;
+  const descripcion = hotel.descripcion || h.description;
+  const amenidades: string[] = hotel.amenidades || h.amenities || [];
 
   return (
     <div
@@ -31,10 +39,10 @@ export function TabHotel({ hotel }: TabHotelProps) {
       }}
     >
       {/* Hotel image */}
-      {hotel.image && (
+      {imagen && (
         <Img
-          src={hotel.image}
-          alt={hotel.name}
+          src={imagen}
+          alt={nombre}
           isDark={T.mode === "dark"}
           style={{ width: "100%", height: 300 }}
         />
@@ -52,17 +60,17 @@ export function TabHotel({ hotel }: TabHotelProps) {
               fontWeight: 800,
             }}
           >
-            {hotel.name}
+            {nombre}
           </h3>
-          {hotel.stars && hotel.stars > 0 && (
+          {estrellas > 0 && (
             <span style={{ color: "#f59e0b", fontSize: 20 }}>
-              {"★".repeat(hotel.stars)}
+              {"★".repeat(estrellas)}
             </span>
           )}
         </div>
 
         {/* Description */}
-        {hotel.description && (
+        {descripcion && (
           <p
             style={{
               fontFamily: FONT2,
@@ -72,14 +80,14 @@ export function TabHotel({ hotel }: TabHotelProps) {
               fontSize: 15,
             }}
           >
-            {hotel.description}
+            {descripcion}
           </p>
         )}
 
         {/* Amenities as pill badges */}
-        {hotel.amenities && hotel.amenities.length > 0 && (
+        {amenidades.length > 0 && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {hotel.amenities.map((amenity, i) => (
+            {amenidades.map((amenity, i) => (
               <span
                 key={i}
                 style={{

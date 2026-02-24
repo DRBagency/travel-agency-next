@@ -7,11 +7,11 @@ const FONT = `var(--font-syne), Syne, sans-serif`;
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
 
 interface Coordinator {
-  name: string;
-  role?: string;
+  nombre: string;
+  rol?: string;
   avatar?: string;
-  bio?: string;
-  languages?: string[];
+  descripcion?: string;
+  idiomas?: string[];
 }
 
 interface TabCoordinatorProps {
@@ -20,6 +20,14 @@ interface TabCoordinatorProps {
 
 export function TabCoordinator({ coordinator }: TabCoordinatorProps) {
   const T = useLandingTheme();
+
+  /* backwards compat with English-keyed seed data */
+  const c = coordinator as any;
+  const nombre = coordinator.nombre || c.name || "";
+  const rol = coordinator.rol || c.role;
+  const avatar = coordinator.avatar || c.avatar;
+  const descripcion = coordinator.descripcion || c.bio;
+  const idiomas: string[] = coordinator.idiomas || c.languages || [];
 
   return (
     <div
@@ -35,10 +43,10 @@ export function TabCoordinator({ coordinator }: TabCoordinatorProps) {
       }}
     >
       {/* Avatar */}
-      {coordinator.avatar ? (
+      {avatar ? (
         <Img
-          src={coordinator.avatar}
-          alt={coordinator.name}
+          src={avatar}
+          alt={nombre}
           isDark={T.mode === "dark"}
           style={{
             width: 110,
@@ -67,7 +75,7 @@ export function TabCoordinator({ coordinator }: TabCoordinatorProps) {
             color: T.accent,
           }}
         >
-          {coordinator.name.charAt(0).toUpperCase()}
+          {nombre.charAt(0).toUpperCase()}
         </div>
       )}
 
@@ -96,10 +104,10 @@ export function TabCoordinator({ coordinator }: TabCoordinatorProps) {
             margin: "0 0 4px",
           }}
         >
-          {coordinator.name}
+          {nombre}
         </h3>
 
-        {coordinator.role && (
+        {rol && (
           <p
             style={{
               fontFamily: FONT2,
@@ -108,11 +116,11 @@ export function TabCoordinator({ coordinator }: TabCoordinatorProps) {
               margin: "0 0 12px",
             }}
           >
-            {coordinator.role}
+            {rol}
           </p>
         )}
 
-        {coordinator.bio && (
+        {descripcion && (
           <p
             style={{
               fontFamily: FONT2,
@@ -122,14 +130,14 @@ export function TabCoordinator({ coordinator }: TabCoordinatorProps) {
               lineHeight: 1.7,
             }}
           >
-            {coordinator.bio}
+            {descripcion}
           </p>
         )}
 
         {/* Languages as pill badges */}
-        {coordinator.languages && coordinator.languages.length > 0 && (
+        {idiomas.length > 0 && (
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {coordinator.languages.map((lang, i) => (
+            {idiomas.map((lang, i) => (
               <span
                 key={i}
                 style={{

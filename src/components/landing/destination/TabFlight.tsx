@@ -6,6 +6,10 @@ const FONT = `var(--font-syne), Syne, sans-serif`;
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
 
 interface Flights {
+  aeropuerto_llegada?: string;
+  aeropuerto_regreso?: string;
+  nota?: string;
+  /* backwards compat with seeded English data */
   arrival?: string;
   returnAirport?: string;
   notes?: string;
@@ -17,6 +21,10 @@ interface TabFlightProps {
 
 export function TabFlight({ flights }: TabFlightProps) {
   const T = useLandingTheme();
+
+  const arrival = flights.aeropuerto_llegada || flights.arrival;
+  const returnAirport = flights.aeropuerto_regreso || flights.returnAirport;
+  const notes = flights.nota || flights.notes;
 
   return (
     <div
@@ -70,7 +78,7 @@ export function TabFlight({ flights }: TabFlightProps) {
               margin: 0,
             }}
           >
-            {flights.arrival || "\u2014"}
+            {arrival || "\u2014"}
           </p>
         </div>
 
@@ -110,13 +118,13 @@ export function TabFlight({ flights }: TabFlightProps) {
               margin: 0,
             }}
           >
-            {flights.returnAirport || "\u2014"}
+            {returnAirport || "\u2014"}
           </p>
         </div>
       </div>
 
       {/* Notes */}
-      {flights.notes && (
+      {notes && (
         <p
           style={{
             fontFamily: FONT2,
@@ -130,7 +138,7 @@ export function TabFlight({ flights }: TabFlightProps) {
             borderLeft: `3px solid ${T.accent}`,
           }}
         >
-          {flights.notes}
+          {notes}
         </p>
       )}
 

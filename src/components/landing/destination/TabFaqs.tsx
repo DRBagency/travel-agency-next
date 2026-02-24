@@ -5,13 +5,10 @@ import { Accordion } from "../ui/Accordion";
 
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
 
-interface Faq {
-  question: string;
-  answer: string;
-}
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface TabFaqsProps {
-  faqs: Faq[];
+  faqs: any[];
 }
 
 export function TabFaqs({ faqs }: TabFaqsProps) {
@@ -26,25 +23,29 @@ export function TabFaqs({ faqs }: TabFaqsProps) {
         padding: "8px 28px",
       }}
     >
-      {faqs.map((faq, i) => (
-        <Accordion
-          key={i}
-          title={faq.question}
-          defaultOpen={i === 0}
-        >
-          <p
-            style={{
-              fontFamily: FONT2,
-              color: T.sub,
-              fontSize: 15,
-              lineHeight: 1.7,
-              margin: 0,
-            }}
+      {faqs.map((faq, i) => {
+        const question = faq.pregunta || faq.question;
+        const answer = faq.respuesta || faq.answer;
+        return (
+          <Accordion
+            key={i}
+            title={question}
+            defaultOpen={i === 0}
           >
-            {faq.answer}
-          </p>
-        </Accordion>
-      ))}
+            <p
+              style={{
+                fontFamily: FONT2,
+                color: T.sub,
+                fontSize: 15,
+                lineHeight: 1.7,
+                margin: 0,
+              }}
+            >
+              {answer}
+            </p>
+          </Accordion>
+        );
+      })}
     </div>
   );
 }

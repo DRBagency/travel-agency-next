@@ -21,15 +21,16 @@ function AnimatedNumber({ value, visible }: { value: string; visible: boolean })
     if (!visible) return;
 
     // Extract numeric part
-    const numMatch = value.match(/[\d.]+/);
+    const str = String(value);
+    const numMatch = str.match(/[\d.]+/);
     if (!numMatch) {
-      setDisplay(value);
+      setDisplay(str);
       return;
     }
 
     const target = parseFloat(numMatch[0]);
-    const prefix = value.slice(0, value.indexOf(numMatch[0]));
-    const suffix = value.slice(value.indexOf(numMatch[0]) + numMatch[0].length);
+    const prefix = str.slice(0, str.indexOf(numMatch[0]));
+    const suffix = str.slice(str.indexOf(numMatch[0]) + numMatch[0].length);
     const isDecimal = numMatch[0].includes(".");
     const duration = 1500;
     const startTime = performance.now();
@@ -50,7 +51,7 @@ function AnimatedNumber({ value, visible }: { value: string; visible: boolean })
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
-        setDisplay(value);
+        setDisplay(str);
       }
     };
 
