@@ -15,6 +15,8 @@ import { TabDepartures } from "./TabDepartures";
 import { TabCoordinator } from "./TabCoordinator";
 import { TabFaqs } from "./TabFaqs";
 import BookingModal from "../booking/BookingModal";
+import Footer from "../sections/Footer";
+import Navbar from "../sections/Navbar";
 import { makeTr } from "@/lib/translations";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -27,21 +29,50 @@ interface DestinationDetailProps {
   backUrl?: string;
   lang?: string;
   preferredLanguage?: string;
+  clientName?: string;
+  logoUrl?: string | null;
+  primaryColor?: string;
+  darkModeEnabled?: boolean;
+  availableLanguages?: string[];
+  homeUrl?: string;
+  footerDescription?: string;
+  allDestinos?: any[];
+  paginasLegales?: any[];
+  legalBasePath?: string;
+  instagramUrl?: string;
+  facebookUrl?: string;
+  tiktokUrl?: string;
 }
 
-export function DestinationDetail({ destino, backUrl = "/", lang, preferredLanguage }: DestinationDetailProps) {
+export function DestinationDetail({
+  destino,
+  backUrl = "/",
+  lang,
+  preferredLanguage,
+  clientName,
+  logoUrl,
+  primaryColor,
+  darkModeEnabled = true,
+  availableLanguages = [],
+  homeUrl = "/",
+  footerDescription,
+  allDestinos = [],
+  paginasLegales = [],
+  legalBasePath = "/legal",
+  instagramUrl,
+  facebookUrl,
+  tiktokUrl,
+}: DestinationDetailProps) {
   const T = useLandingTheme();
   const [tab, setTab] = useState("itinerary");
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [autoRotate, setAutoRotate] = useState(true);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [initialDeparture, setInitialDeparture] = useState<any>(null);
+  const [currentLang, setCurrentLang] = useState<string>(lang || preferredLanguage || "es");
 
   // Translation helper
-  const dTr = makeTr(destino, lang || preferredLanguage || "es", preferredLanguage);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const dTr = makeTr(destino, currentLang, preferredLanguage);
 
   /* ── Parse JSONB fields safely ── */
   const gallery: string[] =
@@ -50,6 +81,19 @@ export function DestinationDetail({ destino, backUrl = "/", lang, preferredLangu
       : destino.imagen_url
         ? [destino.imagen_url]
         : [];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Auto-rotate gallery every 4 seconds
+  useEffect(() => {
+    if (!autoRotate || gallery.length <= 1) return;
+    const timer = setInterval(() => {
+      setGalleryIndex((prev) => (prev + 1) % gallery.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [autoRotate, gallery.length]);
 
   const itinerary: any[] = Array.isArray(destino.itinerario)
     ? destino.itinerario
@@ -109,6 +153,20 @@ export function DestinationDetail({ destino, backUrl = "/", lang, preferredLangu
 
   return (
     <div style={{ minHeight: "100vh", color: T.text }}>
+      {/* ═══════════════════ MAIN NAVBAR ═══════════════════ */}
+      {clientName && (
+        <Navbar
+          clientName={clientName}
+          logoUrl={logoUrl}
+          primaryColor={primaryColor}
+          darkModeEnabled={darkModeEnabled}
+          lang={currentLang}
+          availableLanguages={availableLanguages.length > 0 ? availableLanguages : [currentLang]}
+          onLangChange={(l) => setCurrentLang(l.toLowerCase())}
+          homeUrl={homeUrl}
+        />
+      )}
+
       {/* ═══════════════════ SUB-NAV BAR (below main Navbar) ═══════════════════ */}
       <div
         style={{
@@ -196,10 +254,33 @@ export function DestinationDetail({ destino, backUrl = "/", lang, preferredLangu
 
       <div style={{ paddingTop: 116 }}>
         {/* ═══════════════════ HERO SECTION ═══════════════════ */}
-        <div style={{ position: "relative" }}>
-          {/* Main image */}
-          {gallery.length > 0 && (
-            <div style={{ position: "relative", height: 420, overflow: "hidden", borderRadius: "0 0 24px 24px" }}>
+        {gallery.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              height: 460,
+              borderRadius: "0 0 24px 24px",
+              overflow: "hidden",
+              position: "relative",
+            }}
+            className="destino-hero-gallery"
+          >
+            {/* Main large image */}
+            <div
+              style={{
+                flex: gallery.length > 1 ? "0 0 65%" : "1 1 100%",
+                position: "relative",
+                overflow: "hidden",
+                cursor: gallery.length > 1 ? "pointer" : undefined,
+              }}
+              onClick={() => {
+                if (gallery.length > 1) {
+                  setAutoRotate(false);
+                  setGalleryIndex((prev) => (prev + 1) % gallery.length);
+                }
+              }}
+            >
               <Img
                 src={gallery[galleryIndex]}
                 alt={destino.nombre}
@@ -211,11 +292,11 @@ export function DestinationDetail({ destino, backUrl = "/", lang, preferredLangu
                 style={{
                   position: "absolute",
                   inset: 0,
-                  background: T.darkOverlay,
+                  background: "linear-gradient(to top, rgba(0,0,0,.6) 0%, rgba(0,0,0,.15) 50%, rgba(0,0,0,.05) 100%)",
                 }}
               />
 
-              {/* Price badge — solid dark background for readability */}
+              {/* Price badge */}
               {destino.precio && (
                 <div
                   style={{
@@ -237,9 +318,10 @@ export function DestinationDetail({ destino, backUrl = "/", lang, preferredLangu
                     <span
                       style={{
                         fontFamily: FONT2,
-                        fontSize: 13,
-                        color: "rgba(255,255,255,.55)",
+                        fontSize: 16,
+                        color: "rgba(255,255,255,.78)",
                         textDecoration: "line-through",
+                        textDecorationColor: "rgba(255,100,100,.7)",
                       }}
                     >
                       {destino.precio_original}{"€"}
@@ -318,51 +400,117 @@ export function DestinationDetail({ destino, backUrl = "/", lang, preferredLangu
                   </p>
                 )}
               </div>
-            </div>
-          )}
 
-          {/* Thumbnail strip */}
-          {gallery.length > 1 && (
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                padding: "12px 24px",
-                overflowX: "auto",
-                WebkitOverflowScrolling: "touch",
-              }}
-            >
-              {gallery.map((url: string, i: number) => (
-                <button
-                  key={i}
-                  onClick={() => setGalleryIndex(i)}
+              {/* Gallery dots indicator */}
+              {gallery.length > 1 && (
+                <div
                   style={{
-                    flexShrink: 0,
-                    width: 80,
-                    height: 56,
-                    borderRadius: 10,
-                    overflow: "hidden",
-                    border: galleryIndex === i
-                      ? `2.5px solid ${T.accent}`
-                      : `1.5px solid ${T.border}`,
-                    cursor: "pointer",
-                    opacity: galleryIndex === i ? 1 : 0.65,
-                    transition: "all .25s",
-                    padding: 0,
-                    background: "none",
+                    position: "absolute",
+                    bottom: 14,
+                    right: 24,
+                    display: "flex",
+                    gap: 6,
+                    zIndex: 3,
                   }}
                 >
-                  <Img
-                    src={url}
-                    alt={`${destino.nombre} ${i + 1}`}
-                    isDark={T.mode === "dark"}
-                    style={{ width: "100%", height: "100%", borderRadius: 0 }}
-                  />
-                </button>
-              ))}
+                  {gallery.map((_: string, i: number) => (
+                    <button
+                      key={i}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setAutoRotate(false);
+                        setGalleryIndex(i);
+                      }}
+                      style={{
+                        width: galleryIndex === i ? 20 : 8,
+                        height: 8,
+                        borderRadius: 4,
+                        background: galleryIndex === i ? T.accent : "rgba(255,255,255,.5)",
+                        border: "none",
+                        cursor: "pointer",
+                        transition: "all .3s",
+                        padding: 0,
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+
+            {/* Side carousel thumbnails (only if more than 1 image) */}
+            {gallery.length > 1 && (
+              <div
+                style={{
+                  flex: "0 0 35%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                  overflow: "hidden",
+                }}
+                className="destino-hero-side"
+              >
+                {gallery.slice(0, 4).map((url: string, i: number) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setAutoRotate(false);
+                      setGalleryIndex(i);
+                    }}
+                    style={{
+                      flex: 1,
+                      position: "relative",
+                      overflow: "hidden",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                      opacity: galleryIndex === i ? 1 : 0.7,
+                      transition: "opacity .3s",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
+                    onMouseLeave={(e) => { if (galleryIndex !== i) e.currentTarget.style.opacity = "0.7"; }}
+                  >
+                    <Img
+                      src={url}
+                      alt={`${destino.nombre} ${i + 1}`}
+                      isDark={T.mode === "dark"}
+                      style={{ width: "100%", height: "100%", borderRadius: 0 }}
+                    />
+                    {galleryIndex === i && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          border: `3px solid ${T.accent}`,
+                          borderRadius: 0,
+                          pointerEvents: "none",
+                        }}
+                      />
+                    )}
+                    {/* Show "+N more" on last visible thumbnail if there are more images */}
+                    {i === 3 && gallery.length > 4 && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background: "rgba(0,0,0,.5)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#fff",
+                          fontFamily: FONT,
+                          fontWeight: 700,
+                          fontSize: 18,
+                        }}
+                      >
+                        +{gallery.length - 4}
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* ═══════════════════ MAIN CONTENT ═══════════════════ */}
         <div
@@ -484,6 +632,7 @@ export function DestinationDetail({ destino, backUrl = "/", lang, preferredLangu
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
                   <EffortDots level={destino.esfuerzo} />
@@ -727,6 +876,21 @@ export function DestinationDetail({ destino, backUrl = "/", lang, preferredLangu
         </div>
       </div>
 
+      {/* ═══════════════════ FOOTER ═══════════════════ */}
+      {clientName && (
+        <Footer
+          clientName={clientName}
+          logoUrl={logoUrl}
+          footerDescription={footerDescription}
+          destinos={allDestinos.map((d: any) => ({ slug: d.slug || d.id, nombre: d.nombre }))}
+          paginasLegales={paginasLegales.map((p: any) => ({ slug: p.slug, titulo: p.titulo }))}
+          legalBasePath={legalBasePath}
+          instagramUrl={instagramUrl}
+          facebookUrl={facebookUrl}
+          tiktokUrl={tiktokUrl}
+        />
+      )}
+
       {/* ═══════════════════ BOOKING MODAL ═══════════════════ */}
       {bookingOpen && (
         <BookingModal
@@ -747,6 +911,20 @@ export function DestinationDetail({ destino, backUrl = "/", lang, preferredLangu
           div[style*="flex-wrap: wrap"][style*="padding: 18px 24px"] > div[style*="width: 1"] {
             width: 100% !important;
             height: 1px;
+          }
+          /* Stack gallery vertically on mobile */
+          .destino-hero-gallery {
+            flex-direction: column !important;
+            height: auto !important;
+          }
+          .destino-hero-gallery > div:first-child {
+            flex: 1 1 auto !important;
+            height: 320px !important;
+          }
+          .destino-hero-side {
+            flex: 1 1 auto !important;
+            flex-direction: row !important;
+            height: 80px !important;
           }
         }
       `}</style>

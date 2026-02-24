@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { NextIntlClientProvider } from "next-intl";
 import { LandingThemeProvider } from "@/components/landing/LandingThemeProvider";
 import { LandingGlobalStyles } from "@/components/landing/LandingGlobalStyles";
 import { BgMesh } from "@/components/landing/ui/BgMesh";
@@ -27,6 +28,7 @@ export default function HomeClient({
   allDestinos = [],
   lang = "es",
   legalBasePath = "/legal",
+  allMessages,
 }: {
   client: any;
   opiniones: any[];
@@ -35,6 +37,7 @@ export default function HomeClient({
   allDestinos?: any[];
   lang?: string;
   legalBasePath?: string;
+  allMessages?: Record<string, any>;
 }) {
   const [currentLang, setCurrentLang] = useState<string>(lang);
   const preferredLang = client.preferred_language || "es";
@@ -89,6 +92,21 @@ export default function HomeClient({
 
   const hasBlog = blogPosts.length > 0;
 
+  // Determine messages for current language
+  const currentMessages = allMessages?.[currentLang] || allMessages?.[lang] || undefined;
+
+  // Wrap content in a dynamic NextIntlClientProvider if messages are available
+  const LangWrapper = ({ children }: { children: React.ReactNode }) => {
+    if (currentMessages) {
+      return (
+        <NextIntlClientProvider locale={currentLang} messages={currentMessages}>
+          {children}
+        </NextIntlClientProvider>
+      );
+    }
+    return <>{children}</>;
+  };
+
   return (
     <LandingThemeProvider
       primaryColor={client.primary_color}
@@ -97,7 +115,8 @@ export default function HomeClient({
       <LandingGlobalStyles />
       <BgMesh />
 
-      <div className="landing-wrap" style={{ position: "relative", zIndex: 1 }}>
+      <LangWrapper>
+      <div className="landing-wrap" style={{ position: "relative", zIndex: 1 }} dir={currentLang === "ar" ? "rtl" : "ltr"}>
         {/* 1. Navbar */}
         <Navbar
           clientName={client.nombre}
@@ -188,6 +207,7 @@ export default function HomeClient({
           tiktokUrl={client.tiktok_url}
         />
       </div>
+      </LangWrapper>
 
       {/* Chatbot Widget */}
       <ChatbotWidget

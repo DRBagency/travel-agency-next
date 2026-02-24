@@ -66,9 +66,6 @@ interface ClientData {
   cta_banner_description: string | null;
   cta_banner_cta_text: string | null;
   cta_banner_cta_link: string | null;
-  about_title: string | null;
-  about_text_1: string | null;
-  about_text_2: string | null;
   contact_email: string | null;
   contact_phone: string | null;
   contact_address: string | null;
@@ -125,7 +122,6 @@ type SectionKey =
   | "stats"
   | "whyus"
   | "ctabanner"
-  | "about"
   | "contact"
   | "social"
   | "footer"
@@ -189,9 +185,6 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     cta_banner_description: client.cta_banner_description ?? "",
     cta_banner_cta_text: client.cta_banner_cta_text ?? "",
     cta_banner_cta_link: client.cta_banner_cta_link ?? "",
-    about_title: client.about_title ?? "",
-    about_text_1: client.about_text_1 ?? "",
-    about_text_2: client.about_text_2 ?? "",
     contact_email: client.contact_email ?? "",
     contact_phone: client.contact_phone ?? "",
     contact_address: client.contact_address ?? "",
@@ -223,7 +216,6 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     stats: { loading: false, success: false, error: null },
     whyus: { loading: false, success: false, error: null },
     ctabanner: { loading: false, success: false, error: null },
-    about: { loading: false, success: false, error: null },
     contact: { loading: false, success: false, error: null },
     social: { loading: false, success: false, error: null },
     footer: { loading: false, success: false, error: null },
@@ -1211,79 +1203,6 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               "cta_banner_description",
               "cta_banner_cta_text",
               "cta_banner_cta_link",
-            ])}
-          </div>
-        )}
-      </section>
-
-      {/* Sobre nosotros */}
-      <section className="panel-card p-5 space-y-3">
-        <SectionHeader
-          sectionKey="about"
-          icon={Users}
-          title={t("aboutUs")}
-          subtitle={t("aboutUsSub")}
-        />
-        {openSections.has("about") && (
-          <div className="space-y-4 pt-2">
-            <div>
-              <label className="panel-label block mb-1">
-                {t("aboutTitle")}
-              </label>
-              <input
-                value={fields.about_title}
-                onChange={(e) => updateField("about_title", e.target.value)}
-                className="panel-input w-full"
-                placeholder={t("aboutTitlePlaceholder")}
-              />
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="panel-label">
-                  {t("aboutText")}
-                </label>
-                {!aiLocked && (
-                  <AIDescriptionButton
-                    context={`about us section for travel agency "${client.nombre}"`}
-                    fieldName="about_text_1"
-                    onAccept={(text) => updateField("about_text_1", text)}
-                    clienteId={client.id}
-                  />
-                )}
-              </div>
-              <textarea
-                value={fields.about_text_1}
-                onChange={(e) => updateField("about_text_1", e.target.value)}
-                className="panel-input w-full min-h-[80px]"
-                placeholder={t("aboutTextPlaceholder")}
-              />
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="panel-label">
-                  {t("aboutVision")}
-                </label>
-                {!aiLocked && (
-                  <AIDescriptionButton
-                    context={`company vision statement for travel agency "${client.nombre}"`}
-                    fieldName="about_text_2"
-                    onAccept={(text) => updateField("about_text_2", text)}
-                    clienteId={client.id}
-                  />
-                )}
-              </div>
-              <textarea
-                value={fields.about_text_2}
-                onChange={(e) => updateField("about_text_2", e.target.value)}
-                className="panel-input w-full min-h-[80px]"
-                placeholder={t("aboutVisionPlaceholder")}
-              />
-            </div>
-
-            {renderSaveButton("about", [
-              "about_title",
-              "about_text_1",
-              "about_text_2",
             ])}
           </div>
         )}

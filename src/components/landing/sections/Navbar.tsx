@@ -17,6 +17,7 @@ interface NavbarProps {
   lang?: string;
   availableLanguages?: string[];
   onLangChange?: (lang: string) => void;
+  homeUrl?: string;
 }
 
 const NAV_LINKS = [
@@ -36,6 +37,7 @@ export default function Navbar({
   lang = "ES",
   availableLanguages = ["es"],
   onLangChange,
+  homeUrl = "/",
 }: NavbarProps) {
   const T = useLandingTheme();
   const { mode, toggleTheme } = useLandingMode();
@@ -102,7 +104,7 @@ export default function Navbar({
           }}
         >
           {/* Logo / Brand */}
-          <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
+          <Link href={homeUrl} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
             {logoUrl ? (
               <img
                 src={logoUrl}

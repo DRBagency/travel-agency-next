@@ -29,7 +29,13 @@ export default async function PreviewPage({
     ? (client.preferred_language as string)
     : "es";
 
-  const [{ data: opiniones }, { data: paginasLegales }, { data: blogPosts }, { data: allDestinos }, messages] =
+  // Load messages for all available languages
+  const availLangs: string[] =
+    Array.isArray(client.available_languages) && client.available_languages.length > 0
+      ? client.available_languages
+      : [clientLocale];
+
+  const [{ data: opiniones }, { data: paginasLegales }, { data: blogPosts }, { data: allDestinos }, ...langMessages] =
     await Promise.all([
       supabaseAdmin
         .from("opiniones")
@@ -53,13 +59,18 @@ export default async function PreviewPage({
         .select("*")
         .eq("cliente_id", client.id)
         .eq("activo", true),
-      import(`../../../../messages/${clientLocale}.json`).then(
-        (m) => m.default
+      ...availLangs.map((l) =>
+        import(`../../../../messages/${VALID_LOCALES.includes(l as any) ? l : "es"}.json`).then(
+          (m) => m.default
+        )
       ),
     ]);
 
+  const allMessages: Record<string, any> = {};
+  availLangs.forEach((l, i) => { allMessages[l] = langMessages[i]; });
+
   return (
-    <NextIntlClientProvider locale={clientLocale} messages={messages}>
+    <NextIntlClientProvider locale={clientLocale} messages={allMessages[clientLocale] || langMessages[0]}>
       <div dir={clientLocale === "ar" ? "rtl" : "ltr"}>
         <HomeClient
           client={client}
@@ -69,6 +80,7 @@ export default async function PreviewPage({
           allDestinos={allDestinos ?? []}
           lang={clientLocale}
           legalBasePath={`/preview/${slug}/legal`}
+          allMessages={allMessages}
         />
       </div>
     </NextIntlClientProvider>

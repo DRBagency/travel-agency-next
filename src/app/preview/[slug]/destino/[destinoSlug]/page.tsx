@@ -6,7 +6,7 @@ import { DestinationDetail } from "@/components/landing/destination/DestinationD
 import { LandingThemeProvider } from "@/components/landing/LandingThemeProvider";
 import { LandingGlobalStyles } from "@/components/landing/LandingGlobalStyles";
 import { BgMesh } from "@/components/landing/ui/BgMesh";
-import Navbar from "@/components/landing/sections/Navbar";
+
 
 export default async function PreviewDestinoPage({
   params,
@@ -50,7 +50,20 @@ export default async function PreviewDestinoPage({
   if (!destino) return notFound();
 
   const locale = client.preferred_language || (await getLocale());
-  const messages = await getMessages();
+
+  const [{ data: allDestinos }, { data: paginasLegales }, messages] = await Promise.all([
+    supabaseAdmin
+      .from("destinos")
+      .select("id, slug, nombre")
+      .eq("cliente_id", client.id)
+      .eq("activo", true),
+    supabaseAdmin
+      .from("paginas_legales")
+      .select("slug, titulo")
+      .eq("cliente_id", client.id)
+      .eq("activo", true),
+    getMessages(),
+  ]);
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
@@ -60,7 +73,11 @@ export default async function PreviewDestinoPage({
       >
         <LandingGlobalStyles />
         <BgMesh />
-        <Navbar
+        <DestinationDetail
+          destino={destino}
+          backUrl={`/preview/${slug}`}
+          lang={locale}
+          preferredLanguage={client.preferred_language || "es"}
           clientName={client.nombre || client.name || ""}
           logoUrl={client.logo_url}
           primaryColor={client.primary_color}
@@ -70,12 +87,14 @@ export default async function PreviewDestinoPage({
               ? client.available_languages
               : [locale]
           }
-        />
-        <DestinationDetail
-          destino={destino}
-          backUrl={`/preview/${slug}`}
-          lang={locale}
-          preferredLanguage={client.preferred_language || "es"}
+          homeUrl={`/preview/${slug}`}
+          footerDescription={client.footer_description}
+          allDestinos={allDestinos ?? []}
+          paginasLegales={paginasLegales ?? []}
+          legalBasePath={`/preview/${slug}/legal`}
+          instagramUrl={client.instagram_url}
+          facebookUrl={client.facebook_url}
+          tiktokUrl={client.tiktok_url}
         />
       </LandingThemeProvider>
     </NextIntlClientProvider>

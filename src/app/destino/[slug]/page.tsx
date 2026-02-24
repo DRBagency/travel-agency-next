@@ -7,7 +7,7 @@ import { DestinationDetail } from "@/components/landing/destination/DestinationD
 import { LandingThemeProvider } from "@/components/landing/LandingThemeProvider";
 import { LandingGlobalStyles } from "@/components/landing/LandingGlobalStyles";
 import { BgMesh } from "@/components/landing/ui/BgMesh";
-import Navbar from "@/components/landing/sections/Navbar";
+
 
 export default async function DestinoPage({
   params,
@@ -49,7 +49,20 @@ export default async function DestinoPage({
   if (!destino) return notFound();
 
   const locale = client.preferred_language || "es";
-  const messages = await getMessages();
+
+  const [{ data: allDestinos }, { data: paginasLegales }, messages] = await Promise.all([
+    supabaseAdmin
+      .from("destinos")
+      .select("id, slug, nombre")
+      .eq("cliente_id", client.id)
+      .eq("activo", true),
+    supabaseAdmin
+      .from("paginas_legales")
+      .select("slug, titulo")
+      .eq("cliente_id", client.id)
+      .eq("activo", true),
+    getMessages(),
+  ]);
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
@@ -59,7 +72,11 @@ export default async function DestinoPage({
       >
         <LandingGlobalStyles />
         <BgMesh />
-        <Navbar
+        <DestinationDetail
+          destino={destino}
+          backUrl="/"
+          lang={locale}
+          preferredLanguage={client.preferred_language || "es"}
           clientName={client.nombre || client.name || ""}
           logoUrl={client.logo_url}
           primaryColor={client.primary_color}
@@ -69,11 +86,14 @@ export default async function DestinoPage({
               ? client.available_languages
               : [locale]
           }
-        />
-        <DestinationDetail
-          destino={destino}
-          lang={locale}
-          preferredLanguage={client.preferred_language || "es"}
+          homeUrl="/"
+          footerDescription={client.footer_description}
+          allDestinos={allDestinos ?? []}
+          paginasLegales={paginasLegales ?? []}
+          legalBasePath="/legal"
+          instagramUrl={client.instagram_url}
+          facebookUrl={client.facebook_url}
+          tiktokUrl={client.tiktok_url}
         />
       </LandingThemeProvider>
     </NextIntlClientProvider>

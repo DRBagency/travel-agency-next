@@ -505,15 +505,15 @@ export default function BookingModal({
                     >
                       <div
                         style={{
-                          width: 34,
-                          height: 34,
+                          width: 42,
+                          height: 42,
                           borderRadius: "50%",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           fontFamily: FONT,
                           fontWeight: 700,
-                          fontSize: 14,
+                          fontSize: 16,
                           color: isActive || isCompleted ? "#fff" : T.muted,
                           background:
                             isActive || isCompleted ? accentGrad : T.bg3,
@@ -530,11 +530,11 @@ export default function BookingModal({
                       <span
                         style={{
                           fontFamily: FONT2,
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: isActive ? 700 : 500,
                           color: isActive ? T.text : T.muted,
                           whiteSpace: "nowrap",
-                          maxWidth: 70,
+                          maxWidth: 85,
                           textAlign: "center",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
@@ -553,7 +553,7 @@ export default function BookingModal({
                             step > stepNum ? T.accent : T.border,
                           marginLeft: 4,
                           marginRight: 4,
-                          marginBottom: 20,
+                          marginBottom: 24,
                           borderRadius: 2,
                           transition: "background .3s",
                         }}
