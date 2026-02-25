@@ -121,7 +121,7 @@ export default function HomeClient({
           clientName={client.nombre}
           logoUrl={client.logo_url}
           primaryColor={client.primary_color}
-          ctaText={client.hero_cta_text}
+          ctaText={clientTr("hero_cta_text")}
           ctaLink={client.hero_cta_link}
           darkModeEnabled={client.dark_mode_enabled ?? true}
           lang={currentLang}
@@ -130,7 +130,11 @@ export default function HomeClient({
               ? client.available_languages
               : ["es"]
           }
-          onLangChange={(l) => setCurrentLang(l.toLowerCase())}
+          onLangChange={(l) => {
+            const newLang = l.toLowerCase();
+            setCurrentLang(newLang);
+            document.cookie = `NEXT_LOCALE=${newLang};path=/;max-age=31536000`;
+          }}
           homeUrl={homeUrl}
         />
 

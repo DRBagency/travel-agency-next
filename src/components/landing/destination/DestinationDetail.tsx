@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Fragment } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, NextIntlClientProvider } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { Img } from "../ui/Img";
 import { TagChip } from "../ui/TagChip";
@@ -44,12 +44,42 @@ interface DestinationDetailProps {
   instagramUrl?: string;
   facebookUrl?: string;
   tiktokUrl?: string;
+  allMessages?: Record<string, any>;
 }
 
-export function DestinationDetail({
+export function DestinationDetail(props: DestinationDetailProps) {
+  const {
+    lang,
+    preferredLanguage,
+    allMessages,
+  } = props;
+
+  const [currentLang, setCurrentLang] = useState<string>(lang || preferredLanguage || "es");
+
+  // Dynamic i18n provider for language switching
+  const currentMessages = allMessages?.[currentLang] || allMessages?.[lang || "es"] || undefined;
+
+  const handleLangChange = (l: string) => {
+    const newLang = l.toLowerCase();
+    setCurrentLang(newLang);
+    document.cookie = `NEXT_LOCALE=${newLang};path=/;max-age=31536000`;
+  };
+
+  // Wrap in provider so inner component reads correct locale
+  if (currentMessages) {
+    return (
+      <NextIntlClientProvider locale={currentLang} messages={currentMessages} key={currentLang}>
+        <DestinationDetailInner {...props} currentLang={currentLang} onLangChange={handleLangChange} />
+      </NextIntlClientProvider>
+    );
+  }
+
+  return <DestinationDetailInner {...props} currentLang={currentLang} onLangChange={handleLangChange} />;
+}
+
+function DestinationDetailInner({
   destino,
   backUrl = "/",
-  lang,
   preferredLanguage,
   clientName,
   logoUrl,
@@ -65,7 +95,9 @@ export function DestinationDetail({
   instagramUrl,
   facebookUrl,
   tiktokUrl,
-}: DestinationDetailProps) {
+  currentLang,
+  onLangChange,
+}: DestinationDetailProps & { currentLang: string; onLangChange: (l: string) => void }) {
   const T = useLandingTheme();
   const t = useTranslations('landing.destino');
   const [tab, setTab] = useState("itinerary");
@@ -73,7 +105,6 @@ export function DestinationDetail({
   const [autoRotate, setAutoRotate] = useState(true);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [initialDeparture, setInitialDeparture] = useState<any>(null);
-  const [currentLang, setCurrentLang] = useState<string>(lang || preferredLanguage || "es");
 
   // Translation helper
   const dTr = makeTr(destino, currentLang, preferredLanguage);
@@ -156,7 +187,7 @@ export function DestinationDetail({
       : null;
 
   return (
-    <div style={{ minHeight: "100vh", color: T.text }}>
+    <div style={{ minHeight: "100vh", color: T.text }} dir={currentLang === "ar" ? "rtl" : "ltr"}>
       {/* ═══════════════════ MAIN NAVBAR ═══════════════════ */}
       {clientName && (
         <Navbar
@@ -166,7 +197,7 @@ export function DestinationDetail({
           darkModeEnabled={darkModeEnabled}
           lang={currentLang}
           availableLanguages={availableLanguages.length > 0 ? availableLanguages : [currentLang]}
-          onLangChange={(l) => setCurrentLang(l.toLowerCase())}
+          onLangChange={onLangChange}
           homeUrl={homeUrl}
         />
       )}

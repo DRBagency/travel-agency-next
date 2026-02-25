@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 
 const FONT = `var(--font-syne), Syne, sans-serif`;
@@ -21,6 +22,7 @@ interface TabFlightProps {
 
 export function TabFlight({ flights }: TabFlightProps) {
   const T = useLandingTheme();
+  const t = useTranslations("landing.destino");
 
   const arrival = flights.aeropuerto_llegada || flights.arrival;
   const returnAirport = flights.aeropuerto_regreso || flights.returnAirport;
@@ -66,7 +68,7 @@ export function TabFlight({ flights }: TabFlightProps) {
                 fontWeight: 600,
               }}
             >
-              Aeropuerto de llegada
+              {t("arrivalAirport")}
             </p>
           </div>
           <p
@@ -106,7 +108,7 @@ export function TabFlight({ flights }: TabFlightProps) {
                 fontWeight: 600,
               }}
             >
-              Aeropuerto de regreso
+              {t("returnAirport")}
             </p>
           </div>
           <p
@@ -165,7 +167,7 @@ export function TabFlight({ flights }: TabFlightProps) {
           e.currentTarget.style.color = T.accent;
         }}
       >
-        {"🔍"} Buscar vuelo
+        {"🔍"} {t("searchFlight")}
       </button>
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { StatusBadge } from "../ui/StatusBadge";
 
@@ -13,14 +14,11 @@ interface TabDeparturesProps {
   onBook: (departure: any) => void;
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  confirmed: "Confirmado",
-  lastSpots: "Ultimas plazas",
-  soldOut: "Agotado",
-};
+/* STATUS_LABELS now resolved via useTranslations inside the component */
 
 export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
   const T = useLandingTheme();
+  const t = useTranslations("landing.destino");
 
   return (
     <div
@@ -100,7 +98,15 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
             <span>
               <StatusBadge
                 status={status}
-                label={STATUS_LABELS[status] || status}
+                label={
+                  status === "confirmed"
+                    ? t("confirmed")
+                    : status === "lastSpots"
+                      ? t("lastSpots")
+                      : status === "soldOut"
+                        ? t("soldOut")
+                        : status
+                }
               />
             </span>
 
@@ -112,7 +118,7 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                 color: T.sub,
               }}
             >
-              {spots != null ? `${spots} plazas` : "\u2014"}
+              {spots != null ? `${spots} ${t("spots")}` : "\u2014"}
             </span>
 
             {/* Price */}
@@ -152,7 +158,7 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                     e.currentTarget.style.color = T.sub;
                   }}
                 >
-                  Avisame
+                  {t("notifyMe")}
                 </button>
               ) : (
                 <button
@@ -178,7 +184,7 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 >
-                  Reservar
+                  {t("bookNow")}
                   {spots != null && spots <= 3
                     ? ` (${spots})`
                     : ""}

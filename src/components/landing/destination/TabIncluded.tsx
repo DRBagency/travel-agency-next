@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 
 const FONT = `var(--font-syne), Syne, sans-serif`;
@@ -12,6 +13,7 @@ interface TabIncludedProps {
 
 export function TabIncluded({ included, notIncluded }: TabIncludedProps) {
   const T = useLandingTheme();
+  const t = useTranslations("landing.destino");
 
   return (
     <div
@@ -57,7 +59,7 @@ export function TabIncluded({ included, notIncluded }: TabIncludedProps) {
             >
               {"\u2713"}
             </span>
-            Incluido
+            {t("included")}
           </h3>
           {included.map((item, i) => (
             <div
@@ -133,7 +135,7 @@ export function TabIncluded({ included, notIncluded }: TabIncludedProps) {
             >
               {"\u2717"}
             </span>
-            No incluido
+            {t("notIncluded")}
           </h3>
           {notIncluded.map((item, i) => (
             <div

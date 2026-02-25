@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { Img } from "../ui/Img";
 
@@ -20,6 +21,7 @@ interface TabCoordinatorProps {
 
 export function TabCoordinator({ coordinator }: TabCoordinatorProps) {
   const T = useLandingTheme();
+  const t = useTranslations("landing.destino");
 
   /* backwards compat with English-keyed seed data */
   const c = coordinator as any;
@@ -92,7 +94,7 @@ export function TabCoordinator({ coordinator }: TabCoordinatorProps) {
             marginBottom: 4,
           }}
         >
-          Tu coordinador/a
+          {t("yourCoordinator")}
         </p>
 
         <h3

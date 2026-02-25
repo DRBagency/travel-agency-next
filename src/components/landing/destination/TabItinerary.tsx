@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { ItineraryMap } from "../ui/ItineraryMap";
 import { Img } from "../ui/Img";
@@ -19,14 +20,9 @@ interface TabItineraryProps {
   lang?: string;
 }
 
-export function TabItinerary({ itinerary, lang }: TabItineraryProps) {
+export function TabItinerary({ itinerary }: TabItineraryProps) {
   const T = useLandingTheme();
-
-  const labels = {
-    title: lang === "en" ? "Itinerary" : "Itinerario",
-    dayByDay: lang === "en" ? "Day by day" : "Dia a dia",
-    day: lang === "en" ? "Day" : "Dia",
-  };
+  const t = useTranslations('landing.destino');
 
   return (
     <div>
@@ -39,7 +35,7 @@ export function TabItinerary({ itinerary, lang }: TabItineraryProps) {
           color: T.text,
         }}
       >
-        {labels.title}{" "}
+        {t('tabItinerary')}{" "}
         <span
           style={{
             fontFamily: FONT2,
@@ -49,7 +45,7 @@ export function TabItinerary({ itinerary, lang }: TabItineraryProps) {
           }}
         >
           {" "}
-          {labels.dayByDay}
+          {t('dayByDay')}
         </span>
       </h3>
 
