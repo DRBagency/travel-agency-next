@@ -255,264 +255,373 @@ export function DestinationDetail({
       </div>
 
       <div style={{ paddingTop: 116 }}>
-        {/* ═══════════════════ HERO SECTION ═══════════════════ */}
-        {gallery.length > 0 && (
+        {/* ═══════════════════ HERO SECTION (split layout like main Hero) ═══════════════════ */}
+        <section
+          style={{
+            paddingTop: 40,
+            paddingBottom: 60,
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Background decorative orbs */}
           <div
             style={{
-              display: "flex",
-              gap: 6,
-              height: 460,
-              borderRadius: "0 0 24px 24px",
-              overflow: "hidden",
-              position: "relative",
+              position: "absolute",
+              top: "10%",
+              left: "-5%",
+              width: 400,
+              height: 400,
+              borderRadius: "50%",
+              background: `radial-gradient(circle, ${T.accent}15, transparent 70%)`,
+              filter: "blur(80px)",
+              pointerEvents: "none",
+              animation: "orbFloat1 12s ease-in-out infinite",
             }}
-            className="destino-hero-gallery"
+          />
+          <div
+            style={{
+              position: "absolute",
+              bottom: "5%",
+              right: "-8%",
+              width: 350,
+              height: 350,
+              borderRadius: "50%",
+              background: `radial-gradient(circle, ${T.lime}12, transparent 70%)`,
+              filter: "blur(80px)",
+              pointerEvents: "none",
+              animation: "orbFloat2 15s ease-in-out infinite",
+            }}
+          />
+
+          <div
+            style={{
+              maxWidth: 1200,
+              margin: "0 auto",
+              padding: "0 24px",
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 60,
+              alignItems: "center",
+            }}
+            className="destino-hero-grid"
           >
-            {/* Main large image */}
-            <div
-              style={{
-                flex: gallery.length > 1 ? "0 0 65%" : "1 1 100%",
-                position: "relative",
-                overflow: "hidden",
-                cursor: gallery.length > 1 ? "pointer" : undefined,
-              }}
-              onClick={() => {
-                if (gallery.length > 1) {
-                  setAutoRotate(false);
-                  setGalleryIndex((prev) => (prev + 1) % gallery.length);
-                }
-              }}
-            >
-              <Img
-                src={gallery[galleryIndex]}
-                alt={destino.nombre}
-                isDark={T.mode === "dark"}
-                style={{ width: "100%", height: "100%" }}
-              />
-              {/* Dark overlay */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: "linear-gradient(to top, rgba(0,0,0,.6) 0%, rgba(0,0,0,.15) 50%, rgba(0,0,0,.05) 100%)",
-                }}
-              />
-
-              {/* Price badge */}
-              {destino.precio && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 24,
-                    padding: "10px 20px",
-                    borderRadius: 14,
-                    background: "rgba(15,23,42,.82)",
-                    backdropFilter: "blur(12px)",
-                    border: `1px solid rgba(255,255,255,.12)`,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    zIndex: 2,
-                  }}
-                >
-                  {destino.precio_original && destino.precio_original > destino.precio && (
-                    <span
-                      style={{
-                        fontFamily: FONT2,
-                        fontSize: 16,
-                        color: "rgba(255,255,255,.78)",
-                        textDecoration: "line-through",
-                        textDecorationColor: "rgba(255,100,100,.7)",
-                      }}
-                    >
-                      {destino.precio_original}{"€"}
-                    </span>
-                  )}
-                  <span
-                    style={{
-                      fontFamily: FONT,
-                      fontWeight: 800,
-                      fontSize: 22,
-                      color: T.lime,
-                    }}
-                  >
-                    {destino.precio}{"€"}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: FONT2,
-                      fontSize: 11,
-                      color: "rgba(255,255,255,.6)",
-                    }}
-                  >
-                    por persona
-                  </span>
-                </div>
-              )}
-
-              {/* Title overlay at bottom */}
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 20,
-                  left: 0,
-                  right: 0,
-                  padding: "0 36px",
-                  zIndex: 2,
-                }}
-              >
+            {/* LEFT — Text content */}
+            <div>
+              <AnimateIn delay={0}>
                 {destino.pais && (
                   <span
                     style={{
-                      fontFamily: FONT2,
+                      display: "inline-block",
+                      background: `${T.accent}18`,
                       color: T.accent,
+                      fontFamily: FONT,
+                      fontWeight: 700,
                       fontSize: 13,
-                      letterSpacing: 3,
-                      textTransform: "uppercase",
-                      fontWeight: 600,
+                      padding: "6px 16px",
+                      borderRadius: 30,
+                      letterSpacing: ".5px",
+                      marginBottom: 20,
+                      border: `1px solid ${T.accent}30`,
                     }}
                   >
-                    {destino.continente ? `${destino.continente} · ` : ""}
-                    {destino.pais}
+                    {destino.continente ? `${destino.continente} · ` : ""}{destino.pais}
                   </span>
                 )}
+              </AnimateIn>
+
+              <AnimateIn delay={0.1}>
                 <h1
                   style={{
                     fontFamily: FONT,
-                    fontSize: "clamp(28px, 4.5vw, 48px)",
-                    color: "#fff",
-                    margin: "4px 0",
                     fontWeight: 800,
-                    textShadow: "0 2px 20px rgba(0,0,0,.4)",
+                    fontSize: "clamp(34px, 5vw, 56px)",
+                    lineHeight: 1.08,
+                    color: T.text,
+                    margin: 0,
+                    marginBottom: 12,
+                    letterSpacing: "-1px",
                   }}
                 >
                   {dTr("nombre")}
                 </h1>
-                {(dTr("tagline") || destino.tagline) && (
+              </AnimateIn>
+
+              {(dTr("tagline") || destino.tagline) && (
+                <AnimateIn delay={0.15}>
                   <p
                     style={{
-                      fontFamily: FONT2,
-                      color: "rgba(255,255,255,.75)",
-                      fontSize: 16,
+                      fontFamily: FONT,
+                      fontWeight: 600,
+                      fontSize: "clamp(18px, 2.5vw, 24px)",
+                      color: T.accent,
                       margin: 0,
+                      marginBottom: 16,
+                      lineHeight: 1.3,
                     }}
                   >
                     {dTr("tagline")}
                   </p>
-                )}
-              </div>
+                </AnimateIn>
+              )}
 
-              {/* Gallery dots indicator */}
-              {gallery.length > 1 && (
+              {(dTr("descripcion_larga") || dTr("descripcion") || destino.descripcion_larga || destino.descripcion_corta) && (
+                <AnimateIn delay={0.2}>
+                  <p
+                    style={{
+                      fontFamily: FONT2,
+                      fontWeight: 400,
+                      fontSize: 17,
+                      color: T.sub,
+                      margin: 0,
+                      marginBottom: 32,
+                      lineHeight: 1.7,
+                      maxWidth: 480,
+                    }}
+                  >
+                    {dTr("descripcion_larga") || dTr("descripcion") || destino.descripcion_larga || destino.descripcion_corta}
+                  </p>
+                </AnimateIn>
+              )}
+
+              <AnimateIn delay={0.3}>
+                <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+                  {/* Primary CTA — Reservar */}
+                  <button
+                    onClick={() => openBooking()}
+                    style={{
+                      background: `linear-gradient(135deg, ${T.accent}, ${T.accent}cc)`,
+                      color: "#fff",
+                      fontFamily: FONT,
+                      fontWeight: 700,
+                      fontSize: 15,
+                      padding: "14px 32px",
+                      borderRadius: 14,
+                      border: "none",
+                      cursor: "pointer",
+                      transition: "all .3s",
+                      boxShadow: `0 4px 20px ${T.accent}33`,
+                      letterSpacing: ".3px",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-3px)";
+                      e.currentTarget.style.boxShadow = `0 8px 30px ${T.accent}44`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "none";
+                      e.currentTarget.style.boxShadow = `0 4px 20px ${T.accent}33`;
+                    }}
+                  >
+                    Reservar ahora
+                  </button>
+
+                  {/* Secondary CTA — Volver */}
+                  <a
+                    href={backUrl}
+                    style={{
+                      background: "transparent",
+                      color: T.text,
+                      fontFamily: FONT,
+                      fontWeight: 700,
+                      fontSize: 15,
+                      padding: "14px 32px",
+                      borderRadius: 14,
+                      border: `2px solid ${T.border}`,
+                      cursor: "pointer",
+                      transition: "all .3s",
+                      letterSpacing: ".3px",
+                      textDecoration: "none",
+                      display: "inline-block",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = T.accent;
+                      e.currentTarget.style.color = T.accent;
+                      e.currentTarget.style.transform = "translateY(-3px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = T.border;
+                      e.currentTarget.style.color = T.text;
+                      e.currentTarget.style.transform = "none";
+                    }}
+                  >
+                    {"←"} Ver destinos
+                  </a>
+                </div>
+              </AnimateIn>
+            </div>
+
+            {/* RIGHT — Hero image with floating badges */}
+            <AnimateIn delay={0.2} from="right">
+              <div style={{ position: "relative" }}>
+                <div
+                  style={{
+                    borderRadius: 28,
+                    overflow: "hidden",
+                    boxShadow: `0 20px 60px ${T.shadow}`,
+                    aspectRatio: "4/5",
+                    maxHeight: 560,
+                    cursor: gallery.length > 1 ? "pointer" : undefined,
+                  }}
+                  onClick={() => {
+                    if (gallery.length > 1) {
+                      setAutoRotate(false);
+                      setGalleryIndex((prev) => (prev + 1) % gallery.length);
+                    }
+                  }}
+                >
+                  <img
+                    src={gallery[galleryIndex] || destino.imagen_url}
+                    alt={dTr("nombre")}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                </div>
+
+                {/* Gallery dots */}
+                {gallery.length > 1 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: 6,
+                      marginTop: 12,
+                    }}
+                  >
+                    {gallery.map((_: string, i: number) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setAutoRotate(false);
+                          setGalleryIndex(i);
+                        }}
+                        style={{
+                          width: galleryIndex === i ? 20 : 8,
+                          height: 8,
+                          borderRadius: 4,
+                          background: galleryIndex === i ? T.accent : `${T.muted}44`,
+                          border: "none",
+                          cursor: "pointer",
+                          transition: "all .3s",
+                          padding: 0,
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Floating price badge (top-right) */}
+                {destino.precio && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 28,
+                      right: -20,
+                      background: T.bg2,
+                      borderRadius: 16,
+                      padding: "14px 20px",
+                      boxShadow: `0 8px 32px ${T.shadow}`,
+                      border: `1px solid ${T.border}`,
+                      animation: "float 4s ease-in-out infinite",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      zIndex: 2,
+                    }}
+                    className="destino-hero-floating-card"
+                  >
+                    <span style={{ fontSize: 24 }}>💰</span>
+                    <div>
+                      {destino.precio_original && destino.precio_original > destino.precio && (
+                        <div
+                          style={{
+                            fontFamily: FONT2,
+                            fontSize: 13,
+                            color: T.muted,
+                            textDecoration: "line-through",
+                            textDecorationColor: "rgba(255,100,100,.7)",
+                            lineHeight: 1,
+                          }}
+                        >
+                          {destino.precio_original}{"€"}
+                        </div>
+                      )}
+                      <div
+                        style={{
+                          fontFamily: FONT,
+                          fontWeight: 800,
+                          fontSize: 20,
+                          color: T.text,
+                          lineHeight: 1,
+                        }}
+                      >
+                        {destino.precio}{"€"}
+                      </div>
+                      <div
+                        style={{
+                          fontFamily: FONT2,
+                          fontSize: 12,
+                          color: T.muted,
+                          marginTop: 2,
+                        }}
+                      >
+                        por persona
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Floating urgency badge (bottom-left) */}
                 <div
                   style={{
                     position: "absolute",
-                    bottom: 14,
-                    right: 24,
+                    bottom: gallery.length > 1 ? 52 : 40,
+                    left: -20,
+                    background: T.bg2,
+                    borderRadius: 16,
+                    padding: "14px 20px",
+                    boxShadow: `0 8px 32px ${T.shadow}`,
+                    border: `1px solid ${T.border}`,
+                    animation: "float 5s ease-in-out infinite 1s",
                     display: "flex",
-                    gap: 6,
-                    zIndex: 3,
+                    alignItems: "center",
+                    gap: 10,
+                    zIndex: 2,
                   }}
+                  className="destino-hero-floating-card"
                 >
-                  {gallery.map((_: string, i: number) => (
-                    <button
-                      key={i}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setAutoRotate(false);
-                        setGalleryIndex(i);
-                      }}
+                  <span style={{ fontSize: 24 }}>{destino.badge ? "🏷️" : "🔥"}</span>
+                  <div>
+                    <div
                       style={{
-                        width: galleryIndex === i ? 20 : 8,
-                        height: 8,
-                        borderRadius: 4,
-                        background: galleryIndex === i ? T.accent : "rgba(255,255,255,.5)",
-                        border: "none",
-                        cursor: "pointer",
-                        transition: "all .3s",
-                        padding: 0,
+                        fontFamily: FONT,
+                        fontWeight: 800,
+                        fontSize: 16,
+                        color: T.text,
+                        lineHeight: 1.2,
                       }}
-                    />
-                  ))}
+                    >
+                      {destino.badge || "No te lo pierdas"}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: FONT2,
+                        fontSize: 12,
+                        color: T.muted,
+                        marginTop: 2,
+                      }}
+                    >
+                      {destino.duracion || "Experiencia unica"}
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-
-            {/* Side carousel thumbnails (only if more than 1 image) */}
-            {gallery.length > 1 && (
-              <div
-                style={{
-                  flex: "0 0 35%",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 6,
-                  overflow: "hidden",
-                }}
-                className="destino-hero-side"
-              >
-                {gallery.slice(0, 4).map((url: string, i: number) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setAutoRotate(false);
-                      setGalleryIndex(i);
-                    }}
-                    style={{
-                      flex: 1,
-                      position: "relative",
-                      overflow: "hidden",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: 0,
-                      opacity: galleryIndex === i ? 1 : 0.7,
-                      transition: "opacity .3s",
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
-                    onMouseLeave={(e) => { if (galleryIndex !== i) e.currentTarget.style.opacity = "0.7"; }}
-                  >
-                    <Img
-                      src={url}
-                      alt={`${destino.nombre} ${i + 1}`}
-                      isDark={T.mode === "dark"}
-                      style={{ width: "100%", height: "100%", borderRadius: 0 }}
-                    />
-                    {galleryIndex === i && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          border: `3px solid ${T.accent}`,
-                          borderRadius: 0,
-                          pointerEvents: "none",
-                        }}
-                      />
-                    )}
-                    {/* Show "+N more" on last visible thumbnail if there are more images */}
-                    {i === 3 && gallery.length > 4 && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          background: "rgba(0,0,0,.5)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          color: "#fff",
-                          fontFamily: FONT,
-                          fontWeight: 700,
-                          fontSize: 18,
-                        }}
-                      >
-                        +{gallery.length - 4}
-                      </div>
-                    )}
-                  </button>
-                ))}
               </div>
-            )}
+            </AnimateIn>
           </div>
-        )}
+        </section>
 
         {/* ═══════════════════ MAIN CONTENT ═══════════════════ */}
         <div
@@ -905,6 +1014,33 @@ export function DestinationDetail({
 
       {/* ═══════════════════ RESPONSIVE STYLES ═══════════════════ */}
       <style>{`
+        @keyframes orbFloat1 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(30px, -20px); }
+        }
+        @keyframes orbFloat2 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(-20px, 30px); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        .destino-hero-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        @media (max-width: 868px) {
+          .destino-hero-grid {
+            grid-template-columns: 1fr !important;
+            gap: 40px !important;
+            text-align: center;
+          }
+          .destino-hero-grid > div:first-child { order: 1; }
+          .destino-hero-grid > div:last-child { order: 0; }
+          .destino-hero-floating-card {
+            display: none !important;
+          }
+        }
         @media (max-width: 768px) {
           /* Stack stats vertically on small screens */
           div[style*="flex-wrap: wrap"][style*="padding: 18px 24px"] {
@@ -914,20 +1050,6 @@ export function DestinationDetail({
           div[style*="flex-wrap: wrap"][style*="padding: 18px 24px"] > div[style*="width: 1"] {
             width: 100% !important;
             height: 1px;
-          }
-          /* Stack gallery vertically on mobile */
-          .destino-hero-gallery {
-            flex-direction: column !important;
-            height: auto !important;
-          }
-          .destino-hero-gallery > div:first-child {
-            flex: 1 1 auto !important;
-            height: 320px !important;
-          }
-          .destino-hero-side {
-            flex: 1 1 auto !important;
-            flex-direction: row !important;
-            height: 80px !important;
           }
         }
       `}</style>
