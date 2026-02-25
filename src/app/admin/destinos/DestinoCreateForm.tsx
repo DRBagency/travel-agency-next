@@ -94,7 +94,6 @@ interface ClimaData {
 const TABS = [
   { key: "general", icon: Globe },
   { key: "pricing", icon: Tag },
-  { key: "gallery", icon: ImageIcon },
   { key: "itinerary", icon: Mountain },
   { key: "hotel", icon: Hotel },
   { key: "flights", icon: Plane },
@@ -280,13 +279,17 @@ export default function DestinoCreateForm({
         setCoordinador((prev) => ({ ...prev, avatar: url }));
         break;
       default:
-        // Gallery item -- field key is "galeria_<index>"
-        if (unsplashField.startsWith("galeria_")) {
-          const idx = Number(unsplashField.split("_")[1]);
-          setGaleria((prev) => {
-            const next = [...prev];
-            next[idx] = url;
-            return next;
+        // Itinerary day image — field key is "itinerary_day_<index>"
+        if (unsplashField.startsWith("itinerary_day_")) {
+          const idx = Number(unsplashField.split("_")[2]);
+          setItinerario((prev: any) => {
+            if (!prev) return prev;
+            const updated = JSON.parse(JSON.stringify(prev));
+            const dias = updated.dias || updated.days || [];
+            if (dias[idx]) {
+              dias[idx].imagen = url;
+            }
+            return updated;
           });
         }
         break;
@@ -615,6 +618,32 @@ export default function DestinoCreateForm({
                     placeholder={t("longDescription")}
                   />
                 </div>
+                {/* Main image */}
+                <div>
+                  <label className="panel-label">{t("heroImage")}</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={imagenUrl}
+                      onChange={(e) => setImagenUrl(e.target.value)}
+                      className="panel-input w-full flex-1"
+                      placeholder="https://..."
+                    />
+                    <button
+                      type="button"
+                      onClick={() => openUnsplash("imagen_url")}
+                      className="shrink-0 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors"
+                      title="Buscar en Unsplash"
+                    >
+                      <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/50" />
+                    </button>
+                  </div>
+                  {imagenUrl && (
+                    <div className="mt-2 rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden max-w-xs">
+                      <img src={imagenUrl} alt="Preview" className="w-full h-32 object-cover" />
+                    </div>
+                  )}
+                </div>
                 <div className="flex justify-end pt-2">
                   <SubmitButton className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium">
                     {labels.saveDestination}
@@ -706,115 +735,6 @@ export default function DestinoCreateForm({
               </div>
             )}
 
-            {/* ------ GALLERY TAB ------ */}
-            {tab === "gallery" && (
-              <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {t("tabGallery" as any)}
-                </h2>
-
-                {/* Main image */}
-                <div>
-                  <label className="panel-label">{t("heroImage")}</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={imagenUrl}
-                      onChange={(e) => setImagenUrl(e.target.value)}
-                      className="panel-input w-full flex-1"
-                      placeholder="https://..."
-                    />
-                    <button
-                      type="button"
-                      onClick={() => openUnsplash("imagen_url")}
-                      className="shrink-0 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors"
-                      title="Buscar en Unsplash"
-                    >
-                      <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/50" />
-                    </button>
-                  </div>
-                  {imagenUrl && (
-                    <div className="mt-2 rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden max-w-xs">
-                      <img
-                        src={imagenUrl}
-                        alt="Preview"
-                        className="w-full h-32 object-cover"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* Gallery grid */}
-                <div>
-                  <label className="panel-label mb-3 block">Galeria de imagenes</label>
-                  {galeria.length === 0 && (
-                    <p className="text-sm text-gray-400 dark:text-white/40 mb-3">
-                      No hay imagenes en la galeria. Anade la primera.
-                    </p>
-                  )}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {galeria.map((url, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden"
-                      >
-                        {url && (
-                          <img
-                            src={url}
-                            alt={`Gallery ${idx + 1}`}
-                            className="w-full h-32 object-cover"
-                          />
-                        )}
-                        <div className="p-2 flex gap-2">
-                          <input
-                            type="text"
-                            value={url}
-                            onChange={(e) => {
-                              const next = [...galeria];
-                              next[idx] = e.target.value;
-                              setGaleria(next);
-                            }}
-                            className="panel-input flex-1 text-sm"
-                            placeholder="URL de imagen"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => openUnsplash(`galeria_${idx}`)}
-                            className="shrink-0 p-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors"
-                          >
-                            <ImageIcon className="w-3.5 h-3.5 text-gray-500 dark:text-white/50" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setGaleria((prev) => prev.filter((_, i) => i !== idx))
-                            }
-                            className="shrink-0 p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setGaleria((prev) => [...prev, ""])}
-                    className="mt-3 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Anadir imagen
-                  </button>
-                </div>
-
-                <div className="flex justify-end pt-2">
-                  <SubmitButton className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium">
-                    {labels.saveDestination}
-                  </SubmitButton>
-                </div>
-              </div>
-            )}
-
             {/* ------ ITINERARY TAB ------ */}
             {tab === "itinerary" && (
               <div className="space-y-6">
@@ -825,14 +745,29 @@ export default function DestinoCreateForm({
                   <ItineraryEditor
                     itinerario={itinerario}
                     onChange={(updated) => setItinerario(updated)}
+                    onOpenUnsplash={openUnsplash}
                   />
                 ) : (
                   <div className="text-center py-12 text-gray-400 dark:text-white/40">
                     <Mountain className="w-10 h-10 mx-auto mb-3 opacity-40" />
-                    <p className="text-sm">
+                    <p className="text-sm mb-4">
                       Este destino aun no tiene itinerario. Puedes generarlo desde la seccion de AI o
                       crearlo manualmente.
                     </p>
+                    <button
+                      type="button"
+                      onClick={() => setItinerario({
+                        dias: [{ dia: 1, titulo: "", actividades: { manana: { titulo: "", descripcion: "", precio_estimado: "", duracion: "" }, tarde: { titulo: "", descripcion: "", precio_estimado: "", duracion: "" }, noche: { titulo: "", descripcion: "", precio_estimado: "", duracion: "" } }, tip_local: "", imagen: "" }],
+                        tips_generales: [],
+                        mejor_epoca: "",
+                        clima: "",
+                        que_llevar: [],
+                      })}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-drb-turquoise-500 text-white text-sm font-medium hover:bg-drb-turquoise-600 transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Crear itinerario manualmente
+                    </button>
                   </div>
                 )}
                 <div className="flex justify-end pt-2">

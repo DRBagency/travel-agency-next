@@ -10,7 +10,6 @@ import { AnimateIn } from "../ui/AnimateIn";
 import { TabItinerary } from "./TabItinerary";
 import { TabHotel } from "./TabHotel";
 import { TabFlight } from "./TabFlight";
-import { TabGallery } from "./TabGallery";
 import { TabIncluded } from "./TabIncluded";
 import { TabDepartures } from "./TabDepartures";
 import { TabCoordinator } from "./TabCoordinator";
@@ -162,7 +161,6 @@ function DestinationDetailInner({
     { id: "itinerary", label: t('tabItinerary'), icon: "\uD83D\uDDFA\uFE0F", show: itinerary.length > 0 },
     { id: "hotel", label: t('tabHotel'), icon: "\uD83C\uDFE8", show: !!hotel },
     { id: "flight", label: t('tabFlight'), icon: "\u2708\uFE0F", show: !!flights },
-    { id: "gallery", label: t('tabGallery'), icon: "\uD83D\uDDBC\uFE0F", show: gallery.length > 1 },
     { id: "included", label: t('tabIncluded'), icon: "\u2705", show: included.length > 0 || notIncluded.length > 0 },
     { id: "departures", label: t('tabDepartures'), icon: "\uD83D\uDCC5", show: departures.length > 0 },
     { id: "coordinator", label: t('tabCoordinator'), icon: "\uD83D\uDC64", show: !!coordinator },
@@ -899,12 +897,6 @@ function DestinationDetailInner({
 
             {tab === "flight" && flights && <TabFlight flights={flights} />}
 
-            {tab === "gallery" && gallery.length > 1 && (
-              <TabGallery
-                gallery={gallery}
-                destinationName={destino.nombre}
-              />
-            )}
 
             {tab === "included" &&
               (included.length > 0 || notIncluded.length > 0) && (

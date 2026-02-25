@@ -11,12 +11,14 @@ import {
   Trash2,
   Plus,
   Sparkles,
+  ImageIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface ItineraryEditorProps {
   itinerario: any;
   onChange: (updated: any) => void;
+  onOpenUnsplash?: (fieldKey: string) => void;
 }
 
 const PERIODS = [
@@ -28,6 +30,7 @@ const PERIODS = [
 export default function ItineraryEditor({
   itinerario,
   onChange,
+  onOpenUnsplash,
 }: ItineraryEditorProps) {
   const t = useTranslations("admin.destinos");
   const ti = useTranslations("ai.itinerarios");
@@ -35,6 +38,7 @@ export default function ItineraryEditor({
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [openDays, setOpenDays] = useState<Record<number, boolean>>({});
   const [tipsOpen, setTipsOpen] = useState(false);
+  const [queLlevarOpen, setQueLlevarOpen] = useState(false);
 
   // Handle both formats: AI-generated { dias: [...] } or flat array [{ day, title, description }]
   const isFlat = Array.isArray(itinerario);
@@ -44,9 +48,20 @@ export default function ItineraryEditor({
   const tips: string[] = isFlat
     ? []
     : (itinerario?.tips_generales || itinerario?.general_tips || []);
+  const queLlevar: string[] = isFlat
+    ? []
+    : (itinerario?.que_llevar || []);
 
   function clone(obj: any) {
     return JSON.parse(JSON.stringify(obj));
+  }
+
+  /** Convert flat array to rich format if needed */
+  function ensureRichFormat(data: any): any {
+    if (Array.isArray(data)) {
+      return { dias: clone(data), tips_generales: [], que_llevar: [] };
+    }
+    return clone(data);
   }
 
   function toggleDay(index: number) {
@@ -113,6 +128,62 @@ export default function ItineraryEditor({
     const tipsKey = updated.tips_generales ? "tips_generales" : "general_tips";
     if (!updated[tipsKey]) updated[tipsKey] = [];
     updated[tipsKey].push("");
+    onChange(updated);
+  }
+
+  // --- Add / Remove day helpers ---
+
+  function addDay() {
+    const updated = ensureRichFormat(itinerario);
+    const daysKey = updated.dias ? "dias" : "days";
+    if (!updated[daysKey]) updated[daysKey] = [];
+    const currentDias = updated[daysKey];
+    currentDias.push({
+      dia: currentDias.length + 1,
+      titulo: "",
+      actividades: {
+        manana: { titulo: "", descripcion: "", precio_estimado: "", duracion: "" },
+        tarde: { titulo: "", descripcion: "", precio_estimado: "", duracion: "" },
+        noche: { titulo: "", descripcion: "", precio_estimado: "", duracion: "" },
+      },
+      tip_local: "",
+      imagen: "",
+    });
+    onChange(updated);
+  }
+
+  function removeDay(index: number) {
+    const updated = ensureRichFormat(itinerario);
+    const daysKey = updated.dias ? "dias" : "days";
+    if (!updated[daysKey]) return;
+    updated[daysKey].splice(index, 1);
+    // Re-number remaining days
+    updated[daysKey].forEach((d: any, idx: number) => {
+      d.dia = idx + 1;
+    });
+    onChange(updated);
+  }
+
+  // --- Que llevar helpers ---
+
+  function updateQueLlevar(index: number, value: string) {
+    const updated = ensureRichFormat(itinerario);
+    if (!updated.que_llevar) updated.que_llevar = [];
+    updated.que_llevar[index] = value;
+    onChange(updated);
+  }
+
+  function removeQueLlevar(index: number) {
+    const updated = ensureRichFormat(itinerario);
+    if (!updated.que_llevar) return;
+    updated.que_llevar.splice(index, 1);
+    onChange(updated);
+  }
+
+  function addQueLlevar() {
+    const updated = ensureRichFormat(itinerario);
+    if (!updated.que_llevar) updated.que_llevar = [];
+    updated.que_llevar.push("");
     onChange(updated);
   }
 
@@ -197,23 +268,33 @@ export default function ItineraryEditor({
           const actividades = dia.actividades || dia.activities || {};
           return (
             <div key={i}>
-              <button
-                type="button"
-                onClick={() => toggleDay(i)}
-                className="w-full flex items-center justify-between px-4 py-2.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
-              >
-                <span className="text-sm font-medium text-gray-700 dark:text-white/70">
-                  {ti("dayLabel", { n: i + 1 })} —{" "}
-                  <span className="font-normal text-gray-500 dark:text-white/50">
-                    {dia.titulo || dia.title || ""}
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={() => toggleDay(i)}
+                  className="flex-1 flex items-center justify-between px-4 py-2.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+                >
+                  <span className="text-sm font-medium text-gray-700 dark:text-white/70">
+                    {ti("dayLabel", { n: i + 1 })} —{" "}
+                    <span className="font-normal text-gray-500 dark:text-white/50">
+                      {dia.titulo || dia.title || ""}
+                    </span>
                   </span>
-                </span>
-                {isOpen ? (
-                  <ChevronUp className="w-4 h-4 text-gray-400" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
-                )}
-              </button>
+                  {isOpen ? (
+                    <ChevronUp className="w-4 h-4 text-gray-400" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => removeDay(i)}
+                  className="p-2 me-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors shrink-0"
+                  title={t("removeDay")}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
               {isOpen && (
                 <div className="px-4 pb-4 space-y-4">
                   {/* Day title */}
@@ -229,6 +310,37 @@ export default function ItineraryEditor({
                       }
                       className="panel-input w-full text-sm"
                     />
+                  </div>
+
+                  {/* Day image */}
+                  <div>
+                    <label className="text-xs text-gray-500 dark:text-white/40 mb-1 block">
+                      {t("dayImage")}
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={dia.imagen || ""}
+                        onChange={(e) => updateDay(i, "imagen", e.target.value)}
+                        placeholder="https://..."
+                        className="panel-input flex-1 text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => onOpenUnsplash?.("itinerary_day_" + i)}
+                        className="p-2 rounded-lg border border-gray-200 dark:border-white/10 text-gray-500 dark:text-white/50 hover:bg-gray-50 dark:hover:bg-white/[0.04] transition-colors shrink-0"
+                        title="Unsplash"
+                      >
+                        <ImageIcon className="w-4 h-4" />
+                      </button>
+                      {dia.imagen && (
+                        <img
+                          src={dia.imagen}
+                          alt=""
+                          className="w-12 h-12 rounded-lg object-cover shrink-0 border border-gray-200 dark:border-white/10"
+                        />
+                      )}
+                    </div>
                   </div>
 
                   {/* Periods: morning / afternoon / night */}
@@ -331,6 +443,18 @@ export default function ItineraryEditor({
           );
         })}
 
+        {/* ===== ADD DAY BUTTON ===== */}
+        <div className="px-4 py-3">
+          <button
+            type="button"
+            onClick={addDay}
+            className="flex items-center gap-1.5 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            {t("addDay")}
+          </button>
+        </div>
+
         {/* ===== GENERAL TIPS ===== */}
         {tips.length > 0 && (
           <div>
@@ -390,6 +514,69 @@ export default function ItineraryEditor({
             >
               <Plus className="w-3.5 h-3.5" />
               {t("addTip")}
+            </button>
+          </div>
+        )}
+
+        {/* ===== QUE LLEVAR (What to pack) ===== */}
+        {queLlevar.length > 0 && (
+          <div>
+            <button
+              type="button"
+              onClick={() => setQueLlevarOpen(!queLlevarOpen)}
+              className="w-full flex items-center justify-between px-4 py-2.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+            >
+              <span className="text-sm font-medium text-gray-700 dark:text-white/70">
+                {t("queLlevar")}
+              </span>
+              {queLlevarOpen ? (
+                <ChevronUp className="w-4 h-4 text-gray-400" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-gray-400" />
+              )}
+            </button>
+            {queLlevarOpen && (
+              <div className="px-4 pb-4 space-y-2">
+                {queLlevar.map((item: string, i: number) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <input
+                      type="text"
+                      value={item}
+                      onChange={(e) => updateQueLlevar(i, e.target.value)}
+                      className="panel-input flex-1 text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeQueLlevar(i)}
+                      className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors shrink-0"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addQueLlevar}
+                  className="flex items-center gap-1.5 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline mt-1"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  {t("addQueLlevarItem")}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Add que_llevar button when no items exist */}
+        {queLlevar.length === 0 && (
+          <div className="px-4 py-3">
+            <button
+              type="button"
+              onClick={addQueLlevar}
+              className="flex items-center gap-1.5 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              {t("addQueLlevarItem")}
             </button>
           </div>
         )}

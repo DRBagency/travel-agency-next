@@ -172,6 +172,7 @@ export function TabItinerary({ rawItinerario }: TabItineraryProps) {
           );
           // Flat format fallback
           const flatDesc = dia.description || dia.descripcion || "";
+          const dayImage = dia.imagen || dia.image || "";
 
           return (
             <div
@@ -197,40 +198,74 @@ export function TabItinerary({ rawItinerario }: TabItineraryProps) {
                   alignItems: "center",
                   gap: 14,
                   padding: "18px 22px",
-                  borderBottom: hasActivities
+                  borderBottom: (hasActivities || flatDesc)
                     ? `1px solid ${T.border}`
                     : "none",
                 }}
               >
-                <span
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: "50%",
-                    background: `linear-gradient(135deg, ${T.accent}, ${T.accent}bb)`,
-                    color: "#fff",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: FONT,
-                    fontWeight: 800,
-                    fontSize: 15,
-                    flexShrink: 0,
-                  }}
-                >
-                  {dayNum}
-                </span>
-                <h4
-                  style={{
-                    fontFamily: FONT,
-                    fontSize: 18,
-                    fontWeight: 700,
-                    color: T.text,
-                    margin: 0,
-                  }}
-                >
-                  {dayTitle}
-                </h4>
+                {/* Day image thumbnail */}
+                {dayImage ? (
+                  <img
+                    src={dayImage}
+                    alt={dayTitle}
+                    style={{
+                      width: 52,
+                      height: 52,
+                      borderRadius: 10,
+                      objectFit: "cover",
+                      flexShrink: 0,
+                      border: `1.5px solid ${T.border}`,
+                    }}
+                  />
+                ) : (
+                  <span
+                    style={{
+                      width: 38,
+                      height: 38,
+                      borderRadius: "50%",
+                      background: `linear-gradient(135deg, ${T.accent}, ${T.accent}bb)`,
+                      color: "#fff",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontFamily: FONT,
+                      fontWeight: 800,
+                      fontSize: 15,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {dayNum}
+                  </span>
+                )}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  {dayImage && (
+                    <div
+                      style={{
+                        fontFamily: FONT2,
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: T.accent,
+                        textTransform: "uppercase",
+                        letterSpacing: ".5px",
+                        marginBottom: 2,
+                      }}
+                    >
+                      {t("dayLabel", { n: dayNum })}
+                    </div>
+                  )}
+                  <h4
+                    style={{
+                      fontFamily: FONT,
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: T.text,
+                      margin: 0,
+                    }}
+                  >
+                    {!dayImage && <span style={{ marginInlineEnd: 8 }}>{dayNum}.</span>}
+                    {dayTitle}
+                  </h4>
+                </div>
               </div>
 
               {/* Activities: morning / afternoon / night */}
