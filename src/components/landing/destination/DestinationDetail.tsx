@@ -130,18 +130,15 @@ function DestinationDetailInner({
     return () => clearInterval(timer);
   }, [autoRotate, gallery.length]);
 
-  // Normalize itinerary: could be a flat array or an AI-generated object with { dias: [...] }
+  // Raw itinerary data (pass full object to TabItinerary)
   const rawItinerario = destino.itinerario;
+  // Simplified array for ItineraryMap and tab visibility check
   const itinerary: any[] = Array.isArray(rawItinerario)
     ? rawItinerario
     : Array.isArray(rawItinerario?.dias)
       ? rawItinerario.dias.map((d: any, i: number) => ({
           day: d.dia || i + 1,
           title: d.titulo || d.title || "",
-          description: d.descripcion || d.description ||
-            [d.actividades?.manana?.descripcion, d.actividades?.tarde?.descripcion, d.actividades?.noche?.descripcion]
-              .filter(Boolean).join(" · ") || "",
-          image: d.imagen || d.image || "",
         }))
       : [];
 
@@ -895,7 +892,7 @@ function DestinationDetailInner({
           {/* ═══════════════════ TAB CONTENT ═══════════════════ */}
           <div style={{ minHeight: 200 }}>
             {tab === "itinerary" && itinerary.length > 0 && (
-              <TabItinerary itinerary={itinerary} />
+              <TabItinerary rawItinerario={rawItinerario} />
             )}
 
             {tab === "hotel" && hotel && <TabHotel hotel={hotel} />}
