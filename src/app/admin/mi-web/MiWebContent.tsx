@@ -240,6 +240,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
 
   // Bulk translate all state
   const [bulkTranslating, setBulkTranslating] = useState(false);
+  const [bulkProgress, setBulkProgress] = useState("");
   const [bulkTranslateResult, setBulkTranslateResult] = useState<{
     success: boolean;
     translated: number;
@@ -511,31 +512,56 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     setBulkTranslating(true);
     setBulkTranslateResult(null);
     setBulkTranslateError(null);
+    setBulkProgress("");
+
+    const results: { table: string; name: string; success: boolean; error?: string }[] = [];
+
     try {
-      const res = await fetch("/api/admin/translate/all", { method: "POST" });
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        throw new Error(`Server error (${res.status}). Try again in a moment.`);
+      // 1. Get list of all records to translate
+      const listRes = await fetch("/api/admin/translate/list");
+      if (!listRes.ok) throw new Error("Could not fetch record list");
+      const list = await listRes.json();
+
+      // Build queue: client first, then destinos, then opiniones
+      const queue: { table: string; id: string; name: string }[] = [
+        { table: "clientes", id: list.clientId, name: client.nombre || "Web" },
+        ...(list.destinos || []).map((d: any) => ({ table: "destinos", id: d.id, name: d.nombre || "Destino" })),
+        ...(list.opiniones || []).map((o: any) => ({ table: "opiniones", id: o.id, name: o.nombre || "Opinión" })),
+      ];
+
+      // 2. Translate one by one
+      for (let i = 0; i < queue.length; i++) {
+        const item = queue[i];
+        setBulkProgress(`${i + 1}/${queue.length} — ${item.name}...`);
+
+        try {
+          const res = await fetch("/api/admin/translate/record", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ table: item.table, recordId: item.id }),
+          });
+          let data;
+          try { data = await res.json(); } catch { data = { error: `HTTP ${res.status}` }; }
+          results.push({ table: item.table, name: item.name, success: res.ok && data.success !== false, error: data.error });
+        } catch (err: any) {
+          results.push({ table: item.table, name: item.name, success: false, error: err?.message || "Network error" });
+        }
       }
-      if (!res.ok) throw new Error(data.error || "Translation failed");
-      // Log failure details for debugging
-      if (data.details) {
-        const failed = data.details.filter((d: any) => !d.success);
-        if (failed.length > 0) console.error("[translate-all] Failed records:", failed);
-      }
+
+      const successCount = results.filter((r) => r.success).length;
+      const failCount = results.filter((r) => !r.success).length;
       setBulkTranslateResult({
-        success: data.success,
-        translated: data.translated,
-        failed: data.failed,
-        total: data.total,
-        details: data.details,
+        success: failCount === 0,
+        translated: successCount,
+        failed: failCount,
+        total: results.length,
+        details: results,
       });
     } catch (err) {
       setBulkTranslateError(err instanceof Error ? err.message : "Translation failed");
     } finally {
       setBulkTranslating(false);
+      setBulkProgress("");
     }
   }
 
@@ -617,7 +643,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               ) : (
                 <Languages className="w-4 h-4" />
               )}
-              {bulkTranslating ? t("translateAllTranslating") : t("translateAllButton")}
+              {bulkTranslating ? (bulkProgress || t("translateAllTranslating")) : t("translateAllButton")}
             </button>
           </div>
         </div>
