@@ -47,7 +47,9 @@ import LiveVisitorBadge from "./LiveVisitorBadge";
 const SIDEBAR_W_COLLAPSED = 64;
 const SIDEBAR_W_EXPANDED = 240;
 const RIGHT_COL_W = 300;
+const RIGHT_COL_W_COLLAPSED = 48;
 const LS_KEY_PINNED = "drb_sidebar_pinned";
+const LS_KEY_RIGHT_PINNED = "drb_rightcol_pinned";
 
 interface AdminShellProps {
   clientName: string;
@@ -473,6 +475,24 @@ const AdminShell = ({
   const sidebarExpanded = pinned || hovered;
   const sidebarWidth = sidebarExpanded ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED;
 
+  // Right column pin state (persisted in localStorage)
+  const [rightPinned, setRightPinned] = useState(true);
+  const [rightHovered, setRightHovered] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(LS_KEY_RIGHT_PINNED);
+    if (stored !== null) setRightPinned(stored === "true");
+  }, []);
+
+  const toggleRightPin = () => {
+    const next = !rightPinned;
+    setRightPinned(next);
+    localStorage.setItem(LS_KEY_RIGHT_PINNED, String(next));
+  };
+
+  const rightColExpanded = rightPinned || rightHovered;
+  const rightColWidth = rightColExpanded ? RIGHT_COL_W : RIGHT_COL_W_COLLAPSED;
+
   // Nav items grouped with separators between groups
   const navGroups: NavItem[][] = [
     // Home
@@ -528,22 +548,47 @@ const AdminShell = ({
       />
 
       {/* ========== DESKTOP RIGHT COLUMN (xl only) ========== */}
-      <aside
-        className="fixed end-0 top-0 bottom-0 hidden xl:flex flex-col z-40"
-        style={{ width: RIGHT_COL_W }}
+      <motion.aside
+        className="fixed end-0 top-0 bottom-0 hidden xl:flex flex-col z-40 overflow-hidden border-s border-gray-200/80 dark:border-white/[0.06]"
+        animate={{ width: rightColWidth }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+        onMouseEnter={() => setRightHovered(true)}
+        onMouseLeave={() => setRightHovered(false)}
       >
-        <AdminRightColumn
-          clientName={clientName}
-          clientEmail={clientEmail}
-          clienteId={clienteId}
-          logoUrl={logoUrl}
-          profilePhoto={profilePhoto}
-          primaryColor={primaryColor}
-          contactPhone={contactPhone}
-          agencyContext={agencyContext}
-          plan={plan}
-        />
-      </aside>
+        {/* Pin/Unpin toggle */}
+        <div className="flex justify-start px-2 pt-2 shrink-0" style={{ minWidth: RIGHT_COL_W }}>
+          <button
+            onClick={toggleRightPin}
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+            title={rightPinned ? tc("unpin") : tc("pin")}
+          >
+            {rightPinned ? (
+              <Pin className="w-3.5 h-3.5 text-drb-turquoise-500" />
+            ) : (
+              <PinOff className="w-3.5 h-3.5 text-gray-400 dark:text-white/40" />
+            )}
+          </button>
+        </div>
+        {rightColExpanded ? (
+          <div className="flex-1 overflow-hidden" style={{ minWidth: RIGHT_COL_W }}>
+            <AdminRightColumn
+              clientName={clientName}
+              clientEmail={clientEmail}
+              clienteId={clienteId}
+              logoUrl={logoUrl}
+              profilePhoto={profilePhoto}
+              primaryColor={primaryColor}
+              contactPhone={contactPhone}
+              agencyContext={agencyContext}
+              plan={plan}
+            />
+          </div>
+        ) : (
+          <div className="flex-1 flex flex-col items-center pt-3 gap-3">
+            <MessageCircle className="w-5 h-5 text-drb-turquoise-500" />
+          </div>
+        )}
+      </motion.aside>
 
       {/* ========== HEADER ========== */}
       <header
@@ -561,7 +606,7 @@ const AdminShell = ({
             header { --sidebar-w: 0px; }
           }
           @media (min-width: 1280px) {
-            header { --right-col-w: ${RIGHT_COL_W}px; }
+            header { --right-col-w: ${rightColWidth}px; }
           }
         `}</style>
         <div className="flex items-center justify-between px-4 lg:px-6 h-16">
@@ -665,7 +710,7 @@ const AdminShell = ({
             main { --main-sidebar-w: ${sidebarWidth}px; }
           }
           @media (min-width: 1280px) {
-            main { --main-right-w: ${RIGHT_COL_W}px; }
+            main { --main-right-w: ${rightColWidth}px; }
           }
         `}</style>
         {/* Subtle mountain landscape background */}
