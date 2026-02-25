@@ -9,7 +9,7 @@ import {
   type FieldType,
 } from "@/lib/translations";
 
-export const maxDuration = 60;
+export const maxDuration = 180;
 
 const FIELD_MAPS: Record<string, Record<string, FieldType>> = {
   clientes: TRANSLATABLE_CLIENT_FIELDS,

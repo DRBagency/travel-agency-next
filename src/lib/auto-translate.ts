@@ -117,8 +117,8 @@ export async function autoTranslateRecord(
   try {
     const anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
-      maxRetries: 1,
-      timeout: 45_000,
+      maxRetries: 2,      // retry on 529/503 (API overloaded) — SDK handles backoff
+      timeout: 150_000,   // 2.5 min — generous for large JSONB (itinerario etc.)
     });
 
     const targetLangList = langs
@@ -136,22 +136,12 @@ export async function autoTranslateRecord(
     const changedFields = Object.keys(toTranslate).join(",");
     console.log(`[translate] Starting ${table}/${recordId} → ${langs.join(",")}, changed: ${changedFields} (${skippedCount} unchanged)`);
 
-    // Use Haiku as primary (fast + reliable), Sonnet as fallback
-    let response;
-    try {
-      response = await anthropic.messages.create({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 8192,
-        messages: [{ role: "user", content: prompt }],
-      });
-    } catch (haikuErr: any) {
-      console.log(`[translate] Haiku failed (${haikuErr?.status}), trying Sonnet for ${table}/${recordId}`);
-      response = await anthropic.messages.create({
-        model: "claude-sonnet-4-6",
-        max_tokens: 8192,
-        messages: [{ role: "user", content: prompt }],
-      });
-    }
+    // Single model (Haiku) — no fallback to avoid doubling time on failure
+    const response = await anthropic.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 8192,
+      messages: [{ role: "user", content: prompt }],
+    });
 
     // Check if response was truncated
     if (response.stop_reason === "max_tokens") {
