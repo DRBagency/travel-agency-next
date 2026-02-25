@@ -9,25 +9,59 @@ import DestinoCreateForm from "./DestinoCreateForm";
 import { MapPin, Trash2, Sparkles } from "lucide-react";
 import { getTranslations } from 'next-intl/server';
 
+function safeJsonParse(raw: string | null): any {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    // Treat empty arrays/objects as null to keep DB clean
+    if (Array.isArray(parsed) && parsed.length === 0) return null;
+    if (typeof parsed === "object" && parsed !== null && Object.keys(parsed).length === 0) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 async function createDestino(formData: FormData) {
   "use server";
 
   const clientId = (await cookies()).get("cliente_id")?.value;
   if (!clientId) return;
 
-  const itinerarioRaw = formData.get("itinerario") as string | null;
-
   const payload: Record<string, any> = {
     cliente_id: clientId,
     nombre: (formData.get("nombre") as string) || null,
     descripcion: (formData.get("descripcion") as string) || null,
+    descripcion_larga: (formData.get("descripcion_larga") as string) || null,
+    subtitle: (formData.get("subtitle") as string) || null,
+    tagline: (formData.get("tagline") as string) || null,
+    badge: (formData.get("badge") as string) || null,
+    pais: (formData.get("pais") as string) || null,
+    continente: (formData.get("continente") as string) || null,
+    categoria: (formData.get("categoria") as string) || null,
+    dificultad: (formData.get("dificultad") as string) || null,
+    duracion: (formData.get("duracion") as string) || null,
+    esfuerzo: Number(formData.get("esfuerzo") || 0) || null,
+    grupo_max: Number(formData.get("grupo_max") || 0) || null,
+    edad_min: Number(formData.get("edad_min") || 0) || null,
+    edad_max: Number(formData.get("edad_max") || 0) || null,
     precio: Number(formData.get("precio") || 0) || 0,
+    precio_original: Number(formData.get("precio_original") || 0) || null,
     precio_adulto: Number(formData.get("precio_adulto") || 0) || 0,
     precio_nino: Number(formData.get("precio_nino") || 0) || 0,
     precio_grupo: Number(formData.get("precio_grupo") || 0) || 0,
     imagen_url: (formData.get("imagen_url") as string) || null,
     activo: formData.get("activo") === "on",
-    itinerario: itinerarioRaw ? JSON.parse(itinerarioRaw) : null,
+    itinerario: safeJsonParse(formData.get("itinerario") as string | null),
+    tags: safeJsonParse(formData.get("tags") as string | null),
+    highlights: safeJsonParse(formData.get("highlights") as string | null),
+    clima: safeJsonParse(formData.get("clima") as string | null),
+    hotel: safeJsonParse(formData.get("hotel") as string | null),
+    vuelos: safeJsonParse(formData.get("vuelos") as string | null),
+    coordinador: safeJsonParse(formData.get("coordinador") as string | null),
+    incluido: safeJsonParse(formData.get("incluido") as string | null),
+    no_incluido: safeJsonParse(formData.get("no_incluido") as string | null),
+    faqs: safeJsonParse(formData.get("faqs") as string | null),
     latitude: formData.get("latitude") ? Number(formData.get("latitude")) : null,
     longitude: formData.get("longitude") ? Number(formData.get("longitude")) : null,
   };

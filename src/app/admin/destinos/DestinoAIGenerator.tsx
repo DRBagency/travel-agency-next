@@ -49,8 +49,31 @@ const TIPOS_GRUPO = ["solo", "pareja", "familia", "amigos", "negocios"];
 interface GeneratedData {
   nombre: string;
   descripcion: string;
+  descripcion_larga: string;
+  subtitle: string;
+  tagline: string;
+  badge: string;
+  pais: string;
+  continente: string;
+  categoria: string;
+  dificultad: string;
+  duracion: string;
+  esfuerzo: number;
+  grupo_max: number;
+  edad_min: number;
+  edad_max: number;
   precio: number;
+  precio_original: number;
   imagenUrl: string;
+  tags: string[];
+  highlights: string[];
+  clima: any;
+  hotel: any;
+  vuelos: any;
+  coordinador: any;
+  incluido: string[];
+  no_incluido: string[];
+  faqs: any[];
   itinerario: any;
 }
 
@@ -130,25 +153,40 @@ ${form.notas ? `- Notas adicionales: ${form.notas}` : ""}`;
       const priceStr = itinerary?.precio_total_estimado || itinerary?.estimated_price || "";
       const precio = parseFloat(String(priceStr).replace(/[^0-9.]/g, "")) || 0;
 
-      const bestSeason = itinerary?.mejor_epoca || itinerary?.best_season || "";
-      const clima = itinerary?.clima || itinerary?.weather || "";
-      const tips = itinerary?.tips_generales || itinerary?.general_tips || [];
-      const firstTip = Array.isArray(tips) ? tips[0] || "" : String(tips);
-
-      const descripcionParts = [bestSeason, clima, firstTip].filter(Boolean);
-      const descripcion =
-        descripcionParts.length > 0
-          ? descripcionParts.join(". ").slice(0, 300)
-          : "";
+      const precioOriginalStr = itinerary?.precio_original || "";
+      const precioOriginal = parseFloat(String(precioOriginalStr).replace(/[^0-9.]/g, "")) || 0;
 
       const imagenUrl = images?.photos?.[0]?.url_regular || "";
 
       onGenerated({
-        nombre: form.pais,
-        descripcion,
+        nombre: itinerary?.nombre || form.pais,
+        descripcion: itinerary?.descripcion || "",
+        descripcion_larga: itinerary?.descripcion_larga || "",
+        subtitle: itinerary?.subtitle || "",
+        tagline: itinerary?.tagline || "",
+        badge: itinerary?.badge || "",
+        pais: itinerary?.pais || form.pais,
+        continente: itinerary?.continente || "",
+        categoria: itinerary?.categoria || "",
+        dificultad: itinerary?.dificultad || "",
+        duracion: itinerary?.duracion || `${form.duracion} noches`,
+        esfuerzo: Number(itinerary?.esfuerzo) || 0,
+        grupo_max: Number(itinerary?.grupo_max) || 0,
+        edad_min: Number(itinerary?.edad_min) || 0,
+        edad_max: Number(itinerary?.edad_max) || 0,
         precio,
+        precio_original: precioOriginal,
         imagenUrl,
-        itinerario: itinerary,
+        tags: Array.isArray(itinerary?.tags) ? itinerary.tags : [],
+        highlights: Array.isArray(itinerary?.highlights) ? itinerary.highlights : [],
+        clima: itinerary?.clima || null,
+        hotel: itinerary?.hotel || null,
+        vuelos: itinerary?.vuelos || null,
+        coordinador: itinerary?.coordinador || null,
+        incluido: Array.isArray(itinerary?.incluido) ? itinerary.incluido : [],
+        no_incluido: Array.isArray(itinerary?.no_incluido) ? itinerary.no_incluido : [],
+        faqs: Array.isArray(itinerary?.faqs) ? itinerary.faqs : [],
+        itinerario: itinerary?.itinerario || itinerary,
       });
 
       sileo.success({ title: t("aiGenerated") });

@@ -46,32 +46,90 @@ function stripCodeFences(text: string): string {
 
 function getSystemPrompt(action: AIAction, data: Record<string, any>): string {
   const prompts: Record<AIAction, string> = {
-    "generate-itinerary": `Eres un experto planificador de viajes de una agencia de viajes profesional. Genera itinerarios detallados día por día.
+    "generate-itinerary": `Eres un experto planificador de viajes y copywriter de una agencia de viajes profesional. Genera una ficha de destino COMPLETA con todos los campos necesarios para publicar el destino en la web de la agencia.
 
 INSTRUCCIONES:
-- Cada día debe tener actividades para mañana, tarde y noche
+- Genera TODOS los campos en una sola respuesta
+- "descripcion" debe ser corta (máximo 200 caracteres) para tarjetas de la landing
+- "descripcion_larga" debe tener 300-500 caracteres para la página de detalle del destino
+- "precio_total_estimado" y "precio_original" deben ser números como strings SIN símbolos de moneda (ej: "3190", no "3190€")
+- "esfuerzo" es un entero de 1 a 5 indicando esfuerzo físico
+- "tags" debe incluir 3-5 etiquetas relevantes al estilo del destino
+- "highlights" debe incluir 3-5 puntos clave de venta del destino
+- "faqs" debe incluir 3-4 preguntas y respuestas relevantes para el viajero
+- "incluido" y "no_incluido" deben ser listas completas y realistas
+- Cada día del itinerario debe tener actividades para mañana, tarde y noche
 - Incluye estimación de precios para cada actividad
 - Incluye tips locales y recomendaciones
-- Incluye información del clima y mejor época para visitar
+- Responde en el idioma de la descripción del destino (español por defecto)
 - Responde SIEMPRE en JSON válido con esta estructura exacta:
 {
-  "dias": [
-    {
-      "dia": 1,
-      "titulo": "Título del día",
-      "actividades": {
-        "manana": { "titulo": "...", "descripcion": "...", "precio_estimado": "...", "duracion": "...", "tipo": "cultura|naturaleza|gastronomia|relax|aventura|compras" },
-        "tarde": { "titulo": "...", "descripcion": "...", "precio_estimado": "...", "duracion": "...", "tipo": "..." },
-        "noche": { "titulo": "...", "descripcion": "...", "precio_estimado": "...", "duracion": "...", "tipo": "..." }
-      },
-      "tip_local": "..."
-    }
+  "nombre": "Nombre del destino",
+  "subtitle": "Frase corta evocadora",
+  "tagline": "Eslogan breve del destino",
+  "badge": "Bestseller|Nuevo|Oferta|Popular|Exclusivo",
+  "descripcion": "Descripción corta para tarjetas (máx 200 chars)",
+  "descripcion_larga": "Descripción larga y rica para la página de detalle del destino (300-500 chars)",
+  "pais": "País",
+  "continente": "Asia|Europa|América|África|Oceanía",
+  "categoria": "Aventura|Cultural|Relax|Gastronomía|Naturaleza|Urbano",
+  "dificultad": "Baja|Media|Alta",
+  "duracion": "X noches",
+  "esfuerzo": 3,
+  "grupo_max": 16,
+  "edad_min": 18,
+  "edad_max": 45,
+  "precio_total_estimado": "3190",
+  "precio_original": "3690",
+  "tags": ["Tag1", "Tag2", "Tag3"],
+  "highlights": ["Punto clave 1", "Punto clave 2", "Punto clave 3"],
+  "clima": {
+    "temp_avg": "28°C",
+    "best_months": "Abril - Octubre",
+    "description": "Descripción del clima del destino"
+  },
+  "hotel": {
+    "nombre": "Nombre del hotel",
+    "estrellas": 4,
+    "descripcion": "Descripción breve del hotel",
+    "amenidades": ["Piscina", "Spa", "Restaurante", "WiFi"]
+  },
+  "vuelos": {
+    "aeropuerto_llegada": "Nombre del aeropuerto (código IATA)",
+    "aeropuerto_regreso": "Nombre del aeropuerto (código IATA)",
+    "nota": "Nota sobre vuelos disponibles"
+  },
+  "coordinador": {
+    "nombre": "Nombre del coordinador",
+    "rol": "Coordinador local",
+    "descripcion": "Breve bio del coordinador",
+    "idiomas": ["Español", "Inglés"]
+  },
+  "incluido": ["Vuelos ida y vuelta", "Alojamiento X noches", "Desayunos diarios", "Transfers aeropuerto", "Guía en español", "Seguro de viaje"],
+  "no_incluido": ["Comidas no especificadas", "Gastos personales", "Propinas", "Visado"],
+  "faqs": [
+    {"pregunta": "Pregunta frecuente 1", "respuesta": "Respuesta detallada 1"},
+    {"pregunta": "Pregunta frecuente 2", "respuesta": "Respuesta detallada 2"},
+    {"pregunta": "Pregunta frecuente 3", "respuesta": "Respuesta detallada 3"}
   ],
-  "precio_total_estimado": "...",
-  "mejor_epoca": "...",
-  "clima": "...",
-  "tips_generales": ["...", "..."],
-  "que_llevar": ["...", "..."]
+  "itinerario": {
+    "dias": [
+      {
+        "dia": 1,
+        "titulo": "Título del día",
+        "actividades": {
+          "manana": { "titulo": "...", "descripcion": "...", "precio_estimado": "...", "duracion": "...", "tipo": "cultura|naturaleza|gastronomia|relax|aventura|compras" },
+          "tarde": { "titulo": "...", "descripcion": "...", "precio_estimado": "...", "duracion": "...", "tipo": "..." },
+          "noche": { "titulo": "...", "descripcion": "...", "precio_estimado": "...", "duracion": "...", "tipo": "..." }
+        },
+        "tip_local": "..."
+      }
+    ],
+    "mejor_epoca": "...",
+    "clima": "...",
+    "tips_generales": ["...", "..."],
+    "que_llevar": ["...", "..."]
+  }
 }
 
 No incluyas texto fuera del JSON. Solo responde con el JSON.`,
@@ -218,7 +276,7 @@ export async function POST(req: NextRequest) {
       "optimize-pricing": 1024,
       "free-chat": 2000,
       "owner-chat": 2000,
-      "generate-itinerary": 4096,
+      "generate-itinerary": 8000,
       "draft-email": 2048,
       "chatbot-response": 1024,
       "suggest-destinations": 1024,
