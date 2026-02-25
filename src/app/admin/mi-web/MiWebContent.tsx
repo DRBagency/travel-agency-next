@@ -22,6 +22,7 @@ import {
   Scale,
   MapPin,
   Globe,
+  Languages,
   RefreshCw,
   AlertCircle,
   type LucideIcon,
@@ -236,6 +237,16 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     field: string;
     defaultQuery: string;
   }>({ open: false, field: "", defaultQuery: "" });
+
+  // Bulk translate all state
+  const [bulkTranslating, setBulkTranslating] = useState(false);
+  const [bulkTranslateResult, setBulkTranslateResult] = useState<{
+    success: boolean;
+    translated: number;
+    failed: number;
+    total: number;
+  } | null>(null);
+  const [bulkTranslateError, setBulkTranslateError] = useState<string | null>(null);
 
   function toggleSection(key: SectionKey) {
     setOpenSections((prev) => {
@@ -495,6 +506,27 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     setWhyusItems((prev) => [...prev, { icon: "✨", title: "", desc: "" }]);
   }
 
+  async function handleBulkTranslateAll() {
+    setBulkTranslating(true);
+    setBulkTranslateResult(null);
+    setBulkTranslateError(null);
+    try {
+      const res = await fetch("/api/admin/translate/all", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Translation failed");
+      setBulkTranslateResult({
+        success: data.success,
+        translated: data.translated,
+        failed: data.failed,
+        total: data.total,
+      });
+    } catch (err) {
+      setBulkTranslateError(err instanceof Error ? err.message : "Translation failed");
+    } finally {
+      setBulkTranslating(false);
+    }
+  }
+
   return (
     <div className="space-y-3">
       {/* Header */}
@@ -527,6 +559,48 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
         <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-sm text-amber-700 dark:text-amber-300">
           <AlertCircle className="w-4 h-4" />
           Translation failed. Content saved successfully.
+        </div>
+      )}
+
+      {/* Bulk Translate All button — shown when translation is eligible */}
+      {translationEligible && (
+        <div className="panel-card p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center shrink-0">
+              <Languages className="w-4.5 h-4.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                {t("translateAllTitle")}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-white/50">
+                {t("translateAllDescription")}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            {bulkTranslateResult && (
+              <span className={`text-xs ${bulkTranslateResult.success ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
+                {bulkTranslateResult.translated}/{bulkTranslateResult.total} {t("translateAllTranslated")}
+                {bulkTranslateResult.failed > 0 && ` · ${bulkTranslateResult.failed} ${t("translateAllFailed")}`}
+              </span>
+            )}
+            {bulkTranslateError && (
+              <span className="text-xs text-red-600 dark:text-red-400">{bulkTranslateError}</span>
+            )}
+            <button
+              onClick={handleBulkTranslateAll}
+              disabled={bulkTranslating}
+              className="btn-primary disabled:opacity-50 flex items-center gap-2 text-sm"
+            >
+              {bulkTranslating ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Languages className="w-4 h-4" />
+              )}
+              {bulkTranslating ? t("translateAllTranslating") : t("translateAllButton")}
+            </button>
+          </div>
         </div>
       )}
 

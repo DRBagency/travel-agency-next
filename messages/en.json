@@ -870,7 +870,13 @@
       "published": "published",
       "publishedF": "published",
       "pages": "pages",
-      "errorSaving": "Error saving"
+      "errorSaving": "Error saving",
+      "translateAllTitle": "Translate all content",
+      "translateAllDescription": "Automatically translate all your content (website, destinations and reviews) to your selected languages.",
+      "translateAllButton": "Translate all",
+      "translateAllTranslating": "Translating...",
+      "translateAllTranslated": "translated",
+      "translateAllFailed": "failed"
     },
     "calendario": {
       "title": "Calendar",
@@ -1728,7 +1734,8 @@
       "titleHighlight": "travelers say",
       "whatSay": "What our",
       "ourTravelers": "travelers say",
-      "subtitle": "Thousands of clients have already trusted us for their vacations."
+      "subtitle": "Thousands of clients have already trusted us for their vacations.",
+      "tripTo": "Trip to {destination}"
     },
     "ctaBanner": {
       "readyNext": "Ready for your next trip?",
@@ -1781,7 +1788,8 @@
       "privacy": "Privacy",
       "cookies": "Cookies",
       "rights": "All rights reserved.",
-      "poweredBy": "Powered by"
+      "poweredBy": "Powered by",
+      "socialMedia": "Social media"
     },
     "destino": {
       "back": "Back to destinations",

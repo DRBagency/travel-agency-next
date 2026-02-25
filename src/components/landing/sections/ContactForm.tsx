@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { AnimateIn } from "../ui/AnimateIn";
 
@@ -29,10 +30,11 @@ export default function ContactForm({
   contactAddress,
   destinos = [],
   clienteId,
-  sectionTitle = "Escribenos",
-  sectionSubtitle = "¿Tienes preguntas? Estamos aqui para ayudarte a planificar tu viaje perfecto.",
+  sectionTitle,
+  sectionSubtitle,
 }: ContactFormProps) {
   const T = useLandingTheme();
+  const t = useTranslations('landing.contact');
 
   const [formData, setFormData] = useState({
     name: "",
@@ -140,7 +142,7 @@ export default function ContactForm({
                 letterSpacing: "-0.5px",
               }}
             >
-              {sectionTitle}
+              {sectionTitle || t('writeUs')}
             </h2>
             <p
               style={{
@@ -154,7 +156,7 @@ export default function ContactForm({
                 lineHeight: 1.6,
               }}
             >
-              {sectionSubtitle}
+              {sectionSubtitle || t('subtitle')}
             </p>
           </div>
         </AnimateIn>
@@ -189,7 +191,7 @@ export default function ContactForm({
               >
                 {/* Name */}
                 <div>
-                  <label style={labelStyle}>Nombre</label>
+                  <label style={labelStyle}>{t('nameLabel')}</label>
                   <input
                     type="text"
                     name="name"
@@ -197,7 +199,7 @@ export default function ContactForm({
                     onChange={handleChange}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
-                    placeholder="Tu nombre"
+                    placeholder={t('namePlaceholder')}
                     required
                     style={inputStyle}
                   />
@@ -205,7 +207,7 @@ export default function ContactForm({
 
                 {/* Email */}
                 <div>
-                  <label style={labelStyle}>Email</label>
+                  <label style={labelStyle}>{t('emailLabel')}</label>
                   <input
                     type="email"
                     name="email"
@@ -213,7 +215,7 @@ export default function ContactForm({
                     onChange={handleChange}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
-                    placeholder="tu@email.com"
+                    placeholder={t('emailPlaceholder')}
                     required
                     style={inputStyle}
                   />
@@ -221,7 +223,7 @@ export default function ContactForm({
 
                 {/* Phone */}
                 <div>
-                  <label style={labelStyle}>Telefono</label>
+                  <label style={labelStyle}>{t('phoneLabel')}</label>
                   <input
                     type="tel"
                     name="phone"
@@ -236,7 +238,7 @@ export default function ContactForm({
 
                 {/* Destination select */}
                 <div>
-                  <label style={labelStyle}>Destino de interes</label>
+                  <label style={labelStyle}>{t('selectDest')}</label>
                   <select
                     name="destination"
                     value={formData.destination}
@@ -252,7 +254,7 @@ export default function ContactForm({
                       paddingRight: 36,
                     }}
                   >
-                    <option value="">Selecciona un destino</option>
+                    <option value="">{t('selectDest')}</option>
                     {destinos.map((d) => (
                       <option key={d.id} value={d.slug}>
                         {d.nombre}
@@ -264,14 +266,14 @@ export default function ContactForm({
 
               {/* Message */}
               <div style={{ marginTop: 18 }}>
-                <label style={labelStyle}>Mensaje</label>
+                <label style={labelStyle}>{t('messageLabel')}</label>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   onFocus={handleFocus as any}
                   onBlur={handleBlur as any}
-                  placeholder="Cuentanos sobre tu viaje ideal..."
+                  placeholder={t('messagePlaceholder')}
                   rows={5}
                   required
                   style={{
@@ -320,12 +322,12 @@ export default function ContactForm({
                 }}
               >
                 {status === "sending"
-                  ? "Enviando..."
+                  ? t('sending')
                   : status === "sent"
-                  ? "✓ Mensaje enviado"
+                  ? `✓ ${t('successMessage')}`
                   : status === "error"
-                  ? "Error al enviar"
-                  : "Enviar mensaje"}
+                  ? "Error"
+                  : t('send')}
               </button>
             </form>
           </AnimateIn>
@@ -396,7 +398,7 @@ export default function ContactForm({
                       marginBottom: 2,
                     }}
                   >
-                    Email
+                    {t('emailLabel')}
                   </div>
                   <a
                     href={`mailto:${contactEmail}`}
@@ -468,7 +470,7 @@ export default function ContactForm({
                       marginBottom: 2,
                     }}
                   >
-                    Telefono
+                    {t('phoneLabel')}
                   </div>
                   <a
                     href={`tel:${contactPhone}`}
@@ -542,7 +544,7 @@ export default function ContactForm({
                         marginBottom: 2,
                       }}
                     >
-                      Direccion
+                      {t('addressLabel')}
                     </div>
                     <div
                       style={{

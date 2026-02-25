@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { AnimateIn } from "../ui/AnimateIn";
 import Link from "next/link";
@@ -29,11 +30,12 @@ interface DestinationsGridProps {
 
 export default function DestinationsGrid({
   destinos,
-  sectionTitle = "Destinos exclusivos",
-  sectionSubtitle = "Tu proxima aventura te espera",
+  sectionTitle,
+  sectionSubtitle,
   destinationBasePath = "/destino",
 }: DestinationsGridProps) {
   const T = useLandingTheme();
+  const t = useTranslations('landing.destinations');
 
   return (
     <section id="destinos" style={{ padding: "80px 24px" }}>
@@ -52,7 +54,7 @@ export default function DestinationsGrid({
                 letterSpacing: "-0.5px",
               }}
             >
-              {sectionTitle}
+              {sectionTitle || t('exclusiveDests')}
             </h2>
             <p
               style={{
@@ -66,7 +68,7 @@ export default function DestinationsGrid({
                 lineHeight: 1.6,
               }}
             >
-              {sectionSubtitle}
+              {sectionSubtitle || `${t('nextAdventure')} ${t('awaitsYou')}`}
             </p>
           </div>
         </AnimateIn>

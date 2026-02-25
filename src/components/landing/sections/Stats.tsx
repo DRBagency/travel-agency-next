@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { AnimateIn, useInView } from "../ui/AnimateIn";
 
@@ -68,13 +69,14 @@ export default function Stats({
   repeat = "92%",
 }: StatsProps) {
   const T = useLandingTheme();
+  const t = useTranslations('landing.stats');
   const [ref, visible] = useInView();
 
   const stats = [
-    { emoji: "🌍", value: travelers, label: "Viajeros felices" },
-    { emoji: "📍", value: destinations, label: "Destinos exclusivos" },
-    { emoji: "⭐", value: rating, label: "Valoracion media" },
-    { emoji: "🔁", value: repeat, label: "Repiten con nosotros" },
+    { emoji: "🌍", value: travelers, label: t('travelers') },
+    { emoji: "📍", value: destinations, label: t('uniqueDests') },
+    { emoji: "⭐", value: rating, label: t('avgRating') },
+    { emoji: "🔁", value: repeat, label: t('repeat') },
   ];
 
   return (

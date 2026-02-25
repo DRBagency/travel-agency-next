@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { AnimateIn } from "../ui/AnimateIn";
 
@@ -14,12 +15,17 @@ interface CtaBannerProps {
 }
 
 export default function CtaBanner({
-  title = "¿Listo para tu proxima aventura?",
-  description = "Reserva hoy y asegura tu plaza en los mejores destinos del mundo. Plazas limitadas, experiencias ilimitadas.",
-  ctaText = "Reservar ahora",
+  title,
+  description,
+  ctaText,
   ctaLink = "#contact",
 }: CtaBannerProps) {
   const T = useLandingTheme();
+  const t = useTranslations('landing.ctaBanner');
+
+  const resolvedTitle = title || t('readyNext');
+  const resolvedDescription = description || t('tellUs');
+  const resolvedCtaText = ctaText || t('getQuote');
 
   const handleClick = () => {
     if (ctaLink.startsWith("#")) {
@@ -84,7 +90,7 @@ export default function CtaBanner({
               zIndex: 1,
             }}
           >
-            {title}
+            {resolvedTitle}
           </h2>
 
           <p
@@ -102,7 +108,7 @@ export default function CtaBanner({
               zIndex: 1,
             }}
           >
-            {description}
+            {resolvedDescription}
           </p>
 
           <button
@@ -132,7 +138,7 @@ export default function CtaBanner({
               e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,.15)";
             }}
           >
-            {ctaText}
+            {resolvedCtaText}
           </button>
         </div>
       </AnimateIn>

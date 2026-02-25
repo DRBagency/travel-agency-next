@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, Fragment } from "react";
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { Img } from "../ui/Img";
 import { TagChip } from "../ui/TagChip";
@@ -66,6 +67,7 @@ export function DestinationDetail({
   tiktokUrl,
 }: DestinationDetailProps) {
   const T = useLandingTheme();
+  const t = useTranslations('landing.destino');
   const [tab, setTab] = useState("itinerary");
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [autoRotate, setAutoRotate] = useState(true);
@@ -118,19 +120,19 @@ export function DestinationDetail({
 
   /* ── Tabs config ── */
   const allTabs = [
-    { id: "itinerary", label: "Itinerario", icon: "\uD83D\uDDFA\uFE0F", show: itinerary.length > 0 },
-    { id: "hotel", label: "Hotel", icon: "\uD83C\uDFE8", show: !!hotel },
-    { id: "flight", label: "Vuelos", icon: "\u2708\uFE0F", show: !!flights },
-    { id: "gallery", label: "Galeria", icon: "\uD83D\uDDBC\uFE0F", show: gallery.length > 1 },
-    { id: "included", label: "Incluido", icon: "\u2705", show: included.length > 0 || notIncluded.length > 0 },
-    { id: "departures", label: "Salidas", icon: "\uD83D\uDCC5", show: departures.length > 0 },
-    { id: "coordinator", label: "Coordinador", icon: "\uD83D\uDC64", show: !!coordinator },
-    { id: "faq", label: "FAQ", icon: "\u2753", show: faqs.length > 0 },
-  ].filter((t) => t.show);
+    { id: "itinerary", label: t('tabItinerary'), icon: "\uD83D\uDDFA\uFE0F", show: itinerary.length > 0 },
+    { id: "hotel", label: t('tabHotel'), icon: "\uD83C\uDFE8", show: !!hotel },
+    { id: "flight", label: t('tabFlight'), icon: "\u2708\uFE0F", show: !!flights },
+    { id: "gallery", label: t('tabGallery'), icon: "\uD83D\uDDBC\uFE0F", show: gallery.length > 1 },
+    { id: "included", label: t('tabIncluded'), icon: "\u2705", show: included.length > 0 || notIncluded.length > 0 },
+    { id: "departures", label: t('tabDepartures'), icon: "\uD83D\uDCC5", show: departures.length > 0 },
+    { id: "coordinator", label: t('tabCoordinator'), icon: "\uD83D\uDC64", show: !!coordinator },
+    { id: "faq", label: t('tabFAQ'), icon: "\u2753", show: faqs.length > 0 },
+  ].filter((tb) => tb.show);
 
   // Set initial tab to first available
   useEffect(() => {
-    if (allTabs.length > 0 && !allTabs.find((t) => t.id === tab)) {
+    if (allTabs.length > 0 && !allTabs.find((tb) => tb.id === tab)) {
       setTab(allTabs[0].id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -208,7 +210,7 @@ export function DestinationDetail({
             e.currentTarget.style.color = T.sub;
           }}
         >
-          {"←"} Volver
+          {`← ${t('back')}`}
         </a>
 
         {/* Destination name (center) */}
@@ -250,7 +252,7 @@ export function DestinationDetail({
             e.currentTarget.style.boxShadow = "none";
           }}
         >
-          Reservar ahora {"→"}
+          {t('bookNow')} {"→"}
         </button>
       </div>
 
@@ -412,7 +414,7 @@ export function DestinationDetail({
                       e.currentTarget.style.boxShadow = `0 4px 20px ${T.accent}33`;
                     }}
                   >
-                    Reservar ahora
+                    {t('bookNow')}
                   </button>
 
                   {/* Secondary CTA — Volver */}
@@ -444,7 +446,7 @@ export function DestinationDetail({
                       e.currentTarget.style.transform = "none";
                     }}
                   >
-                    {"←"} Ver destinos
+                    {`← ${t('back')}`}
                   </a>
                 </div>
               </AnimateIn>
@@ -568,7 +570,7 @@ export function DestinationDetail({
                           marginTop: 2,
                         }}
                       >
-                        por persona
+                        {t('perPerson')}
                       </div>
                     </div>
                   </div>
@@ -647,7 +649,7 @@ export function DestinationDetail({
             {[
               {
                 value: destino.duracion || "",
-                sub: "Duracion",
+                sub: t('duration'),
                 icon: "\u23F1\uFE0F",
               },
               {
@@ -655,7 +657,7 @@ export function DestinationDetail({
                   ? `${destino.rating}`
                   : null,
                 sub: destino.reviews
-                  ? `${destino.reviews} opiniones`
+                  ? `${destino.reviews} ${t('reviews')}`
                   : "Rating",
                 icon: "\u2B50",
                 color: "#f59e0b",
@@ -664,7 +666,7 @@ export function DestinationDetail({
                 value: destino.grupo_max
                   ? `${destino.grupo_max} max`
                   : null,
-                sub: "Grupo",
+                sub: t('group'),
                 icon: "\uD83D\uDC65",
               },
               {
@@ -672,7 +674,7 @@ export function DestinationDetail({
                   destino.edad_min != null && destino.edad_max != null
                     ? `${destino.edad_min}-${destino.edad_max}`
                     : null,
-                sub: "Rango de edad",
+                sub: t('ageRange'),
                 icon: "\uD83C\uDF82",
               },
             ]
@@ -755,7 +757,7 @@ export function DestinationDetail({
                       margin: "5px 0 0",
                     }}
                   >
-                    Esfuerzo fisico
+                    {t('physicalEffort')}
                   </p>
                 </div>
               </>
@@ -934,7 +936,7 @@ export function DestinationDetail({
                     position: "relative",
                   }}
                 >
-                  {"¿"}Listo para {dTr("nombre")}?
+                  {`${t('readyFor')} ${dTr("nombre")}?`}
                 </h2>
                 <p
                   style={{
@@ -945,7 +947,7 @@ export function DestinationDetail({
                     position: "relative",
                   }}
                 >
-                  Por persona {"·"}{" "}
+                  {t('perPerson')} {"·"}{" "}
                   <strong style={{ color: T.lime }}>
                     {destino.precio}
                     {destino.moneda || "€"}
@@ -979,7 +981,7 @@ export function DestinationDetail({
                       "0 4px 24px rgba(212,242,77,.4)";
                   }}
                 >
-                  Reservar ahora {"→"}
+                  {t('bookNow')} {"→"}
                 </button>
               </div>
             </AnimateIn>

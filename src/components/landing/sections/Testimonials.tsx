@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { AnimateIn } from "../ui/AnimateIn";
 
@@ -36,11 +37,13 @@ const INITIAL_COLORS = [
 
 export default function Testimonials({
   opiniones,
-  sectionTitle = "Lo que dicen nuestros viajeros",
+  sectionTitle,
   sectionSubtitle,
   autoPlayInterval = 5000,
 }: TestimonialsProps) {
+  const t = useTranslations('landing.testimonials');
   const T = useLandingTheme();
+  const resolvedTitle = sectionTitle || `${t('whatSay')} ${t('ourTravelers')}`;
   const [current, setCurrent] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -94,7 +97,7 @@ export default function Testimonials({
                 letterSpacing: "-0.5px",
               }}
             >
-              {sectionTitle}
+              {resolvedTitle}
             </h2>
             {sectionSubtitle && (
               <p
@@ -237,7 +240,7 @@ export default function Testimonials({
                               color: T.muted,
                             }}
                           >
-                            Viaje a {op.destino}
+                            {t('tripTo', { destination: op.destino })}
                           </div>
                         )}
                       </div>

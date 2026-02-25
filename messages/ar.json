@@ -870,7 +870,13 @@
       "published": "منشور",
       "publishedF": "منشورة",
       "pages": "صفحات",
-      "errorSaving": "خطأ في الحفظ"
+      "errorSaving": "خطأ في الحفظ",
+      "translateAllTitle": "ترجمة كل المحتوى",
+      "translateAllDescription": "ترجم تلقائياً كل محتواك (الموقع والوجهات والتقييمات) إلى اللغات المحددة.",
+      "translateAllButton": "ترجمة الكل",
+      "translateAllTranslating": "جارٍ الترجمة...",
+      "translateAllTranslated": "مترجم",
+      "translateAllFailed": "فشل"
     },
     "calendario": {
       "title": "التقويم",
@@ -1728,7 +1734,8 @@
       "titleHighlight": "مسافرونا",
       "whatSay": "ماذا يقول",
       "ourTravelers": "مسافرونا",
-      "subtitle": "آلاف العملاء وثقوا بنا بالفعل لقضاء إجازاتهم."
+      "subtitle": "آلاف العملاء وثقوا بنا بالفعل لقضاء إجازاتهم.",
+      "tripTo": "رحلة إلى {destination}"
     },
     "ctaBanner": {
       "readyNext": "مستعد لرحلتك القادمة؟",
@@ -1781,7 +1788,8 @@
       "privacy": "الخصوصية",
       "cookies": "ملفات تعريف الارتباط",
       "rights": "جميع الحقوق محفوظة.",
-      "poweredBy": "مدعوم بواسطة"
+      "poweredBy": "مدعوم بواسطة",
+      "socialMedia": "وسائل التواصل الاجتماعي"
     },
     "destino": {
       "back": "العودة إلى الوجهات",

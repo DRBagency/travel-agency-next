@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { AnimateIn } from "../ui/AnimateIn";
 
@@ -24,20 +25,25 @@ interface HeroProps {
 }
 
 export default function Hero({
-  badge = "Agencia Premium",
+  badge,
   title,
   subtitle,
   description,
   imageUrl = "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80",
-  ctaText = "Reservar ahora",
+  ctaText,
   ctaLink = "#contact",
-  ctaTextSecondary = "Ver destinos",
+  ctaTextSecondary,
   ctaLinkSecondary = "#destinos",
   primaryColor,
   stats,
 }: HeroProps) {
   const T = useLandingTheme();
+  const t = useTranslations('landing.hero');
   const accent = primaryColor || T.accent;
+
+  const resolvedBadge = badge || t('badge');
+  const resolvedCtaText = ctaText || t('explore');
+  const resolvedCtaTextSecondary = ctaTextSecondary || t('ctaSecondary');
 
   const handleClick = (href: string) => {
     if (href.startsWith("#")) {
@@ -102,7 +108,7 @@ export default function Hero({
         {/* LEFT */}
         <div>
           <AnimateIn delay={0}>
-            {badge && (
+            {resolvedBadge && (
               <span
                 style={{
                   display: "inline-block",
@@ -118,7 +124,7 @@ export default function Hero({
                   border: `1px solid ${accent}30`,
                 }}
               >
-                {badge}
+                {resolvedBadge}
               </span>
             )}
           </AnimateIn>
@@ -205,7 +211,7 @@ export default function Hero({
                   e.currentTarget.style.boxShadow = `0 4px 20px ${accent}33`;
                 }}
               >
-                {ctaText}
+                {resolvedCtaText}
               </button>
 
               {/* Secondary CTA */}
@@ -235,7 +241,7 @@ export default function Hero({
                   e.currentTarget.style.transform = "none";
                 }}
               >
-                {ctaTextSecondary}
+                {resolvedCtaTextSecondary}
               </button>
             </div>
           </AnimateIn>
@@ -306,7 +312,7 @@ export default function Hero({
                       marginTop: 2,
                     }}
                   >
-                    Valoracion
+                    {t('statsRating')}
                   </div>
                 </div>
               </div>
@@ -353,7 +359,7 @@ export default function Hero({
                       marginTop: 2,
                     }}
                   >
-                    Viajeros felices
+                    {t('statsTravelers')}
                   </div>
                 </div>
               </div>

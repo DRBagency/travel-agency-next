@@ -870,7 +870,13 @@
       "published": "publicados",
       "publishedF": "publicadas",
       "pages": "páginas",
-      "errorSaving": "Error al guardar"
+      "errorSaving": "Error al guardar",
+      "translateAllTitle": "Traducir todo el contenido",
+      "translateAllDescription": "Traduce automáticamente todo tu contenido (web, destinos y opiniones) a los idiomas seleccionados.",
+      "translateAllButton": "Traducir todo",
+      "translateAllTranslating": "Traduciendo...",
+      "translateAllTranslated": "traducidos",
+      "translateAllFailed": "fallidos"
     },
     "calendario": {
       "title": "Calendario",
@@ -1728,7 +1734,8 @@
       "titleHighlight": "viajeros",
       "whatSay": "Lo que dicen nuestros",
       "ourTravelers": "viajeros",
-      "subtitle": "Miles de clientes ya han confiado en nosotros para sus vacaciones."
+      "subtitle": "Miles de clientes ya han confiado en nosotros para sus vacaciones.",
+      "tripTo": "Viaje a {destination}"
     },
     "ctaBanner": {
       "readyNext": "¿Listo para tu próximo viaje?",
@@ -1781,7 +1788,8 @@
       "privacy": "Privacidad",
       "cookies": "Cookies",
       "rights": "Todos los derechos reservados.",
-      "poweredBy": "Powered by"
+      "poweredBy": "Powered by",
+      "socialMedia": "Redes sociales"
     },
     "destino": {
       "back": "Volver a destinos",

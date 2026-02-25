@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { AnimateIn } from "../ui/AnimateIn";
 
@@ -18,40 +19,39 @@ interface WhyUsProps {
   sectionSubtitle?: string;
 }
 
-const DEFAULT_ITEMS: WhyUsItem[] = [
-  {
-    icon: "🛡️",
-    title: "Seguridad total",
-    description:
-      "Viaja con la tranquilidad de saber que cada detalle esta cubierto. Seguro completo incluido en todos nuestros viajes.",
-  },
-  {
-    icon: "💎",
-    title: "Experiencias unicas",
-    description:
-      "Acceso a experiencias exclusivas y destinos seleccionados que no encontraras en otras agencias.",
-  },
-  {
-    icon: "🤝",
-    title: "Atencion personalizada",
-    description:
-      "Un equipo dedicado a ti desde el primer momento. Te acompanamos antes, durante y despues del viaje.",
-  },
-  {
-    icon: "💰",
-    title: "Mejor precio garantizado",
-    description:
-      "Precios competitivos sin comprometer la calidad. Si encuentras un precio mejor, lo igualamos.",
-  },
-];
-
 export default function WhyUs({
   items,
-  sectionTitle = "¿Por que elegirnos?",
+  sectionTitle,
   sectionSubtitle,
 }: WhyUsProps) {
+  const t = useTranslations('landing.whyus');
   const T = useLandingTheme();
-  const cards = items && items.length > 0 ? items.slice(0, 4) : DEFAULT_ITEMS;
+
+  const defaultItems: WhyUsItem[] = [
+    {
+      icon: "🛡️",
+      title: t('card1Title'),
+      description: t('card1Desc'),
+    },
+    {
+      icon: "💎",
+      title: t('card2Title'),
+      description: t('card2Desc'),
+    },
+    {
+      icon: "🤝",
+      title: t('card3Title'),
+      description: t('card3Desc'),
+    },
+    {
+      icon: "💰",
+      title: t('card4Title'),
+      description: t('card4Desc'),
+    },
+  ];
+
+  const resolvedTitle = sectionTitle || t('badge');
+  const cards = items && items.length > 0 ? items.slice(0, 4) : defaultItems;
 
   return (
     <section id="why" style={{ padding: "80px 24px" }}>
@@ -70,7 +70,7 @@ export default function WhyUs({
                 letterSpacing: "-0.5px",
               }}
             >
-              {sectionTitle}
+              {resolvedTitle}
             </h2>
             {sectionSubtitle && (
               <p

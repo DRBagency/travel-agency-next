@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { useLandingTheme, useLandingMode } from "../LandingThemeProvider";
 import Link from "next/link";
 
@@ -20,18 +21,11 @@ interface NavbarProps {
   homeUrl?: string;
 }
 
-const NAV_LINKS = [
-  { label: "Destinos", href: "#destinos" },
-  { label: "Por qué nosotros", href: "#why" },
-  { label: "Testimonios", href: "#testimonials" },
-  { label: "Contacto", href: "#contact" },
-];
-
 export default function Navbar({
   clientName,
   logoUrl,
   primaryColor,
-  ctaText = "Reservar",
+  ctaText,
   ctaLink = "#contact",
   darkModeEnabled = true,
   lang = "ES",
@@ -39,8 +33,18 @@ export default function Navbar({
   onLangChange,
   homeUrl = "/",
 }: NavbarProps) {
+  const t = useTranslations('landing.navbar');
   const T = useLandingTheme();
   const { mode, toggleTheme } = useLandingMode();
+
+  const navLinks = [
+    { label: t('destinations'), href: "#destinos" },
+    { label: t('whyUs'), href: "#why" },
+    { label: t('testimonials'), href: "#testimonials" },
+    { label: t('contact'), href: "#contact" },
+  ];
+
+  const resolvedCtaText = ctaText || t('book');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
@@ -135,7 +139,7 @@ export default function Navbar({
             }}
             className="navbar-desktop-links"
           >
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -336,7 +340,7 @@ export default function Navbar({
                 e.currentTarget.style.boxShadow = `0 4px 16px ${accent}33`;
               }}
             >
-              {ctaText}
+              {resolvedCtaText}
             </a>
 
             {/* Hamburger (mobile) */}
@@ -410,7 +414,7 @@ export default function Navbar({
             animation: "fadeIn .3s ease",
           }}
         >
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -519,7 +523,7 @@ export default function Navbar({
               boxShadow: `0 4px 16px ${accent}33`,
             }}
           >
-            {ctaText}
+            {resolvedCtaText}
           </a>
         </div>
       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLandingTheme } from "../LandingThemeProvider";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 const FONT = `var(--font-syne), Syne, sans-serif`;
@@ -42,12 +43,13 @@ export default function Footer({
   tiktokUrl,
 }: FooterProps) {
   const T = useLandingTheme();
+  const t = useTranslations('landing');
   const year = new Date().getFullYear();
 
   const navLinks = [
-    { label: "Por qué nosotros", href: "#why" },
-    { label: "Testimonios", href: "#testimonials" },
-    { label: "Contacto", href: "#contact" },
+    { label: t('navbar.whyUs'), href: "#why" },
+    { label: t('navbar.testimonials'), href: "#testimonials" },
+    { label: t('navbar.contact'), href: "#contact" },
   ];
 
   const handleAnchorClick = (href: string) => {
@@ -145,7 +147,7 @@ export default function Footer({
                 letterSpacing: ".2px",
               }}
             >
-              Destinos
+              {t('footer.destinations')}
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {destinos.slice(0, 6).map((d) => (
@@ -183,7 +185,7 @@ export default function Footer({
                 letterSpacing: ".2px",
               }}
             >
-              Navegacion
+              {t('footer.navigation')}
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {navLinks.map((link) => (
@@ -226,7 +228,7 @@ export default function Footer({
                 letterSpacing: ".2px",
               }}
             >
-              Redes sociales
+              {t('footer.socialMedia')}
             </h4>
             <div style={{ display: "flex", gap: 12 }}>
               {instagramUrl && (
@@ -388,7 +390,7 @@ export default function Footer({
               margin: 0,
             }}
           >
-            &copy; {year} {clientName}. Todos los derechos reservados.
+            &copy; {year} {clientName}. {t('footer.rights')}
           </p>
 
           {paginasLegales.length > 0 && (
