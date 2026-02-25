@@ -70,7 +70,7 @@ export default async function DestinoPage({
     await Promise.all([
       supabaseAdmin
         .from("destinos")
-        .select("id, slug, nombre")
+        .select("id, slug, nombre, translations")
         .eq("cliente_id", client.id)
         .eq("activo", true),
       supabaseAdmin
@@ -112,6 +112,7 @@ export default async function DestinoPage({
           }
           homeUrl="/"
           footerDescription={client.footer_description}
+          clientTranslations={client.translations}
           allDestinos={allDestinos ?? []}
           paginasLegales={paginasLegales ?? []}
           legalBasePath="/legal"

@@ -17,7 +17,7 @@ import { TabFaqs } from "./TabFaqs";
 import BookingModal from "../booking/BookingModal";
 import Footer from "../sections/Footer";
 import Navbar from "../sections/Navbar";
-import { makeTr } from "@/lib/translations";
+import { makeTr, tr } from "@/lib/translations";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -44,6 +44,7 @@ interface DestinationDetailProps {
   facebookUrl?: string;
   tiktokUrl?: string;
   allMessages?: Record<string, any>;
+  clientTranslations?: Record<string, any>;
 }
 
 export function DestinationDetail(props: DestinationDetailProps) {
@@ -94,6 +95,7 @@ function DestinationDetailInner({
   instagramUrl,
   facebookUrl,
   tiktokUrl,
+  clientTranslations,
   currentLang,
   onLangChange,
 }: DestinationDetailProps & { currentLang: string; onLangChange: (l: string) => void }) {
@@ -107,6 +109,10 @@ function DestinationDetailInner({
 
   // Translation helper
   const dTr = makeTr(destino, currentLang, preferredLanguage);
+
+  // Client-level translation helper (for footer_description etc.)
+  const clientObj = { footer_description: footerDescription, translations: clientTranslations };
+  const translatedFooterDesc = tr(clientObj, 'footer_description', currentLang, preferredLanguage) || footerDescription;
 
   /* ── Parse JSONB fields safely ── */
   const gallery: string[] =
@@ -129,8 +135,8 @@ function DestinationDetailInner({
     return () => clearInterval(timer);
   }, [autoRotate, gallery.length]);
 
-  // Raw itinerary data (pass full object to TabItinerary)
-  const rawItinerario = destino.itinerario;
+  // Use translated JSONB fields when available
+  const rawItinerario = dTr("itinerario") || destino.itinerario;
   // Simplified array for ItineraryMap and tab visibility check
   const itinerary: any[] = Array.isArray(rawItinerario)
     ? rawItinerario
@@ -141,20 +147,29 @@ function DestinationDetailInner({
         }))
       : [];
 
-  const hotel: any = destino.hotel || null;
-  const flights: any = destino.vuelos || null;
-  const included: string[] = Array.isArray(destino.incluido)
-    ? destino.incluido
-    : [];
-  const notIncluded: string[] = Array.isArray(destino.no_incluido)
-    ? destino.no_incluido
-    : [];
-  const departures: any[] = Array.isArray(destino.salidas)
-    ? destino.salidas
-    : [];
-  const coordinator: any = destino.coordinador || null;
-  const faqs: any[] = Array.isArray(destino.faqs) ? destino.faqs : [];
-  const tags: string[] = Array.isArray(destino.tags) ? destino.tags : [];
+  const hotel: any = dTr("hotel") || destino.hotel || null;
+  const flights: any = dTr("vuelos") || destino.vuelos || null;
+  const included: string[] = (() => {
+    const v = dTr("incluido");
+    return Array.isArray(v) ? v : Array.isArray(destino.incluido) ? destino.incluido : [];
+  })();
+  const notIncluded: string[] = (() => {
+    const v = dTr("no_incluido");
+    return Array.isArray(v) ? v : Array.isArray(destino.no_incluido) ? destino.no_incluido : [];
+  })();
+  const departures: any[] = (() => {
+    const v = dTr("salidas");
+    return Array.isArray(v) ? v : Array.isArray(destino.salidas) ? destino.salidas : [];
+  })();
+  const coordinator: any = dTr("coordinador") || destino.coordinador || null;
+  const faqs: any[] = (() => {
+    const v = dTr("faqs");
+    return Array.isArray(v) ? v : Array.isArray(destino.faqs) ? destino.faqs : [];
+  })();
+  const tags: string[] = (() => {
+    const v = dTr("tags");
+    return Array.isArray(v) ? v : Array.isArray(destino.tags) ? destino.tags : [];
+  })();
 
   /* ── Tabs config ── */
   const allTabs = [
@@ -364,7 +379,7 @@ function DestinationDetailInner({
                       border: `1px solid ${T.accent}30`,
                     }}
                   >
-                    {destino.continente ? `${destino.continente} · ` : ""}{destino.pais}
+                    {dTr("continente") ? `${dTr("continente")} · ` : ""}{dTr("pais") || destino.pais}
                   </span>
                 )}
               </AnimateIn>
@@ -643,7 +658,7 @@ function DestinationDetailInner({
                         lineHeight: 1.2,
                       }}
                     >
-                      {destino.badge || "No te lo pierdas"}
+                      {dTr("badge") || destino.badge || "No te lo pierdas"}
                     </div>
                     <div
                       style={{
@@ -653,7 +668,7 @@ function DestinationDetailInner({
                         marginTop: 2,
                       }}
                     >
-                      {destino.duracion || "Experiencia unica"}
+                      {dTr("duracion") || destino.duracion || "Experiencia unica"}
                     </div>
                   </div>
                 </div>
@@ -685,7 +700,7 @@ function DestinationDetailInner({
           >
             {[
               {
-                value: destino.duracion || "",
+                value: dTr("duracion") || destino.duracion || "",
                 sub: t('duration'),
                 icon: "\u23F1\uFE0F",
               },
@@ -983,7 +998,7 @@ function DestinationDetailInner({
                     {destino.precio}
                     {destino.moneda || "€"}
                   </strong>{" "}
-                  {"·"} {destino.duracion}
+                  {"·"} {dTr("duracion") || destino.duracion}
                 </p>
                 <button
                   onClick={() => openBooking()}
@@ -1025,8 +1040,8 @@ function DestinationDetailInner({
         <Footer
           clientName={clientName}
           logoUrl={logoUrl}
-          footerDescription={footerDescription}
-          destinos={allDestinos.map((d: any) => ({ slug: d.slug || d.id, nombre: d.nombre }))}
+          footerDescription={translatedFooterDesc}
+          destinos={allDestinos.map((d: any) => ({ slug: d.slug || d.id, nombre: tr(d, 'nombre', currentLang, preferredLanguage) || d.nombre }))}
           paginasLegales={paginasLegales.map((p: any) => ({ slug: p.slug, titulo: p.titulo }))}
           legalBasePath={legalBasePath}
           destinationBasePath={destinationBasePath}
@@ -1042,6 +1057,7 @@ function DestinationDetailInner({
           destination={destino}
           initialDeparture={initialDeparture}
           onClose={closeBooking}
+          lang={currentLang}
         />
       )}
 

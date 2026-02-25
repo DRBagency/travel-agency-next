@@ -1797,6 +1797,7 @@
       "socialMedia": "Social media"
     },
     "destino": {
+      "dayLabel": "Day {n}",
       "back": "Back to destinations",
       "mySpace": "My space",
       "tabItinerary": "Itinerary",

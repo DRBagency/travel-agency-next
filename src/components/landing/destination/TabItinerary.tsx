@@ -209,9 +209,9 @@ export function TabItinerary({ rawItinerario }: TabItineraryProps) {
                     src={dayImage}
                     alt={dayTitle}
                     style={{
-                      width: 52,
-                      height: 52,
-                      borderRadius: 10,
+                      width: 90,
+                      height: 90,
+                      borderRadius: 14,
                       objectFit: "cover",
                       flexShrink: 0,
                       border: `1.5px solid ${T.border}`,

@@ -1797,6 +1797,7 @@
       "socialMedia": "وسائل التواصل الاجتماعي"
     },
     "destino": {
+      "dayLabel": "اليوم {n}",
       "back": "العودة إلى الوجهات",
       "mySpace": "مساحتي",
       "tabItinerary": "البرنامج",

@@ -110,6 +110,55 @@ const translations = {
     passport: "Passport",
     nie: "NIE",
   },
+  ar: {
+    s1: "المغادرة والمسافرون",
+    s2: "بيانات المسافرين",
+    s3: "الملخص",
+    s4: "الدفع",
+    sDep: "اختر تاريخ المغادرة",
+    sAd: "بالغون",
+    sCh: "أطفال",
+    sNx: "متابعة",
+    sBk: "رجوع",
+    sFn: "الاسم الكامل",
+    sEm: "البريد الإلكتروني",
+    sPh: "الهاتف",
+    sDt: "نوع الوثيقة",
+    sDn: "رقم الوثيقة",
+    sDb: "تاريخ الميلاد",
+    sNt: "الجنسية",
+    sMc: "جهة الاتصال الرئيسية",
+    sCo: "مرافق",
+    sSm: "ملخص الحجز",
+    sDs: "الوجهة",
+    sFd: "تاريخ المغادرة",
+    sDu: "المدة",
+    sTv: "المسافرون",
+    sDp: "عربون للحجز (٢٠٠€/شخص)",
+    sTt: "إجمالي الرحلة",
+    sSc: "دفع مشفر وآمن عبر Stripe",
+    sPy: "ادفع",
+    sCd: "رقم البطاقة",
+    sEx: "تاريخ الانتهاء",
+    sCv: "CVV",
+    sHl: "حامل البطاقة",
+    sCt: "تم تأكيد الحجز!",
+    sCm: "ستتلقى بريداً إلكترونياً بجميع التفاصيل. سيتواصل معك المنسق قريباً.",
+    sCl: "العودة إلى الوجهة",
+    sSp: "أماكن متاحة",
+    conf: "مؤكد",
+    last: "أماكن أخيرة",
+    sold: "نفدت",
+    pp: "للشخص",
+    sUnit: "سعر الوحدة",
+    sDeposit: "العربون",
+    adults: "بالغ(ون)",
+    children: "طفل/أطفال",
+    passenger: "مسافر",
+    dni: "DNI",
+    passport: "جواز سفر",
+    nie: "NIE",
+  },
 };
 
 /* ─── Types ─── */
@@ -144,7 +193,7 @@ interface BookingModalProps {
   destination: any;
   initialDeparture?: any;
   onClose: () => void;
-  lang?: "es" | "en";
+  lang?: string;
 }
 
 /* ─── Keyframes injected once ─── */
@@ -171,7 +220,7 @@ export default function BookingModal({
   lang = "es",
 }: BookingModalProps) {
   const T = useLandingTheme();
-  const t = translations[lang] || translations.es;
+  const t = (translations as any)[lang] || translations.es;
 
   /* ── State ── */
   const [step, setStep] = useState(1);
