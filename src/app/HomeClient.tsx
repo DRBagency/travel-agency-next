@@ -133,7 +133,7 @@ export default function HomeClient({
           onLangChange={(l) => {
             const newLang = l.toLowerCase();
             setCurrentLang(newLang);
-            document.cookie = `NEXT_LOCALE=${newLang};path=/;max-age=31536000`;
+            document.cookie = `NEXT_LOCALE_LANDING=${newLang};path=/;max-age=31536000`;
           }}
           homeUrl={homeUrl}
         />

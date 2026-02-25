@@ -61,7 +61,7 @@ export function DestinationDetail(props: DestinationDetailProps) {
   const handleLangChange = (l: string) => {
     const newLang = l.toLowerCase();
     setCurrentLang(newLang);
-    document.cookie = `NEXT_LOCALE=${newLang};path=/;max-age=31536000`;
+    document.cookie = `NEXT_LOCALE_LANDING=${newLang};path=/;max-age=31536000`;
   };
 
   // Wrap in provider so inner component reads correct locale

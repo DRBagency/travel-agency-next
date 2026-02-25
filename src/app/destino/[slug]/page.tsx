@@ -55,7 +55,7 @@ export default async function DestinoPage({
 
   // Read visitor's selected language from cookie
   const cookieStore = await cookies();
-  const cookieLang = cookieStore.get("NEXT_LOCALE")?.value;
+  const cookieLang = cookieStore.get("NEXT_LOCALE_LANDING")?.value;
   const initialLocale = cookieLang && VALID_LOCALES.includes(cookieLang as any)
     ? cookieLang
     : clientLocale;
