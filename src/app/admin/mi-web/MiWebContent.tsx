@@ -513,7 +513,12 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     setBulkTranslateError(null);
     try {
       const res = await fetch("/api/admin/translate/all", { method: "POST" });
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error(`Server error (${res.status}). Try again in a moment.`);
+      }
       if (!res.ok) throw new Error(data.error || "Translation failed");
       // Log failure details for debugging
       if (data.details) {
