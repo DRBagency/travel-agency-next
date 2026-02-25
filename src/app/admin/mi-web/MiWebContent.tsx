@@ -619,15 +619,23 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
           <div className="flex items-center gap-3 shrink-0">
             {bulkTranslateResult && (
               <div className="flex flex-col">
-                <span className={`text-xs ${bulkTranslateResult.success ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
-                  {bulkTranslateResult.translated}/{bulkTranslateResult.total} {t("translateAllTranslated")}
-                  {bulkTranslateResult.failed > 0 && ` · ${bulkTranslateResult.failed} ${t("translateAllFailed")}`}
-                </span>
-                {bulkTranslateResult.details?.filter((d: any) => !d.success).map((d: any, i: number) => (
-                  <span key={i} className="text-[10px] text-red-500 dark:text-red-400 truncate max-w-xs">
-                    {d.table}/{d.name || d.id}: {d.error}
+                {bulkTranslateResult.translated === 0 && bulkTranslateResult.failed === 0 ? (
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400">
+                    {t("translateAllUpToDate")}
                   </span>
-                ))}
+                ) : (
+                  <>
+                    <span className={`text-xs ${bulkTranslateResult.success ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
+                      {bulkTranslateResult.translated}/{bulkTranslateResult.total} {t("translateAllTranslated")}
+                      {bulkTranslateResult.failed > 0 && ` · ${bulkTranslateResult.failed} ${t("translateAllFailed")}`}
+                    </span>
+                    {bulkTranslateResult.details?.filter((d: any) => !d.success).map((d: any, i: number) => (
+                      <span key={i} className="text-[10px] text-red-500 dark:text-red-400 truncate max-w-xs">
+                        {d.table}/{d.name || d.id}: {d.error}
+                      </span>
+                    ))}
+                  </>
+                )}
               </div>
             )}
             {bulkTranslateError && (

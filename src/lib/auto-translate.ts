@@ -20,6 +20,16 @@ const FIELD_MAPS: Record<string, Record<string, FieldType>> = {
   opiniones: TRANSLATABLE_OPINION_FIELDS,
 };
 
+/** Simple hash for change detection (not crypto) */
+function contentHash(value: any): string {
+  const str = typeof value === "string" ? value : JSON.stringify(value);
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+  }
+  return h.toString(36);
+}
+
 interface AutoTranslateParams {
   table: "clientes" | "destinos" | "opiniones";
   recordId: string;
@@ -27,6 +37,7 @@ interface AutoTranslateParams {
   fields: Record<string, any>;
   sourceLang: string;
   targetLangs: string[];
+  force?: boolean; // skip hash check, retranslate everything
 }
 
 interface TranslationResult {
@@ -34,15 +45,17 @@ interface TranslationResult {
   translations: Record<string, Record<string, any>>;
   usage?: { input_tokens: number; output_tokens: number };
   error?: string;
+  skipped?: number; // fields skipped because unchanged
 }
 
 /**
  * Translates fields for a record and stores results in its `translations` JSONB column.
+ * Uses content hashing to skip unchanged fields (saves tokens).
  */
 export async function autoTranslateRecord(
   params: AutoTranslateParams
 ): Promise<TranslationResult> {
-  const { table, recordId, clientId, fields, sourceLang, targetLangs } = params;
+  const { table, recordId, clientId, fields, sourceLang, targetLangs, force } = params;
 
   if (!process.env.ANTHROPIC_API_KEY) {
     return { success: false, translations: {}, error: "No API key configured" };
@@ -54,15 +67,15 @@ export async function autoTranslateRecord(
   }
 
   // Filter to only translatable fields that have content
-  const toTranslate: Record<string, any> = {};
+  const allFields: Record<string, any> = {};
   for (const [key, value] of Object.entries(fields)) {
     if (!fieldMap[key]) continue;
     if (value === null || value === undefined || value === "") continue;
     if (typeof value === "string" && value.trim() === "") continue;
-    toTranslate[key] = value;
+    allFields[key] = value;
   }
 
-  if (Object.keys(toTranslate).length === 0) {
+  if (Object.keys(allFields).length === 0) {
     return { success: true, translations: {} };
   }
 
@@ -70,6 +83,35 @@ export async function autoTranslateRecord(
   const langs = targetLangs.filter((l) => l !== sourceLang);
   if (langs.length === 0) {
     return { success: true, translations: {} };
+  }
+
+  // Load existing translations to check hashes
+  const { data: existing } = await supabaseAdmin
+    .from(table)
+    .select("translations")
+    .eq("id", recordId)
+    .single();
+
+  const existingTranslations: Record<string, any> = existing?.translations || {};
+  const existingHashes: Record<string, string> = existingTranslations._hashes || {};
+
+  // Filter out unchanged fields (unless force=true)
+  const toTranslate: Record<string, any> = {};
+  let skippedCount = 0;
+
+  for (const [key, value] of Object.entries(allFields)) {
+    const hash = contentHash(value);
+    if (!force && existingHashes[key] === hash) {
+      // Content hasn't changed since last translation — skip
+      skippedCount++;
+      continue;
+    }
+    toTranslate[key] = value;
+  }
+
+  if (Object.keys(toTranslate).length === 0) {
+    console.log(`[translate] ${table}/${recordId}: all ${skippedCount} fields unchanged, skipping`);
+    return { success: true, translations: existingTranslations, skipped: skippedCount };
   }
 
   try {
@@ -91,7 +133,8 @@ export async function autoTranslateRecord(
       langs
     );
 
-    console.log(`[translate] Starting ${table}/${recordId} → ${langs.join(",")}, fields: ${Object.keys(toTranslate).join(",")}`);
+    const changedFields = Object.keys(toTranslate).join(",");
+    console.log(`[translate] Starting ${table}/${recordId} → ${langs.join(",")}, changed: ${changedFields} (${skippedCount} unchanged)`);
 
     // Use Haiku as primary (fast + reliable), Sonnet as fallback
     let response;
@@ -115,7 +158,8 @@ export async function autoTranslateRecord(
       return {
         success: false,
         translations: {},
-        error: "Translation response truncated (content too large). Try translating fewer fields.",
+        error: "Translation response truncated (content too large)",
+        skipped: skippedCount,
       };
     }
 
@@ -129,6 +173,7 @@ export async function autoTranslateRecord(
         success: false,
         translations: {},
         error: "Could not parse translation response",
+        skipped: skippedCount,
       };
     }
 
@@ -136,21 +181,22 @@ export async function autoTranslateRecord(
       jsonMatch[0]
     );
 
-    // Deep merge into existing translations column
-    const { data: existing } = await supabaseAdmin
-      .from(table)
-      .select("translations")
-      .eq("id", recordId)
-      .single();
-
-    const merged: Record<string, any> = existing?.translations || {};
+    // Deep merge into existing translations
+    const merged: Record<string, any> = { ...existingTranslations };
 
     for (const lang of langs) {
       if (!parsed[lang]) continue;
       merged[lang] = { ...(merged[lang] || {}), ...parsed[lang] };
     }
 
-    // Use eq on both id and (for destinos/opiniones) cliente_id for safety
+    // Update hashes for translated fields
+    const newHashes = { ...existingHashes };
+    for (const key of Object.keys(toTranslate)) {
+      newHashes[key] = contentHash(toTranslate[key]);
+    }
+    merged._hashes = newHashes;
+
+    // Save to database
     let query = supabaseAdmin
       .from(table)
       .update({ translations: merged })
@@ -167,6 +213,7 @@ export async function autoTranslateRecord(
         success: false,
         translations: merged,
         error: updateError.message,
+        skipped: skippedCount,
       };
     }
 
@@ -177,6 +224,7 @@ export async function autoTranslateRecord(
         input_tokens: response.usage.input_tokens,
         output_tokens: response.usage.output_tokens,
       },
+      skipped: skippedCount,
     };
   } catch (err: any) {
     console.error(`[translate] FAILED ${table}/${recordId}:`, err?.status, err?.message);
@@ -184,6 +232,7 @@ export async function autoTranslateRecord(
       success: false,
       translations: {},
       error: `${err?.status || ""} ${err?.message || "Translation failed"}`.trim(),
+      skipped: skippedCount,
     };
   }
 }

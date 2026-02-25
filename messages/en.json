@@ -881,7 +881,8 @@
       "translateAllButton": "Translate all",
       "translateAllTranslating": "Translating...",
       "translateAllTranslated": "translated",
-      "translateAllFailed": "failed"
+      "translateAllFailed": "failed",
+      "translateAllUpToDate": "Everything is already translated (no changes)"
     },
     "calendario": {
       "title": "Calendar",

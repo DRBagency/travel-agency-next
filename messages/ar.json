@@ -881,7 +881,8 @@
       "translateAllButton": "ترجمة الكل",
       "translateAllTranslating": "جارٍ الترجمة...",
       "translateAllTranslated": "مترجم",
-      "translateAllFailed": "فشل"
+      "translateAllFailed": "فشل",
+      "translateAllUpToDate": "كل شيء مترجم بالفعل (بدون تغييرات)"
     },
     "calendario": {
       "title": "التقويم",

@@ -99,10 +99,12 @@ export async function POST(req: NextRequest) {
   // For tables with JSONB fields (destinos), split into two passes
   // to keep prompts small enough to avoid timeouts
   const errors: string[] = [];
+  let totalSkipped = 0;
 
   if (hasStrings) {
     const r = await autoTranslateRecord({ ...baseParams, fields: stringFields });
     if (!r.success) errors.push(r.error || "String fields failed");
+    totalSkipped += r.skipped || 0;
   }
 
   if (hasJsonb) {
@@ -110,11 +112,13 @@ export async function POST(req: NextRequest) {
     for (const [key, val] of Object.entries(jsonbFields)) {
       const r = await autoTranslateRecord({ ...baseParams, fields: { [key]: val } });
       if (!r.success) errors.push(`${key}: ${r.error || "failed"}`);
+      totalSkipped += r.skipped || 0;
     }
   }
 
   return NextResponse.json({
     success: errors.length === 0,
     error: errors.length > 0 ? errors.join("; ") : undefined,
+    skipped: totalSkipped,
   });
 }
