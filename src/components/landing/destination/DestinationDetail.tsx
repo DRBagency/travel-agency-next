@@ -130,9 +130,20 @@ function DestinationDetailInner({
     return () => clearInterval(timer);
   }, [autoRotate, gallery.length]);
 
-  const itinerary: any[] = Array.isArray(destino.itinerario)
-    ? destino.itinerario
-    : [];
+  // Normalize itinerary: could be a flat array or an AI-generated object with { dias: [...] }
+  const rawItinerario = destino.itinerario;
+  const itinerary: any[] = Array.isArray(rawItinerario)
+    ? rawItinerario
+    : Array.isArray(rawItinerario?.dias)
+      ? rawItinerario.dias.map((d: any, i: number) => ({
+          day: d.dia || i + 1,
+          title: d.titulo || d.title || "",
+          description: d.descripcion || d.description ||
+            [d.actividades?.manana?.descripcion, d.actividades?.tarde?.descripcion, d.actividades?.noche?.descripcion]
+              .filter(Boolean).join(" · ") || "",
+          image: d.imagen || d.image || "",
+        }))
+      : [];
 
   const hotel: any = destino.hotel || null;
   const flights: any = destino.vuelos || null;

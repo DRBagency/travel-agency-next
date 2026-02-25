@@ -36,8 +36,14 @@ export default function ItineraryEditor({
   const [openDays, setOpenDays] = useState<Record<number, boolean>>({});
   const [tipsOpen, setTipsOpen] = useState(false);
 
-  const dias: any[] = itinerario?.dias || itinerario?.days || [];
-  const tips: string[] = itinerario?.tips_generales || itinerario?.general_tips || [];
+  // Handle both formats: AI-generated { dias: [...] } or flat array [{ day, title, description }]
+  const isFlat = Array.isArray(itinerario);
+  const dias: any[] = isFlat
+    ? itinerario
+    : (itinerario?.dias || itinerario?.days || []);
+  const tips: string[] = isFlat
+    ? []
+    : (itinerario?.tips_generales || itinerario?.general_tips || []);
 
   function clone(obj: any) {
     return JSON.parse(JSON.stringify(obj));
@@ -50,6 +56,7 @@ export default function ItineraryEditor({
   // --- Update helpers ---
 
   function updateSummary(field: string, value: string) {
+    if (isFlat) return; // flat arrays don't have summary
     const updated = clone(itinerario);
     updated[field] = value;
     onChange(updated);
@@ -57,8 +64,12 @@ export default function ItineraryEditor({
 
   function updateDay(index: number, field: string, value: string) {
     const updated = clone(itinerario);
-    const daysKey = updated.dias ? "dias" : "days";
-    updated[daysKey][index][field] = value;
+    if (isFlat) {
+      updated[index][field] = value;
+    } else {
+      const daysKey = updated.dias ? "dias" : "days";
+      updated[daysKey][index][field] = value;
+    }
     onChange(updated);
   }
 
@@ -69,8 +80,7 @@ export default function ItineraryEditor({
     value: string
   ) {
     const updated = clone(itinerario);
-    const daysKey = updated.dias ? "dias" : "days";
-    const day = updated[daysKey][dayIndex];
+    const day = isFlat ? updated[dayIndex] : updated[updated.dias ? "dias" : "days"][dayIndex];
     const actividades = day.actividades || day.activities || {};
     if (!day.actividades && day.activities) {
       day.activities[period][field] = value;
