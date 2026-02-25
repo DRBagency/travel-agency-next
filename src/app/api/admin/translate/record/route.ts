@@ -6,11 +6,12 @@ import {
   TRANSLATABLE_CLIENT_FIELDS,
   TRANSLATABLE_DESTINO_FIELDS,
   TRANSLATABLE_OPINION_FIELDS,
+  type FieldType,
 } from "@/lib/translations";
 
 export const maxDuration = 120;
 
-const FIELD_MAPS: Record<string, Record<string, string>> = {
+const FIELD_MAPS: Record<string, Record<string, FieldType>> = {
   clientes: TRANSLATABLE_CLIENT_FIELDS,
   destinos: TRANSLATABLE_DESTINO_FIELDS,
   opiniones: TRANSLATABLE_OPINION_FIELDS,
@@ -19,7 +20,8 @@ const FIELD_MAPS: Record<string, Record<string, string>> = {
 /**
  * POST /api/admin/translate/record
  * Translates a single record. Body: { table, recordId }
- * Fetches the record, extracts translatable fields, calls AI translation.
+ * For destinos, splits into two passes (string fields + JSONB fields)
+ * to avoid oversized prompts that timeout.
  */
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
@@ -64,32 +66,55 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Record not found" }, { status: 404 });
   }
 
-  // Extract translatable fields
+  // Extract translatable fields, split into string and jsonb groups
   const fieldMap = FIELD_MAPS[table];
-  const fields: Record<string, any> = {};
+  const stringFields: Record<string, any> = {};
+  const jsonbFields: Record<string, any> = {};
+
   for (const key of Object.keys(fieldMap)) {
     const val = record[key];
-    if (val !== null && val !== undefined && val !== "") {
-      fields[key] = val;
+    if (val === null || val === undefined || val === "") continue;
+    if (fieldMap[key] === "jsonb") {
+      jsonbFields[key] = val;
+    } else {
+      stringFields[key] = val;
     }
   }
 
-  if (Object.keys(fields).length === 0) {
+  const hasStrings = Object.keys(stringFields).length > 0;
+  const hasJsonb = Object.keys(jsonbFields).length > 0;
+
+  if (!hasStrings && !hasJsonb) {
     return NextResponse.json({ success: true, message: "No fields to translate" });
   }
 
-  const result = await autoTranslateRecord({
+  const baseParams = {
     table: table as "clientes" | "destinos" | "opiniones",
     recordId,
     clientId,
-    fields,
     sourceLang,
     targetLangs,
-  });
+  };
+
+  // For tables with JSONB fields (destinos), split into two passes
+  // to keep prompts small enough to avoid timeouts
+  const errors: string[] = [];
+
+  if (hasStrings) {
+    const r = await autoTranslateRecord({ ...baseParams, fields: stringFields });
+    if (!r.success) errors.push(r.error || "String fields failed");
+  }
+
+  if (hasJsonb) {
+    // Translate each JSONB field individually to avoid huge prompts
+    for (const [key, val] of Object.entries(jsonbFields)) {
+      const r = await autoTranslateRecord({ ...baseParams, fields: { [key]: val } });
+      if (!r.success) errors.push(`${key}: ${r.error || "failed"}`);
+    }
+  }
 
   return NextResponse.json({
-    success: result.success,
-    error: result.error,
-    usage: result.usage,
+    success: errors.length === 0,
+    error: errors.length > 0 ? errors.join("; ") : undefined,
   });
 }

@@ -75,8 +75,8 @@ export async function autoTranslateRecord(
   try {
     const anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
-      maxRetries: 2,
-      timeout: 60_000,
+      maxRetries: 1,
+      timeout: 45_000,
     });
 
     const targetLangList = langs
