@@ -14,7 +14,6 @@ import Testimonials from "@/components/landing/sections/Testimonials";
 import CtaBanner from "@/components/landing/sections/CtaBanner";
 import ContactForm from "@/components/landing/sections/ContactForm";
 import Footer from "@/components/landing/sections/Footer";
-import BlogSection from "@/components/BlogSection";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import { makeTr, tr } from "@/lib/translations";
 
@@ -24,19 +23,21 @@ export default function HomeClient({
   client,
   opiniones,
   paginasLegales,
-  blogPosts = [],
   allDestinos = [],
   lang = "es",
   legalBasePath = "/legal",
+  destinationBasePath = "/destino",
+  homeUrl = "/",
   allMessages,
 }: {
   client: any;
   opiniones: any[];
   paginasLegales: any[];
-  blogPosts?: any[];
   allDestinos?: any[];
   lang?: string;
   legalBasePath?: string;
+  destinationBasePath?: string;
+  homeUrl?: string;
   allMessages?: Record<string, any>;
 }) {
   const [currentLang, setCurrentLang] = useState<string>(lang);
@@ -90,8 +91,6 @@ export default function HomeClient({
     }).catch(() => {});
   }, [client?.id]);
 
-  const hasBlog = blogPosts.length > 0;
-
   // Determine messages for current language
   const currentMessages = allMessages?.[currentLang] || allMessages?.[lang] || undefined;
 
@@ -132,6 +131,7 @@ export default function HomeClient({
               : ["es"]
           }
           onLangChange={(l) => setCurrentLang(l.toLowerCase())}
+          homeUrl={homeUrl}
         />
 
         {/* 2. Hero — split layout */}
@@ -161,20 +161,12 @@ export default function HomeClient({
         />
 
         {/* 4. Destinations Grid */}
-        <DestinationsGrid destinos={translatedDestinos} />
+        <DestinationsGrid destinos={translatedDestinos} destinationBasePath={destinationBasePath} />
 
         {/* 5. Why Us — 4 cards */}
         <WhyUs items={translatedWhyUsItems} />
 
-        {/* 6. Blog Section — conditional */}
-        {hasBlog && (
-          <BlogSection
-            posts={blogPosts}
-            primaryColor={client.primary_color}
-          />
-        )}
-
-        {/* 7. Testimonials */}
+        {/* 6. Testimonials */}
         <Testimonials opiniones={translatedOpiniones} />
 
         {/* 8. CTA Banner */}
@@ -202,6 +194,7 @@ export default function HomeClient({
           destinos={translatedDestinos}
           paginasLegales={paginasLegales}
           legalBasePath={legalBasePath}
+          destinationBasePath={destinationBasePath}
           instagramUrl={client.instagram_url}
           facebookUrl={client.facebook_url}
           tiktokUrl={client.tiktok_url}

@@ -35,7 +35,7 @@ export default async function PreviewPage({
       ? client.available_languages
       : [clientLocale];
 
-  const [{ data: opiniones }, { data: paginasLegales }, { data: blogPosts }, { data: allDestinos }, ...langMessages] =
+  const [{ data: opiniones }, { data: paginasLegales }, { data: allDestinos }, ...langMessages] =
     await Promise.all([
       supabaseAdmin
         .from("opiniones")
@@ -47,13 +47,6 @@ export default async function PreviewPage({
         .select("*")
         .eq("cliente_id", client.id)
         .eq("activo", true),
-      supabaseAdmin
-        .from("blog_posts")
-        .select("*")
-        .eq("cliente_id", client.id)
-        .eq("publicado", true)
-        .order("published_at", { ascending: false })
-        .limit(4),
       supabaseAdmin
         .from("destinos")
         .select("*")
@@ -76,10 +69,11 @@ export default async function PreviewPage({
           client={client}
           opiniones={opiniones ?? []}
           paginasLegales={paginasLegales ?? []}
-          blogPosts={blogPosts ?? []}
           allDestinos={allDestinos ?? []}
           lang={clientLocale}
           legalBasePath={`/preview/${slug}/legal`}
+          destinationBasePath={`/preview/${slug}/destino`}
+          homeUrl={`/preview/${slug}`}
           allMessages={allMessages}
         />
       </div>

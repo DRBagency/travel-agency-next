@@ -23,6 +23,7 @@ interface FooterProps {
   destinos?: DestinoLink[];
   paginasLegales?: LegalPage[];
   legalBasePath?: string;
+  destinationBasePath?: string;
   instagramUrl?: string;
   facebookUrl?: string;
   tiktokUrl?: string;
@@ -35,6 +36,7 @@ export default function Footer({
   destinos = [],
   paginasLegales = [],
   legalBasePath = "/legal",
+  destinationBasePath = "/destino",
   instagramUrl,
   facebookUrl,
   tiktokUrl,
@@ -149,7 +151,7 @@ export default function Footer({
               {destinos.slice(0, 6).map((d) => (
                 <Link
                   key={d.slug}
-                  href={`/destino/${d.slug}`}
+                  href={`${destinationBasePath}/${d.slug}`}
                   style={{
                     fontFamily: FONT2,
                     fontSize: 14,

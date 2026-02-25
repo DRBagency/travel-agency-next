@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 23 Febrero 2026
+> **Última actualización:** 24 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -59,7 +59,7 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **Animations:** Framer Motion (framer-motion@12.29.2) + Lottie (lottie-react)
 - **Rive:** @rive-app/react-canvas (interactive login animations only)
 - **Icons:** Lucide React
-- **AI:** Anthropic Claude API (@anthropic-ai/sdk) — itineraries, recommendations, chatbot config
+- **AI:** Anthropic Claude API (@anthropic-ai/sdk) — itineraries, recommendations, chatbot config, auto-translation
 
 ### Backend
 - **Runtime:** Node.js (Edge Runtime selectivo)
@@ -70,7 +70,7 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **Database:** PostgreSQL (Supabase)
 - **ORM:** Supabase Client (@supabase/supabase-js 2.93.2)
 - **Migrations:** Supabase CLI (SQL manual)
-- **RLS:** Habilitado en TODAS las 17 tablas (verificado 21 Feb 2026)
+- **RLS:** Habilitado en TODAS las 27 tablas (verificado 24 Feb 2026)
 - **Service Role:** `supabaseAdmin` para operaciones del servidor (service_role bypasses RLS)
 - **Anon Key:** Solo usado client-side para Supabase Auth login + lectura pública destinos activos
 
@@ -111,6 +111,8 @@ travel-agency-next/
 │   │   └── ChatbotWidget.tsx # Widget flotante público para chatbot AI
 │   ├── i18n/
 │   │   └── request.ts        # Config next-intl (cookie NEXT_LOCALE)
+│   ├── hooks/
+│   │   └── useAutoTranslate.ts  # Hook auto-traducción AI (plan-gated)
 │   ├── lib/
 │   │   ├── emails/           # Sistema de emails
 │   │   ├── billing/          # Funciones de billing
@@ -118,6 +120,8 @@ travel-agency-next/
 │   │   ├── owner/            # Funciones del owner (get-chart-data: 8 semanas, get-dashboard-metrics)
 │   │   ├── supabase/         # Clients de Supabase
 │   │   ├── vercel/          # Vercel API helpers (domain management)
+│   │   ├── auto-translate.ts # Server-side AI translation (Claude Sonnet 4)
+│   │   ├── translations.ts   # Translation runtime helpers (tr, makeTr, field maps)
 │   │   ├── landing-theme.ts  # Theme palettes (light/dark) with CSS variable mapping
 │   │   └── set-locale.ts     # Server action cambio idioma
 │   └── middleware.ts
@@ -175,22 +179,36 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - **RTL:** `<html dir={locale === 'ar' ? 'rtl' : 'ltr'}>`, fuente Noto Sans Arabic, CSS logical properties
 - **Selector:** `<LanguageSelector />` en header de AdminShell y OwnerShell
 - **Fechas:** `toLocaleDateString(locale)` con locale dinámico, date-fns con locale map
-- **Landing i18n:** Per-client locale override via `preferred_language` column in `clientes` table. `page.tsx` loads locale-specific messages and wraps `HomeClient` with nested `NextIntlClientProvider`. Configurable in `/admin/mi-web` (marca section)
-- **Landing namespace:** `landing.*` keys (navbar, hero, destinations, testimonials, about, contact, footer, chatbot) — 80+ keys per locale
+- **Landing i18n:** Per-client locale override via `preferred_language` column in `clientes` table. `page.tsx` loads ALL available language messages and wraps `HomeClient` with nested `NextIntlClientProvider`. Configurable in `/admin/mi-web` (marca section)
+- **Landing multi-lang switching:** Dynamic `NextIntlClientProvider` inside `HomeClient` — when visitor changes language via Navbar, a `LangWrapper` component re-wraps content with the new locale's messages. All locale messages loaded server-side and passed as `allMessages` prop
+- **Landing namespace:** `landing.*` keys (navbar, hero, destinations, testimonials, contact, footer, chatbot) — 80+ keys per locale
+
+### Auto-Translation System (24 Feb 2026)
+AI-powered content translation for landing pages. When admin saves content, Claude translates all text fields to selected languages and stores in `translations` JSONB column.
+
+- **Database:** `translations JSONB DEFAULT '{}'` on `clientes`, `destinos`, `opiniones` tables
+- **Structure:** `{ "en": { "hero_title": "...", "whyus_items": [...] }, "ar": { ... } }`
+- **Server:** `src/lib/auto-translate.ts` — calls Claude Sonnet 4 API for translation, handles strings/JSONB/arrays
+- **API:** `POST /api/admin/translate` — plan-gated to Grow/Pro plans
+- **Hook:** `src/hooks/useAutoTranslate.ts` — `{ translating, translationError, isEligible, translate(fields) }`
+- **Runtime:** `src/lib/translations.ts` — `tr(obj, field, lang, preferredLang)` + `makeTr(obj, lang, preferredLang)` for reading translations at render time
+- **Integration:** Auto-fires after save in MiWebContent.tsx and DestinoEditor.tsx. Opiniones auto-translate server-side on insert/update
+- **Plan gating:** Only Grow/Pro plans (matches existing `aiLocked` pattern). Start plan saves content but skips translation
+- **Error handling:** Fire-and-forget — save always succeeds, translation failure shows amber warning
 
 ---
 
-## BASE DE DATOS - TABLAS Y ESTADO
+## BASE DE DATOS - TABLAS Y ESTADO (27 tablas, 24 Feb 2026)
 
 ### Tablas con CRUD completo (✅):
 | Tabla | Panel | Ruta |
 |-------|-------|------|
-| `clientes` | Owner | `/owner/clientes` — Columnas notables: `domain_verified`, `profile_photo`, `onboarding_completed`, `onboarding_step`, `slug`, `hero_badge`, `hero_cta_text_secondary`, `hero_cta_link_secondary`, `whyus_items` (JSONB), `cta_banner_*`, `footer_description`, `dark_mode_enabled`, `meta_title`, `meta_description` |
+| `clientes` | Owner | `/owner/clientes` — Columnas notables: `domain_verified`, `profile_photo`, `onboarding_completed`, `onboarding_step`, `slug`, `hero_badge`, `hero_cta_text_secondary`, `hero_cta_link_secondary`, `whyus_items` (JSONB), `cta_banner_*`, `footer_description`, `dark_mode_enabled`, `meta_title`, `meta_description`, `translations` (JSONB) |
 | `platform_settings` | Owner | `/owner/emails` |
 | `billing_email_templates` | Owner | `/owner/emails` |
 | `email_templates` | Admin | `/admin/emails` |
-| `destinos` | Admin | `/admin/destinos` (card grid) + `/admin/destinos/[id]` (tabbed editor: 11 tabs). Expanded columns: `slug`, `subtitle`, `tagline`, `badge`, `descripcion_larga`, `galeria` (JSONB), `coordinador` (JSONB), `hotel` (JSONB), `vuelos` (JSONB), `incluido` (JSONB), `no_incluido` (JSONB), `salidas` (JSONB), `faqs` (JSONB), `clima` (JSONB), `tags` (JSONB), `highlights` (JSONB), `esfuerzo`, `grupo_max`, `edad_min`, `edad_max`, `precio_original`, `moneda`, `duracion`, `continente`, `dificultad`, `categoria` |
-| `opiniones` | Admin | `/admin/mi-web` (OpinionesManager, integrado en Mi Web). Expanded: `avatar_url`, `fecha_display` |
+| `destinos` | Admin | `/admin/destinos` (card grid) + `/admin/destinos/[id]` (tabbed editor: 11 tabs). Expanded columns: `slug`, `subtitle`, `tagline`, `badge`, `descripcion_larga`, `galeria` (JSONB), `coordinador` (JSONB), `hotel` (JSONB), `vuelos` (JSONB), `incluido` (JSONB), `no_incluido` (JSONB), `salidas` (JSONB), `faqs` (JSONB), `clima` (JSONB), `tags` (JSONB), `highlights` (JSONB), `esfuerzo`, `grupo_max`, `edad_min`, `edad_max`, `precio_original`, `moneda`, `duracion`, `continente`, `dificultad`, `categoria`, `translations` (JSONB) |
+| `opiniones` | Admin | `/admin/mi-web` (OpinionesManager, integrado en Mi Web). Expanded: `avatar_url`, `fecha_display`, `translations` (JSONB) |
 | `paginas_legales` | Admin | `/admin/legales` |
 | `calendar_events` | Admin | `/admin/calendario` |
 | `documents` | Admin | `/admin/documentos` (crear, editar, eliminar, PDF) |
@@ -219,10 +237,34 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 |-------|-------|------|
 | `social_connections` | Admin | `/admin/social` (OAuth connect/disconnect, sync stats, recent posts) |
 
+### Tablas CRM (✅):
+| Tabla | Panel | Ruta |
+|-------|-------|------|
+| `agency_customers` | Admin | `/admin/crm` (Kanban board, funnel chart, export CSV) |
+| `agency_customer_activities` | Admin | `/admin/crm/[id]` (activity timeline) |
+
+### Tablas Mensajería (✅):
+| Tabla | Panel | Ruta |
+|-------|-------|------|
+| `contact_messages` | Admin | `/admin/mensajes` (MensajesContent — leer, marcar como leído). Landing form → API POST `/api/contact` |
+
 ### Tablas Tracking (✅):
 | Tabla | Panel | Ruta |
 |-------|-------|------|
 | `page_visits` | Admin (header badge) | Tracking público via `/api/track`, lectura via `/api/admin/visits/active` + Realtime |
+| `notifications` | Admin/Owner | `/api/notifications`, `/api/owner/notifications` |
+
+### Tablas pendientes de limpieza (🗑️):
+| Tabla | Estado | Acción |
+|-------|--------|--------|
+| `newsletter_subscribers` | **OBSOLETA** — era de la antigua landing page. Ahora el formulario de contacto va a `contact_messages` | Eliminar tabla + API route `/api/newsletter/subscribe` |
+| `blog_posts` | **HUÉRFANA** — no tiene migración SQL, no tiene CRUD admin, no tiene API routes. Solo hay un `BlogSection.tsx` que lee datos que nunca se pueden crear | Eliminar tabla + componente `BlogSection.tsx` + referencias en `HomeClient.tsx` y `page.tsx`. O implementar CRUD completo si se quiere blog |
+
+### Supabase Health (24 Feb 2026):
+- **27 tablas** con RLS habilitado en todas
+- **Security advisors:** Esperados — service_role "always true" policies en blog_posts/newsletter_subscribers (a eliminar), anon INSERT en contact_messages/page_visits (requerido para público), leaked password protection disabled (configurar)
+- **Performance advisors:** 15 unused indexes en tablas de pocas filas (aceptable), multiple permissive policies en blog_posts (a eliminar con la tabla)
+- **Migrations:** 23 archivos SQL en `supabase/migrations/`
 
 ### CHECKLIST AL AÑADIR TABLA NUEVA:
 1. Crear migración SQL en `supabase/migrations/`
@@ -248,8 +290,8 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - Soporte (tickets de clientes con SoporteTable DataTable)
 
 ### ✅ Panel CLIENTE completado:
-- Contenido web (hero, nosotros, contacto + AIDescriptionButton en campos de texto)
-- Destinos (CRUD + imágenes + activo/inactivo + visual card grid + DeleteWithConfirm + DestinoDescriptionField AI + DestinoPriceFieldWithAI)
+- Contenido web (hero, CTA banner, why us, contacto, footer + AIDescriptionButton en campos de texto + auto-traducción AI)
+- Destinos (CRUD + imágenes + activo/inactivo + visual card grid + DeleteWithConfirm + DestinoDescriptionField AI + DestinoPriceFieldWithAI + auto-traducción AI)
 - Reservas (ReservasTable DataTable con inline StatusCell + filtrado + export CSV/PDF + 3 KPICards + timeline visual en detalle)
 - Opiniones (CRUD + rating + moderación + star distribution chart + DeleteWithConfirm — integrado en Mi Web via OpinionesManager)
 - Emails (6 templates: reserva_cliente, reserva_agencia, bienvenida, recordatorio_viaje, seguimiento, promocion + preview en modal + EmailBodyWithAI + SendPromocionButton)
@@ -323,6 +365,23 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - ✅ **i18n Keys**: admin.eden namespace (welcome, chip1-4, placeholder, editProfile, photoUpdated, profileSaved, phone) in ES/EN/AR
 - ✅ **Eden AI Visual**: Tried Rive animation (black bg issues), tried Spline 3D (watermark/bg issues) — currently simple icon+gradient header, pending better 3D/animation solution
 
+### ✅ Auto-Traducción Landing + UI/UX Fixes (24 Feb 2026):
+- ✅ **Auto-Translation System**: `translations` JSONB column on `clientes`, `destinos`, `opiniones`. Claude Sonnet 4 translates on save (Grow/Pro only). `autoTranslateRecord()` in `src/lib/auto-translate.ts`. API: `POST /api/admin/translate`. Hook: `useAutoTranslate()`. Runtime: `tr()` + `makeTr()` helpers. Fire-and-forget after save
+- ✅ **Multi-language landing switching**: All available language messages loaded server-side, dynamic `NextIntlClientProvider` in `HomeClient.tsx` wraps content with current locale on language change
+- ✅ **Navbar persistence in destination pages**: Navbar rendered inside `DestinationDetail.tsx` (client component) with shared `currentLang` state for language switching
+- ✅ **Footer in destination pages**: Full Footer component rendered in destination detail pages with all client data (brand, destinos, legal pages, social links)
+- ✅ **Gallery redesign**: Split layout (65% main + 35% side thumbnails), 4-second auto-rotation, dot indicators, click-to-pause, "+N more" overlay, responsive mobile stacking
+- ✅ **Effort dots centering**: `justifyContent: "center"` on effort dots container
+- ✅ **Price badge contrast**: Strikethrough fontSize 13→16, opacity .55→.78, red textDecorationColor
+- ✅ **BookingModal stepper**: Circle 34→42, fontSize 14→16, label fontSize 10→12, maxWidth 70→85
+- ✅ **Removed "Sobre nosotros"**: Eliminated `about` section from Mi Web admin (was empty/unused)
+- ✅ **`homeUrl` prop on Navbar**: Brand logo/name links to correct URL (preview vs production)
+
+### 🐛 Bugs persistentes (pendientes de fix):
+- **Bloque A #2 — "Volver" back URL**: En preview mode (`/preview/[slug]/destino/[destinoSlug]`), el botón "Volver" y el click en el nombre de la agencia redirigen al sitio corporativo (`travel-agency-next-ten.vercel.app`) en vez de a la landing del cliente. Necesita verificación del `homeUrl` prop
+- **Bloque C #10 — Gallery sizing**: Las imágenes de la galería del destino siguen apareciendo estiradas/grandes. Necesitan dimensiones iguales al hero
+- **Bloque D #15 — Multi-language toggle**: El cambio de idioma en la landing puede no funcionar completamente. Necesita testing después del fix del `LangWrapper`
+
 ### ⚠️ Fase D — Nuevas Secciones / Integraciones (parcial):
 - ⏳ **D1 — Social Media Integration**: Código OAuth listo (social_connections table, OAuth library, API routes, UI). **Pendiente:** env vars Meta/TikTok (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`), crear apps en Meta Developer + TikTok Developer, gráficas de rendimiento de posts
 - ✅ **Más plantillas email**: Bienvenida, Recordatorio de viaje, Seguimiento post-viaje, Promoción (con SendPromocionButton). Total 6 templates (+ reserva_cliente, reserva_agencia)
@@ -362,7 +421,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 ### ✅ Fase G completada — Landing Page Rediseño Completo (23 Feb 2026):
 - ✅ **G1-G3 — 100% Landing Replacement**: Entire G2 landing replaced with new template port. 9 landing sections (LandingNavbar, LandingHero, LandingStats, LandingDestinations, LandingWhyUs, LandingTestimonials, LandingCTABanner, LandingContact, LandingFooter). 7 UI micro-components (AnimateIn, Img, Accordion, TagChip, StatusBadge, EffortDots, GlowOrb). Typography: Syne (display) + DM Sans (body) via next/font/google. Theme: next-themes + CSS variables + LandingThemeProvider + LandingGlobalStyles. Dark/light toggle in navbar
 - ✅ **Database Migrations (4)**: `expand_destinos_v2` (25+ new columns: slug, subtitle, tagline, badge, descripcion_larga, galeria, coordinador, hotel, vuelos, incluido, no_incluido, salidas, faqs, clima, tags, highlights — all JSONB), `expand_clientes_v2` (hero_badge, hero_cta_text_secondary, whyus_items, cta_banner_*, footer_description, dark_mode_enabled, meta_title/description), `expand_opiniones_v2` (avatar_url, fecha_display), `auto_generate_destino_slug` (trigger function)
-- ✅ **Destination Detail Page**: `/destino/[slug]/page.tsx` (server) + `DestinoDetail.tsx` (client). 8-tab layout: Itinerary, Hotel, Flight, Gallery, Included, Departures, Coordinator, FAQ. Hero gallery carousel, quick stats bar, tags + effort dots, bottom CTA. Preview route at `/preview/[slug]/destino/[destinoSlug]`
+- ✅ **Destination Detail Page**: `/destino/[slug]/page.tsx` (server) + `DestinoDetail.tsx` (client). 8-tab layout: Itinerary, Hotel, Flight, Gallery, Included, Departures, Coordinator, FAQ. Split gallery (65%/35% + auto-rotate), quick stats bar, tags + effort dots, bottom CTA, persistent Navbar with lang switching, full Footer. Preview route at `/preview/[slug]/destino/[destinoSlug]`
 - ✅ **Admin Destinos Tabbed Editor**: `/admin/destinos/[id]/page.tsx` + `DestinoEditor.tsx` (1460-line client component). 11 tabs: General, Pricing, Gallery, Itinerary, Hotel, Flights, Included, Departures, FAQs, Coordinator, Tags+Clima. API route `/api/admin/destinos/[id]/update` with typed field handling (STRING/NUMBER/BOOLEAN/JSONB). Unsplash picker integration. "Edit full page" link in destinos list
 - ✅ **Mi Web Admin Expansion**: New sections in MiWebContent.tsx — WhyUs editor (6 cards × icon/title/desc, add/remove/reorder), CTA Banner (title/desc/cta), expanded Hero (badge + secondary CTA), expanded Footer (description), Global Config (dark_mode_enabled toggle, meta_title, meta_description). ALLOWED_FIELDS + JSONB/boolean handling in update route
 - ✅ **i18n Expansion**: ~170 new keys across ES/EN/AR — `landing.*` namespace (stats, destinations, whyus, testimonials, ctaBanner, contact, destino detail), `admin.destinos` (76 keys for tabbed editor), `admin.miWeb` (new sections)
@@ -375,13 +434,25 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 
 ## ROADMAP DE FASES
 
-### Orden sugerido de ejecución:
+### Orden de ejecución:
 1. ~~Fase F (Visual/UX)~~ — **COMPLETADA**
 2. ~~Fase E (Self-service)~~ — **COMPLETADA (E1-E7)** — 22 Feb 2026
 3. ~~Fase G (Landing rediseño)~~ — **COMPLETADA (G1-G9)** — 23 Feb 2026
-4. Fase D (Nuevas secciones) — Coordinadores, vuelos, depósitos
-5. Fase H (Técnico) — Notificaciones, búsqueda, RGPD
-6. Fase I (Futuro) — Cuando las anteriores estén sólidas
+4. ~~Auto-Traducción + UI/UX Fixes~~ — **COMPLETADA** — 24 Feb 2026
+5. **SIGUIENTE → Bugs persistentes** (A#2, C#10, D#15) + Limpieza DB (newsletter, blog_posts)
+6. **SIGUIENTE → Bloque E** (#17 depósitos, #18 Stripe+Resend live, #19 features D2-D5, #20 portal cliente)
+7. Fase D restante (D1 social env vars, D5 depósitos)
+8. Fase G restante (G10 página reserva, G11 portal cliente final)
+9. Fase H (Técnico) — Notificaciones, búsqueda, RGPD
+10. Fase I (Futuro) — Cuando las anteriores estén sólidas
+
+### Bloque E — Prioridades Inmediatas (25 Feb 2026)
+| # | Feature | Descripción | Estado |
+|---|---------|-------------|--------|
+| E17 | Sistema de anticipos/depósitos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo y el resto antes de fecha X | Pendiente |
+| E18 | Stripe + Resend en producción | Cambiar de modo test a modo live. Configurar keys de producción, verificar webhooks, dominio Resend | Pendiente |
+| E19 | Features D2-D5 mejoras | Revisar y mejorar coordinadores, vuelos, hoteles, FAQs que ya están implementados | Pendiente |
+| E20 | Portal del cliente final | En la landing, el viajero accede con email y ve: reservas, itinerarios, estado de pago, chat con agencia | Pendiente |
 
 ### Fase D — Nuevas Secciones / Integraciones
 | # | Feature | Descripción | Estado |
@@ -390,7 +461,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 | D2 | Sección de Coordinadores | Panel admin para gestionar coordinadores de viaje de la agencia (nombre, foto, bio, idiomas). Se muestran en landing en los destinos asignados | ✅ Integrado en destinos tabbed editor (tab Coordinador) |
 | D3 | Vuelos y hoteles en destinos | Opción para que la agencia añade info de vuelos (aeropuertos recomendados, buscar vuelo) y hoteles a cada destino | ✅ Integrado en destinos tabbed editor (tabs Vuelos + Hotel) |
 | D4 | FAQs por destino | Preguntas frecuentes editables por destino, visibles en la landing | ✅ Integrado en destinos tabbed editor (tab FAQs) |
-| D5 | Sistema de depósitos/anticipos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo (ej: 100€) y el resto antes de fecha X | Nuevo |
+| D5 | Sistema de depósitos/anticipos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo (ej: 100€) y el resto antes de fecha X | Pendiente (→ E17) |
 
 ### ~~Fase E — Plataforma Self-Service (Autonomía Total)~~ — COMPLETADA (E1-E7) — 22 Feb 2026
 | # | Feature | Descripción | Estado |
@@ -550,7 +621,7 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 ### Componentes Landing (`src/components/landing/`):
 | Componente | Tipo | Uso |
 |------------|------|-----|
-| `LandingNavbar` | Client | Fixed glass-morphism navbar: logo + links + lang/theme toggles + CTA |
+| `LandingNavbar` | Client | Fixed glass-morphism navbar: logo + links + lang/theme toggles + CTA. `homeUrl` prop for correct brand link. `onLangChange` callback for dynamic language switching |
 | `LandingHero` | Client | Full-viewport centered hero: parallax bg, glow orbs, gradient text, dual CTAs, scroll indicator |
 | `LandingStats` | Client | 4 stat cards (emoji + animated counter + label) |
 | `LandingDestinations` | Client | Card grid with overlay text + tags + price. Click → `/destino/[slug]` |

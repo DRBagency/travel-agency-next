@@ -92,6 +92,7 @@ export default async function PreviewDestinoPage({
           allDestinos={allDestinos ?? []}
           paginasLegales={paginasLegales ?? []}
           legalBasePath={`/preview/${slug}/legal`}
+          destinationBasePath={`/preview/${slug}/destino`}
           instagramUrl={client.instagram_url}
           facebookUrl={client.facebook_url}
           tiktokUrl={client.tiktok_url}

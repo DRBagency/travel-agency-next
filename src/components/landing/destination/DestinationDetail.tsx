@@ -39,6 +39,7 @@ interface DestinationDetailProps {
   allDestinos?: any[];
   paginasLegales?: any[];
   legalBasePath?: string;
+  destinationBasePath?: string;
   instagramUrl?: string;
   facebookUrl?: string;
   tiktokUrl?: string;
@@ -59,6 +60,7 @@ export function DestinationDetail({
   allDestinos = [],
   paginasLegales = [],
   legalBasePath = "/legal",
+  destinationBasePath = "/destino",
   instagramUrl,
   facebookUrl,
   tiktokUrl,
@@ -885,6 +887,7 @@ export function DestinationDetail({
           destinos={allDestinos.map((d: any) => ({ slug: d.slug || d.id, nombre: d.nombre }))}
           paginasLegales={paginasLegales.map((p: any) => ({ slug: p.slug, titulo: p.titulo }))}
           legalBasePath={legalBasePath}
+          destinationBasePath={destinationBasePath}
           instagramUrl={instagramUrl}
           facebookUrl={facebookUrl}
           tiktokUrl={tiktokUrl}

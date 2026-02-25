@@ -24,12 +24,14 @@ interface DestinationsGridProps {
   destinos: Destino[];
   sectionTitle?: string;
   sectionSubtitle?: string;
+  destinationBasePath?: string;
 }
 
 export default function DestinationsGrid({
   destinos,
   sectionTitle = "Destinos exclusivos",
   sectionSubtitle = "Tu proxima aventura te espera",
+  destinationBasePath = "/destino",
 }: DestinationsGridProps) {
   const T = useLandingTheme();
 
@@ -81,7 +83,7 @@ export default function DestinationsGrid({
           {destinos.slice(0, 4).map((dest, i) => (
             <AnimateIn key={dest.id} delay={i * 0.1}>
               <Link
-                href={`/destino/${dest.slug}`}
+                href={`${destinationBasePath}/${dest.slug}`}
                 style={{ textDecoration: "none" }}
               >
                 <div
