@@ -32,7 +32,7 @@ import AIDescriptionButton from "@/components/ai/AIDescriptionButton";
 import OpinionesManager from "./OpinionesManager";
 import LegalesManager from "./LegalesManager";
 import { useAutoTranslate } from "@/hooks/useAutoTranslate";
-import { MIWEB_SECTION_TRANSLATABLE_FIELDS, TRANSLATABLE_CLIENT_FIELDS } from "@/lib/translations";
+import { MIWEB_SECTION_TRANSLATABLE_FIELDS, TRANSLATABLE_CLIENT_FIELDS, TRANSLATABLE_DESTINO_FIELDS } from "@/lib/translations";
 
 interface WhyUsItem {
   icon: string;
@@ -529,23 +529,62 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
         ...(list.opiniones || []).map((o: any) => ({ table: "opiniones", id: o.id, name: o.nombre || "Opinión" })),
       ];
 
-      // 2. Translate one by one
+      // Derive JSONB field names per table (each becomes its own API call)
+      const JSONB_FIELDS: Record<string, string[]> = {
+        clientes: Object.entries(TRANSLATABLE_CLIENT_FIELDS)
+          .filter(([, type]) => type === "jsonb")
+          .map(([key]) => key),
+        destinos: Object.entries(TRANSLATABLE_DESTINO_FIELDS)
+          .filter(([, type]) => type === "jsonb")
+          .map(([key]) => key),
+        opiniones: [],
+      };
+
+      // 2. Translate one record at a time, splitting by fieldGroup
+      // Each fieldGroup = exactly 1 AI API call = stays within serverless timeout
       for (let i = 0; i < queue.length; i++) {
         const item = queue[i];
-        setBulkProgress(`${i + 1}/${queue.length} — ${item.name}...`);
+        const jsonbFields = JSONB_FIELDS[item.table] || [];
 
-        try {
-          const res = await fetch("/api/admin/translate/record", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ table: item.table, recordId: item.id }),
-          });
-          let data;
-          try { data = await res.json(); } catch { data = { error: `HTTP ${res.status}` }; }
-          results.push({ table: item.table, name: item.name, success: res.ok && data.success !== false, error: data.error });
-        } catch (err: any) {
-          results.push({ table: item.table, name: item.name, success: false, error: err?.message || "Network error" });
+        // Build fieldGroup list: tables with JSONB get "strings" + each JSONB field separately
+        // Tables without JSONB (opiniones) get a single call with no fieldGroup
+        const fieldGroups: (string | undefined)[] = jsonbFields.length > 0
+          ? ["strings", ...jsonbFields]
+          : [undefined];
+
+        let recordSuccess = true;
+        let recordError: string | undefined;
+
+        for (let g = 0; g < fieldGroups.length; g++) {
+          const fg = fieldGroups[g];
+          const label = fg || "text";
+          setBulkProgress(`${i + 1}/${queue.length} — ${item.name} (${label})...`);
+
+          try {
+            const res = await fetch("/api/admin/translate/record", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                table: item.table,
+                recordId: item.id,
+                ...(fg ? { fieldGroup: fg } : {}),
+              }),
+            });
+            let data;
+            try { data = await res.json(); } catch { data = { error: `HTTP ${res.status}` }; }
+            if (!res.ok || data.success === false) {
+              recordSuccess = false;
+              recordError = `${label}: ${data.error || `HTTP ${res.status}`}`;
+              break; // Stop remaining field groups for this record
+            }
+          } catch (err: any) {
+            recordSuccess = false;
+            recordError = `${label}: ${err?.message || "Network error"}`;
+            break;
+          }
         }
+
+        results.push({ table: item.table, name: item.name, success: recordSuccess, error: recordError });
       }
 
       const successCount = results.filter((r) => r.success).length;

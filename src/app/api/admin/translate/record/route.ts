@@ -9,7 +9,7 @@ import {
   type FieldType,
 } from "@/lib/translations";
 
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 const FIELD_MAPS: Record<string, Record<string, FieldType>> = {
   clientes: TRANSLATABLE_CLIENT_FIELDS,
@@ -19,9 +19,13 @@ const FIELD_MAPS: Record<string, Record<string, FieldType>> = {
 
 /**
  * POST /api/admin/translate/record
- * Translates a single record. Body: { table, recordId }
- * For destinos, splits into two passes (string fields + JSONB fields)
- * to avoid oversized prompts that timeout.
+ * Translates specific fields of a single record.
+ * Body: { table, recordId, fieldGroup?: "strings" | "<jsonb_field_name>" }
+ *
+ * Each call makes exactly ONE AI API call:
+ * - fieldGroup="strings" → translate all string-type fields
+ * - fieldGroup="itinerario" → translate just that one JSONB field
+ * - no fieldGroup → translate all string fields (for small records)
  */
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
@@ -41,7 +45,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { table, recordId } = body;
+  const { table, recordId, fieldGroup } = body;
 
   if (!table || !recordId || !FIELD_MAPS[table]) {
     return NextResponse.json({ error: "Invalid table or recordId" }, { status: 400 });
@@ -66,59 +70,43 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Record not found" }, { status: 404 });
   }
 
-  // Extract translatable fields, split into string and jsonb groups
   const fieldMap = FIELD_MAPS[table];
-  const stringFields: Record<string, any> = {};
-  const jsonbFields: Record<string, any> = {};
+  const fields: Record<string, any> = {};
 
-  for (const key of Object.keys(fieldMap)) {
-    const val = record[key];
-    if (val === null || val === undefined || val === "") continue;
-    if (fieldMap[key] === "jsonb") {
-      jsonbFields[key] = val;
-    } else {
-      stringFields[key] = val;
+  if (fieldGroup && fieldGroup !== "strings") {
+    // Single JSONB field
+    const val = record[fieldGroup];
+    if (val !== null && val !== undefined && val !== "") {
+      fields[fieldGroup] = val;
+    }
+  } else {
+    // All string fields (fieldGroup="strings" or omitted)
+    for (const key of Object.keys(fieldMap)) {
+      if (fieldGroup === "strings" && fieldMap[key] === "jsonb") continue;
+      const val = record[key];
+      if (val === null || val === undefined || val === "") continue;
+      fields[key] = val;
     }
   }
 
-  const hasStrings = Object.keys(stringFields).length > 0;
-  const hasJsonb = Object.keys(jsonbFields).length > 0;
-
-  if (!hasStrings && !hasJsonb) {
-    return NextResponse.json({ success: true, message: "No fields to translate" });
+  if (Object.keys(fields).length === 0) {
+    return NextResponse.json({ success: true, skipped: 0 });
   }
 
-  const baseParams = {
+  // Single AI call
+  const result = await autoTranslateRecord({
     table: table as "clientes" | "destinos" | "opiniones",
     recordId,
     clientId,
+    fields,
     sourceLang,
     targetLangs,
-  };
-
-  // For tables with JSONB fields (destinos), split into two passes
-  // to keep prompts small enough to avoid timeouts
-  const errors: string[] = [];
-  let totalSkipped = 0;
-
-  if (hasStrings) {
-    const r = await autoTranslateRecord({ ...baseParams, fields: stringFields });
-    if (!r.success) errors.push(r.error || "String fields failed");
-    totalSkipped += r.skipped || 0;
-  }
-
-  if (hasJsonb) {
-    // Translate each JSONB field individually to avoid huge prompts
-    for (const [key, val] of Object.entries(jsonbFields)) {
-      const r = await autoTranslateRecord({ ...baseParams, fields: { [key]: val } });
-      if (!r.success) errors.push(`${key}: ${r.error || "failed"}`);
-      totalSkipped += r.skipped || 0;
-    }
-  }
+  });
 
   return NextResponse.json({
-    success: errors.length === 0,
-    error: errors.length > 0 ? errors.join("; ") : undefined,
-    skipped: totalSkipped,
+    success: result.success,
+    error: result.error,
+    skipped: result.skipped || 0,
+    usage: result.usage,
   });
 }
