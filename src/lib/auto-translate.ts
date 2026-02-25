@@ -121,62 +121,53 @@ export async function autoTranslateRecord(
       timeout: 150_000,   // 2.5 min — generous for large JSONB (itinerario etc.)
     });
 
-    const targetLangList = langs
-      .map((l) => `"${l}" (${LANG_NAMES[l] || l})`)
-      .join(", ");
-
-    const prompt = buildTranslationPrompt(
-      toTranslate,
-      fieldMap,
-      sourceLang,
-      targetLangList,
-      langs
-    );
-
     const changedFields = Object.keys(toTranslate).join(",");
     console.log(`[translate] Starting ${table}/${recordId} → ${langs.join(",")}, changed: ${changedFields} (${skippedCount} unchanged)`);
 
-    // Single model (Haiku) — no fallback to avoid doubling time on failure
-    const response = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 8192,
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    // Check if response was truncated
-    if (response.stop_reason === "max_tokens") {
-      return {
-        success: false,
-        translations: {},
-        error: "Translation response truncated (content too large)",
-        skipped: skippedCount,
-      };
-    }
-
-    const text =
-      response.content[0].type === "text" ? response.content[0].text : "";
-
-    // Parse JSON from response (may be wrapped in ```json ... ```)
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      return {
-        success: false,
-        translations: {},
-        error: "Could not parse translation response",
-        skipped: skippedCount,
-      };
-    }
-
-    const parsed: Record<string, Record<string, any>> = JSON.parse(
-      jsonMatch[0]
-    );
-
-    // Deep merge into existing translations
+    // Translate ONE language at a time to avoid exceeding Haiku's 8192 output token limit.
+    // A large itinerario translated to 2 languages can exceed 8192 tokens; splitting halves output per call.
     const merged: Record<string, any> = { ...existingTranslations };
+    const totalUsage = { input_tokens: 0, output_tokens: 0 };
 
     for (const lang of langs) {
-      if (!parsed[lang]) continue;
-      merged[lang] = { ...(merged[lang] || {}), ...parsed[lang] };
+      const langLabel = `"${lang}" (${LANG_NAMES[lang] || lang})`;
+      const prompt = buildTranslationPrompt(toTranslate, fieldMap, sourceLang, langLabel, [lang]);
+
+      const response = await anthropic.messages.create({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 8192,
+        messages: [{ role: "user", content: prompt }],
+      });
+
+      totalUsage.input_tokens += response.usage.input_tokens;
+      totalUsage.output_tokens += response.usage.output_tokens;
+
+      if (response.stop_reason === "max_tokens") {
+        console.error(`[translate] TRUNCATED ${table}/${recordId} lang=${lang}`);
+        return {
+          success: false,
+          translations: {},
+          error: `Translation truncated for ${lang} (content too large)`,
+          skipped: skippedCount,
+        };
+      }
+
+      const text = response.content[0].type === "text" ? response.content[0].text : "";
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        console.error(`[translate] PARSE FAIL ${table}/${recordId} lang=${lang}`);
+        return {
+          success: false,
+          translations: {},
+          error: `Could not parse translation for ${lang}`,
+          skipped: skippedCount,
+        };
+      }
+
+      const parsed: Record<string, Record<string, any>> = JSON.parse(jsonMatch[0]);
+      if (parsed[lang]) {
+        merged[lang] = { ...(merged[lang] || {}), ...parsed[lang] };
+      }
     }
 
     // Update hashes for translated fields
@@ -210,10 +201,7 @@ export async function autoTranslateRecord(
     return {
       success: true,
       translations: merged,
-      usage: {
-        input_tokens: response.usage.input_tokens,
-        output_tokens: response.usage.output_tokens,
-      },
+      usage: totalUsage,
       skipped: skippedCount,
     };
   } catch (err: any) {
