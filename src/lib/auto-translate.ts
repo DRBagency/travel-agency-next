@@ -93,11 +93,26 @@ export async function autoTranslateRecord(
 
     console.log(`[translate] Starting ${table}/${recordId} → ${langs.join(",")}, fields: ${Object.keys(toTranslate).join(",")}`);
 
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 8192,
-      messages: [{ role: "user", content: prompt }],
-    });
+    // Try primary model, fall back to haiku if overloaded
+    let response;
+    try {
+      response = await anthropic.messages.create({
+        model: "claude-sonnet-4-6",
+        max_tokens: 8192,
+        messages: [{ role: "user", content: prompt }],
+      });
+    } catch (primaryErr: any) {
+      if (primaryErr?.status === 529 || primaryErr?.status === 503) {
+        console.log(`[translate] Sonnet overloaded, falling back to Haiku for ${table}/${recordId}`);
+        response = await anthropic.messages.create({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 8192,
+          messages: [{ role: "user", content: prompt }],
+        });
+      } else {
+        throw primaryErr;
+      }
+    }
 
     // Check if response was truncated
     if (response.stop_reason === "max_tokens") {
