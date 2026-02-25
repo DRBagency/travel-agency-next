@@ -89,9 +89,18 @@ export async function autoTranslateRecord(
 
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 4096,
+      max_tokens: 8192,
       messages: [{ role: "user", content: prompt }],
     });
+
+    // Check if response was truncated
+    if (response.stop_reason === "max_tokens") {
+      return {
+        success: false,
+        translations: {},
+        error: "Translation response truncated (content too large). Try translating fewer fields.",
+      };
+    }
 
     const text =
       response.content[0].type === "text" ? response.content[0].text : "";
@@ -186,7 +195,8 @@ function buildTranslationPrompt(
 RULES:
 - Maintain the exact same JSON structure for JSONB fields (arrays stay arrays, objects stay objects)
 - Keep the same keys — only translate string VALUES
-- Do NOT translate: URLs, email addresses, phone numbers, icon emojis, numeric values, currency codes, dates, proper nouns that are brand names
+- Do NOT translate: URLs, email addresses, phone numbers, icon emojis, numeric values, currency codes, dates, proper nouns that are brand names, image paths
+- PRESERVE all URL fields (imagen, image, avatar, avatar_url, logo_url) exactly as-is in the output
 - For JSONB arrays of strings (like "incluido", "tags", "highlights"), translate each string in the array
 - For JSONB objects (like "hotel", "coordinador"), translate text fields but keep structural fields (like "estrellas", "amenidades" keys) unchanged
 - For itinerario arrays, translate titles, descriptions, activity text but keep structural keys

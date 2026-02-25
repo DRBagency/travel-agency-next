@@ -8,6 +8,8 @@ import {
   TRANSLATABLE_OPINION_FIELDS,
 } from "@/lib/translations";
 
+export const maxDuration = 300; // 5 minutes for bulk translation
+
 /**
  * POST /api/admin/translate/all
  * Translates ALL content for the current client: clientes row + all destinos + all opiniones.
@@ -69,59 +71,65 @@ export async function POST() {
     results.push({ table: "clientes", id: clientId, name: client.nombre, success: r.success, error: r.error });
   }
 
-  // 2. Translate all active destinos
+  // 2. Translate all active destinos (in parallel)
   const { data: destinos } = await supabaseAdmin
     .from("destinos")
     .select("*")
     .eq("cliente_id", clientId)
     .eq("activo", true);
 
-  for (const destino of destinos || []) {
+  const destinoPromises = (destinos || []).map(async (destino) => {
     const destFields: Record<string, any> = {};
     for (const key of Object.keys(TRANSLATABLE_DESTINO_FIELDS)) {
       if (destino[key] !== null && destino[key] !== undefined && destino[key] !== "") {
         destFields[key] = destino[key];
       }
     }
+    if (Object.keys(destFields).length === 0) return null;
+    const r = await autoTranslateRecord({
+      table: "destinos",
+      recordId: destino.id,
+      clientId,
+      fields: destFields,
+      sourceLang,
+      targetLangs,
+    });
+    return { table: "destinos", id: destino.id, name: destino.nombre, success: r.success, error: r.error };
+  });
 
-    if (Object.keys(destFields).length > 0) {
-      const r = await autoTranslateRecord({
-        table: "destinos",
-        recordId: destino.id,
-        clientId,
-        fields: destFields,
-        sourceLang,
-        targetLangs,
-      });
-      results.push({ table: "destinos", id: destino.id, name: destino.nombre, success: r.success, error: r.error });
-    }
-  }
-
-  // 3. Translate all active opiniones
+  // 3. Translate all active opiniones (in parallel)
   const { data: opiniones } = await supabaseAdmin
     .from("opiniones")
     .select("*")
     .eq("cliente_id", clientId)
     .eq("activo", true);
 
-  for (const opinion of opiniones || []) {
+  const opinionPromises = (opiniones || []).map(async (opinion) => {
     const opFields: Record<string, any> = {};
     for (const key of Object.keys(TRANSLATABLE_OPINION_FIELDS)) {
       if (opinion[key] !== null && opinion[key] !== undefined && opinion[key] !== "") {
         opFields[key] = opinion[key];
       }
     }
+    if (Object.keys(opFields).length === 0) return null;
+    const r = await autoTranslateRecord({
+      table: "opiniones",
+      recordId: opinion.id,
+      clientId,
+      fields: opFields,
+      sourceLang,
+      targetLangs,
+    });
+    return { table: "opiniones", id: opinion.id, name: opinion.nombre, success: r.success, error: r.error };
+  });
 
-    if (Object.keys(opFields).length > 0) {
-      const r = await autoTranslateRecord({
-        table: "opiniones",
-        recordId: opinion.id,
-        clientId,
-        fields: opFields,
-        sourceLang,
-        targetLangs,
-      });
-      results.push({ table: "opiniones", id: opinion.id, name: opinion.nombre, success: r.success, error: r.error });
+  // Wait for all parallel translations
+  const allSettled = await Promise.allSettled([...destinoPromises, ...opinionPromises]);
+  for (const result of allSettled) {
+    if (result.status === "fulfilled" && result.value) {
+      results.push(result.value);
+    } else if (result.status === "rejected") {
+      results.push({ table: "unknown", id: "", success: false, error: result.reason?.message || "Unknown error" });
     }
   }
 

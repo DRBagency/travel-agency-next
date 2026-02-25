@@ -135,8 +135,25 @@ function DestinationDetailInner({
     return () => clearInterval(timer);
   }, [autoRotate, gallery.length]);
 
-  // Use translated JSONB fields when available
-  const rawItinerario = dTr("itinerario") || destino.itinerario;
+  // Use translated JSONB fields when available, merging non-translatable data (images) from originals
+  const rawItinerario = (() => {
+    const translated = dTr("itinerario");
+    const original = destino.itinerario;
+    if (!translated || translated === original) return original;
+    // Merge image URLs from original days into translated days (URLs aren't translated)
+    if (translated?.dias && original?.dias) {
+      translated.dias.forEach((day: any, i: number) => {
+        const origDay = original.dias[i];
+        if (origDay && !day.imagen && origDay.imagen) {
+          day.imagen = origDay.imagen;
+        }
+        if (origDay && !day.image && origDay.image) {
+          day.image = origDay.image;
+        }
+      });
+    }
+    return translated;
+  })();
   // Simplified array for ItineraryMap and tab visibility check
   const itinerary: any[] = Array.isArray(rawItinerario)
     ? rawItinerario
@@ -147,7 +164,15 @@ function DestinationDetailInner({
         }))
       : [];
 
-  const hotel: any = dTr("hotel") || destino.hotel || null;
+  const hotel: any = (() => {
+    const translated = dTr("hotel");
+    const original = destino.hotel;
+    if (!translated || translated === original) return original || null;
+    // Merge image URL from original hotel
+    if (original?.imagen && !translated.imagen) translated.imagen = original.imagen;
+    if (original?.image && !translated.image) translated.image = original.image;
+    return translated;
+  })();
   const flights: any = dTr("vuelos") || destino.vuelos || null;
   const included: string[] = (() => {
     const v = dTr("incluido");
@@ -161,7 +186,15 @@ function DestinationDetailInner({
     const v = dTr("salidas");
     return Array.isArray(v) ? v : Array.isArray(destino.salidas) ? destino.salidas : [];
   })();
-  const coordinator: any = dTr("coordinador") || destino.coordinador || null;
+  const coordinator: any = (() => {
+    const translated = dTr("coordinador");
+    const original = destino.coordinador;
+    if (!translated || translated === original) return original || null;
+    // Merge avatar URL from original coordinator
+    if (original?.avatar && !translated.avatar) translated.avatar = original.avatar;
+    if (original?.avatar_url && !translated.avatar_url) translated.avatar_url = original.avatar_url;
+    return translated;
+  })();
   const faqs: any[] = (() => {
     const v = dTr("faqs");
     return Array.isArray(v) ? v : Array.isArray(destino.faqs) ? destino.faqs : [];
