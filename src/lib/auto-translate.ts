@@ -73,7 +73,11 @@ export async function autoTranslateRecord(
   }
 
   try {
-    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    const anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+      maxRetries: 4,
+      timeout: 120_000, // 2 min per request
+    });
 
     const targetLangList = langs
       .map((l) => `"${l}" (${LANG_NAMES[l] || l})`)
@@ -87,8 +91,10 @@ export async function autoTranslateRecord(
       langs
     );
 
+    console.log(`[translate] Starting ${table}/${recordId} → ${langs.join(",")}, fields: ${Object.keys(toTranslate).join(",")}`);
+
     const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-sonnet-4-6",
       max_tokens: 8192,
       messages: [{ role: "user", content: prompt }],
     });
@@ -162,10 +168,11 @@ export async function autoTranslateRecord(
       },
     };
   } catch (err: any) {
+    console.error(`[translate] FAILED ${table}/${recordId}:`, err?.status, err?.message);
     return {
       success: false,
       translations: {},
-      error: err?.message || "Translation failed",
+      error: `${err?.status || ""} ${err?.message || "Translation failed"}`.trim(),
     };
   }
 }
