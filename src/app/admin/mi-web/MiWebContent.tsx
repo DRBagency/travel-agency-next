@@ -57,7 +57,6 @@ interface ClientData {
   hero_description: string | null;
   hero_cta_text_secondary: string | null;
   hero_cta_link_secondary: string | null;
-  stats_years: string | null;
   stats_destinations: string | null;
   stats_travelers: string | null;
   stats_rating: string | null;
@@ -153,16 +152,25 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
   });
 
   // Parse whyus_items from client data (could be JSON string or array)
+  // Pre-fill with defaults matching the landing when empty
+  const DEFAULT_WHYUS: WhyUsItem[] = [
+    { icon: "🛡️", title: "Grupos reducidos", desc: "Viaja con grupos de máximo 16 personas para una experiencia más auténtica." },
+    { icon: "💎", title: "Cancelación flexible", desc: "Cancela hasta 30 días antes sin coste alguno." },
+    { icon: "🤝", title: "Anticipo 200€", desc: "Reserva tu plaza con solo 200€ y paga el resto más tarde." },
+    { icon: "💰", title: "Coordinador local", desc: "Un coordinador experto te acompaña durante todo el viaje." },
+  ];
+
   function parseWhyUsItems(data: WhyUsItem[] | string | null): WhyUsItem[] {
-    if (!data) return [];
+    if (!data) return DEFAULT_WHYUS;
     if (typeof data === "string") {
       try {
-        return JSON.parse(data) as WhyUsItem[];
+        const parsed = JSON.parse(data) as WhyUsItem[];
+        return parsed.length > 0 ? parsed : DEFAULT_WHYUS;
       } catch {
-        return [];
+        return DEFAULT_WHYUS;
       }
     }
-    return data;
+    return data.length > 0 ? data : DEFAULT_WHYUS;
   }
 
   const [fields, setFields] = useState({
@@ -177,7 +185,6 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     hero_description: client.hero_description ?? "",
     hero_cta_text_secondary: client.hero_cta_text_secondary ?? "",
     hero_cta_link_secondary: client.hero_cta_link_secondary ?? "",
-    stats_years: client.stats_years ?? "",
     stats_destinations: client.stats_destinations ?? "",
     stats_travelers: client.stats_travelers ?? "",
     stats_rating: client.stats_rating ?? "",
@@ -1135,17 +1142,6 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label block mb-1">
-                  {t("yearsExperience")}
-                </label>
-                <input
-                  value={fields.stats_years}
-                  onChange={(e) => updateField("stats_years", e.target.value)}
-                  className="panel-input w-full"
-                  placeholder="Ej: 15+"
-                />
-              </div>
-              <div>
-                <label className="panel-label block mb-1">
                   {t("destinations")}
                 </label>
                 <input
@@ -1195,7 +1191,6 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
             </div>
 
             {renderSaveButton("stats", [
-              "stats_years",
               "stats_destinations",
               "stats_travelers",
               "stats_rating",

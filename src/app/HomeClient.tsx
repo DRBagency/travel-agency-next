@@ -68,8 +68,15 @@ export default function HomeClient({
     comentario: tr(o, "comentario", currentLang, preferredLang),
   }));
 
-  // Translate whyus_items
-  const translatedWhyUsItems = clientTr("whyus_items");
+  // Translate whyus_items and map "desc" → "description" for landing component
+  const rawWhyUs = clientTr("whyus_items");
+  const translatedWhyUsItems = Array.isArray(rawWhyUs)
+    ? rawWhyUs.map((item: any) => ({
+        icon: item.icon || "",
+        title: item.title || "",
+        description: item.description || item.desc || "",
+      }))
+    : rawWhyUs;
 
   // Track page visit for live visitor counter
   useEffect(() => {
