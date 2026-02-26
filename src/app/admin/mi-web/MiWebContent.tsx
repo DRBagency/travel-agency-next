@@ -186,7 +186,10 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
     return data.length > 0 ? normalizeItems(data) : DEFAULT_WHYUS;
   }
 
+  const [logoUploading, setLogoUploading] = useState(false);
+
   const [fields, setFields] = useState({
+    nombre: client.nombre ?? "",
     logo_url: client.logo_url ?? "",
     primary_color: client.primary_color ?? "#1CABB0",
     hero_title: client.hero_title ?? "",
@@ -1003,34 +1006,84 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
                   {t("agencyName")}
                 </label>
                 <input
-                  value={client.nombre}
-                  readOnly
-                  className="w-full rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 px-3 py-2 text-gray-400 dark:text-white/50 cursor-not-allowed"
+                  value={fields.nombre}
+                  onChange={(e) => updateField("nombre", e.target.value)}
+                  className="panel-input w-full"
                 />
-                <p className="text-xs text-gray-400 dark:text-white/40 mt-1">
-                  {t("readOnly")}
-                </p>
               </div>
 
               <div>
                 <label className="panel-label block mb-1">
-                  {t("logoUrl")}
+                  Logo
                 </label>
-                <div className="flex items-center gap-2">
-                  <input
-                    value={fields.logo_url}
-                    onChange={(e) => updateField("logo_url", e.target.value)}
-                    className="panel-input w-full"
-                    placeholder="https://..."
-                  />
-                  {fields.logo_url && (
-                    <div className="shrink-0 rounded-lg border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-1">
+                <div className="flex items-center gap-3">
+                  {/* Preview */}
+                  <div className="shrink-0 w-12 h-12 rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 flex items-center justify-center overflow-hidden">
+                    {fields.logo_url ? (
                       <img
                         src={fields.logo_url}
-                        alt="Logo preview"
-                        className="h-8 w-auto object-contain"
+                        alt="Logo"
+                        className="w-full h-full object-contain"
                       />
-                    </div>
+                    ) : (
+                      <ImageIcon className="w-5 h-5 text-gray-300 dark:text-white/30" />
+                    )}
+                  </div>
+                  {/* Upload button */}
+                  <label
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium cursor-pointer transition-colors ${
+                      logoUploading
+                        ? "bg-gray-100 dark:bg-white/5 text-gray-400 cursor-wait"
+                        : "bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white/70 hover:bg-gray-200 dark:hover:bg-white/15"
+                    }`}
+                  >
+                    {logoUploading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <ImageIcon className="w-4 h-4" />
+                    )}
+                    {logoUploading ? "Subiendo..." : "Subir logo"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={logoUploading}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setLogoUploading(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append("file", file);
+                          const res = await fetch("/api/admin/upload-logo", {
+                            method: "POST",
+                            body: formData,
+                          });
+                          const json = await res.json();
+                          if (res.ok && json.url) {
+                            updateField("logo_url", json.url);
+                            sileo.success({ title: "Logo actualizado" });
+                          } else {
+                            sileo.error({ title: json.error || "Error al subir" });
+                          }
+                        } catch {
+                          sileo.error({ title: "Error al subir" });
+                        } finally {
+                          setLogoUploading(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                  </label>
+                  {/* Remove button */}
+                  {fields.logo_url && (
+                    <button
+                      type="button"
+                      onClick={() => updateField("logo_url", "")}
+                      className="text-xs text-red-500 hover:text-red-600 transition-colors"
+                    >
+                      {tc("delete")}
+                    </button>
                   )}
                 </div>
               </div>
@@ -1117,7 +1170,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
               </div>
             </div>
 
-            {renderSaveButton("marca", ["logo_url", "primary_color", "preferred_language"], { available_languages: availableLangs })}
+            {renderSaveButton("marca", ["nombre", "logo_url", "primary_color", "preferred_language"], { available_languages: availableLangs })}
           </div>
         )}
       </section>

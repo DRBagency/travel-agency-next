@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase-server";
 
 const ALLOWED_FIELDS = new Set([
+  "nombre",
   "logo_url",
   "primary_color",
   "hero_title",
