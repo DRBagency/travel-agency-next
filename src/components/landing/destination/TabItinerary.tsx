@@ -1,8 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { ItineraryMap } from "../ui/ItineraryMap";
+import { localizeDigits } from "@/lib/format-arabic";
 
 const FONT = `var(--font-syne), Syne, sans-serif`;
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
@@ -21,6 +22,8 @@ interface TabItineraryProps {
 export function TabItinerary({ rawItinerario }: TabItineraryProps) {
   const T = useLandingTheme();
   const t = useTranslations("landing.destino");
+  const locale = useLocale();
+  const ld = (v: string | number | null | undefined) => localizeDigits(v, locale);
 
   // Normalize: handle both flat array and rich { dias: [...] } format
   const isRich =
@@ -234,7 +237,7 @@ export function TabItinerary({ rawItinerario }: TabItineraryProps) {
                       flexShrink: 0,
                     }}
                   >
-                    {dayNum}
+                    {ld(dayNum)}
                   </span>
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -250,7 +253,7 @@ export function TabItinerary({ rawItinerario }: TabItineraryProps) {
                         marginBottom: 2,
                       }}
                     >
-                      {t("dayLabel", { n: dayNum })}
+                      {t("dayLabel", { n: ld(dayNum) })}
                     </div>
                   )}
                   <h4
@@ -262,7 +265,7 @@ export function TabItinerary({ rawItinerario }: TabItineraryProps) {
                       margin: 0,
                     }}
                   >
-                    {!dayImage && <span style={{ marginInlineEnd: 8 }}>{dayNum}.</span>}
+                    {!dayImage && <span style={{ marginInlineEnd: 8 }}>{ld(dayNum)}.</span>}
                     {dayTitle}
                   </h4>
                 </div>
@@ -487,7 +490,7 @@ export function TabItinerary({ rawItinerario }: TabItineraryProps) {
                 }}
               >
                 <span style={{ color: T.accent, fontWeight: 700 }}>
-                  {i + 1}.
+                  {ld(i + 1)}.
                 </span>
                 {tip}
               </li>

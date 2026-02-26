@@ -1,8 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { StatusBadge } from "../ui/StatusBadge";
+import { localizeDigits } from "@/lib/format-arabic";
 
 const FONT = `var(--font-syne), Syne, sans-serif`;
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
@@ -19,6 +20,8 @@ interface TabDeparturesProps {
 export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
   const T = useLandingTheme();
   const t = useTranslations("landing.destino");
+  const locale = useLocale();
+  const ld = (v: string | number | null | undefined) => localizeDigits(v, locale);
 
   return (
     <div
@@ -118,7 +121,7 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                 color: T.sub,
               }}
             >
-              {spots != null ? `${spots} ${t("spots")}` : "\u2014"}
+              {spots != null ? `${ld(spots)} ${t("spots")}` : "\u2014"}
             </span>
 
             {/* Price */}
@@ -130,7 +133,7 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                 color: T.accent,
               }}
             >
-              {price != null ? `${price}\u20AC` : "\u2014"}
+              {price != null ? `${ld(price)}\u20AC` : "\u2014"}
             </span>
 
             {/* Action button */}
@@ -186,7 +189,7 @@ export function TabDepartures({ departures, onBook }: TabDeparturesProps) {
                 >
                   {t("bookNow")}
                   {spots != null && spots <= 3
-                    ? ` (${spots})`
+                    ? ` (${ld(spots)})`
                     : ""}
                 </button>
               )}

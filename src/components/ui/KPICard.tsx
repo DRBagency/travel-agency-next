@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import AnimatedCounter from "./AnimatedCounter";
+import { localizeDigits } from "@/lib/format-arabic";
 
 interface KPICardProps {
   title: string;
@@ -94,7 +95,7 @@ export default function KPICard({
                   <TrendingDown className="w-3.5 h-3.5 text-red-300" />
                 )}
                 <span className={`text-xs font-semibold ${trend >= 0 ? "text-emerald-300" : "text-red-300"}`}>
-                  {trend > 0 ? "+" : ""}{trend}%
+                  {trend > 0 ? "+" : ""}{localizeDigits(trend, locale)}%
                 </span>
                 <span className="text-xs text-white/50 ms-1">{trendLabel}</span>
               </div>
@@ -143,7 +144,7 @@ export default function KPICard({
                   <Minus className="w-3 h-3 text-gray-400" />
                 )}
                 <span className={`text-[11px] font-semibold ${trend > 0 ? "text-emerald-600 dark:text-emerald-400" : trend < 0 ? "text-red-600 dark:text-red-400" : "text-gray-400"}`}>
-                  {trend > 0 ? "+" : ""}{trend}%
+                  {trend > 0 ? "+" : ""}{localizeDigits(trend, locale)}%
                 </span>
               </div>
             ) : (
@@ -179,7 +180,7 @@ export default function KPICard({
                 <TrendingDown className="w-3.5 h-3.5 text-red-500" />
               )}
               <span className={`text-xs font-semibold ${trend >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
-                {trend > 0 ? "+" : ""}{trend}%
+                {trend > 0 ? "+" : ""}{localizeDigits(trend, locale)}%
               </span>
               <span className="text-xs text-gray-400 dark:text-white/40 ms-1">{trendLabel}</span>
             </div>

@@ -18,6 +18,7 @@ import BookingModal from "../booking/BookingModal";
 import Footer from "../sections/Footer";
 import Navbar from "../sections/Navbar";
 import { makeTr, tr } from "@/lib/translations";
+import { localizeDigits } from "@/lib/format-arabic";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -101,6 +102,7 @@ function DestinationDetailInner({
 }: DestinationDetailProps & { currentLang: string; onLangChange: (l: string) => void }) {
   const T = useLandingTheme();
   const t = useTranslations('landing.destino');
+  const ld = (v: string | number | null | undefined) => localizeDigits(v, currentLang);
   const [tab, setTab] = useState("itinerary");
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [autoRotate, setAutoRotate] = useState(true);
@@ -633,7 +635,7 @@ function DestinationDetailInner({
                             lineHeight: 1,
                           }}
                         >
-                          {destino.precio_original}{"€"}
+                          {ld(destino.precio_original)}{"€"}
                         </div>
                       )}
                       <div
@@ -645,7 +647,7 @@ function DestinationDetailInner({
                           lineHeight: 1,
                         }}
                       >
-                        {destino.precio}{"€"}
+                        {ld(destino.precio)}{"€"}
                       </div>
                       <div
                         style={{
@@ -739,17 +741,17 @@ function DestinationDetailInner({
               },
               {
                 value: ratingStars
-                  ? `${destino.rating}`
+                  ? ld(destino.rating)
                   : null,
                 sub: destino.reviews
-                  ? `${destino.reviews} ${t('reviews')}`
+                  ? `${ld(destino.reviews)} ${t('reviews')}`
                   : "Rating",
                 icon: "\u2B50",
                 color: "#f59e0b",
               },
               {
                 value: destino.grupo_max
-                  ? `${destino.grupo_max} max`
+                  ? `${ld(destino.grupo_max)} max`
                   : null,
                 sub: t('group'),
                 icon: "\uD83D\uDC65",
@@ -757,7 +759,7 @@ function DestinationDetailInner({
               {
                 value:
                   destino.edad_min != null && destino.edad_max != null
-                    ? `${destino.edad_min}-${destino.edad_max}`
+                    ? `${ld(destino.edad_min)}-${ld(destino.edad_max)}`
                     : null,
                 sub: t('ageRange'),
                 icon: "\uD83C\uDF82",
@@ -1028,7 +1030,7 @@ function DestinationDetailInner({
                 >
                   {t('perPerson')} {"·"}{" "}
                   <strong style={{ color: T.lime }}>
-                    {destino.precio}
+                    {ld(destino.precio)}
                     {destino.moneda || "€"}
                   </strong>{" "}
                   {"·"} {dTr("duracion") || destino.duracion}

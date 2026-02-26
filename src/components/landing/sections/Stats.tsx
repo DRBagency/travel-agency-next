@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { AnimateIn, useInView } from "../ui/AnimateIn";
+import { localizeDigits } from "@/lib/format-arabic";
 
 const FONT = `var(--font-syne), Syne, sans-serif`;
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
@@ -15,7 +16,7 @@ interface StatsProps {
   repeat?: string;
 }
 
-function AnimatedNumber({ value, visible }: { value: string; visible: boolean }) {
+function AnimatedNumber({ value, visible, locale }: { value: string; visible: boolean; locale: string }) {
   const [display, setDisplay] = useState("0");
 
   useEffect(() => {
@@ -59,7 +60,7 @@ function AnimatedNumber({ value, visible }: { value: string; visible: boolean })
     requestAnimationFrame(animate);
   }, [visible, value]);
 
-  return <>{display}</>;
+  return <>{localizeDigits(display, locale)}</>;
 }
 
 export default function Stats({
@@ -70,6 +71,7 @@ export default function Stats({
 }: StatsProps) {
   const T = useLandingTheme();
   const t = useTranslations('landing.stats');
+  const locale = useLocale();
   const [ref, visible] = useInView();
 
   const stats = [
@@ -124,7 +126,7 @@ export default function Stats({
                   marginBottom: 8,
                 }}
               >
-                <AnimatedNumber value={stat.value} visible={visible} />
+                <AnimatedNumber value={stat.value} visible={visible} locale={locale} />
               </div>
               <div
                 style={{

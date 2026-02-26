@@ -1,7 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
+import { localizeDigits } from "@/lib/format-arabic";
 import { AnimateIn } from "../ui/AnimateIn";
 import Link from "next/link";
 
@@ -36,6 +37,8 @@ export default function DestinationsGrid({
 }: DestinationsGridProps) {
   const T = useLandingTheme();
   const t = useTranslations('landing.destinations');
+  const locale = useLocale();
+  const ld = (v: string | number) => localizeDigits(v, locale);
 
   return (
     <section id="destinos" style={{ padding: "80px 24px" }}>
@@ -161,7 +164,7 @@ export default function DestinationsGrid({
                       letterSpacing: "-.2px",
                     }}
                   >
-                    {dest.precio.toLocaleString("es-ES")}€
+                    {ld(dest.precio.toLocaleString("es-ES"))}€
                   </div>
 
                   {/* Bottom content */}
@@ -215,7 +218,7 @@ export default function DestinationsGrid({
                           gap: 4,
                         }}
                       >
-                        🕐 {dest.duracion}
+                        🕐 {ld(dest.duracion)}
                       </span>
                       <span
                         style={{
@@ -227,7 +230,7 @@ export default function DestinationsGrid({
                           gap: 4,
                         }}
                       >
-                        ⭐ {dest.rating}
+                        ⭐ {ld(dest.rating)}
                       </span>
                       {dest.tags && dest.tags.length > 0 && (
                         <span

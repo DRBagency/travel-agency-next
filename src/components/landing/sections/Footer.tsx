@@ -1,8 +1,9 @@
 "use client";
 
 import { useLandingTheme } from "../LandingThemeProvider";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
+import { localizeDigits } from "@/lib/format-arabic";
 
 const FONT = `var(--font-syne), Syne, sans-serif`;
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
@@ -44,7 +45,8 @@ export default function Footer({
 }: FooterProps) {
   const T = useLandingTheme();
   const t = useTranslations('landing');
-  const year = new Date().getFullYear();
+  const locale = useLocale();
+  const year = localizeDigits(new Date().getFullYear(), locale);
 
   const navLinks = [
     { label: t('navbar.whyUs'), href: "#why" },

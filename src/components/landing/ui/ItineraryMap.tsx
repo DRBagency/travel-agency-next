@@ -1,7 +1,9 @@
 "use client";
 
 import { Fragment, useRef, useEffect, useState } from "react";
+import { useLocale } from "next-intl";
 import { useLandingTheme } from "../LandingThemeProvider";
+import { localizeDigits } from "@/lib/format-arabic";
 
 interface ItineraryDay {
   day: number;
@@ -12,6 +14,8 @@ interface ItineraryDay {
 
 export function ItineraryMap({ itinerary }: { itinerary: ItineraryDay[] }) {
   const T = useLandingTheme();
+  const locale = useLocale();
+  const ld = (v: string | number) => localizeDigits(v, locale);
   const ref = useRef<HTMLDivElement>(null);
   const [isRtl, setIsRtl] = useState(false);
 
@@ -59,7 +63,7 @@ export function ItineraryMap({ itinerary }: { itinerary: ItineraryDay[] }) {
                 boxShadow: `0 2px 10px ${T.accent}35`,
               }}
             >
-              {day.day}
+              {ld(day.day)}
             </div>
             <p
               style={{

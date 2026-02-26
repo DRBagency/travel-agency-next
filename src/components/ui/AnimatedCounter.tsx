@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useMotionValue, useTransform, animate, useInView } from "framer-motion";
+import { localizeDigits } from "@/lib/format-arabic";
 
 interface AnimatedCounterProps {
   value: number;
@@ -21,7 +22,7 @@ export default function AnimatedCounter({
   const ref = useRef<HTMLSpanElement>(null);
   const motionValue = useMotionValue(0);
   const rounded = useTransform(motionValue, (latest) =>
-    Math.round(latest).toLocaleString(locale)
+    localizeDigits(Math.round(latest).toLocaleString(locale === "ar" ? "ar-EG" : locale), locale)
   );
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
