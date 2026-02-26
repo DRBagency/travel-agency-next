@@ -72,13 +72,13 @@ export default function CorporateLanding() {
   };
 
   return (
-    <div className="min-h-screen bg-[#041820] text-white">
+    <div className="min-h-screen bg-[#041820] text-white font-dm">
       {/* ===== NAVBAR ===== */}
       <nav className="fixed top-0 inset-x-0 z-50 bg-[#041820]/80 backdrop-blur-xl border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto flex items-center justify-between h-16 px-4 md:px-8">
           <div className="flex items-center gap-3">
             <Image src="/logo.png" alt="DRB Agency" width={32} height={32} />
-            <span className="font-display text-lg font-bold tracking-tight">
+            <span className="font-syne text-lg font-bold tracking-tight">
               DRB<span className="text-drb-turquoise-400"> Agency</span>
             </span>
           </div>
@@ -166,7 +166,7 @@ export default function CorporateLanding() {
               {t("hero.tagline")}
             </motion.p>
             <motion.h1
-              className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
+              className="font-syne text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
@@ -217,7 +217,7 @@ export default function CorporateLanding() {
             <span className="inline-block text-sm font-semibold text-drb-turquoise-400 mb-3 tracking-wide uppercase">
               {t("features.tagline")}
             </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold">
+            <h2 className="font-syne text-3xl md:text-4xl font-bold">
               {t("features.headline")}
             </h2>
           </motion.div>
@@ -235,7 +235,7 @@ export default function CorporateLanding() {
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center mb-4">
                   <Icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="font-display text-lg font-semibold mb-2">
+                <h3 className="font-syne text-lg font-semibold mb-2">
                   {t(`features.items.${key}.title`)}
                 </h3>
                 <p className="text-sm text-white/50 leading-relaxed">
@@ -259,7 +259,7 @@ export default function CorporateLanding() {
             <span className="inline-block text-sm font-semibold text-drb-turquoise-400 mb-3 tracking-wide uppercase">
               {t("benefits.tagline")}
             </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold">
+            <h2 className="font-syne text-3xl md:text-4xl font-bold">
               {t("benefits.headline")}
             </h2>
           </motion.div>
@@ -277,7 +277,7 @@ export default function CorporateLanding() {
                 <div className="w-10 h-10 rounded-lg bg-drb-turquoise-500/15 flex items-center justify-center mb-4">
                   <Icon className="w-5 h-5 text-drb-turquoise-400" />
                 </div>
-                <h3 className="font-display text-base font-semibold mb-2">
+                <h3 className="font-syne text-base font-semibold mb-2">
                   {t(`benefits.items.${key}.title`)}
                 </h3>
                 <p className="text-sm text-white/50 leading-relaxed">
@@ -301,7 +301,7 @@ export default function CorporateLanding() {
             <span className="inline-block text-sm font-semibold text-drb-turquoise-400 mb-3 tracking-wide uppercase">
               {t("how.tagline")}
             </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold">
+            <h2 className="font-syne text-3xl md:text-4xl font-bold">
               {t("how.headline")}
             </h2>
           </motion.div>
@@ -316,10 +316,10 @@ export default function CorporateLanding() {
                 transition={{ delay: i * 0.15 }}
                 className="text-center"
               >
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 text-white font-display text-xl font-bold mb-6">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 text-white font-syne text-xl font-bold mb-6">
                   {`0${i + 1}`}
                 </div>
-                <h3 className="font-display text-xl font-semibold mb-3">
+                <h3 className="font-syne text-xl font-semibold mb-3">
                   {t(`how.steps.${i}.title`)}
                 </h3>
                 <p className="text-white/50 leading-relaxed max-w-sm mx-auto">
@@ -343,7 +343,7 @@ export default function CorporateLanding() {
             <span className="inline-block text-sm font-semibold text-drb-turquoise-400 mb-3 tracking-wide uppercase">
               {t("pricing.tagline")}
             </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="font-syne text-3xl md:text-4xl font-bold mb-4">
               {t("pricing.headline")}
             </h2>
             <p className="text-white/50 text-lg max-w-2xl mx-auto">
@@ -372,10 +372,10 @@ export default function CorporateLanding() {
                     </span>
                   </div>
                 )}
-                <h3 className="font-display text-xl font-bold mb-2">{plan.name}</h3>
+                <h3 className="font-syne text-xl font-bold mb-2">{plan.name}</h3>
                 <p className="text-sm text-white/50 mb-4">{t(`pricing.plans.${i}.desc`)}</p>
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span className="font-display text-4xl font-bold">{plan.price}€</span>
+                  <span className="font-syne text-4xl font-bold">{plan.price}€</span>
                   <span className="text-white/50 text-sm">{t("pricing.perMonth")}</span>
                 </div>
                 <div className="text-sm text-drb-turquoise-400 font-medium mb-6">
@@ -420,7 +420,7 @@ export default function CorporateLanding() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">
+            <h2 className="font-syne text-3xl md:text-5xl font-bold mb-6">
               {t("cta.headline")}
             </h2>
             <p className="text-lg md:text-xl mb-10 text-white/60 max-w-2xl mx-auto">
@@ -444,7 +444,7 @@ export default function CorporateLanding() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <Image src="/logo.png" alt="DRB Agency" width={28} height={28} />
-            <span className="font-display text-sm font-bold">
+            <span className="font-syne text-sm font-bold">
               DRB<span className="text-drb-turquoise-400"> Agency</span>
             </span>
           </div>
