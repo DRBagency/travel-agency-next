@@ -37,7 +37,7 @@ import { MIWEB_SECTION_TRANSLATABLE_FIELDS, TRANSLATABLE_CLIENT_FIELDS, TRANSLAT
 interface WhyUsItem {
   icon: string;
   title: string;
-  desc: string;
+  description: string;
 }
 
 interface ClientData {
@@ -154,23 +154,31 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
   // Parse whyus_items from client data (could be JSON string or array)
   // Pre-fill with defaults matching the landing when empty
   const DEFAULT_WHYUS: WhyUsItem[] = [
-    { icon: "🛡️", title: "Grupos reducidos", desc: "Viaja con grupos de máximo 16 personas para una experiencia más auténtica." },
-    { icon: "💎", title: "Cancelación flexible", desc: "Cancela hasta 30 días antes sin coste alguno." },
-    { icon: "🤝", title: "Anticipo 200€", desc: "Reserva tu plaza con solo 200€ y paga el resto más tarde." },
-    { icon: "💰", title: "Coordinador local", desc: "Un coordinador experto te acompaña durante todo el viaje." },
+    { icon: "🎯", title: "Coordinador local", description: "Un experto del destino te acompaña durante todo el viaje." },
+    { icon: "👥", title: "Grupos reducidos", description: "Máximo 16 viajeros para experiencias auténticas e íntimas." },
+    { icon: "🔄", title: "Cancelación flexible", description: "Cancela gratis hasta 30 días antes de la fecha de salida." },
+    { icon: "🔒", title: "Pago 100% seguro", description: "Reserva tu plaza con solo 200€ de anticipo. Plataforma segura." },
   ];
+
+  function normalizeItems(items: any[]): WhyUsItem[] {
+    return items.map((item) => ({
+      icon: item.icon || "",
+      title: item.title || "",
+      description: item.description || item.desc || "",
+    }));
+  }
 
   function parseWhyUsItems(data: WhyUsItem[] | string | null): WhyUsItem[] {
     if (!data) return DEFAULT_WHYUS;
     if (typeof data === "string") {
       try {
-        const parsed = JSON.parse(data) as WhyUsItem[];
-        return parsed.length > 0 ? parsed : DEFAULT_WHYUS;
+        const parsed = JSON.parse(data) as any[];
+        return parsed.length > 0 ? normalizeItems(parsed) : DEFAULT_WHYUS;
       } catch {
         return DEFAULT_WHYUS;
       }
     }
-    return data.length > 0 ? data : DEFAULT_WHYUS;
+    return data.length > 0 ? normalizeItems(data) : DEFAULT_WHYUS;
   }
 
   const [fields, setFields] = useState({
@@ -512,7 +520,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
 
   function addWhyUsItem() {
     if (whyusItems.length >= 4) return;
-    setWhyusItems((prev) => [...prev, { icon: "✨", title: "", desc: "" }]);
+    setWhyusItems((prev) => [...prev, { icon: "✨", title: "", description: "" }]);
   }
 
   async function handleBulkTranslateAll() {
@@ -1272,8 +1280,8 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
                 <div>
                   <label className="panel-label block mb-1 text-xs">{tc("description")}</label>
                   <textarea
-                    value={item.desc}
-                    onChange={(e) => updateWhyUsItem(index, "desc", e.target.value)}
+                    value={item.description}
+                    onChange={(e) => updateWhyUsItem(index, "description", e.target.value)}
                     className="panel-input w-full min-h-[60px]"
                     placeholder={t("whyUsCardDescPlaceholder")}
                   />
