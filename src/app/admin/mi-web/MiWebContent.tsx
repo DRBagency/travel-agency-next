@@ -116,18 +116,16 @@ interface MiWebContentProps {
 }
 
 type SectionKey =
-  | "domain"
   | "marca"
   | "hero"
   | "stats"
   | "whyus"
+  | "opiniones"
   | "ctabanner"
   | "contact"
-  | "social"
   | "footer"
   | "global"
-  | "opiniones"
-  | "legales";
+  | "domain";
 
 interface SaveState {
   loading: boolean;
@@ -226,18 +224,16 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     new Set()
   );
   const [saveStates, setSaveStates] = useState<Record<SectionKey, SaveState>>({
-    domain: { loading: false, success: false, error: null },
     marca: { loading: false, success: false, error: null },
     hero: { loading: false, success: false, error: null },
     stats: { loading: false, success: false, error: null },
     whyus: { loading: false, success: false, error: null },
+    opiniones: { loading: false, success: false, error: null },
     ctabanner: { loading: false, success: false, error: null },
     contact: { loading: false, success: false, error: null },
-    social: { loading: false, success: false, error: null },
     footer: { loading: false, success: false, error: null },
     global: { loading: false, success: false, error: null },
-    opiniones: { loading: false, success: false, error: null },
-    legales: { loading: false, success: false, error: null },
+    domain: { loading: false, success: false, error: null },
   });
 
   // Domain state
@@ -710,131 +706,6 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
           </div>
         </div>
       )}
-
-      {/* Dominio */}
-      <section className="panel-card p-5 space-y-3">
-        <SectionHeader
-          sectionKey="domain"
-          icon={Globe}
-          title={t("domainSection")}
-          subtitle={t("domainSectionSub")}
-        />
-        {openSections.has("domain") && (
-          <div className="space-y-4 pt-2">
-            {/* Current domain with badge */}
-            {client.domain && (
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-700 dark:text-white/80 font-mono">{client.domain}</span>
-                {domainVerified ? (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">
-                    <Check className="w-3 h-3" />
-                    {t("domainVerified")}
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400">
-                    <AlertCircle className="w-3 h-3" />
-                    {t("domainPending")}
-                  </span>
-                )}
-              </div>
-            )}
-
-            {/* Input for new/change domain */}
-            <div>
-              <label className="panel-label block mb-1">{t("changeDomain")}</label>
-              <input
-                value={domainValue}
-                onChange={(e) => setDomainValue(e.target.value)}
-                className="panel-input w-full"
-                placeholder={t("domainPlaceholder")}
-              />
-            </div>
-
-            {/* CNAME instructions */}
-            <div className="bg-gray-50 dark:bg-white/[0.04] rounded-xl p-4 text-sm space-y-2">
-              <p className="text-gray-600 dark:text-white/60">
-                {t("domainCnameInstructions")}
-              </p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="text-start text-gray-500 dark:text-white/50 border-b border-gray-200 dark:border-white/10">
-                      <th className="py-2 pe-4 font-medium text-start">Type</th>
-                      <th className="py-2 pe-4 font-medium text-start">Name</th>
-                      <th className="py-2 font-medium text-start">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="text-gray-900 dark:text-white">
-                      <td className="py-2 pe-4 font-mono text-xs">CNAME</td>
-                      <td className="py-2 pe-4 font-mono text-xs">@</td>
-                      <td className="py-2 font-mono text-xs text-drb-turquoise-600 dark:text-drb-turquoise-400">
-                        cname.vercel-dns.com
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Vercel TXT verification if needed */}
-            {vercelVerification && vercelVerification.length > 0 && (
-              <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-xl p-4 text-sm space-y-2">
-                <p className="font-medium text-amber-700 dark:text-amber-300">
-                  {t("txtRecord")}
-                </p>
-                <p className="text-amber-600 dark:text-amber-400 text-xs">
-                  {t("txtInstructions")}
-                </p>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="text-start text-gray-500 dark:text-white/50 border-b border-gray-200 dark:border-white/10">
-                        <th className="py-2 pe-4 font-medium text-start">Type</th>
-                        <th className="py-2 pe-4 font-medium text-start">Name</th>
-                        <th className="py-2 font-medium text-start">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {vercelVerification.map((v, i) => (
-                        <tr key={i} className="text-gray-900 dark:text-white">
-                          <td className="py-2 pe-4 font-mono text-xs">{v.type}</td>
-                          <td className="py-2 pe-4 font-mono text-xs">{v.domain}</td>
-                          <td className="py-2 font-mono text-xs text-drb-turquoise-600 dark:text-drb-turquoise-400 break-all">
-                            {v.value}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {/* Action buttons */}
-            <div className="flex items-center gap-3 justify-end pt-2">
-              <button
-                onClick={saveDomain}
-                disabled={domainSaving || !domainValue.trim()}
-                className="btn-primary disabled:opacity-50 flex items-center gap-2"
-              >
-                {domainSaving && <Loader2 className="w-4 h-4 animate-spin" />}
-                {t("saveDomain")}
-              </button>
-              {client.domain && (
-                <button
-                  onClick={handleVerifyDomain}
-                  disabled={domainVerifying}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-drb-turquoise-200 dark:border-drb-turquoise-500/20 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-50 dark:hover:bg-drb-turquoise-500/10 transition-colors text-sm font-medium"
-                >
-                  <RefreshCw className={`w-4 h-4 ${domainVerifying ? "animate-spin" : ""}`} />
-                  {t("verifyDomain")}
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-      </section>
 
       {/* Marca y Estilo */}
       <section className="panel-card p-5 space-y-3">
@@ -1310,6 +1181,23 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
         )}
       </section>
 
+      {/* Opiniones */}
+      <section className="panel-card p-5 space-y-3">
+        <SectionHeader
+          sectionKey="opiniones"
+          icon={Star}
+          title={t("reviewsSection")}
+          subtitle={`${counts.opiniones} ${t("publishedF")}`}
+        />
+        {openSections.has("opiniones") && (
+          <OpinionesManager
+            opiniones={opiniones}
+            clientId={client.id}
+            locale={locale}
+          />
+        )}
+      </section>
+
       {/* Banner CTA */}
       <section className="panel-card p-5 space-y-3">
         <SectionHeaderEmoji
@@ -1438,62 +1326,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
         )}
       </section>
 
-      {/* Redes sociales */}
-      <section className="panel-card p-5 space-y-3">
-        <SectionHeader
-          sectionKey="social"
-          icon={Share2}
-          title={t("socialMedia")}
-          subtitle={t("socialMediaSub")}
-        />
-        {openSections.has("social") && (
-          <div className="space-y-4 pt-2">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <label className="panel-label block mb-1">
-                  Instagram
-                </label>
-                <input
-                  value={fields.instagram_url}
-                  onChange={(e) => updateField("instagram_url", e.target.value)}
-                  className="panel-input w-full"
-                  placeholder="https://instagram.com/..."
-                />
-              </div>
-              <div>
-                <label className="panel-label block mb-1">
-                  Facebook
-                </label>
-                <input
-                  value={fields.facebook_url}
-                  onChange={(e) => updateField("facebook_url", e.target.value)}
-                  className="panel-input w-full"
-                  placeholder="https://facebook.com/..."
-                />
-              </div>
-              <div>
-                <label className="panel-label block mb-1">
-                  TikTok
-                </label>
-                <input
-                  value={fields.tiktok_url}
-                  onChange={(e) => updateField("tiktok_url", e.target.value)}
-                  className="panel-input w-full"
-                  placeholder="https://tiktok.com/..."
-                />
-              </div>
-            </div>
-
-            {renderSaveButton("social", [
-              "instagram_url",
-              "facebook_url",
-              "tiktok_url",
-            ])}
-          </div>
-        )}
-      </section>
-
-      {/* Footer */}
+      {/* Footer (texto + redes + legal) */}
       <section className="panel-card p-5 space-y-3">
         <SectionHeader
           sectionKey="footer"
@@ -1502,65 +1335,90 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
           subtitle={t("footerSub")}
         />
         {openSections.has("footer") && (
-          <div className="space-y-4 pt-2">
-            <div>
-              <label className="panel-label block mb-1">
-                {t("footerTextLabel")}
-              </label>
-              <textarea
-                value={fields.footer_text}
-                onChange={(e) => updateField("footer_text", e.target.value)}
-                className="panel-input w-full min-h-[80px]"
-                placeholder={t("footerTextPlaceholder")}
-              />
+          <div className="space-y-6 pt-2">
+            {/* Texto del footer */}
+            <div className="space-y-4">
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("footerTextLabel")}
+                </label>
+                <textarea
+                  value={fields.footer_text}
+                  onChange={(e) => updateField("footer_text", e.target.value)}
+                  className="panel-input w-full min-h-[80px]"
+                  placeholder={t("footerTextPlaceholder")}
+                />
+              </div>
+              <div>
+                <label className="panel-label block mb-1">
+                  {t("footerDescription")}
+                </label>
+                <textarea
+                  value={fields.footer_description}
+                  onChange={(e) => updateField("footer_description", e.target.value)}
+                  className="panel-input w-full min-h-[80px]"
+                  placeholder={t("footerDescPlaceholder")}
+                />
+              </div>
             </div>
-            <div>
-              <label className="panel-label block mb-1">
-                {t("footerDescription")}
-              </label>
-              <textarea
-                value={fields.footer_description}
-                onChange={(e) => updateField("footer_description", e.target.value)}
-                className="panel-input w-full min-h-[80px]"
-                placeholder={t("footerDescPlaceholder")}
+
+            {/* Redes sociales */}
+            <div className="space-y-3 border-t border-gray-200 dark:border-white/10 pt-4">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-white/70 flex items-center gap-2">
+                <Share2 className="w-4 h-4" />
+                {t("socialMedia")}
+              </h3>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div>
+                  <label className="panel-label block mb-1">Instagram</label>
+                  <input
+                    value={fields.instagram_url}
+                    onChange={(e) => updateField("instagram_url", e.target.value)}
+                    className="panel-input w-full"
+                    placeholder="https://instagram.com/..."
+                  />
+                </div>
+                <div>
+                  <label className="panel-label block mb-1">Facebook</label>
+                  <input
+                    value={fields.facebook_url}
+                    onChange={(e) => updateField("facebook_url", e.target.value)}
+                    className="panel-input w-full"
+                    placeholder="https://facebook.com/..."
+                  />
+                </div>
+                <div>
+                  <label className="panel-label block mb-1">TikTok</label>
+                  <input
+                    value={fields.tiktok_url}
+                    onChange={(e) => updateField("tiktok_url", e.target.value)}
+                    className="panel-input w-full"
+                    placeholder="https://tiktok.com/..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Páginas legales */}
+            <div className="space-y-3 border-t border-gray-200 dark:border-white/10 pt-4">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-white/70 flex items-center gap-2">
+                <Scale className="w-4 h-4" />
+                {t("legalSection")} · {counts.legales} {t("pages")}
+              </h3>
+              <LegalesManager
+                legales={legales}
+                clientId={client.id}
               />
             </div>
 
-            {renderSaveButton("footer", ["footer_text", "footer_description"])}
+            {renderSaveButton("footer", [
+              "footer_text",
+              "footer_description",
+              "instagram_url",
+              "facebook_url",
+              "tiktok_url",
+            ])}
           </div>
-        )}
-      </section>
-
-      {/* Opiniones */}
-      <section className="panel-card p-5 space-y-3">
-        <SectionHeader
-          sectionKey="opiniones"
-          icon={Star}
-          title={t("reviewsSection")}
-          subtitle={`${counts.opiniones} ${t("publishedF")}`}
-        />
-        {openSections.has("opiniones") && (
-          <OpinionesManager
-            opiniones={opiniones}
-            clientId={client.id}
-            locale={locale}
-          />
-        )}
-      </section>
-
-      {/* Legales */}
-      <section className="panel-card p-5 space-y-3">
-        <SectionHeader
-          sectionKey="legales"
-          icon={Scale}
-          title={t("legalSection")}
-          subtitle={`${counts.legales} ${t("pages")}`}
-        />
-        {openSections.has("legales") && (
-          <LegalesManager
-            legales={legales}
-            clientId={client.id}
-          />
         )}
       </section>
 
@@ -1618,6 +1476,131 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
             </div>
 
             {renderSaveButton("global", ["meta_title", "meta_description"], { dark_mode_enabled: darkModeEnabled })}
+          </div>
+        )}
+      </section>
+
+      {/* Dominio */}
+      <section className="panel-card p-5 space-y-3">
+        <SectionHeader
+          sectionKey="domain"
+          icon={Globe}
+          title={t("domainSection")}
+          subtitle={t("domainSectionSub")}
+        />
+        {openSections.has("domain") && (
+          <div className="space-y-4 pt-2">
+            {/* Current domain with badge */}
+            {client.domain && (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-700 dark:text-white/80 font-mono">{client.domain}</span>
+                {domainVerified ? (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">
+                    <Check className="w-3 h-3" />
+                    {t("domainVerified")}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400">
+                    <AlertCircle className="w-3 h-3" />
+                    {t("domainPending")}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Input for new/change domain */}
+            <div>
+              <label className="panel-label block mb-1">{t("changeDomain")}</label>
+              <input
+                value={domainValue}
+                onChange={(e) => setDomainValue(e.target.value)}
+                className="panel-input w-full"
+                placeholder={t("domainPlaceholder")}
+              />
+            </div>
+
+            {/* CNAME instructions */}
+            <div className="bg-gray-50 dark:bg-white/[0.04] rounded-xl p-4 text-sm space-y-2">
+              <p className="text-gray-600 dark:text-white/60">
+                {t("domainCnameInstructions")}
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-start text-gray-500 dark:text-white/50 border-b border-gray-200 dark:border-white/10">
+                      <th className="py-2 pe-4 font-medium text-start">Type</th>
+                      <th className="py-2 pe-4 font-medium text-start">Name</th>
+                      <th className="py-2 font-medium text-start">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="text-gray-900 dark:text-white">
+                      <td className="py-2 pe-4 font-mono text-xs">CNAME</td>
+                      <td className="py-2 pe-4 font-mono text-xs">@</td>
+                      <td className="py-2 font-mono text-xs text-drb-turquoise-600 dark:text-drb-turquoise-400">
+                        cname.vercel-dns.com
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Vercel TXT verification if needed */}
+            {vercelVerification && vercelVerification.length > 0 && (
+              <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-xl p-4 text-sm space-y-2">
+                <p className="font-medium text-amber-700 dark:text-amber-300">
+                  {t("txtRecord")}
+                </p>
+                <p className="text-amber-600 dark:text-amber-400 text-xs">
+                  {t("txtInstructions")}
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-start text-gray-500 dark:text-white/50 border-b border-gray-200 dark:border-white/10">
+                        <th className="py-2 pe-4 font-medium text-start">Type</th>
+                        <th className="py-2 pe-4 font-medium text-start">Name</th>
+                        <th className="py-2 font-medium text-start">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {vercelVerification.map((v, i) => (
+                        <tr key={i} className="text-gray-900 dark:text-white">
+                          <td className="py-2 pe-4 font-mono text-xs">{v.type}</td>
+                          <td className="py-2 pe-4 font-mono text-xs">{v.domain}</td>
+                          <td className="py-2 font-mono text-xs text-drb-turquoise-600 dark:text-drb-turquoise-400 break-all">
+                            {v.value}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex items-center gap-3 justify-end pt-2">
+              <button
+                onClick={saveDomain}
+                disabled={domainSaving || !domainValue.trim()}
+                className="btn-primary disabled:opacity-50 flex items-center gap-2"
+              >
+                {domainSaving && <Loader2 className="w-4 h-4 animate-spin" />}
+                {t("saveDomain")}
+              </button>
+              {client.domain && (
+                <button
+                  onClick={handleVerifyDomain}
+                  disabled={domainVerifying}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-drb-turquoise-200 dark:border-drb-turquoise-500/20 text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:bg-drb-turquoise-50 dark:hover:bg-drb-turquoise-500/10 transition-colors text-sm font-medium"
+                >
+                  <RefreshCw className={`w-4 h-4 ${domainVerifying ? "animate-spin" : ""}`} />
+                  {t("verifyDomain")}
+                </button>
+              )}
+            </div>
           </div>
         )}
       </section>
