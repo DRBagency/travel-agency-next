@@ -127,7 +127,7 @@ function DesktopSidebar({
 
   return (
     <motion.aside
-      className="fixed start-0 top-0 bottom-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06] z-40 hidden lg:flex flex-col"
+      className="fixed start-0 top-0 bottom-0 glass-sidebar z-40 hidden lg:flex flex-col"
       animate={{ width: showLabels ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
       onMouseEnter={onHoverStart}
@@ -433,7 +433,7 @@ export default function OwnerShell({
   const navItems = navGroups.flat();
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] dark:bg-[#041820]">
+    <div className="min-h-screen bg-[#f0f4f8] dark:bg-[#041820]">
       {/* ========== DESKTOP SIDEBAR ========== */}
       <DesktopSidebar
         navGroups={navGroups}
@@ -485,7 +485,7 @@ export default function OwnerShell({
 
       {/* ========== HEADER ========== */}
       <header
-        className="sticky top-0 z-30 bg-white/80 dark:bg-[#041820]/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-white/[0.06] transition-all duration-200"
+        className="sticky top-0 z-30 glass-header transition-all duration-200"
         style={{
           marginInlineStart: `var(--sidebar-w, ${SIDEBAR_W_COLLAPSED}px)`,
           marginInlineEnd: `var(--right-col-w, 0px)`,
