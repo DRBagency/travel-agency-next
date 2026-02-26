@@ -1,6 +1,7 @@
 "use client";
 
 import { useLandingTheme } from "../LandingThemeProvider";
+import { useTranslations } from "next-intl";
 import { Img } from "../ui/Img";
 
 const FONT = `var(--font-syne), Syne, sans-serif`;
@@ -21,6 +22,7 @@ interface TabHotelProps {
 
 export function TabHotel({ hotel }: TabHotelProps) {
   const T = useLandingTheme();
+  const t = useTranslations('landing.destino');
 
   /* backwards compat with English-keyed seed data */
   const h = hotel as any;
@@ -133,7 +135,7 @@ export function TabHotel({ hotel }: TabHotelProps) {
                   fontWeight: 600,
                 }}
               >
-                {direccion.startsWith("http") ? "Ver ubicacion" : direccion}
+                {direccion.startsWith("http") ? t('viewLocation') : direccion}
               </p>
             </div>
             <a
@@ -158,7 +160,7 @@ export function TabHotel({ hotel }: TabHotelProps) {
                 whiteSpace: "nowrap",
               }}
             >
-              {"🗺️"} Ver en Maps
+              {"🗺️"} {t('viewOnMaps')}
             </a>
           </div>
         )}

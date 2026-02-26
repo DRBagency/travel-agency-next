@@ -44,10 +44,15 @@ export default async function HomePage() {
     );
   }
 
-  // Determine landing locale from client's preferred_language
+  // Determine landing locale: cookie > client preference > "es"
+  const cookieStore = await cookies();
+  const cookieLang = cookieStore.get("NEXT_LOCALE_LANDING")?.value;
   const clientLocale = VALID_LOCALES.includes(client.preferred_language as any)
     ? (client.preferred_language as string)
     : "es";
+  const initialLocale = cookieLang && VALID_LOCALES.includes(cookieLang as any)
+    ? cookieLang
+    : clientLocale;
 
   // Load messages for all available languages
   const availLangs: string[] =
@@ -80,14 +85,15 @@ export default async function HomePage() {
   availLangs.forEach((l, i) => { allMessages[l] = langMessages[i]; });
 
   return (
-    <NextIntlClientProvider locale={clientLocale} messages={allMessages[clientLocale] || langMessages[0]}>
-      <div dir={clientLocale === "ar" ? "rtl" : "ltr"}>
+    <NextIntlClientProvider locale={initialLocale} messages={allMessages[initialLocale] || allMessages[clientLocale] || langMessages[0]}>
+      <div dir={initialLocale === "ar" ? "rtl" : "ltr"}>
         <HomeClient
           client={client}
           opiniones={opiniones ?? []}
           paginasLegales={paginasLegales ?? []}
           allDestinos={allDestinos ?? []}
           allMessages={allMessages}
+          lang={initialLocale}
         />
       </div>
     </NextIntlClientProvider>

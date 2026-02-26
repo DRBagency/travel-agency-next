@@ -52,6 +52,7 @@ export default function HomeClient({
     return {
       ...d,
       nombre: dTr("nombre"),
+      pais: dTr("pais"),
       descripcion: dTr("descripcion"),
       descripcion_larga: dTr("descripcion_larga"),
       subtitle: dTr("subtitle"),
@@ -59,6 +60,7 @@ export default function HomeClient({
       badge: dTr("badge"),
       categoria: dTr("categoria"),
       duracion: dTr("duracion"),
+      tags: dTr("tags"),
     };
   });
 

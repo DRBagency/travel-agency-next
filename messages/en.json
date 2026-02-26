@@ -1862,7 +1862,9 @@
       "accessDesc": "Access with your email to see bookings, itineraries, documents and payments.",
       "access": "Access",
       "weather": "Current weather",
-      "reserve200": "Reserve your spot with only €200 deposit."
+      "reserve200": "Reserve your spot with only €200 deposit.",
+      "viewOnMaps": "View on Maps",
+      "viewLocation": "View location"
     },
     "booking": {
       "bookingStep1": "1. Details",

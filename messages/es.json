@@ -1862,7 +1862,9 @@
       "accessDesc": "Accede con tu email para ver reservas, itinerarios, documentos y pagos.",
       "access": "Acceder",
       "weather": "Clima actual",
-      "reserve200": "Reserva tu plaza con solo 200€ de anticipo."
+      "reserve200": "Reserva tu plaza con solo 200€ de anticipo.",
+      "viewOnMaps": "Ver en Maps",
+      "viewLocation": "Ver ubicación"
     },
     "booking": {
       "bookingStep1": "1. Datos",

@@ -113,6 +113,12 @@ html {
   }
 }
 
+/* Force Arabic font in RTL landing pages — overrides inline fontFamily styles */
+[dir="rtl"] .landing-wrap,
+[dir="rtl"] .landing-wrap * {
+  font-family: var(--font-arabic), var(--font-sans), ui-sans-serif, system-ui !important;
+}
+
 @layer components {
   /* ─── Panel utility classes (DRB Corporate) ─── */
   .panel-card {
