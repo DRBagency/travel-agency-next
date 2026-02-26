@@ -59,6 +59,10 @@ export const TRANSLATABLE_OPINION_FIELDS: Record<string, FieldType> = {
   texto: "string",
 };
 
+export const TRANSLATABLE_LEGAL_FIELDS: Record<string, FieldType> = {
+  titulo: "string",
+};
+
 /**
  * Map from MiWeb section key → translatable fields in that section.
  * Used to extract which fields to translate after saving a section.

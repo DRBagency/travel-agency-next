@@ -31,7 +31,7 @@ function contentHash(value: any): string {
 }
 
 interface AutoTranslateParams {
-  table: "clientes" | "destinos" | "opiniones";
+  table: "clientes" | "destinos" | "opiniones" | "paginas_legales";
   recordId: string;
   clientId: string;
   fields: Record<string, any>;

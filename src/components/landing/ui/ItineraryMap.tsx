@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useRef, useEffect, useState } from "react";
 import { useLandingTheme } from "../LandingThemeProvider";
 
 interface ItineraryDay {
@@ -12,9 +12,18 @@ interface ItineraryDay {
 
 export function ItineraryMap({ itinerary }: { itinerary: ItineraryDay[] }) {
   const T = useLandingTheme();
+  const ref = useRef<HTMLDivElement>(null);
+  const [isRtl, setIsRtl] = useState(false);
+
+  useEffect(() => {
+    if (ref.current) {
+      setIsRtl(getComputedStyle(ref.current).direction === "rtl");
+    }
+  }, []);
 
   return (
     <div
+      ref={ref}
       style={{
         display: "flex",
         alignItems: "flex-start",
@@ -72,7 +81,9 @@ export function ItineraryMap({ itinerary }: { itinerary: ItineraryDay[] }) {
               style={{
                 flex: "0 0 36px",
                 height: 2,
-                background: `linear-gradient(90deg, ${T.accent}, ${T.accent}30)`,
+                background: isRtl
+                  ? `linear-gradient(270deg, ${T.accent}, ${T.accent}30)`
+                  : `linear-gradient(90deg, ${T.accent}, ${T.accent}30)`,
                 marginTop: 21,
                 position: "relative",
               }}
@@ -80,13 +91,14 @@ export function ItineraryMap({ itinerary }: { itinerary: ItineraryDay[] }) {
               <div
                 style={{
                   position: "absolute",
-                  right: -3,
                   top: -3.5,
                   width: 0,
                   height: 0,
                   borderTop: "5px solid transparent",
                   borderBottom: "5px solid transparent",
-                  borderLeft: `7px solid ${T.accent}`,
+                  ...(isRtl
+                    ? { left: -3, borderRight: `7px solid ${T.accent}` }
+                    : { right: -3, borderLeft: `7px solid ${T.accent}` }),
                 }}
               />
             </div>

@@ -23,8 +23,11 @@ const TAG_COLORS: Record<string, string> = {
   "فن الطهي": "#ef4444",
 };
 
-export function TagChip({ label }: { label: string }) {
-  const color = TAG_COLORS[label] || "#1CABB0";
+/** Stable palette for tags that don't match the known map */
+const PALETTE = ["#0ea5e9", "#e879f9", "#22c55e", "#f97316", "#8b5cf6", "#ef4444"];
+
+export function TagChip({ label, index }: { label: string; index?: number }) {
+  const color = TAG_COLORS[label] || (index !== undefined ? PALETTE[index % PALETTE.length] : "#1CABB0");
   return (
     <span
       style={{

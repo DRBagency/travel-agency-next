@@ -6,6 +6,7 @@ import {
   TRANSLATABLE_CLIENT_FIELDS,
   TRANSLATABLE_DESTINO_FIELDS,
   TRANSLATABLE_OPINION_FIELDS,
+  TRANSLATABLE_LEGAL_FIELDS,
   type FieldType,
 } from "@/lib/translations";
 
@@ -15,6 +16,7 @@ const FIELD_MAPS: Record<string, Record<string, FieldType>> = {
   clientes: TRANSLATABLE_CLIENT_FIELDS,
   destinos: TRANSLATABLE_DESTINO_FIELDS,
   opiniones: TRANSLATABLE_OPINION_FIELDS,
+  paginas_legales: TRANSLATABLE_LEGAL_FIELDS,
 };
 
 /**
@@ -95,7 +97,7 @@ export async function POST(req: NextRequest) {
 
   // Single AI call
   const result = await autoTranslateRecord({
-    table: table as "clientes" | "destinos" | "opiniones",
+    table: table as "clientes" | "destinos" | "opiniones" | "paginas_legales",
     recordId,
     clientId,
     fields,

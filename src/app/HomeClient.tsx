@@ -72,6 +72,12 @@ export default function HomeClient({
     destino: o.ciudad || "",
   }));
 
+  // Translate legal page titles
+  const translatedLegales = paginasLegales.map((p: any) => ({
+    ...p,
+    titulo: tr(p, "titulo", currentLang, preferredLang),
+  }));
+
   // Translate whyus_items and map "desc" → "description" for landing component
   const rawWhyUs = clientTr("whyus_items");
   const translatedWhyUsItems = Array.isArray(rawWhyUs)
@@ -207,7 +213,7 @@ export default function HomeClient({
           logoUrl={client.logo_url}
           footerDescription={clientTr("footer_description")}
           destinos={translatedDestinos}
-          paginasLegales={paginasLegales}
+          paginasLegales={translatedLegales}
           legalBasePath={legalBasePath}
           destinationBasePath={destinationBasePath}
           instagramUrl={client.instagram_url}

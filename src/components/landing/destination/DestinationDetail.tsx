@@ -859,8 +859,8 @@ function DestinationDetailInner({
                 marginBottom: 24,
               }}
             >
-              {tags.map((tag: string) => (
-                <TagChip key={tag} label={tag} />
+              {tags.map((tag: string, idx: number) => (
+                <TagChip key={tag} label={tag} index={idx} />
               ))}
             </div>
           )}
@@ -1075,7 +1075,7 @@ function DestinationDetailInner({
           logoUrl={logoUrl}
           footerDescription={translatedFooterDesc}
           destinos={allDestinos.map((d: any) => ({ slug: d.slug || d.id, nombre: tr(d, 'nombre', currentLang, preferredLanguage) || d.nombre }))}
-          paginasLegales={paginasLegales.map((p: any) => ({ slug: p.slug, titulo: p.titulo }))}
+          paginasLegales={paginasLegales.map((p: any) => ({ slug: p.slug, titulo: tr(p, 'titulo', currentLang, preferredLanguage) || p.titulo }))}
           legalBasePath={legalBasePath}
           destinationBasePath={destinationBasePath}
           instagramUrl={instagramUrl}

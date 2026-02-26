@@ -560,11 +560,12 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       if (!listRes.ok) throw new Error("Could not fetch record list");
       const list = await listRes.json();
 
-      // Build queue: client first, then destinos, then opiniones
+      // Build queue: client first, then destinos, then opiniones, then legal pages
       const queue: { table: string; id: string; name: string }[] = [
         { table: "clientes", id: list.clientId, name: client.nombre || "Web" },
         ...(list.destinos || []).map((d: any) => ({ table: "destinos", id: d.id, name: d.nombre || "Destino" })),
         ...(list.opiniones || []).map((o: any) => ({ table: "opiniones", id: o.id, name: o.nombre || "Opinión" })),
+        ...(list.paginasLegales || []).map((p: any) => ({ table: "paginas_legales", id: p.id, name: p.titulo || "Legal" })),
       ];
 
       // Derive JSONB field names per table (each becomes its own API call)
@@ -576,6 +577,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
           .filter(([, type]) => type === "jsonb")
           .map(([key]) => key),
         opiniones: [],
+        paginas_legales: [],
       };
 
       // 2. Translate one record at a time, splitting by fieldGroup

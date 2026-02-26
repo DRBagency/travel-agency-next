@@ -4,7 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 
 /**
  * GET /api/admin/translate/list
- * Returns list of records to translate: client + destinos + opiniones.
+ * Returns list of records to translate: client + destinos + opiniones + paginas_legales.
  */
 export async function GET() {
   const cookieStore = await cookies();
@@ -13,7 +13,7 @@ export async function GET() {
     return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
 
-  const [{ data: destinos }, { data: opiniones }] = await Promise.all([
+  const [{ data: destinos }, { data: opiniones }, { data: paginasLegales }] = await Promise.all([
     supabaseAdmin
       .from("destinos")
       .select("id, nombre")
@@ -24,11 +24,17 @@ export async function GET() {
       .select("id, nombre")
       .eq("cliente_id", clientId)
       .eq("activo", true),
+    supabaseAdmin
+      .from("paginas_legales")
+      .select("id, titulo")
+      .eq("cliente_id", clientId)
+      .eq("activo", true),
   ]);
 
   return NextResponse.json({
     clientId,
     destinos: destinos || [],
     opiniones: opiniones || [],
+    paginasLegales: paginasLegales || [],
   });
 }
