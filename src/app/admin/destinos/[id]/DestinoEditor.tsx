@@ -429,7 +429,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {tab === "general" && (
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Informacion general
+              Información general
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* nombre */}
@@ -455,7 +455,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               </div>
               {/* subtitle */}
               <div>
-                <label className="panel-label">Subtitulo</label>
+                <label className="panel-label">Subtítulo</label>
                 <input
                   type="text"
                   value={subtitle}
@@ -481,12 +481,12 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                   value={badge}
                   onChange={(e) => setBadge(e.target.value)}
                   className="panel-input w-full"
-                  placeholder="Ej: Mas vendido"
+                  placeholder="Ej: Más vendido"
                 />
               </div>
               {/* categoria */}
               <div>
-                <label className="panel-label">Categoria</label>
+                <label className="panel-label">Categoría</label>
                 <input
                   type="text"
                   value={categoria}
@@ -496,7 +496,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               </div>
               {/* pais */}
               <div>
-                <label className="panel-label">Pais</label>
+                <label className="panel-label">País</label>
                 <input
                   type="text"
                   value={pais}
@@ -536,9 +536,9 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                   className="panel-input w-full"
                 >
                   <option value="">— Seleccionar —</option>
-                  <option value="facil">Facil</option>
+                  <option value="facil">Fácil</option>
                   <option value="moderado">Moderado</option>
-                  <option value="dificil">Dificil</option>
+                  <option value="dificil">Difícil</option>
                   <option value="extremo">Extremo</option>
                 </select>
               </div>
@@ -556,18 +556,18 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               </div>
               {/* duracion */}
               <div>
-                <label className="panel-label">Duracion</label>
+                <label className="panel-label">Duración</label>
                 <input
                   type="text"
                   value={duracion}
                   onChange={(e) => setDuracion(e.target.value)}
                   className="panel-input w-full"
-                  placeholder="Ej: 7 dias / 6 noches"
+                  placeholder="Ej: 7 días / 6 noches"
                 />
               </div>
               {/* grupo_max */}
               <div>
-                <label className="panel-label">Grupo maximo</label>
+                <label className="panel-label">Grupo máximo</label>
                 <input
                   type="number"
                   min={0}
@@ -578,7 +578,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               </div>
               {/* edad_min */}
               <div>
-                <label className="panel-label">Edad minima</label>
+                <label className="panel-label">Edad mínima</label>
                 <input
                   type="number"
                   min={0}
@@ -589,7 +589,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               </div>
               {/* edad_max */}
               <div>
-                <label className="panel-label">Edad maxima</label>
+                <label className="panel-label">Edad máxima</label>
                 <input
                   type="number"
                   min={0}
@@ -613,7 +613,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
             </div>
             {/* descripcion */}
             <div>
-              <label className="panel-label">Descripcion corta</label>
+              <label className="panel-label">Descripción corta</label>
               <textarea
                 rows={3}
                 value={descripcion}
@@ -623,7 +623,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
             </div>
             {/* descripcion_larga */}
             <div>
-              <label className="panel-label">Descripcion larga</label>
+              <label className="panel-label">Descripción larga</label>
               <textarea
                 rows={5}
                 value={descripcionLarga}
@@ -711,7 +711,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                 />
               </div>
               <div>
-                <label className="panel-label">Precio nino</label>
+                <label className="panel-label">Precio niño</label>
                 <input
                   type="number"
                   min={0}
@@ -751,7 +751,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               <div className="text-center py-12 text-gray-400 dark:text-white/40">
                 <Mountain className="w-10 h-10 mx-auto mb-3 opacity-40" />
                 <p className="text-sm mb-4">
-                  Este destino aun no tiene itinerario. Puedes generarlo desde la seccion de AI o
+                  Este destino aún no tiene itinerario. Puedes generarlo desde la sección de AI o
                   crearlo manualmente.
                 </p>
                 <button
@@ -826,7 +826,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                 )}
               </div>
               <div className="md:col-span-2">
-                <label className="panel-label">Descripcion</label>
+                <label className="panel-label">Descripción</label>
                 <textarea
                   rows={3}
                   value={hotel.descripcion}
@@ -835,16 +835,16 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="panel-label">Direccion / Google Maps</label>
+                <label className="panel-label">Dirección / Google Maps</label>
                 <input
                   type="text"
                   value={hotel.direccion || ""}
                   onChange={(e) => setHotel((p) => ({ ...p, direccion: e.target.value }))}
                   className="panel-input w-full"
-                  placeholder="Ej: Calle Gran Via 1, Madrid, Espana o URL de Google Maps"
+                  placeholder="Ej: Calle Gran Vía 1, Madrid, España o URL de Google Maps"
                 />
                 <p className="text-xs text-gray-400 dark:text-white/30 mt-1">
-                  Introduce la direccion o un enlace de Google Maps para mostrar en la landing
+                  Introduce la dirección o un enlace de Google Maps para mostrar en la landing
                 </p>
               </div>
             </div>
@@ -886,7 +886,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                 className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
               >
                 <Plus className="w-4 h-4" />
-                Anadir amenidad
+                Añadir amenidad
               </button>
             </div>
 
@@ -928,7 +928,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                   value={vuelos.nota}
                   onChange={(e) => setVuelos((p) => ({ ...p, nota: e.target.value }))}
                   className="panel-input w-full"
-                  placeholder="Informacion adicional sobre los vuelos..."
+                  placeholder="Información adicional sobre los vuelos..."
                 />
               </div>
             </div>
@@ -980,7 +980,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                   className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                 >
                   <Plus className="w-4 h-4" />
-                  Anadir
+                  Añadir
                 </button>
               </div>
 
@@ -1019,7 +1019,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                   className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                 >
                   <Plus className="w-4 h-4" />
-                  Anadir
+                  Añadir
                 </button>
               </div>
             </div>
@@ -1037,7 +1037,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
             </h2>
             {salidas.length === 0 && (
               <p className="text-sm text-gray-400 dark:text-white/40">
-                No hay salidas programadas. Anade la primera.
+                No hay salidas programadas. Añade la primera.
               </p>
             )}
             <div className="space-y-3">
@@ -1071,7 +1071,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                       className="panel-input w-full text-sm"
                     >
                       <option value="confirmed">Confirmado</option>
-                      <option value="lastSpots">Ultimas plazas</option>
+                      <option value="lastSpots">Últimas plazas</option>
                       <option value="soldOut">Agotado</option>
                     </select>
                   </div>
@@ -1126,7 +1126,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
             >
               <Plus className="w-4 h-4" />
-              Anadir salida
+              Añadir salida
             </button>
             <div className="flex justify-end pt-2">
               <SaveButton />
@@ -1142,7 +1142,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
             </h2>
             {faqs.length === 0 && (
               <p className="text-sm text-gray-400 dark:text-white/40">
-                No hay preguntas frecuentes. Anade la primera.
+                No hay preguntas frecuentes. Añade la primera.
               </p>
             )}
             <div className="space-y-4">
@@ -1221,7 +1221,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
             >
               <Plus className="w-4 h-4" />
-              Anadir pregunta
+              Añadir pregunta
             </button>
             <div className="flex justify-end pt-2">
               <SaveButton />
@@ -1282,7 +1282,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                 )}
               </div>
               <div className="md:col-span-2">
-                <label className="panel-label">Descripcion</label>
+                <label className="panel-label">Descripción</label>
                 <textarea
                   rows={3}
                   value={coordinador.descripcion}
@@ -1307,7 +1307,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         setCoordinador((p) => ({ ...p, idiomas: next }));
                       }}
                       className="panel-input flex-1 text-sm"
-                      placeholder="Ej: Espanol"
+                      placeholder="Ej: Español"
                     />
                     <button
                       type="button"
@@ -1330,7 +1330,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                 className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
               >
                 <Plus className="w-4 h-4" />
-                Anadir idioma
+                Añadir idioma
               </button>
             </div>
 
@@ -1383,7 +1383,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                 className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
               >
                 <Plus className="w-4 h-4" />
-                Anadir tag
+                Añadir tag
               </button>
             </div>
 
@@ -1423,7 +1423,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                 className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
               >
                 <Plus className="w-4 h-4" />
-                Anadir highlight
+                Añadir highlight
               </button>
             </div>
 
@@ -1441,7 +1441,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                     value={clima.temp_avg}
                     onChange={(e) => setClima((p) => ({ ...p, temp_avg: e.target.value }))}
                     className="panel-input w-full"
-                    placeholder="Ej: 25 C"
+                    placeholder="Ej: 25 °C"
                   />
                 </div>
                 <div>
@@ -1455,7 +1455,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="panel-label">Descripcion del clima</label>
+                  <label className="panel-label">Descripción del clima</label>
                   <textarea
                     rows={2}
                     value={clima.description}

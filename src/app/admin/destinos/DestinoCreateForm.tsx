@@ -751,7 +751,7 @@ export default function DestinoCreateForm({
                   <div className="text-center py-12 text-gray-400 dark:text-white/40">
                     <Mountain className="w-10 h-10 mx-auto mb-3 opacity-40" />
                     <p className="text-sm mb-4">
-                      Este destino aun no tiene itinerario. Puedes generarlo desde la seccion de AI o
+                      Este destino aún no tiene itinerario. Puedes generarlo desde la sección de AI o
                       crearlo manualmente.
                     </p>
                     <button
@@ -836,7 +836,7 @@ export default function DestinoCreateForm({
                     )}
                   </div>
                   <div className="md:col-span-2">
-                    <label className="panel-label">Descripcion</label>
+                    <label className="panel-label">Descripción</label>
                     <textarea
                       rows={3}
                       value={hotel.descripcion}
@@ -845,13 +845,13 @@ export default function DestinoCreateForm({
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="panel-label">Direccion / Google Maps</label>
+                    <label className="panel-label">Dirección / Google Maps</label>
                     <input
                       type="text"
                       value={hotel.direccion || ""}
                       onChange={(e) => setHotel((p) => ({ ...p, direccion: e.target.value }))}
                       className="panel-input w-full"
-                      placeholder="Ej: Calle Gran Via 1, Madrid, Espana o URL de Google Maps"
+                      placeholder="Ej: Calle Gran Vía 1, Madrid, España o URL de Google Maps"
                     />
                     <p className="text-xs text-gray-400 dark:text-white/30 mt-1">
                       Introduce la direccion o un enlace de Google Maps para mostrar en la landing
@@ -898,7 +898,7 @@ export default function DestinoCreateForm({
                     className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                   >
                     <Plus className="w-4 h-4" />
-                    Anadir amenidad
+                    Añadir amenidad
                   </button>
                 </div>
 
@@ -948,7 +948,7 @@ export default function DestinoCreateForm({
                       value={vuelos.nota}
                       onChange={(e) => setVuelos((p) => ({ ...p, nota: e.target.value }))}
                       className="panel-input w-full"
-                      placeholder="Informacion adicional sobre los vuelos..."
+                      placeholder="Información adicional sobre los vuelos..."
                     />
                   </div>
                 </div>
@@ -1004,7 +1004,7 @@ export default function DestinoCreateForm({
                       className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                     >
                       <Plus className="w-4 h-4" />
-                      Anadir
+                      Añadir
                     </button>
                   </div>
 
@@ -1045,7 +1045,7 @@ export default function DestinoCreateForm({
                       className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                     >
                       <Plus className="w-4 h-4" />
-                      Anadir
+                      Añadir
                     </button>
                   </div>
                 </div>
@@ -1065,7 +1065,7 @@ export default function DestinoCreateForm({
                 </h2>
                 {salidas.length === 0 && (
                   <p className="text-sm text-gray-400 dark:text-white/40">
-                    No hay salidas programadas. Anade la primera.
+                    No hay salidas programadas. Añade la primera.
                   </p>
                 )}
                 <div className="space-y-3">
@@ -1099,7 +1099,7 @@ export default function DestinoCreateForm({
                           className="panel-input w-full text-sm"
                         >
                           <option value="confirmed">Confirmado</option>
-                          <option value="lastSpots">Ultimas plazas</option>
+                          <option value="lastSpots">Últimas plazas</option>
                           <option value="soldOut">Agotado</option>
                         </select>
                       </div>
@@ -1162,7 +1162,7 @@ export default function DestinoCreateForm({
                   className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                 >
                   <Plus className="w-4 h-4" />
-                  Anadir salida
+                  Añadir salida
                 </button>
                 <div className="flex justify-end pt-2">
                   <SubmitButton className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium">
@@ -1180,7 +1180,7 @@ export default function DestinoCreateForm({
                 </h2>
                 {faqs.length === 0 && (
                   <p className="text-sm text-gray-400 dark:text-white/40">
-                    No hay preguntas frecuentes. Anade la primera.
+                    No hay preguntas frecuentes. Añade la primera.
                   </p>
                 )}
                 <div className="space-y-4">
@@ -1263,7 +1263,7 @@ export default function DestinoCreateForm({
                   className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                 >
                   <Plus className="w-4 h-4" />
-                  Anadir pregunta
+                  Añadir pregunta
                 </button>
                 <div className="flex justify-end pt-2">
                   <SubmitButton className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium">
@@ -1334,7 +1334,7 @@ export default function DestinoCreateForm({
                     )}
                   </div>
                   <div className="md:col-span-2">
-                    <label className="panel-label">Descripcion</label>
+                    <label className="panel-label">Descripción</label>
                     <textarea
                       rows={3}
                       value={coordinador.descripcion}
@@ -1361,7 +1361,7 @@ export default function DestinoCreateForm({
                             setCoordinador((p) => ({ ...p, idiomas: next }));
                           }}
                           className="panel-input flex-1 text-sm"
-                          placeholder="Ej: Espanol"
+                          placeholder="Ej: Español"
                         />
                         <button
                           type="button"
@@ -1386,7 +1386,7 @@ export default function DestinoCreateForm({
                     className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                   >
                     <Plus className="w-4 h-4" />
-                    Anadir idioma
+                    Añadir idioma
                   </button>
                 </div>
 
@@ -1443,7 +1443,7 @@ export default function DestinoCreateForm({
                     className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                   >
                     <Plus className="w-4 h-4" />
-                    Anadir tag
+                    Añadir tag
                   </button>
                 </div>
 
@@ -1485,7 +1485,7 @@ export default function DestinoCreateForm({
                     className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
                   >
                     <Plus className="w-4 h-4" />
-                    Anadir highlight
+                    Añadir highlight
                   </button>
                 </div>
 
@@ -1521,7 +1521,7 @@ export default function DestinoCreateForm({
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="panel-label">Descripcion del clima</label>
+                      <label className="panel-label">Descripción del clima</label>
                       <textarea
                         rows={2}
                         value={clima.description}
