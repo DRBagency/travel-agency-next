@@ -808,7 +808,7 @@
       "logoUrl": "Logo (URL)",
       "primaryColor": "Color principal",
       "landingLanguage": "Idioma de la landing",
-      "landingLanguageHint": "Idioma en el que se muestran los textos fijos de tu landing pública (botones, secciones, etc.)",
+      "landingLanguageHint": "Idioma predeterminado en el que se mostrará tu web pública. El visitante podrá cambiarlo si hay más idiomas habilitados.",
       "hero": "Hero (portada)",
       "heroSub": "Título, subtítulo, botón CTA y fondo",
       "heroTitle": "Título principal",
