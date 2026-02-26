@@ -109,25 +109,24 @@ export default function Navbar({
         >
           {/* Logo / Brand */}
           <Link href={homeUrl} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-            {logoUrl ? (
+            {logoUrl && (
               <img
                 src={logoUrl}
                 alt={clientName}
                 style={{ height: 36, width: "auto", objectFit: "contain" }}
               />
-            ) : (
-              <span
-                style={{
-                  fontFamily: FONT,
-                  fontWeight: 800,
-                  fontSize: 22,
-                  color: T.text,
-                  letterSpacing: "-0.5px",
-                }}
-              >
-                {clientName}
-              </span>
             )}
+            <span
+              style={{
+                fontFamily: FONT,
+                fontWeight: 800,
+                fontSize: 22,
+                color: T.text,
+                letterSpacing: "-0.5px",
+              }}
+            >
+              {clientName}
+            </span>
           </Link>
 
           {/* Desktop Nav Links */}

@@ -94,32 +94,31 @@ export default function Footer({
         >
           {/* Column 1: Brand */}
           <div>
-            {logoUrl ? (
-              <img
-                src={logoUrl}
-                alt={clientName}
-                style={{
-                  height: 36,
-                  width: "auto",
-                  objectFit: "contain",
-                  marginBottom: 16,
-                  display: "block",
-                }}
-              />
-            ) : (
-              <div
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              {logoUrl && (
+                <img
+                  src={logoUrl}
+                  alt={clientName}
+                  style={{
+                    height: 36,
+                    width: "auto",
+                    objectFit: "contain",
+                    display: "block",
+                  }}
+                />
+              )}
+              <span
                 style={{
                   fontFamily: FONT,
                   fontWeight: 800,
                   fontSize: 22,
                   color: T.text,
-                  marginBottom: 16,
                   letterSpacing: "-0.5px",
                 }}
               >
                 {clientName}
-              </div>
-            )}
+              </span>
+            </div>
             <p
               style={{
                 fontFamily: FONT2,
