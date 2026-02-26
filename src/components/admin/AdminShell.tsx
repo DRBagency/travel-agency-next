@@ -555,34 +555,36 @@ const AdminShell = ({
         onMouseEnter={() => setRightHovered(true)}
         onMouseLeave={() => setRightHovered(false)}
       >
-        {/* Pin/Unpin toggle */}
-        <div className="flex justify-start px-2 pt-2 shrink-0" style={{ minWidth: RIGHT_COL_W }}>
-          <button
-            onClick={toggleRightPin}
-            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
-            title={rightPinned ? tc("unpin") : tc("pin")}
-          >
-            {rightPinned ? (
-              <Pin className="w-3.5 h-3.5 text-drb-turquoise-500" />
-            ) : (
-              <PinOff className="w-3.5 h-3.5 text-gray-400 dark:text-white/40" />
-            )}
-          </button>
-        </div>
         {rightColExpanded ? (
-          <div className="flex-1 overflow-hidden" style={{ minWidth: RIGHT_COL_W }}>
-            <AdminRightColumn
-              clientName={clientName}
-              clientEmail={clientEmail}
-              clienteId={clienteId}
-              logoUrl={logoUrl}
-              profilePhoto={profilePhoto}
-              primaryColor={primaryColor}
-              contactPhone={contactPhone}
-              agencyContext={agencyContext}
-              plan={plan}
-            />
-          </div>
+          <>
+            {/* Pin/Unpin toggle — only visible when expanded */}
+            <div className="flex justify-start px-2 pt-2 shrink-0" style={{ minWidth: RIGHT_COL_W }}>
+              <button
+                onClick={toggleRightPin}
+                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+                title={rightPinned ? tc("unpin") : tc("pin")}
+              >
+                {rightPinned ? (
+                  <Pin className="w-3.5 h-3.5 text-drb-turquoise-500" />
+                ) : (
+                  <PinOff className="w-3.5 h-3.5 text-gray-400 dark:text-white/40" />
+                )}
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden" style={{ minWidth: RIGHT_COL_W }}>
+              <AdminRightColumn
+                clientName={clientName}
+                clientEmail={clientEmail}
+                clienteId={clienteId}
+                logoUrl={logoUrl}
+                profilePhoto={profilePhoto}
+                primaryColor={primaryColor}
+                contactPhone={contactPhone}
+                agencyContext={agencyContext}
+                plan={plan}
+              />
+            </div>
+          </>
         ) : (
           <div className="flex-1 flex flex-col items-center pt-3 gap-3">
             <MessageCircle className="w-5 h-5 text-drb-turquoise-500" />

@@ -126,13 +126,13 @@ export default function EdenChat({ clienteId, agencyContext, plan }: EdenChatPro
               <div className="w-6 h-6 rounded-md bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0 shadow-sm">
                 <Bot className="w-3 h-3 text-white" />
               </div>
-              <div className="bg-white/20 backdrop-blur-md rounded-2xl rounded-tl-sm px-3 py-2 text-[13px] text-white shadow-sm border border-white/15">
+              <div className="bg-[#0a2a35]/80 backdrop-blur-md rounded-2xl rounded-tl-sm px-3 py-2 text-[13px] text-white shadow-sm border border-white/15">
                 {t("welcome")}
               </div>
             </div>
 
             {/* Quick suggestions */}
-            <div className="flex flex-wrap gap-1 ps-8">
+            <div className="grid grid-cols-2 gap-1 ps-8">
               {suggestions.map((s, i) => (
                 <button
                   key={i}
@@ -160,7 +160,7 @@ export default function EdenChat({ clienteId, agencyContext, plan }: EdenChatPro
               className={`max-w-[85%] rounded-2xl px-3 py-2 text-[13px] shadow-sm ${
                 msg.role === "user"
                   ? "bg-drb-turquoise-500/90 text-white rounded-tr-sm border border-drb-turquoise-400/40"
-                  : "bg-white/20 backdrop-blur-md text-white rounded-tl-sm border border-white/15"
+                  : "bg-[#0a2a35]/80 backdrop-blur-md text-white rounded-tl-sm border border-white/15"
               }`}
             >
               <div className="whitespace-pre-wrap break-words">
@@ -180,7 +180,7 @@ export default function EdenChat({ clienteId, agencyContext, plan }: EdenChatPro
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-drb-turquoise-500 to-drb-lime-500 flex items-center justify-center shrink-0 shadow-sm">
               <Bot className="w-3 h-3 text-white" />
             </div>
-            <div className="bg-white/20 backdrop-blur-md rounded-2xl rounded-tl-sm px-3 py-2 shadow-sm border border-white/15">
+            <div className="bg-[#0a2a35]/80 backdrop-blur-md rounded-2xl rounded-tl-sm px-3 py-2 shadow-sm border border-white/15">
               <div className="flex items-center gap-1">
                 <div
                   className="w-1.5 h-1.5 rounded-full bg-drb-turquoise-300 animate-bounce"
