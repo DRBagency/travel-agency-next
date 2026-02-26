@@ -125,10 +125,14 @@ module.exports = {
         'beam-sweep': 'beamSweep 6s ease-in-out infinite',
         'pulse-ring': 'pulseRing 3s ease-out infinite',
         'float-particle': 'floatParticle 8s ease-in-out infinite',
-        'orb-float-1': 'orb-float-1 18s ease-in-out infinite',
-        'orb-float-2': 'orb-float-2 22s ease-in-out infinite',
-        'orb-float-3': 'orb-float-3 20s ease-in-out infinite',
-        'orb-float-4': 'orb-float-4 15s ease-in-out infinite',
+        'orbFloat1': 'orbFloat1 22s ease-in-out infinite',
+        'orbFloat2': 'orbFloat2 26s ease-in-out infinite',
+        'orbFloat3': 'orbFloat3 24s ease-in-out infinite',
+        'orbFloat4': 'orbFloat4 20s ease-in-out infinite',
+        'orbFloat5': 'orbFloat5 28s ease-in-out infinite',
+        'waveD1': 'waveD1 20s ease-in-out infinite alternate',
+        'waveD2': 'waveD2 25s ease-in-out infinite alternate',
+        'waveD3': 'waveD3 22s ease-in-out infinite alternate',
       },
       keyframes: {
         slideInRight: {
@@ -200,21 +204,45 @@ module.exports = {
           '50%': { transform: 'translateY(-15px) translateX(-10px)' },
           '75%': { transform: 'translateY(-25px) translateX(5px)' },
         },
-        'orb-float-1': {
-          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '50%': { transform: 'translate(80px, 50px) scale(1.15)' },
+        orbFloat1: {
+          '0%, 100%': { transform: 'translate(0,0) scale(1)' },
+          '50%': { transform: 'translate(100px,70px) scale(1.15)' },
         },
-        'orb-float-2': {
-          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '50%': { transform: 'translate(-60px, -40px) scale(0.9)' },
+        orbFloat2: {
+          '0%, 100%': { transform: 'translate(0,0) scale(1)' },
+          '50%': { transform: 'translate(-80px,-60px) scale(0.88)' },
         },
-        'orb-float-3': {
-          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '50%': { transform: 'translate(50px, -60px) scale(1.1)' },
+        orbFloat3: {
+          '0%, 100%': { transform: 'translate(0,0) scale(1)' },
+          '50%': { transform: 'translate(70px,-80px) scale(1.1)' },
         },
-        'orb-float-4': {
-          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '50%': { transform: 'translate(-30px, 40px) scale(1.2)' },
+        orbFloat4: {
+          '0%, 100%': { transform: 'translate(0,0) scale(1)' },
+          '50%': { transform: 'translate(-50px,60px) scale(1.18)' },
+        },
+        orbFloat5: {
+          '0%, 100%': { transform: 'translate(0,0) scale(1)' },
+          '50%': { transform: 'translate(60px,-40px) scale(0.92)' },
+        },
+        twinkle: {
+          '0%': { opacity: '0.08', transform: 'scale(0.8)' },
+          '50%': { opacity: 'var(--twinkle-opacity, 0.4)', transform: 'scale(1.3)' },
+          '100%': { opacity: '0.1', transform: 'scale(0.9)' },
+        },
+        waveD1: {
+          '0%': { transform: 'translateX(-3%) scaleY(1)' },
+          '50%': { transform: 'translateX(3%) scaleY(1.15)' },
+          '100%': { transform: 'translateX(-2%) scaleY(0.9)' },
+        },
+        waveD2: {
+          '0%': { transform: 'translateX(2%) scaleY(1)' },
+          '50%': { transform: 'translateX(-4%) scaleY(0.85)' },
+          '100%': { transform: 'translateX(3%) scaleY(1.1)' },
+        },
+        waveD3: {
+          '0%': { transform: 'translateX(-2%) scaleY(0.9)' },
+          '50%': { transform: 'translateX(2%) scaleY(1.2)' },
+          '100%': { transform: 'translateX(-3%) scaleY(1)' },
         },
       },
     },
