@@ -849,6 +849,7 @@
       "whyUsCardTitlePlaceholder": "Ej: Grupos reducidos",
       "whyUsCardDescPlaceholder": "Ej: Viaja con grupos de máximo 16 personas para una experiencia más auténtica.",
       "addCard": "Añadir tarjeta",
+      "maxCardsReached": "Máximo de 4 tarjetas alcanzado",
       "removeCard": "Eliminar",
       "moveUp": "Subir",
       "moveDown": "Bajar",

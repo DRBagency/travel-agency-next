@@ -849,6 +849,7 @@
       "whyUsCardTitlePlaceholder": "مثال: مجموعات صغيرة",
       "whyUsCardDescPlaceholder": "مثال: سافر مع مجموعات لا تزيد عن 16 شخصًا لتجربة أكثر أصالة.",
       "addCard": "إضافة بطاقة",
+      "maxCardsReached": "تم الوصول إلى الحد الأقصى وهو 4 بطاقات",
       "removeCard": "حذف",
       "moveUp": "تحريك لأعلى",
       "moveDown": "تحريك لأسفل",

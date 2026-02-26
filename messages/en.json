@@ -849,6 +849,7 @@
       "whyUsCardTitlePlaceholder": "E.g.: Small groups",
       "whyUsCardDescPlaceholder": "E.g.: Travel with groups of up to 16 people for a more authentic experience.",
       "addCard": "Add card",
+      "maxCardsReached": "Maximum of 4 cards reached",
       "removeCard": "Remove",
       "moveUp": "Move up",
       "moveDown": "Move down",
