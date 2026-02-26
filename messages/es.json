@@ -460,6 +460,7 @@
       "location": "Ubicación",
       "destination": "Destino",
       "selectDestination": "Selecciona un destino",
+      "cityCountry": "Ciudad, País",
       "comment": "Comentario",
       "rating": "Rating"
     },
@@ -723,11 +724,13 @@
       "location": "Ubicación",
       "destination": "Destino",
       "selectDestination": "Selecciona un destino",
+      "cityCountry": "Ciudad, País",
       "comment": "Comentario",
       "rating": "Rating",
       "form": {
         "namePlaceholder": "Ej: Ana Martínez",
         "locationPlaceholder": "Ej: Madrid",
+        "cityPlaceholder": "Ej: Tokio, Japón",
         "commentPlaceholder": "Cuéntanos la experiencia del cliente",
         "saveReview": "Guardar opinión"
       }

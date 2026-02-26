@@ -1426,7 +1426,6 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
         {openSections.has("opiniones") && (
           <OpinionesManager
             opiniones={opiniones}
-            destinos={destinos}
             clientId={client.id}
             locale={locale}
           />

@@ -494,6 +494,7 @@
       "location": "Location",
       "destination": "Destination",
       "selectDestination": "Select a destination",
+      "cityCountry": "City, Country",
       "comment": "Comment",
       "rating": "Rating"
     },
@@ -723,11 +724,13 @@
       "location": "Location",
       "destination": "Destination",
       "selectDestination": "Select a destination",
+      "cityCountry": "City, Country",
       "comment": "Comment",
       "rating": "Rating",
       "form": {
         "namePlaceholder": "E.g.: Ana Martinez",
         "locationPlaceholder": "E.g.: Madrid",
+        "cityPlaceholder": "E.g.: Tokyo, Japan",
         "commentPlaceholder": "Tell us about the client's experience",
         "saveReview": "Save review"
       }

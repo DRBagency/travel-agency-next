@@ -19,19 +19,12 @@ interface Opinion {
   created_at: string;
 }
 
-interface Destino {
-  id: string;
-  nombre: string;
-}
-
 export default function OpinionesManager({
   opiniones: initialOpiniones,
-  destinos = [],
   clientId,
   locale,
 }: {
   opiniones: Opinion[];
-  destinos?: Destino[];
   clientId: string;
   locale: string;
 }) {
@@ -184,28 +177,6 @@ export default function OpinionesManager({
     }
   }
 
-  // Destination dropdown component
-  const DestinoSelect = ({
-    value,
-    onChange,
-  }: {
-    value: string;
-    onChange: (v: string) => void;
-  }) => (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="panel-input w-full"
-    >
-      <option value="">{t("selectDestination")}</option>
-      {destinos.map((d) => (
-        <option key={d.id} value={d.nombre}>
-          {d.nombre}
-        </option>
-      ))}
-    </select>
-  );
-
   const activeCount = opiniones.filter((o) => o.activo).length;
 
   return (
@@ -238,8 +209,13 @@ export default function OpinionesManager({
               />
             </div>
             <div>
-              <label className="panel-label block mb-1">{t("destination")}</label>
-              <DestinoSelect value={ciudad} onChange={setCiudad} />
+              <label className="panel-label block mb-1">{t("cityCountry")}</label>
+              <input
+                value={ciudad}
+                onChange={(e) => setCiudad(e.target.value)}
+                className="panel-input w-full"
+                placeholder={t("form.cityPlaceholder")}
+              />
             </div>
           </div>
           <div>
@@ -315,8 +291,13 @@ export default function OpinionesManager({
                       />
                     </div>
                     <div>
-                      <label className="panel-label block mb-1">{t("destination")}</label>
-                      <DestinoSelect value={editCiudad} onChange={setEditCiudad} />
+                      <label className="panel-label block mb-1">{t("cityCountry")}</label>
+                      <input
+                value={editCiudad}
+                onChange={(e) => setEditCiudad(e.target.value)}
+                className="panel-input w-full"
+                placeholder={t("form.cityPlaceholder")}
+              />
                     </div>
                   </div>
                   <div>

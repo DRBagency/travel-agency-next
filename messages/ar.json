@@ -494,6 +494,7 @@
       "location": "الموقع",
       "destination": "الوجهة",
       "selectDestination": "اختر وجهة",
+      "cityCountry": "المدينة، البلد",
       "comment": "التعليق",
       "rating": "التقييم"
     },
@@ -723,11 +724,13 @@
       "location": "الموقع",
       "destination": "الوجهة",
       "selectDestination": "اختر وجهة",
+      "cityCountry": "المدينة، البلد",
       "comment": "التعليق",
       "rating": "التقييم",
       "form": {
         "namePlaceholder": "مثال: أحمد محمد",
         "locationPlaceholder": "مثال: الرياض",
+        "cityPlaceholder": "مثال: طوكيو، اليابان",
         "commentPlaceholder": "أخبرنا عن تجربة العميل",
         "saveReview": "حفظ التقييم"
       }
