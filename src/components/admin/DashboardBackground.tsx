@@ -6,9 +6,11 @@
  * Dark mode: sky gradient + stars + crescent moon + 4 peaked mountain layers + pines.
  * Light mode: turquoise sky gradient + 3 peaked mountain layers.
  * Mountains use angular peaks (not rounded curves) to look like real mountains.
+ * Animated color orbs float behind content for liquid glass depth.
  */
 export default function DashboardBackground() {
   return (
+    <>
     <svg
       className="fixed inset-0 w-full h-full pointer-events-none z-0"
       viewBox="0 0 1600 900"
@@ -142,5 +144,61 @@ export default function DashboardBackground() {
         />
       </g>
     </svg>
+
+    {/* ═══ Liquid Glass Orbs ═══ */}
+    <div
+      className="fixed inset-0 z-0 pointer-events-none overflow-hidden opacity-40 dark:opacity-100"
+      aria-hidden="true"
+    >
+      {/* Orb 1 — Turquesa grande, arriba izquierda */}
+      <div
+        className="absolute rounded-full animate-orb-float-1 will-change-transform"
+        style={{
+          width: '600px',
+          height: '600px',
+          top: '-5%',
+          left: '15%',
+          background: 'radial-gradient(circle, rgba(28,171,176,0.35), transparent 70%)',
+          filter: 'blur(100px)',
+        }}
+      />
+      {/* Orb 2 — Lime medio, abajo derecha */}
+      <div
+        className="absolute rounded-full animate-orb-float-2 will-change-transform"
+        style={{
+          width: '450px',
+          height: '450px',
+          top: '55%',
+          right: '5%',
+          background: 'radial-gradient(circle, rgba(212,242,77,0.2), transparent 70%)',
+          filter: 'blur(100px)',
+        }}
+      />
+      {/* Orb 3 — Turquesa medio, abajo centro */}
+      <div
+        className="absolute rounded-full animate-orb-float-3 will-change-transform"
+        style={{
+          width: '500px',
+          height: '500px',
+          bottom: '-10%',
+          left: '40%',
+          background: 'radial-gradient(circle, rgba(28,171,176,0.25), transparent 70%)',
+          filter: 'blur(100px)',
+        }}
+      />
+      {/* Orb 4 — Lime sutil, arriba derecha */}
+      <div
+        className="absolute rounded-full animate-orb-float-4 will-change-transform"
+        style={{
+          width: '300px',
+          height: '300px',
+          top: '20%',
+          right: '25%',
+          background: 'radial-gradient(circle, rgba(212,242,77,0.15), transparent 70%)',
+          filter: 'blur(100px)',
+        }}
+      />
+    </div>
+    </>
   );
 }

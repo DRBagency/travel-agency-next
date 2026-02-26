@@ -504,6 +504,28 @@ html {
   .badge-dot-danger::before { @apply bg-red-500; }
   .badge-dot-info::before { @apply bg-drb-turquoise-500; }
 
+  /* ═══ Liquid Glass Orb Animations ═══ */
+  @keyframes orb-float-1 {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(80px, 50px) scale(1.15); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+  @keyframes orb-float-2 {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-60px, -40px) scale(0.9); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+  @keyframes orb-float-3 {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, -60px) scale(1.1); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+  @keyframes orb-float-4 {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-30px, 40px) scale(1.2); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+
   /* ─── FullCalendar light + dark theme ─── */
   .fc-travelie-theme .fc {
     --fc-border-color: #e5e7eb;

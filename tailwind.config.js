@@ -125,6 +125,10 @@ module.exports = {
         'beam-sweep': 'beamSweep 6s ease-in-out infinite',
         'pulse-ring': 'pulseRing 3s ease-out infinite',
         'float-particle': 'floatParticle 8s ease-in-out infinite',
+        'orb-float-1': 'orb-float-1 18s ease-in-out infinite',
+        'orb-float-2': 'orb-float-2 22s ease-in-out infinite',
+        'orb-float-3': 'orb-float-3 20s ease-in-out infinite',
+        'orb-float-4': 'orb-float-4 15s ease-in-out infinite',
       },
       keyframes: {
         slideInRight: {
@@ -195,6 +199,22 @@ module.exports = {
           '25%': { transform: 'translateY(-30px) translateX(10px)' },
           '50%': { transform: 'translateY(-15px) translateX(-10px)' },
           '75%': { transform: 'translateY(-25px) translateX(5px)' },
+        },
+        'orb-float-1': {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '50%': { transform: 'translate(80px, 50px) scale(1.15)' },
+        },
+        'orb-float-2': {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '50%': { transform: 'translate(-60px, -40px) scale(0.9)' },
+        },
+        'orb-float-3': {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '50%': { transform: 'translate(50px, -60px) scale(1.1)' },
+        },
+        'orb-float-4': {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '50%': { transform: 'translate(-30px, 40px) scale(1.2)' },
         },
       },
     },
