@@ -26,6 +26,8 @@ import {
   RefreshCw,
   AlertCircle,
   Settings,
+  Layout,
+  Megaphone,
   type LucideIcon,
 } from "lucide-react";
 import UnsplashPicker from "./UnsplashPicker";
@@ -264,6 +266,24 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
   } | null>(null);
   const [bulkTranslateError, setBulkTranslateError] = useState<string | null>(null);
   const [showTranslateConfirm, setShowTranslateConfirm] = useState(false);
+
+  // Tabs
+  const TABS = [
+    { key: "config", icon: Settings },
+    { key: "content", icon: Layout },
+    { key: "conversion", icon: Megaphone },
+  ] as const;
+  type TabKey = (typeof TABS)[number]["key"];
+  const [tab, setTab] = useState<TabKey>("config");
+
+  function tabLabel(key: TabKey): string {
+    const labels: Record<TabKey, string> = {
+      config: t("tabConfig"),
+      content: t("tabContent"),
+      conversion: t("tabConversion"),
+    };
+    return labels[key];
+  }
 
   function toggleSection(key: SectionKey) {
     setOpenSections((prev) => {
@@ -653,6 +673,32 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
           Translation failed. Content saved successfully.
         </div>
       )}
+
+      {/* Tab bar */}
+      <div className="overflow-x-auto -mx-1 px-1">
+        <div className="flex gap-1 min-w-max border-b border-gray-200 dark:border-white/10">
+          {TABS.map(({ key, icon: Icon }) => {
+            const isActive = tab === key;
+            return (
+              <button
+                key={key}
+                onClick={() => setTab(key)}
+                className={`flex items-center gap-1.5 px-3 py-2.5 text-sm whitespace-nowrap transition-colors border-b-2 ${
+                  isActive
+                    ? "border-drb-turquoise-500 text-drb-turquoise-600 dark:text-drb-turquoise-400 font-semibold"
+                    : "border-transparent text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/70"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {tabLabel(key)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ====== TAB 1: Configuración ====== */}
+      {tab === "config" && (<>
 
       {/* Bulk Translate All button — shown when translation is eligible */}
       {translationEligible && (
@@ -1076,6 +1122,11 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
         )}
       </section>
 
+      </>)}
+
+      {/* ====== TAB 2: Contenido ====== */}
+      {tab === "content" && (<>
+
       {/* Hero */}
       <section className="panel-card p-5 space-y-3">
         <SectionHeader
@@ -1432,6 +1483,11 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
         )}
       </section>
 
+      </>)}
+
+      {/* ====== TAB 3: Conversión ====== */}
+      {tab === "conversion" && (<>
+
       {/* Banner CTA */}
       <section className="panel-card p-5 space-y-3">
         <SectionHeaderEmoji
@@ -1641,6 +1697,8 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
           </div>
         )}
       </section>
+
+      </>)}
 
       {/* Enlace a destinos */}
       <section className="panel-card p-5 space-y-3">
