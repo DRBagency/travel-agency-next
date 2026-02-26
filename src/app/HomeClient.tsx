@@ -62,10 +62,12 @@ export default function HomeClient({
     };
   });
 
-  // Translate opiniones
+  // Translate opiniones and map DB fields to Testimonials component fields
+  // DB: comentario → texto, ubicacion → destino
   const translatedOpiniones = opiniones.map((o: any) => ({
     ...o,
-    comentario: tr(o, "comentario", currentLang, preferredLang),
+    texto: tr(o, "comentario", currentLang, preferredLang),
+    destino: o.destino || o.ubicacion || "",
   }));
 
   // Translate whyus_items and map "desc" → "description" for landing component
