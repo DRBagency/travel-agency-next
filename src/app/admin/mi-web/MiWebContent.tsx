@@ -1107,10 +1107,6 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
                     className="w-32 panel-input font-mono text-sm"
                     placeholder="#1CABB0"
                   />
-                  <div
-                    className="h-10 w-10 rounded-xl border border-gray-200 dark:border-white/20"
-                    style={{ backgroundColor: fields.primary_color }}
-                  />
                 </div>
               </div>
 
