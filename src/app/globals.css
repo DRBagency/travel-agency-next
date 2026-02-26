@@ -122,35 +122,57 @@ html {
 @layer components {
   /* ─── Panel utility classes (DRB Corporate) ─── */
   .panel-card {
-    @apply bg-white/95 dark:bg-[#0a2a35]/80 backdrop-blur-sm border border-drb-turquoise-200/60 dark:border-drb-turquoise-800/40 rounded-2xl transition-all duration-200;
-    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 8px 24px rgba(7,35,49,0.08);
+    @apply relative overflow-hidden rounded-2xl transition-all duration-300;
+    @apply bg-white/70 border border-gray-200/50;
+    @apply shadow-[0_8px_32px_rgba(0,0,0,0.06)];
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    @apply dark:bg-white/[0.04] dark:border-white/[0.12];
+    @apply dark:shadow-[0_8px_32px_rgba(0,0,0,0.2)];
+  }
+  .panel-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    pointer-events: none;
+    z-index: 1;
   }
   .panel-card:hover {
-    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(7,35,49,0.14);
-    border-color: rgba(28,171,176,0.3);
-  }
-  .dark .panel-card {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 8px 24px rgba(28,171,176,0.1);
-  }
-  .dark .panel-card:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(28,171,176,0.18);
-    border-color: rgba(28,171,176,0.4);
+    @apply dark:bg-white/[0.06] dark:border-white/[0.18];
+    @apply bg-white/80 border-gray-200/70;
+    @apply shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.25)];
+    transform: translateY(-1px);
   }
 
   .kpi-card {
-    @apply bg-white/95 dark:bg-[#0a2a35]/80 backdrop-blur-sm border border-drb-turquoise-200/60 dark:border-drb-turquoise-800/40 rounded-2xl p-6 transition-all duration-200;
-    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 8px 24px rgba(7,35,49,0.08);
+    @apply relative overflow-hidden rounded-2xl p-6 transition-all duration-300;
+    @apply bg-white/60 border border-gray-200/40;
+    @apply shadow-[0_4px_24px_rgba(0,0,0,0.04)];
+    backdrop-filter: blur(20px) saturate(170%);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    @apply dark:bg-white/[0.05] dark:border-white/[0.10];
+    @apply dark:shadow-[0_4px_24px_rgba(0,0,0,0.15)];
+  }
+  .kpi-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+    pointer-events: none;
+    z-index: 1;
   }
   .kpi-card:hover {
-    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(7,35,49,0.14);
-    transform: scale(1.02);
-  }
-  .dark .kpi-card {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 8px 24px rgba(28,171,176,0.12);
-  }
-  .dark .kpi-card:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(28,171,176,0.2);
-    transform: scale(1.02);
+    @apply dark:bg-white/[0.08] dark:border-white/[0.16];
+    @apply bg-white/75 border-gray-200/60;
+    transform: translateY(-2px);
+    @apply shadow-[0_8px_32px_rgba(28,171,176,0.08)] dark:shadow-[0_8px_32px_rgba(28,171,176,0.12)];
   }
 
   .kpi-card-gradient {
@@ -164,7 +186,20 @@ html {
   }
 
   .panel-input {
-    @apply w-full bg-drb-turquoise-50 dark:bg-[#0a2a35]/70 border border-drb-turquoise-200 dark:border-white/[0.1] rounded-xl px-4 py-2.5 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/30 focus:border-drb-turquoise-500 transition-colors;
+    @apply w-full rounded-xl px-4 py-2.5 text-gray-900 dark:text-white transition-all duration-300;
+    @apply bg-white/50 border border-gray-200/50;
+    @apply dark:bg-white/[0.04] dark:border-white/[0.10];
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    @apply placeholder:text-gray-400 dark:placeholder:text-white/30;
+    @apply focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/20;
+    @apply focus:border-drb-turquoise-500;
+    @apply focus:bg-white/70 dark:focus:bg-[rgba(28,171,176,0.06)];
+    @apply focus:shadow-[0_0_0_3px_rgba(28,171,176,0.08)];
+  }
+  .panel-input:hover {
+    @apply bg-white/60 border-gray-200/70;
+    @apply dark:bg-white/[0.06] dark:border-white/[0.15];
   }
 
   /* Fix select/option contrast in dark mode */
@@ -206,11 +241,23 @@ html {
 
   /* ─── Glass card (both modes) ─── */
   .glass-card {
-    @apply bg-white/80 dark:bg-white/[0.05] backdrop-blur-xl border border-gray-200 dark:border-white/[0.08];
-    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    @apply relative overflow-hidden rounded-2xl transition-all duration-300;
+    @apply bg-white/60 border border-gray-200/40;
+    @apply dark:bg-white/[0.06] dark:border-white/[0.14];
+    @apply shadow-[0_8px_32px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.18)];
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
   }
-  .dark .glass-card {
-    box-shadow: 0 10px 30px rgba(3,7,18,0.45);
+  .glass-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    pointer-events: none;
+    z-index: 1;
   }
 
   /* ─── Landing page only (dark context) ─── */
@@ -279,7 +326,74 @@ html {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(245,158,11,0.15);
   }
 
-  /* ─── Glassmorphism ─── */
+  /* ═══ DRB Liquid Glass System ═══ */
+
+  /* Glass con tint turquesa — para cards destacadas */
+  .glass-turquoise {
+    @apply relative overflow-hidden rounded-2xl transition-all duration-300;
+    @apply bg-drb-turquoise-50/60 border border-drb-turquoise-200/40;
+    @apply dark:bg-[rgba(28,171,176,0.06)] dark:border-[rgba(28,171,176,0.18)];
+    @apply shadow-[0_4px_24px_rgba(28,171,176,0.06)];
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
+  .glass-turquoise:hover {
+    @apply bg-drb-turquoise-50/80 border-drb-turquoise-300/50;
+    @apply dark:bg-[rgba(28,171,176,0.10)] dark:border-[rgba(28,171,176,0.28)];
+    @apply shadow-[0_8px_32px_rgba(28,171,176,0.10)] dark:shadow-[0_8px_32px_rgba(28,171,176,0.15)];
+    transform: translateY(-1px);
+  }
+
+  /* Glass con tint lime — para acentos y CTAs */
+  .glass-lime {
+    @apply relative overflow-hidden rounded-2xl transition-all duration-300;
+    @apply bg-drb-lime-50/50 border border-drb-lime-200/40;
+    @apply dark:bg-[rgba(212,242,77,0.04)] dark:border-[rgba(212,242,77,0.15)];
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
+  .glass-lime:hover {
+    @apply dark:bg-[rgba(212,242,77,0.08)] dark:border-[rgba(212,242,77,0.25)];
+    @apply shadow-[0_8px_32px_rgba(212,242,77,0.08)];
+    transform: translateY(-1px);
+  }
+
+  /* Glass sidebar — optimizado para no causar jank con Framer Motion */
+  .glass-sidebar {
+    @apply transition-colors duration-300;
+    @apply bg-white/70 border-e border-gray-200/50;
+    @apply dark:bg-[rgba(4,24,32,0.75)] dark:border-white/[0.08];
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+  }
+
+  /* Glass header */
+  .glass-header {
+    @apply transition-all duration-300;
+    @apply bg-white/60 border-b border-gray-200/40;
+    @apply dark:bg-[rgba(4,24,32,0.60)] dark:border-white/[0.08];
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
+
+  /* Glass badge variants */
+  .glass-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold transition-all;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .glass-badge-turquoise {
+    @apply glass-badge;
+    @apply bg-drb-turquoise-100/60 text-drb-turquoise-700 border border-drb-turquoise-200/50;
+    @apply dark:bg-[rgba(28,171,176,0.12)] dark:text-drb-turquoise-400 dark:border-[rgba(28,171,176,0.25)];
+  }
+  .glass-badge-lime {
+    @apply glass-badge;
+    @apply bg-drb-lime-100/50 text-drb-lime-800 border border-drb-lime-200/50;
+    @apply dark:bg-[rgba(212,242,77,0.10)] dark:text-drb-lime-400 dark:border-[rgba(212,242,77,0.20)];
+  }
+
+  /* ─── Glassmorphism (legacy) ─── */
   .glassmorphism {
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(2px);
