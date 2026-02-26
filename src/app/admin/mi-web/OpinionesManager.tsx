@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { sileo } from "sileo";
-import { Star, Plus, Loader2, Trash2 } from "lucide-react";
+import { Plus, Loader2, Trash2, Pencil, X, Check } from "lucide-react";
 import StarRating from "@/components/ui/StarRating";
 
 interface Opinion {
@@ -34,17 +34,39 @@ export default function OpinionesManager({
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Form state
+  // Create form state
   const [nombre, setNombre] = useState("");
   const [ubicacion, setUbicacion] = useState("");
   const [comentario, setComentario] = useState("");
   const [rating, setRating] = useState(5);
   const [activo, setActivo] = useState(true);
 
+  // Edit form state
+  const [editNombre, setEditNombre] = useState("");
+  const [editUbicacion, setEditUbicacion] = useState("");
+  const [editComentario, setEditComentario] = useState("");
+  const [editRating, setEditRating] = useState(5);
+  const [editActivo, setEditActivo] = useState(true);
+
   const avatarColors = ["bg-drb-turquoise-500", "bg-emerald-500", "bg-purple-500", "bg-amber-500", "bg-rose-500"];
 
+  function startEditing(op: Opinion) {
+    setEditingId(op.id);
+    setEditNombre(op.nombre || "");
+    setEditUbicacion(op.ubicacion || "");
+    setEditComentario(op.comentario || "");
+    setEditRating(op.rating ?? 5);
+    setEditActivo(op.activo);
+  }
+
+  function cancelEditing() {
+    setEditingId(null);
+  }
+
   async function handleCreate() {
+    if (!comentario.trim()) return;
     setSaving(true);
     try {
       const res = await fetch("/api/admin/opiniones", {
@@ -52,7 +74,10 @@ export default function OpinionesManager({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombre, ubicacion, comentario, rating, activo }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Error");
+      }
       sileo.success({ title: tt("savedSuccessfully") });
       setNombre("");
       setUbicacion("");
@@ -65,6 +90,44 @@ export default function OpinionesManager({
       sileo.error({ title: tt("errorSaving") });
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleEdit(op: Opinion) {
+    setActionLoading(op.id);
+    try {
+      const res = await fetch(`/api/admin/opiniones/${op.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: editNombre || null,
+          ubicacion: editUbicacion || null,
+          comentario: editComentario || null,
+          rating: editRating,
+          activo: editActivo,
+        }),
+      });
+      if (!res.ok) throw new Error();
+      setOpiniones((prev) =>
+        prev.map((o) =>
+          o.id === op.id
+            ? {
+                ...o,
+                nombre: editNombre || null,
+                ubicacion: editUbicacion || null,
+                comentario: editComentario || null,
+                rating: editRating,
+                activo: editActivo,
+              }
+            : o
+        )
+      );
+      setEditingId(null);
+      sileo.success({ title: tt("savedSuccessfully") });
+    } catch {
+      sileo.error({ title: tt("errorSaving") });
+    } finally {
+      setActionLoading(null);
     }
   }
 
@@ -111,7 +174,7 @@ export default function OpinionesManager({
           {opiniones.length} {t("reviews")} · {activeCount} {t("published").toLowerCase()}
         </p>
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => { setShowForm(!showForm); setEditingId(null); }}
           className="flex items-center gap-1.5 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-700 transition-colors"
         >
           <Plus className="w-3.5 h-3.5" />
@@ -164,14 +227,22 @@ export default function OpinionesManager({
                 {tc("publishNow")}
               </label>
             </div>
-            <button
-              onClick={handleCreate}
-              disabled={saving}
-              className="btn-primary text-sm disabled:opacity-50 flex items-center gap-2"
-            >
-              {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-              {tc("save")}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowForm(false)}
+                className="text-xs px-3 py-1.5 rounded-lg text-gray-500 dark:text-white/50 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+              >
+                {tc("cancel")}
+              </button>
+              <button
+                onClick={handleCreate}
+                disabled={saving || !comentario.trim()}
+                className="btn-primary text-sm disabled:opacity-50 flex items-center gap-2"
+              >
+                {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                {tc("save")}
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -187,6 +258,78 @@ export default function OpinionesManager({
             const initial = (op.nombre || "?").charAt(0).toUpperCase();
             const colorIdx = op.nombre ? op.nombre.charCodeAt(0) % avatarColors.length : 0;
             const loading = actionLoading === op.id;
+            const isEditing = editingId === op.id;
+
+            if (isEditing) {
+              return (
+                <div
+                  key={op.id}
+                  className="rounded-xl border border-drb-turquoise-300 dark:border-drb-turquoise-500/30 bg-gray-50 dark:bg-white/[0.03] p-4 space-y-3"
+                >
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <div>
+                      <label className="panel-label block mb-1">{tc("name")}</label>
+                      <input
+                        value={editNombre}
+                        onChange={(e) => setEditNombre(e.target.value)}
+                        className="panel-input w-full"
+                        placeholder={t("form.namePlaceholder")}
+                      />
+                    </div>
+                    <div>
+                      <label className="panel-label block mb-1">{t("location")}</label>
+                      <input
+                        value={editUbicacion}
+                        onChange={(e) => setEditUbicacion(e.target.value)}
+                        className="panel-input w-full"
+                        placeholder={t("form.locationPlaceholder")}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="panel-label block mb-1">{t("comment")}</label>
+                    <textarea
+                      value={editComentario}
+                      onChange={(e) => setEditComentario(e.target.value)}
+                      className="panel-input w-full min-h-[60px]"
+                      placeholder={t("form.commentPlaceholder")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <StarRating value={editRating} onChange={setEditRating} size="md" />
+                      <label className="flex items-center gap-2 text-xs text-gray-600 dark:text-white/60">
+                        <input
+                          type="checkbox"
+                          checked={editActivo}
+                          onChange={(e) => setEditActivo(e.target.checked)}
+                          className="rounded"
+                        />
+                        {t("published")}
+                      </label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={cancelEditing}
+                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg text-gray-500 dark:text-white/50 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                        {tc("cancel")}
+                      </button>
+                      <button
+                        onClick={() => handleEdit(op)}
+                        disabled={loading || !editComentario.trim()}
+                        className="btn-primary text-sm disabled:opacity-50 flex items-center gap-2"
+                      >
+                        {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                        <Check className="w-3.5 h-3.5" />
+                        {tc("save")}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
 
             return (
               <div
@@ -211,12 +354,25 @@ export default function OpinionesManager({
                     )}
                   </div>
                   {op.comentario && (
-                    <p className="text-xs text-gray-500 dark:text-white/50 line-clamp-1 mt-0.5">
+                    <p className="text-xs text-gray-500 dark:text-white/50 line-clamp-2 mt-0.5">
                       {op.comentario}
+                    </p>
+                  )}
+                  {op.ubicacion && (
+                    <p className="text-[10px] text-gray-400 dark:text-white/30 mt-0.5">
+                      {op.ubicacion}
                     </p>
                   )}
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => startEditing(op)}
+                    disabled={loading}
+                    className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] text-gray-400 hover:text-drb-turquoise-500 transition-colors disabled:opacity-50"
+                    title={tc("edit")}
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
                   <button
                     onClick={() => togglePublish(op)}
                     disabled={loading}
