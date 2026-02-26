@@ -492,6 +492,8 @@
       "published": "Published",
       "draft": "Draft",
       "location": "Location",
+      "destination": "Destination",
+      "selectDestination": "Select a destination",
       "comment": "Comment",
       "rating": "Rating"
     },
@@ -719,6 +721,8 @@
       "published": "Published",
       "draft": "Draft",
       "location": "Location",
+      "destination": "Destination",
+      "selectDestination": "Select a destination",
       "comment": "Comment",
       "rating": "Rating",
       "form": {

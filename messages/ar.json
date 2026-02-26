@@ -492,6 +492,8 @@
       "published": "منشور",
       "draft": "مسودة",
       "location": "الموقع",
+      "destination": "الوجهة",
+      "selectDestination": "اختر وجهة",
       "comment": "التعليق",
       "rating": "التقييم"
     },
@@ -719,6 +721,8 @@
       "published": "منشور",
       "draft": "مسودة",
       "location": "الموقع",
+      "destination": "الوجهة",
+      "selectDestination": "اختر وجهة",
       "comment": "التعليق",
       "rating": "التقييم",
       "form": {

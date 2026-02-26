@@ -106,10 +106,16 @@ interface LegalPage {
   created_at: string;
 }
 
+interface Destino {
+  id: string;
+  nombre: string;
+}
+
 interface MiWebContentProps {
   client: ClientData;
   counts: Counts;
   plan?: string;
+  destinos?: Destino[];
   opiniones: Opinion[];
   legales: LegalPage[];
   locale: string;
@@ -132,7 +138,7 @@ interface SaveState {
   error: string | null;
 }
 
-export default function MiWebContent({ client, counts, plan, opiniones, legales, locale }: MiWebContentProps) {
+export default function MiWebContent({ client, counts, plan, destinos = [], opiniones, legales, locale }: MiWebContentProps) {
   const aiLocked = !plan || plan === "start";
   const t = useTranslations('admin.miWeb');
   const tc = useTranslations('common');
@@ -1420,6 +1426,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
         {openSections.has("opiniones") && (
           <OpinionesManager
             opiniones={opiniones}
+            destinos={destinos}
             clientId={client.id}
             locale={locale}
           />

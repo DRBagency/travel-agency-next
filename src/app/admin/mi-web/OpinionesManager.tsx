@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { sileo } from "sileo";
-import { Plus, Loader2, Trash2, Pencil, X, Check } from "lucide-react";
+import { Plus, Loader2, Trash2, Pencil, X, Check, MapPin } from "lucide-react";
 import StarRating from "@/components/ui/StarRating";
 
 interface Opinion {
@@ -17,12 +17,19 @@ interface Opinion {
   created_at: string;
 }
 
+interface Destino {
+  id: string;
+  nombre: string;
+}
+
 export default function OpinionesManager({
   opiniones: initialOpiniones,
+  destinos = [],
   clientId,
   locale,
 }: {
   opiniones: Opinion[];
+  destinos?: Destino[];
   clientId: string;
   locale: string;
 }) {
@@ -59,6 +66,7 @@ export default function OpinionesManager({
     setEditComentario(op.comentario || "");
     setEditRating(op.rating ?? 5);
     setEditActivo(op.activo);
+    setShowForm(false);
   }
 
   function cancelEditing() {
@@ -72,7 +80,13 @@ export default function OpinionesManager({
       const res = await fetch("/api/admin/opiniones", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, ubicacion, comentario, rating, activo }),
+        body: JSON.stringify({
+          nombre: nombre || null,
+          ubicacion: ubicacion || null,
+          comentario: comentario,
+          rating,
+          activo,
+        }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -94,6 +108,7 @@ export default function OpinionesManager({
   }
 
   async function handleEdit(op: Opinion) {
+    if (!editComentario.trim()) return;
     setActionLoading(op.id);
     try {
       const res = await fetch(`/api/admin/opiniones/${op.id}`, {
@@ -102,12 +117,15 @@ export default function OpinionesManager({
         body: JSON.stringify({
           nombre: editNombre || null,
           ubicacion: editUbicacion || null,
-          comentario: editComentario || null,
+          comentario: editComentario,
           rating: editRating,
           activo: editActivo,
         }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Error");
+      }
       setOpiniones((prev) =>
         prev.map((o) =>
           o.id === op.id
@@ -115,7 +133,7 @@ export default function OpinionesManager({
                 ...o,
                 nombre: editNombre || null,
                 ubicacion: editUbicacion || null,
-                comentario: editComentario || null,
+                comentario: editComentario,
                 rating: editRating,
                 activo: editActivo,
               }
@@ -164,6 +182,28 @@ export default function OpinionesManager({
     }
   }
 
+  // Destination dropdown component
+  const DestinoSelect = ({
+    value,
+    onChange,
+  }: {
+    value: string;
+    onChange: (v: string) => void;
+  }) => (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="panel-input w-full"
+    >
+      <option value="">{t("selectDestination")}</option>
+      {destinos.map((d) => (
+        <option key={d.id} value={d.nombre}>
+          {d.nombre}
+        </option>
+      ))}
+    </select>
+  );
+
   const activeCount = opiniones.filter((o) => o.activo).length;
 
   return (
@@ -196,13 +236,8 @@ export default function OpinionesManager({
               />
             </div>
             <div>
-              <label className="panel-label block mb-1">{t("location")}</label>
-              <input
-                value={ubicacion}
-                onChange={(e) => setUbicacion(e.target.value)}
-                className="panel-input w-full"
-                placeholder={t("form.locationPlaceholder")}
-              />
+              <label className="panel-label block mb-1">{t("destination")}</label>
+              <DestinoSelect value={ubicacion} onChange={setUbicacion} />
             </div>
           </div>
           <div>
@@ -210,7 +245,7 @@ export default function OpinionesManager({
             <textarea
               value={comentario}
               onChange={(e) => setComentario(e.target.value)}
-              className="panel-input w-full min-h-[60px]"
+              className="panel-input w-full min-h-[80px]"
               placeholder={t("form.commentPlaceholder")}
             />
           </div>
@@ -260,6 +295,7 @@ export default function OpinionesManager({
             const loading = actionLoading === op.id;
             const isEditing = editingId === op.id;
 
+            /* ---- EDIT MODE ---- */
             if (isEditing) {
               return (
                 <div
@@ -277,13 +313,8 @@ export default function OpinionesManager({
                       />
                     </div>
                     <div>
-                      <label className="panel-label block mb-1">{t("location")}</label>
-                      <input
-                        value={editUbicacion}
-                        onChange={(e) => setEditUbicacion(e.target.value)}
-                        className="panel-input w-full"
-                        placeholder={t("form.locationPlaceholder")}
-                      />
+                      <label className="panel-label block mb-1">{t("destination")}</label>
+                      <DestinoSelect value={editUbicacion} onChange={setEditUbicacion} />
                     </div>
                   </div>
                   <div>
@@ -291,7 +322,7 @@ export default function OpinionesManager({
                     <textarea
                       value={editComentario}
                       onChange={(e) => setEditComentario(e.target.value)}
-                      className="panel-input w-full min-h-[60px]"
+                      className="panel-input w-full min-h-[80px]"
                       placeholder={t("form.commentPlaceholder")}
                     />
                   </div>
@@ -331,18 +362,23 @@ export default function OpinionesManager({
               );
             }
 
+            /* ---- VIEW MODE ---- */
             return (
               <div
                 key={op.id}
-                className="flex items-start gap-2.5 rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-2"
+                className="flex items-start gap-2.5 rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-2.5 group"
               >
+                {/* Avatar */}
                 <div
-                  className={`w-7 h-7 rounded-full ${avatarColors[colorIdx]} flex items-center justify-center text-white text-[10px] font-semibold shrink-0`}
+                  className={`w-8 h-8 rounded-full ${avatarColors[colorIdx]} flex items-center justify-center text-white text-[11px] font-semibold shrink-0 mt-0.5`}
                 >
                   {initial}
                 </div>
+
+                {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
+                  {/* Name + rating + badge */}
+                  <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
                       {op.nombre || t("anonymous")}
                     </span>
@@ -353,22 +389,29 @@ export default function OpinionesManager({
                       <span className="badge-warning text-[10px] px-1.5 py-0.5">{t("draft")}</span>
                     )}
                   </div>
+
+                  {/* Comment text */}
                   {op.comentario && (
-                    <p className="text-xs text-gray-500 dark:text-white/50 line-clamp-2 mt-0.5">
+                    <p className="text-xs text-gray-600 dark:text-white/60 line-clamp-2 mb-0.5">
                       {op.comentario}
                     </p>
                   )}
+
+                  {/* Destination */}
                   {op.ubicacion && (
-                    <p className="text-[10px] text-gray-400 dark:text-white/30 mt-0.5">
+                    <p className="text-[10px] text-gray-400 dark:text-white/30 flex items-center gap-1">
+                      <MapPin className="w-2.5 h-2.5" />
                       {op.ubicacion}
                     </p>
                   )}
                 </div>
+
+                {/* Actions */}
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => startEditing(op)}
                     disabled={loading}
-                    className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] text-gray-400 hover:text-drb-turquoise-500 transition-colors disabled:opacity-50"
+                    className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] text-gray-400 hover:text-drb-turquoise-500 transition-colors disabled:opacity-50"
                     title={tc("edit")}
                   >
                     <Pencil className="w-3.5 h-3.5" />
@@ -383,7 +426,7 @@ export default function OpinionesManager({
                   <button
                     onClick={() => handleDelete(op.id)}
                     disabled={loading}
-                    className="p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                    className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

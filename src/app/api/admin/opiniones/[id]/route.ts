@@ -16,15 +16,22 @@ export async function PATCH(
   const { id } = await params;
   const body = await req.json();
 
+  // Build update object with only provided fields
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updates: Record<string, any> = {};
+  if ("nombre" in body) updates.nombre = body.nombre;
+  if ("ubicacion" in body) updates.ubicacion = body.ubicacion;
+  if ("comentario" in body) updates.comentario = body.comentario;
+  if ("rating" in body) updates.rating = Number(body.rating);
+  if ("activo" in body) updates.activo = Boolean(body.activo);
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+  }
+
   const { error } = await supabaseAdmin
     .from("opiniones")
-    .update({
-      nombre: body.nombre ?? undefined,
-      ubicacion: body.ubicacion ?? undefined,
-      comentario: body.comentario ?? undefined,
-      rating: body.rating !== undefined ? Number(body.rating) : undefined,
-      activo: body.activo !== undefined ? Boolean(body.activo) : undefined,
-    })
+    .update(updates)
     .eq("id", id)
     .eq("cliente_id", clientId);
 

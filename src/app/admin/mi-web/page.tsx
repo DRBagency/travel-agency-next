@@ -13,9 +13,10 @@ export default async function MiWebPage() {
   const [destinosRes, opinionesRes, legalesRes] = await Promise.all([
     supabaseAdmin
       .from("destinos")
-      .select("id", { count: "exact", head: true })
+      .select("id, nombre", { count: "exact" })
       .eq("cliente_id", client.id)
-      .eq("activo", true),
+      .eq("activo", true)
+      .order("nombre"),
     supabaseAdmin
       .from("opiniones")
       .select("*")
@@ -28,6 +29,7 @@ export default async function MiWebPage() {
       .order("created_at", { ascending: false }),
   ]);
 
+  const destinos = destinosRes.data ?? [];
   const opiniones = opinionesRes.data ?? [];
   const legales = legalesRes.data ?? [];
 
@@ -40,6 +42,7 @@ export default async function MiWebPage() {
   return (
     <MiWebContent
       plan={client.plan}
+      destinos={destinos}
       client={{
         id: client.id,
         nombre: client.nombre,

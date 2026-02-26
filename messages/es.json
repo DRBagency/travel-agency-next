@@ -458,6 +458,8 @@
       "published": "Publicada",
       "draft": "Borrador",
       "location": "Ubicación",
+      "destination": "Destino",
+      "selectDestination": "Selecciona un destino",
       "comment": "Comentario",
       "rating": "Rating"
     },
@@ -719,6 +721,8 @@
       "published": "Publicada",
       "draft": "Borrador",
       "location": "Ubicación",
+      "destination": "Destino",
+      "selectDestination": "Selecciona un destino",
       "comment": "Comentario",
       "rating": "Rating",
       "form": {
