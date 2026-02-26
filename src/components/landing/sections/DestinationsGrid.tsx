@@ -82,7 +82,7 @@ export default function DestinationsGrid({
           }}
           className="destinations-grid"
         >
-          {destinos.slice(0, 4).map((dest, i) => (
+          {destinos.map((dest, i) => (
             <AnimateIn key={dest.id} delay={i * 0.1}>
               <Link
                 href={`${destinationBasePath}/${dest.slug}`}
@@ -258,7 +258,7 @@ export default function DestinationsGrid({
         }
         @media (min-width: 1100px) {
           .destinations-grid {
-            grid-template-columns: repeat(4, 1fr) !important;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
           }
           .destinations-grid .dest-card {
             height: 420px !important;
