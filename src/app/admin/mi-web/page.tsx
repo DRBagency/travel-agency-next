@@ -57,7 +57,6 @@ export default async function MiWebPage() {
         hero_description: client.hero_description,
         hero_cta_text_secondary: client.hero_cta_text_secondary,
         hero_cta_link_secondary: client.hero_cta_link_secondary,
-        stats_years: client.stats_years,
         stats_destinations: client.stats_destinations,
         stats_travelers: client.stats_travelers,
         stats_rating: client.stats_rating,
