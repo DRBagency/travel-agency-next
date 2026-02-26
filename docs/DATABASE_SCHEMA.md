@@ -1,7 +1,7 @@
 # Database Schema - Supabase PostgreSQL
 
-> **Última actualización:** 22 Febrero 2026
-> **Estado:** Schema estable - 17+ tablas con RLS
+> **Última actualización:** 26 Febrero 2026
+> **Estado:** Schema estable - 27 tablas con RLS, 24 migraciones
 
 ## ⚠️ PRINCIPIO FUNDAMENTAL
 

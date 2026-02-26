@@ -34,6 +34,33 @@
 10. **[PARTNERSHIP_STRATEGY.md](./PARTNERSHIP_STRATEGY.md)**
     Canales indirectos, programa de afiliados, partners
 
+11. **[BOOKING-FLOW.md](./BOOKING-FLOW.md)**
+    Flujo de reservas de 4 pasos: selección → datos → pago → confirmación
+
+12. **[PAYMENTS.md](./PAYMENTS.md)**
+    Stripe Connect (reservas) + Stripe Billing (suscripciones), webhooks
+
+13. **[LANDING-PAGES.md](./LANDING-PAGES.md)**
+    Sistema de landing pages, componentes, personalización, multi-idioma
+
+14. **[AI-FEATURES.md](./AI-FEATURES.md)**
+    Features AI: itinerarios, chatbot, traducción, Eden chat, plan gating
+
+15. **[API-ROUTES.md](./API-ROUTES.md)**
+    63 endpoints documentados: admin, AI, owner, Stripe, públicos, cron
+
+16. **[DEPLOY.md](./DEPLOY.md)**
+    Flujo VS Code → GitHub → Vercel, variables de entorno, checklist
+
+17. **[INTEGRATIONS.md](./INTEGRATIONS.md)**
+    Stripe, Supabase, Claude AI, Google Calendar, Resend, Vercel, Unsplash
+
+18. **[MULTI-LANGUAGE.md](./MULTI-LANGUAGE.md)**
+    Sistema i18n (ES/EN/AR), RTL, auto-traducción, content hashing
+
+19. **[CHANGELOG.md](./CHANGELOG.md)**
+    Historial de cambios significativos por fecha
+
 ## 🎯 Cómo Usar Esta Documentación
 
 **Para Claude Code:**
