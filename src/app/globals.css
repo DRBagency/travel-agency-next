@@ -120,59 +120,71 @@ html {
 }
 
 @layer components {
-  /* ─── Panel utility classes (DRB Corporate) ─── */
+  /* ─── Panel utility classes (DRB Liquid Glass) ─── */
   .panel-card {
     @apply relative overflow-hidden rounded-2xl transition-all duration-300;
-    @apply bg-white/70 border border-gray-200/50;
-    @apply shadow-[0_8px_32px_rgba(0,0,0,0.06)];
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    @apply dark:bg-white/[0.04] dark:border-white/[0.12];
-    @apply dark:shadow-[0_8px_32px_rgba(0,0,0,0.2)];
+    @apply bg-white/[0.10] border border-white/[0.11];
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
   }
   .panel-card::after {
     content: '';
     position: absolute;
     top: 0;
-    left: 10%;
-    right: 10%;
+    left: 6%;
+    right: 6%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
   }
   .panel-card:hover {
-    @apply dark:bg-white/[0.06] dark:border-white/[0.18];
-    @apply bg-white/80 border-gray-200/70;
-    @apply shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.25)];
-    transform: translateY(-1px);
+    @apply bg-white/[0.14] border-white/[0.20];
+  }
+  /* Light mode overrides */
+  .light .panel-card {
+    @apply bg-white/[0.55] border-black/[0.06];
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  }
+  .light .panel-card::after {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  }
+  .light .panel-card:hover {
+    @apply bg-white/[0.70] border-black/[0.12];
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
   }
 
   .kpi-card {
     @apply relative overflow-hidden rounded-2xl p-6 transition-all duration-300;
-    @apply bg-white/60 border border-gray-200/40;
-    @apply shadow-[0_4px_24px_rgba(0,0,0,0.04)];
-    backdrop-filter: blur(20px) saturate(170%);
-    -webkit-backdrop-filter: blur(20px) saturate(170%);
-    @apply dark:bg-white/[0.05] dark:border-white/[0.10];
-    @apply dark:shadow-[0_4px_24px_rgba(0,0,0,0.15)];
+    @apply bg-white/[0.10] border border-white/[0.11];
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
   }
   .kpi-card::after {
     content: '';
     position: absolute;
     top: 0;
-    left: 10%;
-    right: 10%;
+    left: 6%;
+    right: 6%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
   }
   .kpi-card:hover {
-    @apply dark:bg-white/[0.08] dark:border-white/[0.16];
-    @apply bg-white/75 border-gray-200/60;
+    @apply bg-white/[0.14] border-white/[0.20];
     transform: translateY(-2px);
-    @apply shadow-[0_8px_32px_rgba(28,171,176,0.08)] dark:shadow-[0_8px_32px_rgba(28,171,176,0.12)];
+  }
+  .light .kpi-card {
+    @apply bg-white/[0.55] border-black/[0.06];
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  }
+  .light .kpi-card::after {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  }
+  .light .kpi-card:hover {
+    @apply bg-white/[0.70] border-black/[0.12];
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
   }
 
   .kpi-card-gradient {
@@ -186,20 +198,27 @@ html {
   }
 
   .panel-input {
-    @apply w-full rounded-xl px-4 py-2.5 text-gray-900 dark:text-white transition-all duration-300;
-    @apply bg-white/50 border border-gray-200/50;
-    @apply dark:bg-white/[0.04] dark:border-white/[0.10];
+    @apply w-full rounded-xl px-4 py-2.5 transition-all duration-300;
+    @apply bg-white/[0.04] border border-white/[0.08] text-white;
+    @apply placeholder:text-white/25;
+    @apply focus:outline-none focus:border-drb-turquoise-500;
+    @apply focus:bg-[rgba(28,171,176,0.04)];
+    @apply focus:shadow-[0_0_0_3px_rgba(28,171,176,0.08)];
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    @apply placeholder:text-gray-400 dark:placeholder:text-white/30;
-    @apply focus:outline-none focus:ring-2 focus:ring-drb-turquoise-500/20;
-    @apply focus:border-drb-turquoise-500;
-    @apply focus:bg-white/70 dark:focus:bg-[rgba(28,171,176,0.06)];
-    @apply focus:shadow-[0_0_0_3px_rgba(28,171,176,0.08)];
   }
   .panel-input:hover {
-    @apply bg-white/60 border-gray-200/70;
-    @apply dark:bg-white/[0.06] dark:border-white/[0.15];
+    @apply bg-white/[0.06] border-white/[0.12];
+  }
+  .light .panel-input {
+    @apply bg-white/50 border-black/[0.06] text-gray-900;
+    @apply placeholder:text-gray-400;
+  }
+  .light .panel-input:hover {
+    @apply bg-white/60 border-black/[0.10];
+  }
+  .light .panel-input:focus {
+    @apply bg-white/70 border-drb-turquoise-500;
   }
 
   /* Fix select/option contrast in dark mode */
@@ -242,22 +261,27 @@ html {
   /* ─── Glass card (both modes) ─── */
   .glass-card {
     @apply relative overflow-hidden rounded-2xl transition-all duration-300;
-    @apply bg-white/60 border border-gray-200/40;
-    @apply dark:bg-white/[0.06] dark:border-white/[0.14];
-    @apply shadow-[0_8px_32px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.18)];
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    @apply bg-white/[0.10] border border-white/[0.11];
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
   }
   .glass-card::after {
     content: '';
     position: absolute;
     top: 0;
-    left: 10%;
-    right: 10%;
+    left: 6%;
+    right: 6%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
+  }
+  .light .glass-card {
+    @apply bg-white/[0.55] border-black/[0.06];
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  }
+  .light .glass-card::after {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
   }
 
   /* ─── Landing page only (dark context) ─── */
@@ -358,22 +382,26 @@ html {
     transform: translateY(-1px);
   }
 
-  /* Glass sidebar — optimizado para no causar jank con Framer Motion */
+  /* ═══ DRB Glass Sidebar ═══ */
   .glass-sidebar {
     @apply transition-colors duration-300;
-    @apply bg-white/70 border-e border-gray-200/50;
-    @apply dark:bg-[rgba(4,24,32,0.75)] dark:border-white/[0.08];
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    background: rgba(20,40,55,0.25);
+    backdrop-filter: blur(44px) saturate(200%);
+    -webkit-backdrop-filter: blur(44px) saturate(200%);
+  }
+  .light .glass-sidebar {
+    background: rgba(255,255,255,0.35);
   }
 
-  /* Glass header */
+  /* ═══ DRB Glass Header ═══ */
   .glass-header {
     @apply transition-all duration-300;
-    @apply bg-white/60 border-b border-gray-200/40;
-    @apply dark:bg-[rgba(4,24,32,0.60)] dark:border-white/[0.08];
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    background: rgba(11,24,37,0.40);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+  }
+  .light .glass-header {
+    background: rgba(255,255,255,0.40);
   }
 
   /* Glass badge variants */
@@ -504,26 +532,11 @@ html {
   .badge-dot-danger::before { @apply bg-red-500; }
   .badge-dot-info::before { @apply bg-drb-turquoise-500; }
 
-  /* ═══ Liquid Glass Orb Animations ═══ */
-  @keyframes orb-float-1 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(80px, 50px) scale(1.15); }
-    100% { transform: translate(0, 0) scale(1); }
-  }
-  @keyframes orb-float-2 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-60px, -40px) scale(0.9); }
-    100% { transform: translate(0, 0) scale(1); }
-  }
-  @keyframes orb-float-3 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(50px, -60px) scale(1.1); }
-    100% { transform: translate(0, 0) scale(1); }
-  }
-  @keyframes orb-float-4 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-30px, 40px) scale(1.2); }
-    100% { transform: translate(0, 0) scale(1); }
+  /* ═══ Twinkle animation for stars (uses CSS variable) ═══ */
+  @keyframes twinkle {
+    0% { opacity: 0.08; transform: scale(0.8); }
+    50% { opacity: var(--twinkle-opacity, 0.4); transform: scale(1.3); }
+    100% { opacity: 0.1; transform: scale(0.9); }
   }
 
   /* ─── FullCalendar light + dark theme ─── */
