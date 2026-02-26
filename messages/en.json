@@ -885,7 +885,12 @@
       "translateAllTranslating": "Translating...",
       "translateAllTranslated": "translated",
       "translateAllFailed": "failed",
-      "translateAllUpToDate": "Everything is already translated (no changes)"
+      "translateAllUpToDate": "Everything is already translated (no changes)",
+      "translateConfirmTitle": "Translate all content?",
+      "translateConfirmDesc": "Before translating, make sure that:",
+      "translateConfirmCheck1": "All landing page sections are complete (hero, stats, why us, CTA banner, contact, footer).",
+      "translateConfirmCheck2": "All destinations and reviews have their fields filled in.",
+      "translateConfirmNote": "Only content that has changed since the last translation will be translated. Already translated fields won't be re-processed."
     },
     "calendario": {
       "title": "Calendar",

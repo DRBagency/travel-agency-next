@@ -885,7 +885,12 @@
       "translateAllTranslating": "جارٍ الترجمة...",
       "translateAllTranslated": "مترجم",
       "translateAllFailed": "فشل",
-      "translateAllUpToDate": "كل شيء مترجم بالفعل (بدون تغييرات)"
+      "translateAllUpToDate": "كل شيء مترجم بالفعل (بدون تغييرات)",
+      "translateConfirmTitle": "ترجمة كل المحتوى؟",
+      "translateConfirmDesc": "قبل الترجمة، تأكد من أن:",
+      "translateConfirmCheck1": "جميع أقسام صفحتك الرئيسية مكتملة (البطل، الإحصائيات، لماذا نحن، بانر CTA، التواصل، التذييل).",
+      "translateConfirmCheck2": "جميع الوجهات والآراء تحتوي على بياناتها كاملة.",
+      "translateConfirmNote": "سيتم ترجمة المحتوى الذي تم تغييره فقط منذ آخر ترجمة. الحقول المترجمة مسبقًا لن تُعاد معالجتها."
     },
     "calendario": {
       "title": "التقويم",

@@ -885,7 +885,12 @@
       "translateAllTranslating": "Traduciendo...",
       "translateAllTranslated": "traducidos",
       "translateAllFailed": "fallidos",
-      "translateAllUpToDate": "Todo ya está traducido (sin cambios)"
+      "translateAllUpToDate": "Todo ya está traducido (sin cambios)",
+      "translateConfirmTitle": "¿Traducir todo el contenido?",
+      "translateConfirmDesc": "Antes de traducir, asegúrate de que:",
+      "translateConfirmCheck1": "Todas las secciones de tu landing estén completas (hero, estadísticas, por qué nosotros, banner CTA, contacto, footer).",
+      "translateConfirmCheck2": "Todos los destinos y opiniones tengan sus campos rellenados.",
+      "translateConfirmNote": "Solo se traducirá el contenido que haya cambiado desde la última traducción. No se gasta en campos que ya están traducidos."
     },
     "calendario": {
       "title": "Calendario",

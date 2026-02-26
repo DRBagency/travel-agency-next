@@ -260,6 +260,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     details?: any[];
   } | null>(null);
   const [bulkTranslateError, setBulkTranslateError] = useState<string | null>(null);
+  const [showTranslateConfirm, setShowTranslateConfirm] = useState(false);
 
   function toggleSection(key: SectionKey) {
     setOpenSections((prev) => {
@@ -692,7 +693,7 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               <span className="text-xs text-red-600 dark:text-red-400">{bulkTranslateError}</span>
             )}
             <button
-              onClick={handleBulkTranslateAll}
+              onClick={() => setShowTranslateConfirm(true)}
               disabled={bulkTranslating}
               className="btn-primary disabled:opacity-50 flex items-center gap-2 text-sm"
             >
@@ -703,6 +704,56 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
               )}
               {bulkTranslating ? (bulkProgress || t("translateAllTranslating")) : t("translateAllButton")}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Translate confirmation dialog */}
+      {showTranslateConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-[#0c1f2b] rounded-2xl border border-gray-200 dark:border-white/15 shadow-xl max-w-md w-full mx-4 p-6 space-y-4 animate-fade-in">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-500/15 flex items-center justify-center shrink-0">
+                <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              </div>
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                {t("translateConfirmTitle")}
+              </h3>
+            </div>
+            <div className="space-y-3 text-sm text-gray-600 dark:text-white/60">
+              <p>{t("translateConfirmDesc")}</p>
+              <ul className="space-y-1.5 ps-4">
+                <li className="flex items-start gap-2">
+                  <span className="text-drb-turquoise-500 mt-0.5">•</span>
+                  {t("translateConfirmCheck1")}
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-drb-turquoise-500 mt-0.5">•</span>
+                  {t("translateConfirmCheck2")}
+                </li>
+              </ul>
+              <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-xl p-3 text-xs text-emerald-700 dark:text-emerald-400">
+                {t("translateConfirmNote")}
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-3 pt-1">
+              <button
+                onClick={() => setShowTranslateConfirm(false)}
+                className="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+              >
+                {tc("cancel")}
+              </button>
+              <button
+                onClick={() => {
+                  setShowTranslateConfirm(false);
+                  handleBulkTranslateAll();
+                }}
+                className="btn-primary flex items-center gap-2 text-sm"
+              >
+                <Languages className="w-4 h-4" />
+                {t("translateAllButton")}
+              </button>
+            </div>
           </div>
         </div>
       )}
