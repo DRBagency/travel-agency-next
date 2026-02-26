@@ -17,9 +17,9 @@ export async function POST(req: NextRequest) {
     .from("opiniones")
     .insert({
       cliente_id: clientId,
-      nombre: body.nombre || null,
-      ubicacion: body.ubicacion || null,
-      comentario: body.comentario || null,
+      nombre: body.nombre || "Anónimo",
+      ciudad: body.ciudad || null,
+      texto: body.texto || "",
       rating: Number(body.rating) || 5,
       activo: Boolean(body.activo),
     })
@@ -32,10 +32,9 @@ export async function POST(req: NextRequest) {
 
   revalidatePath("/");
   revalidatePath("/admin/mi-web");
-  revalidatePath("/admin/opiniones");
 
   // Auto-translate if eligible (Grow/Pro plan)
-  if (inserted?.id && body.comentario) {
+  if (inserted?.id && body.texto) {
     const { data: client } = await supabaseAdmin
       .from("clientes")
       .select("plan, preferred_language, available_languages")
@@ -54,7 +53,7 @@ export async function POST(req: NextRequest) {
         table: "opiniones",
         recordId: inserted.id,
         clientId,
-        fields: { comentario: body.comentario },
+        fields: { texto: body.texto },
         sourceLang: client.preferred_language || "es",
         targetLangs: client.available_languages,
       }).catch(() => {});

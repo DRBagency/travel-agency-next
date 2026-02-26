@@ -17,11 +17,12 @@ export async function PATCH(
   const body = await req.json();
 
   // Build update object with only provided fields
+  // DB columns: nombre, ciudad, texto, rating, activo
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updates: Record<string, any> = {};
   if ("nombre" in body) updates.nombre = body.nombre;
-  if ("ubicacion" in body) updates.ubicacion = body.ubicacion;
-  if ("comentario" in body) updates.comentario = body.comentario;
+  if ("ciudad" in body) updates.ciudad = body.ciudad;
+  if ("texto" in body) updates.texto = body.texto;
   if ("rating" in body) updates.rating = Number(body.rating);
   if ("activo" in body) updates.activo = Boolean(body.activo);
 
@@ -41,7 +42,6 @@ export async function PATCH(
 
   revalidatePath("/");
   revalidatePath("/admin/mi-web");
-  revalidatePath("/admin/opiniones");
 
   return NextResponse.json({ success: true });
 }
@@ -70,7 +70,6 @@ export async function DELETE(
 
   revalidatePath("/");
   revalidatePath("/admin/mi-web");
-  revalidatePath("/admin/opiniones");
 
   return NextResponse.json({ success: true });
 }

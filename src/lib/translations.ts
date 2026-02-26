@@ -56,7 +56,7 @@ export const TRANSLATABLE_DESTINO_FIELDS: Record<string, FieldType> = {
 };
 
 export const TRANSLATABLE_OPINION_FIELDS: Record<string, FieldType> = {
-  comentario: "string",
+  texto: "string",
 };
 
 /**

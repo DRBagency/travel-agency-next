@@ -89,9 +89,9 @@ interface Counts {
 
 interface Opinion {
   id: string;
-  nombre: string | null;
-  ubicacion: string | null;
-  comentario: string | null;
+  nombre: string;
+  ciudad: string | null;
+  texto: string;
   rating: number;
   activo: boolean;
   created_at: string;

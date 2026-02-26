@@ -7,11 +7,13 @@ import { sileo } from "sileo";
 import { Plus, Loader2, Trash2, Pencil, X, Check, MapPin } from "lucide-react";
 import StarRating from "@/components/ui/StarRating";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 interface Opinion {
   id: string;
-  nombre: string | null;
-  ubicacion: string | null;
-  comentario: string | null;
+  nombre: string;
+  ciudad: string | null;
+  texto: string;
   rating: number;
   activo: boolean;
   created_at: string;
@@ -45,15 +47,15 @@ export default function OpinionesManager({
 
   // Create form state
   const [nombre, setNombre] = useState("");
-  const [ubicacion, setUbicacion] = useState("");
-  const [comentario, setComentario] = useState("");
+  const [ciudad, setCiudad] = useState("");
+  const [texto, setTexto] = useState("");
   const [rating, setRating] = useState(5);
   const [activo, setActivo] = useState(true);
 
   // Edit form state
   const [editNombre, setEditNombre] = useState("");
-  const [editUbicacion, setEditUbicacion] = useState("");
-  const [editComentario, setEditComentario] = useState("");
+  const [editCiudad, setEditCiudad] = useState("");
+  const [editTexto, setEditTexto] = useState("");
   const [editRating, setEditRating] = useState(5);
   const [editActivo, setEditActivo] = useState(true);
 
@@ -62,8 +64,8 @@ export default function OpinionesManager({
   function startEditing(op: Opinion) {
     setEditingId(op.id);
     setEditNombre(op.nombre || "");
-    setEditUbicacion(op.ubicacion || "");
-    setEditComentario(op.comentario || "");
+    setEditCiudad(op.ciudad || "");
+    setEditTexto(op.texto || "");
     setEditRating(op.rating ?? 5);
     setEditActivo(op.activo);
     setShowForm(false);
@@ -74,7 +76,7 @@ export default function OpinionesManager({
   }
 
   async function handleCreate() {
-    if (!comentario.trim()) return;
+    if (!texto.trim()) return;
     setSaving(true);
     try {
       const res = await fetch("/api/admin/opiniones", {
@@ -82,8 +84,8 @@ export default function OpinionesManager({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nombre: nombre || null,
-          ubicacion: ubicacion || null,
-          comentario: comentario,
+          ciudad: ciudad || null,
+          texto,
           rating,
           activo,
         }),
@@ -94,8 +96,8 @@ export default function OpinionesManager({
       }
       sileo.success({ title: tt("savedSuccessfully") });
       setNombre("");
-      setUbicacion("");
-      setComentario("");
+      setCiudad("");
+      setTexto("");
       setRating(5);
       setActivo(true);
       setShowForm(false);
@@ -108,7 +110,7 @@ export default function OpinionesManager({
   }
 
   async function handleEdit(op: Opinion) {
-    if (!editComentario.trim()) return;
+    if (!editTexto.trim()) return;
     setActionLoading(op.id);
     try {
       const res = await fetch(`/api/admin/opiniones/${op.id}`, {
@@ -116,8 +118,8 @@ export default function OpinionesManager({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nombre: editNombre || null,
-          ubicacion: editUbicacion || null,
-          comentario: editComentario,
+          ciudad: editCiudad || null,
+          texto: editTexto,
           rating: editRating,
           activo: editActivo,
         }),
@@ -131,9 +133,9 @@ export default function OpinionesManager({
           o.id === op.id
             ? {
                 ...o,
-                nombre: editNombre || null,
-                ubicacion: editUbicacion || null,
-                comentario: editComentario,
+                nombre: editNombre || "Anónimo",
+                ciudad: editCiudad || null,
+                texto: editTexto,
                 rating: editRating,
                 activo: editActivo,
               }
@@ -237,14 +239,14 @@ export default function OpinionesManager({
             </div>
             <div>
               <label className="panel-label block mb-1">{t("destination")}</label>
-              <DestinoSelect value={ubicacion} onChange={setUbicacion} />
+              <DestinoSelect value={ciudad} onChange={setCiudad} />
             </div>
           </div>
           <div>
             <label className="panel-label block mb-1">{t("comment")}</label>
             <textarea
-              value={comentario}
-              onChange={(e) => setComentario(e.target.value)}
+              value={texto}
+              onChange={(e) => setTexto(e.target.value)}
               className="panel-input w-full min-h-[80px]"
               placeholder={t("form.commentPlaceholder")}
             />
@@ -271,7 +273,7 @@ export default function OpinionesManager({
               </button>
               <button
                 onClick={handleCreate}
-                disabled={saving || !comentario.trim()}
+                disabled={saving || !texto.trim()}
                 className="btn-primary text-sm disabled:opacity-50 flex items-center gap-2"
               >
                 {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
@@ -314,14 +316,14 @@ export default function OpinionesManager({
                     </div>
                     <div>
                       <label className="panel-label block mb-1">{t("destination")}</label>
-                      <DestinoSelect value={editUbicacion} onChange={setEditUbicacion} />
+                      <DestinoSelect value={editCiudad} onChange={setEditCiudad} />
                     </div>
                   </div>
                   <div>
                     <label className="panel-label block mb-1">{t("comment")}</label>
                     <textarea
-                      value={editComentario}
-                      onChange={(e) => setEditComentario(e.target.value)}
+                      value={editTexto}
+                      onChange={(e) => setEditTexto(e.target.value)}
                       className="panel-input w-full min-h-[80px]"
                       placeholder={t("form.commentPlaceholder")}
                     />
@@ -349,7 +351,7 @@ export default function OpinionesManager({
                       </button>
                       <button
                         onClick={() => handleEdit(op)}
-                        disabled={loading || !editComentario.trim()}
+                        disabled={loading || !editTexto.trim()}
                         className="btn-primary text-sm disabled:opacity-50 flex items-center gap-2"
                       >
                         {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
@@ -391,17 +393,17 @@ export default function OpinionesManager({
                   </div>
 
                   {/* Comment text */}
-                  {op.comentario && (
+                  {op.texto && (
                     <p className="text-xs text-gray-600 dark:text-white/60 line-clamp-2 mb-0.5">
-                      {op.comentario}
+                      {op.texto}
                     </p>
                   )}
 
                   {/* Destination */}
-                  {op.ubicacion && (
+                  {op.ciudad && (
                     <p className="text-[10px] text-gray-400 dark:text-white/30 flex items-center gap-1">
                       <MapPin className="w-2.5 h-2.5" />
-                      {op.ubicacion}
+                      {op.ciudad}
                     </p>
                   )}
                 </div>
