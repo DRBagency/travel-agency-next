@@ -433,7 +433,7 @@ export default function OwnerShell({
   const navItems = navGroups.flat();
 
   return (
-    <div className="min-h-screen bg-[#f0f4f8] dark:bg-[#041820]">
+    <div className="min-h-screen bg-[#F5F0EB] dark:bg-[#0B1825]">
       {/* ========== DESKTOP SIDEBAR ========== */}
       <DesktopSidebar
         navGroups={navGroups}
@@ -585,8 +585,51 @@ export default function OwnerShell({
             main { --main-right-w: ${rightColWidth}px; }
           }
         `}</style>
-        {/* Subtle mountain landscape background */}
         <DashboardBackground />
+        {/* Curved separator — sidebar right edge */}
+        <div
+          className="fixed top-0 w-[6px] h-screen z-20 pointer-events-none hidden lg:block"
+          style={{ insetInlineStart: sidebarWidth - 3 }}
+        >
+          <svg viewBox="0 0 22 800" preserveAspectRatio="none" className="w-full h-full overflow-visible">
+            <defs>
+              <linearGradient id="osepSbV" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="transparent" />
+                <stop offset="15%" stopColor="rgba(28,171,176,0.6)" />
+                <stop offset="35%" stopColor="rgba(212,242,77,0.45)" />
+                <stop offset="55%" stopColor="rgba(167,139,250,0.4)" />
+                <stop offset="75%" stopColor="rgba(28,171,176,0.5)" />
+                <stop offset="90%" stopColor="rgba(212,242,77,0.35)" />
+                <stop offset="100%" stopColor="transparent" />
+              </linearGradient>
+              <filter id="osepGlow1"><feGaussianBlur stdDeviation="1.5" result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+            </defs>
+            <path d="M11,0 Q4,40 11,80 Q18,120 11,160 Q4,200 11,240 Q18,280 11,320 Q4,360 11,400 Q18,440 11,480 Q4,520 11,560 Q18,600 11,640 Q4,680 11,720 Q18,760 11,800" stroke="url(#osepSbV)" strokeWidth="0.4" fill="none" filter="url(#osepGlow1)" />
+            <path d="M11,0 Q4,40 11,80 Q18,120 11,160 Q4,200 11,240 Q18,280 11,320 Q4,360 11,400 Q18,440 11,480 Q4,520 11,560 Q18,600 11,640 Q4,680 11,720 Q18,760 11,800" stroke="url(#osepSbV)" strokeWidth="1" fill="none" opacity="0.04" filter="blur(3px)" />
+          </svg>
+        </div>
+        {/* Curved separator — header bottom edge */}
+        <div
+          className="fixed h-[6px] z-20 pointer-events-none hidden lg:block"
+          style={{ top: 61, insetInlineStart: sidebarWidth, insetInlineEnd: 0 }}
+        >
+          <svg viewBox="0 0 1200 22" preserveAspectRatio="none" className="w-full h-full overflow-visible">
+            <defs>
+              <linearGradient id="osepHdH" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="transparent" />
+                <stop offset="10%" stopColor="rgba(28,171,176,0.5)" />
+                <stop offset="30%" stopColor="rgba(212,242,77,0.4)" />
+                <stop offset="50%" stopColor="rgba(167,139,250,0.35)" />
+                <stop offset="70%" stopColor="rgba(244,114,182,0.3)" />
+                <stop offset="90%" stopColor="rgba(28,171,176,0.4)" />
+                <stop offset="100%" stopColor="transparent" />
+              </linearGradient>
+              <filter id="osepGlow2"><feGaussianBlur stdDeviation="1.5" result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+            </defs>
+            <path d="M0,11 Q60,4 120,11 Q180,18 240,11 Q300,4 360,11 Q420,18 480,11 Q540,4 600,11 Q660,18 720,11 Q780,4 840,11 Q900,18 960,11 Q1020,4 1080,11 Q1140,18 1200,11" stroke="url(#osepHdH)" strokeWidth="0.4" fill="none" filter="url(#osepGlow2)" />
+            <path d="M0,11 Q60,4 120,11 Q180,18 240,11 Q300,4 360,11 Q420,18 480,11 Q540,4 600,11 Q660,18 720,11 Q780,4 840,11 Q900,18 960,11 Q1020,4 1080,11 Q1140,18 1200,11" stroke="url(#osepHdH)" strokeWidth="1" fill="none" opacity="0.03" filter="blur(3px)" />
+          </svg>
+        </div>
         <div className="relative z-[1]">
           <PageTransition key={pathname}>{children}</PageTransition>
         </div>
