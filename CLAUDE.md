@@ -183,18 +183,26 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - **Landing multi-lang switching:** Dynamic `NextIntlClientProvider` inside `HomeClient` — when visitor changes language via Navbar, a `LangWrapper` component re-wraps content with the new locale's messages. All locale messages loaded server-side and passed as `allMessages` prop
 - **Landing namespace:** `landing.*` keys (navbar, hero, destinations, testimonials, contact, footer, chatbot) — 80+ keys per locale
 
-### Auto-Translation System (24 Feb 2026)
-AI-powered content translation for landing pages. When admin saves content, Claude translates all text fields to selected languages and stores in `translations` JSONB column.
+### Auto-Translation System (25 Feb 2026)
+AI-powered content translation for landing pages. When admin saves content OR clicks "Traducir todo", Claude Haiku translates all text fields to selected languages and stores in `translations` JSONB column.
 
-- **Database:** `translations JSONB DEFAULT '{}'` on `clientes`, `destinos`, `opiniones` tables
-- **Structure:** `{ "en": { "hero_title": "...", "whyus_items": [...] }, "ar": { ... } }`
-- **Server:** `src/lib/auto-translate.ts` — calls Claude Sonnet 4 API for translation, handles strings/JSONB/arrays
-- **API:** `POST /api/admin/translate` — plan-gated to Grow/Pro plans
-- **Hook:** `src/hooks/useAutoTranslate.ts` — `{ translating, translationError, isEligible, translate(fields) }`
-- **Runtime:** `src/lib/translations.ts` — `tr(obj, field, lang, preferredLang)` + `makeTr(obj, lang, preferredLang)` for reading translations at render time
-- **Integration:** Auto-fires after save in MiWebContent.tsx and DestinoEditor.tsx. Opiniones auto-translate server-side on insert/update
+- **Database:** `translations JSONB DEFAULT '{}'` on `clientes`, `destinos`, `opiniones` tables. Also: `preferred_language` (source lang, default "es"), `available_languages` (array of enabled langs) on `clientes`
+- **Structure:** `{ "en": { "hero_title": "...", "itinerario": {...} }, "ar": { ... }, "_hashes": { "hero_title": "abc", "itinerario": "def" } }`
+- **Content hashing:** Each field is hashed before translation. Hash stored in `translations._hashes`. On subsequent runs, unchanged fields are skipped (0 tokens, 0 API calls). Function: `contentHash()` in auto-translate.ts
+- **Server:** `src/lib/auto-translate.ts` — calls Claude Haiku 4.5 API (`claude-haiku-4-5-20251001`). **Translates one language at a time** to avoid exceeding Haiku's 8192 output token limit. SDK config: `timeout: 150_000`, `maxRetries: 2`. No model fallback (Haiku only)
+- **Field maps:** `src/lib/translations.ts` — `TRANSLATABLE_CLIENT_FIELDS`, `TRANSLATABLE_DESTINO_FIELDS`, `TRANSLATABLE_OPINION_FIELDS`. Each maps field name → `"string"` | `"jsonb"`
+- **API endpoints:**
+  - `POST /api/admin/translate` — single-section translation (used by save hooks). Plan-gated Grow/Pro
+  - `GET /api/admin/translate/list` — returns all records to translate (clientId + destinos + opiniones)
+  - `POST /api/admin/translate/record` — translates one record's fieldGroup. Body: `{ table, recordId, fieldGroup? }`. `maxDuration = 180` (Vercel Pro). `fieldGroup="strings"` → only string fields. `fieldGroup="itinerario"` → only that JSONB field. Each call = exactly 1 AI API call per language
+- **Bulk translation ("Traducir todo"):** Client-side orchestration in `MiWebContent.tsx` → `handleBulkTranslateAll()`. Steps: (1) fetch list, (2) for each record, split into fieldGroups (strings + each JSONB field), (3) call `/api/admin/translate/record` for each, (4) show live progress "2/9 — Tokio (itinerario)..."
+- **Hook:** `src/hooks/useAutoTranslate.ts` — `{ translating, translationError, isEligible, translate(fields) }` for per-section auto-translate on save
+- **Runtime:** `src/lib/translations.ts` — `tr(obj, field, lang, preferredLang)` + `makeTr(obj, lang, preferredLang)` for reading translations at render time. Falls back to original if no translation found
+- **Image preservation:** Translated JSONB loses image URLs (not translatable text). `DestinationDetail.tsx` merges `imagen`/`avatar` fields from original JSONB into translated version
+- **Tag colors:** `TagChip.tsx` maps tag labels to colors. All language variants (ES/EN/AR) mapped to same color
 - **Plan gating:** Only Grow/Pro plans (matches existing `aiLocked` pattern). Start plan saves content but skips translation
-- **Error handling:** Fire-and-forget — save always succeeds, translation failure shows amber warning
+- **Error handling:** Auto-translate on save is fire-and-forget. Bulk translate shows per-record success/failure with details
+- **Token optimization:** Content hashing + Haiku (cheapest model) + one-language-at-a-time + fieldGroup splitting = minimal token usage
 
 ---
 
@@ -365,22 +373,21 @@ AI-powered content translation for landing pages. When admin saves content, Clau
 - ✅ **i18n Keys**: admin.eden namespace (welcome, chip1-4, placeholder, editProfile, photoUpdated, profileSaved, phone) in ES/EN/AR
 - ✅ **Eden AI Visual**: Tried Rive animation (black bg issues), tried Spline 3D (watermark/bg issues) — currently simple icon+gradient header, pending better 3D/animation solution
 
-### ✅ Auto-Traducción Landing + UI/UX Fixes (24 Feb 2026):
-- ✅ **Auto-Translation System**: `translations` JSONB column on `clientes`, `destinos`, `opiniones`. Claude Sonnet 4 translates on save (Grow/Pro only). `autoTranslateRecord()` in `src/lib/auto-translate.ts`. API: `POST /api/admin/translate`. Hook: `useAutoTranslate()`. Runtime: `tr()` + `makeTr()` helpers. Fire-and-forget after save
-- ✅ **Multi-language landing switching**: All available language messages loaded server-side, dynamic `NextIntlClientProvider` in `HomeClient.tsx` wraps content with current locale on language change
+### ✅ Auto-Traducción Landing + UI/UX Fixes (24-26 Feb 2026):
+- ✅ **Auto-Translation System**: See "Auto-Translation System" section above for full architecture details
+- ✅ **Multi-language landing switching**: All available language messages loaded server-side, dynamic `NextIntlClientProvider` in `HomeClient.tsx` wraps content with current locale on language change. Language cookie separated: `LANDING_LOCALE` (landing) vs `NEXT_LOCALE` (admin panel) to avoid cross-interference
 - ✅ **Navbar persistence in destination pages**: Navbar rendered inside `DestinationDetail.tsx` (client component) with shared `currentLang` state for language switching
-- ✅ **Footer in destination pages**: Full Footer component rendered in destination detail pages with all client data (brand, destinos, legal pages, social links)
+- ✅ **Footer in destination pages**: Full Footer component rendered in destination detail pages with all client data (brand, destinos, legal pages, social links). Footer description translated via `clientTranslations` prop. Destino names in footer translated
+- ✅ **BookingModal i18n**: Complete Arabic translations (~50 strings). Lang prop widened from `"es"|"en"` to `string`
+- ✅ **Tag colors preserved across languages**: `TagChip.tsx` maps ES/EN/AR tag labels to same colors
+- ✅ **Itinerary images preserved in translations**: `DestinationDetail.tsx` merges image URLs from original JSONB into translated JSONB (URLs aren't translatable text)
+- ✅ **Bulk translation "Traducir todo"**: Client-side orchestration with per-fieldGroup calls, live progress display, content hashing to skip unchanged fields
 - ✅ **Gallery redesign**: Split layout (65% main + 35% side thumbnails), 4-second auto-rotation, dot indicators, click-to-pause, "+N more" overlay, responsive mobile stacking
-- ✅ **Effort dots centering**: `justifyContent: "center"` on effort dots container
-- ✅ **Price badge contrast**: Strikethrough fontSize 13→16, opacity .55→.78, red textDecorationColor
-- ✅ **BookingModal stepper**: Circle 34→42, fontSize 14→16, label fontSize 10→12, maxWidth 70→85
-- ✅ **Removed "Sobre nosotros"**: Eliminated `about` section from Mi Web admin (was empty/unused)
-- ✅ **`homeUrl` prop on Navbar**: Brand logo/name links to correct URL (preview vs production)
+- ✅ **UI/UX fixes**: Effort dots centering, price badge contrast, BookingModal stepper sizing, removed "Sobre nosotros", `homeUrl` prop on Navbar
 
 ### 🐛 Bugs persistentes (pendientes de fix):
 - **Bloque A #2 — "Volver" back URL**: En preview mode (`/preview/[slug]/destino/[destinoSlug]`), el botón "Volver" y el click en el nombre de la agencia redirigen al sitio corporativo (`travel-agency-next-ten.vercel.app`) en vez de a la landing del cliente. Necesita verificación del `homeUrl` prop
 - **Bloque C #10 — Gallery sizing**: Las imágenes de la galería del destino siguen apareciendo estiradas/grandes. Necesitan dimensiones iguales al hero
-- **Bloque D #15 — Multi-language toggle**: El cambio de idioma en la landing puede no funcionar completamente. Necesita testing después del fix del `LangWrapper`
 
 ### ⚠️ Fase D — Nuevas Secciones / Integraciones (parcial):
 - ⏳ **D1 — Social Media Integration**: Código OAuth listo (social_connections table, OAuth library, API routes, UI). **Pendiente:** env vars Meta/TikTok (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`), crear apps en Meta Developer + TikTok Developer, gráficas de rendimiento de posts

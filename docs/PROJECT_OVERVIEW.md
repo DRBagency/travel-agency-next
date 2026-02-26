@@ -1,7 +1,7 @@
 # DRB Agency - Project Overview
 
-> **Ultima actualizacion:** 22 Febrero 2026
-> **Estado:** En produccion - Fases 1-6 + D + E + F completadas
+> **Ultima actualizacion:** 26 Febrero 2026
+> **Estado:** En produccion - Fases 1-6 + D + E + F + G + Auto-Traduccion completadas
 
 ## TL;DR
 
@@ -67,14 +67,26 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - Ingles (EN) - Internacional
 - Arabe (AR) - Mercado MENA (con RTL completo)
 
-**Implementacion:**
-- next-intl con cookie-based routing (NEXT_LOCALE), sin prefijo URL
-- ~1000+ keys traducidos en messages/es.json, en.json, ar.json
+### i18n Estatico (Panel Admin/Owner)
+- next-intl con cookie-based routing (`NEXT_LOCALE`), sin prefijo URL
+- ~1000+ keys traducidos en `messages/es.json`, `en.json`, `ar.json`
 - LanguageSelector con banderas en header de AdminShell y OwnerShell
 - RTL completo para Arabe: CSS logical properties, fuente Noto Sans Arabic, SheetContent side flip
 - Formateo de fechas/numeros locale-aware en todas las paginas
-- Landing i18n per-client via preferred_language en tabla clientes
-- Landing namespace con 80+ keys (navbar, hero, destinations, testimonials, about, contact, footer, chatbot)
+
+### i18n Dinamico (Landing Pages — Auto-Traduccion con IA)
+- Cada agencia configura `preferred_language` (idioma fuente) + `available_languages` (idiomas habilitados)
+- Cookie separada `LANDING_LOCALE` para no interferir con el panel admin
+- Landing namespace con 80+ keys estaticos (navbar, hero, destinations, testimonials, about, contact, footer, chatbot)
+- **Contenido dinamico** (textos, itinerarios, hotel, FAQs, etc.) traducido automaticamente con Claude Haiku 4.5
+- Traducciones almacenadas en columna `translations` JSONB en tablas `clientes`, `destinos`, `opiniones`
+- **Content hashing** para evitar re-traducir contenido sin cambios (ahorro de tokens)
+- **Bulk translate "Traducir todo"** con progreso en vivo y orchestracion client-side
+- Runtime helpers: `tr(obj, field, lang)` + `makeTr(obj, lang)` para leer traducciones
+- Preservacion de imagenes (URLs de itinerario/hotel/coordinador se mergean del original)
+- Tag colors preservados entre idiomas (ES/EN/AR mapeados al mismo color)
+- BookingModal con traducciones completas a arabe
+- Plan-gated: solo Grow/Pro. Start plan guarda contenido pero no traduce
 
 ## Principios Fundamentales
 

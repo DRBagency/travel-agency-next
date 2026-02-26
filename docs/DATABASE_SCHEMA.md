@@ -98,6 +98,47 @@ Cuando se crea una tabla nueva, SIEMPRE seguir estos pasos:
 ### `page_visits`
 **Auto-tracked via:** `/api/track` | **Estado:** ✅ Tracking automático
 
-## 🌍 MULTI-IDIOMA
+## 🌍 MULTI-IDIOMA & AUTO-TRADUCCIÓN
 
-> **Nota:** El sistema multi-idioma fue implementado usando **next-intl** con archivos JSON (`messages/es.json`, `messages/en.json`, `messages/ar.json`), no con una tabla `translations` en base de datos. No se necesita tabla de traducciones en Supabase.
+### i18n Estático (Panel Admin/Owner)
+Implementado con **next-intl** + archivos JSON (`messages/es.json`, `messages/en.json`, `messages/ar.json`). ~1000+ keys para UI de paneles.
+
+### Auto-Traducción Dinámica (Landing Pages)
+El contenido de landing (textos, itinerarios, FAQs, etc.) se traduce automáticamente con Claude Haiku y se almacena en la columna `translations` JSONB de cada tabla.
+
+**Columnas relevantes en `clientes`:**
+- `preferred_language` (text, default "es") — idioma fuente del contenido
+- `available_languages` (jsonb, default '["es"]') — idiomas habilitados en la landing
+- `translations` (jsonb, default '{}') — traducciones de campos del cliente (hero, footer, whyus, etc.)
+
+**Columna `translations` en `clientes`, `destinos`, `opiniones`:**
+```json
+{
+  "en": {
+    "hero_title": "Your dream trip",
+    "itinerario": { "dias": [...] },
+    "nombre": "Tokyo"
+  },
+  "ar": {
+    "hero_title": "رحلة أحلامك",
+    "itinerario": { "dias": [...] }
+  },
+  "_hashes": {
+    "hero_title": "a1b2c3",
+    "itinerario": "d4e5f6",
+    "nombre": "g7h8i9"
+  }
+}
+```
+
+- Cada idioma target tiene un objeto con los campos traducidos
+- `_hashes` almacena un hash del contenido original por campo. Si el hash no cambia, el campo no se re-traduce (ahorro de tokens)
+- Los campos JSONB (itinerario, hotel, vuelos, faqs, etc.) se almacenan completos como objetos traducidos
+- Las URLs de imágenes NO se traducen — se preservan del original en runtime
+
+**Campos traducibles por tabla:**
+| Tabla | Campos string | Campos JSONB |
+|-------|--------------|--------------|
+| `clientes` | hero_title, hero_subtitle, hero_description, hero_badge, hero_cta_text, hero_cta_text_secondary, about_title, about_text_1, about_text_2, cta_banner_title, cta_banner_description, cta_banner_cta_text, footer_text, footer_description, meta_title, meta_description | whyus_items |
+| `destinos` | nombre, subtitle, tagline, badge, descripcion, descripcion_larga, duracion, categoria, pais, continente, dificultad | itinerario, hotel, vuelos, coordinador, incluido, no_incluido, faqs, clima, highlights, tags |
+| `opiniones` | comentario | — |

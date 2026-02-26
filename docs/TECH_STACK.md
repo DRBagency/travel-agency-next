@@ -1,7 +1,7 @@
 # Tech Stack - DRB Agency
 
-> **Ultima actualizacion:** 22 Febrero 2026
-> **Estado:** Produccion estable - Fases 1-6 + D + E + F completadas
+> **Ultima actualizacion:** 26 Febrero 2026
+> **Estado:** Produccion estable - Fases 1-6 + D + E + F + G + Auto-Traduccion completadas
 
 ## Stack Tecnologico
 
@@ -10,7 +10,7 @@
 - **React:** 19.2.3
 - **Styling:** Tailwind CSS (custom shadows, glassmorphism, DRB color palette)
 - **UI Components:** shadcn/ui + custom design system (DataTable, KPICard, ConfirmDialog, EmptyState, AnimatedSection, DeleteWithConfirm)
-- **i18n:** next-intl (cookie-based, ES/EN/AR, 1000+ keys, RTL support for Arabic with CSS logical properties)
+- **i18n:** next-intl (cookie-based, ES/EN/AR, 1000+ keys, RTL support for Arabic with CSS logical properties). Landing uses separate `LANDING_LOCALE` cookie. Auto-translation of dynamic content via Claude Haiku
 - **Charts:** Recharts
 - **Calendar:** FullCalendar (Google Calendar integration)
 - **Icons:** Lucide React
@@ -21,7 +21,8 @@
 - **Runtime:** Node.js (Edge Runtime en algunas rutas)
 - **API Routes:** Next.js App Router API
 - **Authentication:** Supabase Auth + Custom cookies (NO NextAuth)
-- **AI:** Anthropic Claude API (@anthropic-ai/sdk) - itineraries, recommendations, chatbot
+- **AI:** Anthropic Claude API (@anthropic-ai/sdk) - itineraries, recommendations, chatbot, **auto-translation** (Claude Haiku 4.5)
+- **Auto-Translation:** `src/lib/auto-translate.ts` + `src/lib/translations.ts`. Haiku 4.5, SDK timeout 150s, maxRetries 2, 1 lang per call, content hashing. API: `/api/admin/translate/*`
 - **Vercel API:** Domain management (add, verify, remove domains via REST API)
 
 ### Base de Datos
@@ -78,6 +79,8 @@ src/
     owner/             # Funciones del owner
     supabase/          # Clients de Supabase
     vercel/            # Vercel API helpers (domain management)
+    auto-translate.ts  # Core translation engine (Haiku API, hashing, merge)
+    translations.ts    # Field maps, tr() + makeTr() runtime helpers
     set-locale.ts      # Server action cambio idioma
   middleware.ts
 messages/

@@ -1,7 +1,7 @@
 # Estado Actual del Proyecto
 
-> **Ultima actualizacion:** 22 Febrero 2026
-> **Estado:** Produccion activa - Fase E completada (E1-E7) + Fase F completada
+> **Ultima actualizacion:** 26 Febrero 2026
+> **Estado:** Produccion activa - Fase E completada (E1-E7) + Fase F + G + Auto-Traduccion completadas
 
 ## FUNCIONALIDADES COMPLETADAS
 
@@ -58,11 +58,14 @@
 - Live visitor tracking badge (emerald pill, pulsing dot, Realtime + polling)
 
 #### Contenido Web (`/admin/mi-web`)
-- Editor completo: hero, nosotros, contacto, redes sociales, footer
+- Editor completo: hero, WhyUs, CTA Banner, contacto, redes sociales, footer, global config
 - Color picker, logo upload, Unsplash image picker
 - AIDescriptionButton en campos de texto
 - OpinionesManager integrado (star rating distribution, visual review cards, CRUD + publish/unpublish + DeleteWithConfirm)
 - Domain management section (edit domain, Vercel API automation, CNAME/TXT verification)
+- **Idiomas:** Selector de idioma preferido + idiomas disponibles (ES/EN/AR)
+- **Traducir todo:** Boton bulk translate con progreso en vivo, orchestracion client-side, fieldGroup splitting
+- Auto-traduccion on save por seccion (Grow/Pro only)
 
 #### Destinos (`/admin/destinos`)
 - Visual card grid con imagenes, hover effects, gradient overlays
@@ -136,7 +139,7 @@
 - **Stripe Billing:** 3 planes (Start/Grow/Pro), checkout, cambio, cancelacion, reactivacion, webhook (`/api/stripe/billing/webhook`)
 - Stripe Billing + Connect integrados en onboarding wizard (Fase E)
 
-#### Anthropic Claude AI (`/api/ai`)
+#### Anthropic Claude AI (`/api/ai` + `/api/admin/translate`)
 - Generador de itinerarios
 - Recomendaciones AI para agencias (en ClienteTabs)
 - Configuracion de chatbot AI
@@ -144,6 +147,7 @@
 - Asistente libre (FreeChat)
 - AI inline helpers (descripcion, pricing, emails, mi-web)
 - Owner copilot (OwnerChat) con metricas de plataforma
+- **Auto-traduccion landing**: Claude Haiku 4.5 traduce contenido a idiomas seleccionados. Endpoints: `/api/admin/translate` (per-section), `/api/admin/translate/list` (list records), `/api/admin/translate/record` (per-fieldGroup). Content hashing, client-side orchestration, 1 AI call per serverless invocation
 
 #### Resend Email
 - Provider: Resend (SDK 6.9.1)
@@ -184,12 +188,13 @@
 | `OwnerCharts` | Client | 5 graficas semanales (MRR, clientes, reservas, breakdown, top destinos) |
 
 ### Cross-cutting
-- **i18n**: 1000+ keys en ES/EN/AR con next-intl (cookie-based, sin prefijo URL)
+- **i18n Panel**: 1000+ keys en ES/EN/AR con next-intl (cookie-based `NEXT_LOCALE`, sin prefijo URL)
+- **i18n Landing**: Per-client locale via `preferred_language` + `available_languages` en tabla clientes. Cookie separada `LANDING_LOCALE`. 80+ keys en `landing.*` namespace
+- **Auto-Traduccion**: Contenido dinamico (textos, itinerarios, FAQs, hotel, etc.) traducido con Claude Haiku 4.5 y almacenado en columna `translations` JSONB. Content hashing para evitar re-traducir contenido sin cambios. Plan-gated Grow/Pro
 - **RTL**: CSS logical properties en TODOS los componentes (shadcn + custom). 0 violations
 - **Loading**: Skeleton loading.tsx para admin y owner
 - **Animations**: animate-fade-in en TODAS las paginas, framer-motion AnimatedSection
 - **Headers**: Consistente text-2xl + text-gray-400 en todas las paginas
-- **Landing i18n**: Per-client locale via `preferred_language`, 80+ keys en `landing.*` namespace
 
 ### Sistema de Emails
 - Emails de reservas (cliente + agencia, templates editables, tokens, branding)
@@ -327,12 +332,26 @@
 - White-label personalizado
 - Multi-moneda
 - Pagos offline
-- Landing page rediseno completo (Fase G)
-- Coordinadores de viaje (Fase D2)
-- Vuelos y hoteles en destinos (Fase D3)
-- FAQs por destino (Fase D4)
 - Sistema de depositos/anticipos (Fase D5)
 - Notificaciones en tiempo real (Fase H1)
 - Busqueda global mejorada (Fase H2)
 - Dashboard drag & drop (Fase H3)
 - Legal / RGPD (Fase H4)
+
+### Fase G completada (Landing Page Rediseno + Auto-Traduccion):
+- Rediseno completo landing page (9 secciones, nuevo template, dark/light mode)
+- Pagina detalle destino con 8 tabs (itinerario, hotel, vuelos, galeria, incluido, salidas, coordinador, FAQ)
+- Admin destinos tabbed editor (11 tabs)
+- D2 Coordinadores, D3 Vuelos/Hotel, D4 FAQs — integrados en destinos
+
+### Auto-Traduccion completada (24-26 Feb 2026):
+- Auto-traduccion con Claude Haiku 4.5 (on save + bulk "Traducir todo")
+- Columna `translations` JSONB en clientes, destinos, opiniones
+- Content hashing para evitar re-traducir contenido sin cambios
+- Client-side orchestration con fieldGroup splitting (1 AI call por funcion serverless)
+- Un idioma por llamada (evita truncamiento por limite output tokens)
+- Tag colors preservados entre idiomas
+- Imagenes de itinerario/hotel/coordinador preservadas en traducciones
+- BookingModal traducido a arabe
+- Footer traducido con descripcion + nombres destinos
+- Cookie separada LANDING_LOCALE para evitar interferencia con panel admin
