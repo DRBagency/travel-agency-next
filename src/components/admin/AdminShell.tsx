@@ -187,7 +187,7 @@ function DesktopSidebar({
             animate={{ opacity: 1 }}
             transition={{ delay: 0.05 }}
           >
-            <div className="font-display text-sm font-semibold text-gray-900 dark:text-white truncate">
+            <div className="font-syne text-sm font-bold text-gray-900 dark:text-white truncate tracking-tight">
               {clientName}
             </div>
             {plan && (
@@ -366,7 +366,7 @@ function MobileSidebarNav({
           </div>
         )}
         <div className="min-w-0">
-          <div className="font-display text-sm font-semibold text-gray-900 dark:text-white truncate">
+          <div className="font-syne text-sm font-bold text-gray-900 dark:text-white truncate tracking-tight">
             {clientName}
           </div>
           {plan && (
