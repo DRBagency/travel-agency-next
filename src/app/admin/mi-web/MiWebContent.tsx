@@ -73,7 +73,6 @@ interface ClientData {
   instagram_url: string | null;
   facebook_url: string | null;
   tiktok_url: string | null;
-  footer_text: string | null;
   footer_description: string | null;
   dark_mode_enabled: boolean | null;
   meta_title: string | null;
@@ -205,7 +204,6 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
     instagram_url: client.instagram_url ?? "",
     facebook_url: client.facebook_url ?? "",
     tiktok_url: client.tiktok_url ?? "",
-    footer_text: client.footer_text ?? "",
     footer_description: client.footer_description ?? "",
     meta_title: client.meta_title ?? "",
     meta_description: client.meta_description ?? "",
@@ -1566,30 +1564,17 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
         />
         {openSections.has("footer") && (
           <div className="space-y-6 pt-2">
-            {/* Texto del footer */}
-            <div className="space-y-4">
-              <div>
-                <label className="panel-label block mb-1">
-                  {t("footerTextLabel")}
-                </label>
-                <textarea
-                  value={fields.footer_text}
-                  onChange={(e) => updateField("footer_text", e.target.value)}
-                  className="panel-input w-full min-h-[80px]"
-                  placeholder={t("footerTextPlaceholder")}
-                />
-              </div>
-              <div>
-                <label className="panel-label block mb-1">
-                  {t("footerDescription")}
-                </label>
-                <textarea
-                  value={fields.footer_description}
-                  onChange={(e) => updateField("footer_description", e.target.value)}
-                  className="panel-input w-full min-h-[80px]"
-                  placeholder={t("footerDescPlaceholder")}
-                />
-              </div>
+            {/* Descripción del footer */}
+            <div>
+              <label className="panel-label block mb-1">
+                {t("footerDescription")}
+              </label>
+              <textarea
+                value={fields.footer_description}
+                onChange={(e) => updateField("footer_description", e.target.value)}
+                className="panel-input w-full min-h-[80px]"
+                placeholder={t("footerDescPlaceholder")}
+              />
             </div>
 
             {/* Redes sociales */}
@@ -1642,7 +1627,6 @@ export default function MiWebContent({ client, counts, plan, opiniones, legales,
             </div>
 
             {renderSaveButton("footer", [
-              "footer_text",
               "footer_description",
               "instagram_url",
               "facebook_url",

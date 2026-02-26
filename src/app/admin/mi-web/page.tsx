@@ -72,7 +72,6 @@ export default async function MiWebPage() {
         instagram_url: client.instagram_url,
         facebook_url: client.facebook_url,
         tiktok_url: client.tiktok_url,
-        footer_text: client.footer_text,
         footer_description: client.footer_description,
         dark_mode_enabled: client.dark_mode_enabled,
         meta_title: client.meta_title,
