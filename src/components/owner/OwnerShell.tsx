@@ -48,41 +48,12 @@ interface NavItem {
 }
 
 // ====================================================================
-// Curved sidebar separator with reflective gradient effect
+// Gradient nav divider
 // ====================================================================
 function OwnerSidebarSeparator({ expanded }: { expanded: boolean }) {
   if (!expanded) return <div className="my-1.5" />;
   return (
-    <div className="my-1.5 mx-3 overflow-hidden">
-      <svg viewBox="0 0 200 8" className="w-full h-2" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="osepLight" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#1CABB0" stopOpacity="0" />
-            <stop offset="20%" stopColor="#1CABB0" stopOpacity="0.25" />
-            <stop offset="50%" stopColor="#D4F24D" stopOpacity="0.4" />
-            <stop offset="80%" stopColor="#1CABB0" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#1CABB0" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id="osepDark" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#1CABB0" stopOpacity="0" />
-            <stop offset="20%" stopColor="#1CABB0" stopOpacity="0.3" />
-            <stop offset="50%" stopColor="#33CFD7" stopOpacity="0.5" />
-            <stop offset="80%" stopColor="#1CABB0" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#1CABB0" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id="osepShine" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#fff" stopOpacity="0" />
-            <stop offset="45%" stopColor="#fff" stopOpacity="0" />
-            <stop offset="50%" stopColor="#fff" stopOpacity="0.6" />
-            <stop offset="55%" stopColor="#fff" stopOpacity="0" />
-            <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d="M 0 4 Q 50 0, 100 4 Q 150 8, 200 4" stroke="url(#osepLight)" strokeWidth="1.5" fill="none" className="dark:hidden" />
-        <path d="M 0 4 Q 50 0, 100 4 Q 150 8, 200 4" stroke="url(#osepDark)" strokeWidth="1.5" fill="none" className="hidden dark:block" />
-        <path d="M 0 4 Q 50 0, 100 4 Q 150 8, 200 4" stroke="url(#osepShine)" strokeWidth="0.5" fill="none" className="opacity-50" />
-      </svg>
-    </div>
+    <div className="h-px mx-3 my-2 bg-gradient-to-r from-transparent via-[rgba(28,171,176,0.15)] to-transparent" />
   );
 }
 
