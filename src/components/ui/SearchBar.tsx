@@ -164,6 +164,7 @@ export default function SearchBar({ navItems }: SearchBarProps) {
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={tc("search")}
+          data-glass-skip
           className="w-full bg-transparent text-sm text-gray-700 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none"
         />
         {loading && (

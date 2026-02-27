@@ -181,7 +181,7 @@ html {
 
   /* ═══ KPI Card — Liquid Glass V3 ═══ */
   .kpi-card {
-    @apply relative overflow-hidden rounded-2xl;
+    @apply relative overflow-hidden rounded-2xl p-5;
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     background: rgba(255,255,255,0.03);
     backdrop-filter: blur(24px) saturate(180%);
@@ -309,9 +309,9 @@ html {
 
 /* ═══ Global input glass — fallback for inputs without .panel-input ═══ */
 /* Placed outside @layer so it has higher specificity than Tailwind utilities */
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input),
-select:not(.fc-select):not([data-sileo]):not(.panel-input),
-textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input) {
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):not([data-glass-skip]),
+select:not(.fc-select):not([data-sileo]):not(.panel-input):not([data-glass-skip]),
+textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-skip]) {
   background: rgba(255,255,255,0.06) !important;
   border: 1px solid rgba(180,220,225,0.16) !important;
   color: rgba(255,255,255,0.92) !important;
@@ -319,37 +319,37 @@ textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input) {
   -webkit-backdrop-filter: blur(12px);
   transition: all 0.2s;
 }
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):hover,
-select:not(.fc-select):not([data-sileo]):not(.panel-input):hover,
-textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):hover {
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):not([data-glass-skip]):hover,
+select:not(.fc-select):not([data-sileo]):not(.panel-input):not([data-glass-skip]):hover,
+textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-skip]):hover {
   background: rgba(255,255,255,0.09) !important;
   border-color: rgba(180,220,225,0.25) !important;
 }
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):focus,
-select:not(.fc-select):not([data-sileo]):not(.panel-input):focus,
-textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):focus {
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):not([data-glass-skip]):focus,
+select:not(.fc-select):not([data-sileo]):not(.panel-input):not([data-glass-skip]):focus,
+textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-skip]):focus {
   background: rgba(255,255,255,0.09) !important;
   border-color: rgba(28,171,176,0.50) !important;
   box-shadow: 0 0 0 3px rgba(28,171,176,0.12) !important;
   outline: none !important;
 }
 /* Light mode global inputs */
-.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input),
-.light select:not(.fc-select):not([data-sileo]):not(.panel-input),
-.light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input) {
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):not([data-glass-skip]),
+.light select:not(.fc-select):not([data-sileo]):not(.panel-input):not([data-glass-skip]),
+.light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-skip]) {
   background: rgba(255,255,255,0.55) !important;
   border: 1px solid rgba(0,0,0,0.10) !important;
   color: rgba(0,0,0,0.85) !important;
 }
-.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):hover,
-.light select:not(.fc-select):not([data-sileo]):not(.panel-input):hover,
-.light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):hover {
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):not([data-glass-skip]):hover,
+.light select:not(.fc-select):not([data-sileo]):not(.panel-input):not([data-glass-skip]):hover,
+.light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-skip]):hover {
   background: rgba(255,255,255,0.70) !important;
   border-color: rgba(0,0,0,0.16) !important;
 }
-.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):focus,
-.light select:not(.fc-select):not([data-sileo]):not(.panel-input):focus,
-.light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):focus {
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):not([data-glass-skip]):focus,
+.light select:not(.fc-select):not([data-sileo]):not(.panel-input):not([data-glass-skip]):focus,
+.light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-skip]):focus {
   background: rgba(255,255,255,0.75) !important;
   border-color: rgba(28,171,176,0.45) !important;
   box-shadow: 0 0 0 3px rgba(28,171,176,0.10) !important;
