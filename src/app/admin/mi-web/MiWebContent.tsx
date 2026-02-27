@@ -473,17 +473,17 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
         onClick={() => toggleSection(sectionKey)}
         className="w-full flex items-center gap-2.5 text-start"
       >
-        <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
-          <Icon className="w-3.5 h-3.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
+        <div className="w-9 h-9 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
+          <Icon className="w-4.5 h-4.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
         </div>
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white flex-1">{title}</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white flex-1">{title}</h2>
         {!isOpen && (
-          <span className="text-xs text-gray-400 dark:text-white/40 hidden sm:block">{subtitle}</span>
+          <span className="text-sm text-gray-400 dark:text-white/40 hidden sm:block">{subtitle}</span>
         )}
         {isOpen ? (
-          <ChevronDown className="w-4 h-4 text-gray-400 dark:text-white/50" />
+          <ChevronDown className="w-5 h-5 text-gray-400 dark:text-white/50" />
         ) : (
-          <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/50" />
+          <ChevronRight className="w-5 h-5 text-gray-400 dark:text-white/50" />
         )}
       </button>
     );
@@ -506,17 +506,17 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
         onClick={() => toggleSection(sectionKey)}
         className="w-full flex items-center gap-2.5 text-start"
       >
-        <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-sm">
+        <div className="w-9 h-9 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center text-base">
           {emoji}
         </div>
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white flex-1">{title}</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white flex-1">{title}</h2>
         {!isOpen && (
-          <span className="text-xs text-gray-400 dark:text-white/40 hidden sm:block">{subtitle}</span>
+          <span className="text-sm text-gray-400 dark:text-white/40 hidden sm:block">{subtitle}</span>
         )}
         {isOpen ? (
-          <ChevronDown className="w-4 h-4 text-gray-400 dark:text-white/50" />
+          <ChevronDown className="w-5 h-5 text-gray-400 dark:text-white/50" />
         ) : (
-          <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/50" />
+          <ChevronRight className="w-5 h-5 text-gray-400 dark:text-white/50" />
         )}
       </button>
     );
@@ -688,7 +688,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
               <button
                 key={key}
                 onClick={() => setTab(key)}
-                className={`flex items-center gap-1.5 px-3 py-2.5 text-sm whitespace-nowrap transition-colors border-b-2 ${
+                className={`flex items-center gap-2 px-4 py-3 text-[15px] whitespace-nowrap transition-colors border-b-2 ${
                   isActive
                     ? "border-drb-turquoise-500 text-drb-turquoise-600 dark:text-drb-turquoise-400 font-semibold"
                     : "border-transparent text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/70"
@@ -813,7 +813,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       )}
 
       {/* Dominio y Configuración */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <SectionHeader
           sectionKey="domain"
           icon={Globe}
@@ -993,7 +993,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       </section>
 
       {/* Marca y Estilo */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <SectionHeader
           sectionKey="marca"
           icon={Palette}
@@ -1179,7 +1179,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       {tab === "content" && (<>
 
       {/* Hero */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <SectionHeader
           sectionKey="hero"
           icon={Image}
@@ -1345,7 +1345,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       </section>
 
       {/* Stats */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <SectionHeader
           sectionKey="stats"
           icon={BarChart3}
@@ -1416,7 +1416,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       </section>
 
       {/* Por que nosotros */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <SectionHeaderEmoji
           sectionKey="whyus"
           emoji="✦"
@@ -1518,7 +1518,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       </section>
 
       {/* Opiniones */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <SectionHeader
           sectionKey="opiniones"
           icon={Star}
@@ -1540,7 +1540,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       {tab === "conversion" && (<>
 
       {/* Banner CTA */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <SectionHeaderEmoji
           sectionKey="ctabanner"
           emoji="📢"
@@ -1607,7 +1607,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       </section>
 
       {/* Contacto */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <SectionHeader
           sectionKey="contact"
           icon={Phone}
@@ -1668,7 +1668,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       </section>
 
       {/* Footer (texto + redes + legal) */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <SectionHeader
           sectionKey="footer"
           icon={FileText}
@@ -1752,7 +1752,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       </>)}
 
       {/* Enlace a destinos */}
-      <section className="panel-card p-5 space-y-3">
+      <section className="panel-card p-6 space-y-4">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
             <MapPin className="w-3.5 h-3.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />

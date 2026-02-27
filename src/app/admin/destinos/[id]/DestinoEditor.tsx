@@ -407,7 +407,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                 key={key}
                 type="button"
                 onClick={() => setTab(key)}
-                className={`flex items-center gap-1.5 px-3 py-2.5 text-sm whitespace-nowrap transition-colors border-b-2 ${
+                className={`flex items-center gap-2 px-4 py-3 text-[15px] whitespace-nowrap transition-colors border-b-2 ${
                   isActive
                     ? "border-drb-turquoise-500 text-drb-turquoise-600 dark:text-drb-turquoise-400 font-semibold"
                     : "border-transparent text-gray-500 dark:text-white/50 hover:text-gray-700 dark:hover:text-white/70"
@@ -428,7 +428,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ GENERAL TAB ------ */}
         {tab === "general" && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               Información general
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -666,7 +666,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ PRICING TAB ------ */}
         {tab === "pricing" && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Precios</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Precios</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label">Precio principal</label>
@@ -740,7 +740,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ ITINERARY TAB ------ */}
         {tab === "itinerary" && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Itinerario</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Itinerario</h2>
             {itinerario ? (
               <ItineraryEditor
                 itinerario={itinerario}
@@ -779,7 +779,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ HOTEL TAB ------ */}
         {tab === "hotel" && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Alojamiento</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Alojamiento</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label">Nombre del hotel</label>
@@ -863,7 +863,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         next[idx] = e.target.value;
                         setHotel((p) => ({ ...p, amenidades: next }));
                       }}
-                      className="panel-input flex-1 text-sm"
+                      className="panel-input flex-1"
                     />
                     <button
                       type="button"
@@ -899,7 +899,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ FLIGHTS TAB ------ */}
         {tab === "flights" && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Vuelos</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Vuelos</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label">Aeropuerto de llegada</label>
@@ -941,13 +941,13 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ INCLUDED / NOT INCLUDED TAB ------ */}
         {tab === "included" && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               Incluido / No incluido
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Incluido */}
               <div>
-                <h3 className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-1.5">
+                <h3 className="text-base font-semibold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2">
                   <Check className="w-4 h-4" />
                   Incluido
                 </h3>
@@ -962,7 +962,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                           next[idx] = e.target.value;
                           setIncluido(next);
                         }}
-                        className="panel-input flex-1 text-sm"
+                        className="panel-input flex-1"
                       />
                       <button
                         type="button"
@@ -986,7 +986,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
 
               {/* No incluido */}
               <div>
-                <h3 className="text-sm font-semibold text-red-600 dark:text-red-400 mb-3 flex items-center gap-1.5">
+                <h3 className="text-base font-semibold text-red-600 dark:text-red-400 mb-3 flex items-center gap-2">
                   <Trash2 className="w-4 h-4" />
                   No incluido
                 </h3>
@@ -1001,7 +1001,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                           next[idx] = e.target.value;
                           setNoIncluido(next);
                         }}
-                        className="panel-input flex-1 text-sm"
+                        className="panel-input flex-1"
                       />
                       <button
                         type="button"
@@ -1032,7 +1032,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ DEPARTURES TAB ------ */}
         {tab === "departures" && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               Salidas programadas
             </h2>
             {salidas.length === 0 && (
@@ -1044,10 +1044,10 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               {salidas.map((s, idx) => (
                 <div
                   key={idx}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end p-4 rounded-xl border border-gray-200 dark:border-white/10"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end p-5 rounded-xl border border-gray-200 dark:border-white/10"
                 >
                   <div>
-                    <label className="panel-label text-xs">Fecha</label>
+                    <label className="panel-label">Fecha</label>
                     <input
                       type="date"
                       value={s.fecha}
@@ -1056,11 +1056,11 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         next[idx] = { ...next[idx], fecha: e.target.value };
                         setSalidas(next);
                       }}
-                      className="panel-input w-full text-sm"
+                      className="panel-input w-full"
                     />
                   </div>
                   <div>
-                    <label className="panel-label text-xs">Estado</label>
+                    <label className="panel-label">Estado</label>
                     <select
                       value={s.estado}
                       onChange={(e) => {
@@ -1068,7 +1068,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         next[idx] = { ...next[idx], estado: e.target.value };
                         setSalidas(next);
                       }}
-                      className="panel-input w-full text-sm"
+                      className="panel-input w-full"
                     >
                       <option value="confirmed">Confirmado</option>
                       <option value="lastSpots">Últimas plazas</option>
@@ -1076,7 +1076,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                     </select>
                   </div>
                   <div>
-                    <label className="panel-label text-xs">Precio</label>
+                    <label className="panel-label">Precio</label>
                     <input
                       type="number"
                       min={0}
@@ -1086,11 +1086,11 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         next[idx] = { ...next[idx], precio: Number(e.target.value) || 0 };
                         setSalidas(next);
                       }}
-                      className="panel-input w-full text-sm"
+                      className="panel-input w-full"
                     />
                   </div>
                   <div>
-                    <label className="panel-label text-xs">Plazas</label>
+                    <label className="panel-label">Plazas</label>
                     <input
                       type="number"
                       min={0}
@@ -1100,7 +1100,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         next[idx] = { ...next[idx], plazas: Number(e.target.value) || 0 };
                         setSalidas(next);
                       }}
-                      className="panel-input w-full text-sm"
+                      className="panel-input w-full"
                     />
                   </div>
                   <div className="flex items-end">
@@ -1137,7 +1137,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ FAQS TAB ------ */}
         {tab === "faqs" && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               Preguntas frecuentes
             </h2>
             {faqs.length === 0 && (
@@ -1149,11 +1149,11 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               {faqs.map((faq, idx) => (
                 <div
                   key={idx}
-                  className="p-4 rounded-xl border border-gray-200 dark:border-white/10 space-y-3"
+                  className="p-5 rounded-xl border border-gray-200 dark:border-white/10 space-y-4"
                 >
                   <div className="flex items-start gap-2">
                     <div className="flex-1">
-                      <label className="panel-label text-xs">Pregunta</label>
+                      <label className="panel-label">Pregunta</label>
                       <input
                         type="text"
                         value={faq.pregunta}
@@ -1162,7 +1162,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                           next[idx] = { ...next[idx], pregunta: e.target.value };
                           setFaqs(next);
                         }}
-                        className="panel-input w-full text-sm"
+                        className="panel-input w-full"
                       />
                     </div>
                     <div className="flex items-center gap-1 pt-5 shrink-0">
@@ -1200,7 +1200,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                     </div>
                   </div>
                   <div>
-                    <label className="panel-label text-xs">Respuesta</label>
+                    <label className="panel-label">Respuesta</label>
                     <textarea
                       rows={2}
                       value={faq.respuesta}
@@ -1209,7 +1209,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         next[idx] = { ...next[idx], respuesta: e.target.value };
                         setFaqs(next);
                       }}
-                      className="panel-input w-full text-sm"
+                      className="panel-input w-full"
                     />
                   </div>
                 </div>
@@ -1232,7 +1232,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ COORDINATOR TAB ------ */}
         {tab === "coordinator" && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Coordinador</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Coordinador</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="panel-label">Nombre</label>
@@ -1306,7 +1306,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         next[idx] = e.target.value;
                         setCoordinador((p) => ({ ...p, idiomas: next }));
                       }}
-                      className="panel-input flex-1 text-sm"
+                      className="panel-input flex-1"
                       placeholder="Ej: Español"
                     />
                     <button
@@ -1343,13 +1343,13 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ TAGS & CLIMATE TAB ------ */}
         {tab === "tags" && (
           <div className="space-y-8">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               Tags, Highlights y Clima
             </h2>
 
             {/* Tags */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-white/70 mb-3 flex items-center gap-1.5">
+              <h3 className="text-base font-semibold text-gray-700 dark:text-white/70 mb-3 flex items-center gap-2">
                 <Tag className="w-4 h-4" />
                 Tags
               </h3>
@@ -1364,7 +1364,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         next[idx] = e.target.value;
                         setTags(next);
                       }}
-                      className="panel-input flex-1 text-sm"
+                      className="panel-input flex-1"
                       placeholder="Ej: aventura, playa, cultura"
                     />
                     <button
@@ -1389,7 +1389,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
 
             {/* Highlights */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-white/70 mb-3 flex items-center gap-1.5">
+              <h3 className="text-base font-semibold text-gray-700 dark:text-white/70 mb-3 flex items-center gap-2">
                 <Mountain className="w-4 h-4" />
                 Highlights
               </h3>
@@ -1404,7 +1404,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         next[idx] = e.target.value;
                         setHighlights(next);
                       }}
-                      className="panel-input flex-1 text-sm"
+                      className="panel-input flex-1"
                       placeholder="Ej: Visita al desierto del Sahara"
                     />
                     <button
@@ -1429,7 +1429,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
 
             {/* Clima */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-white/70 mb-3 flex items-center gap-1.5">
+              <h3 className="text-base font-semibold text-gray-700 dark:text-white/70 mb-3 flex items-center gap-2">
                 <Cloud className="w-4 h-4" />
                 Clima
               </h3>

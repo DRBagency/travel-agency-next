@@ -197,9 +197,9 @@ export default function ItineraryEditor({
   return (
     <div className="rounded-xl border border-drb-turquoise-200 dark:border-drb-turquoise-500/20 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-2 px-4 py-3 bg-drb-turquoise-50/50 dark:bg-drb-turquoise-500/5 border-b border-drb-turquoise-200 dark:border-drb-turquoise-500/20">
-        <Sparkles className="w-4 h-4 text-drb-turquoise-500" />
-        <span className="text-sm font-semibold text-drb-turquoise-700 dark:text-drb-turquoise-400">
+      <div className="flex items-center gap-2.5 px-5 py-3.5 bg-drb-turquoise-50/50 dark:bg-drb-turquoise-500/5 border-b border-drb-turquoise-200 dark:border-drb-turquoise-500/20">
+        <Sparkles className="w-4.5 h-4.5 text-drb-turquoise-500" />
+        <span className="text-base font-bold text-drb-turquoise-700 dark:text-drb-turquoise-400">
           {t("editItinerary")}
         </span>
       </div>
@@ -210,9 +210,9 @@ export default function ItineraryEditor({
           <button
             type="button"
             onClick={() => setSummaryOpen(!summaryOpen)}
-            className="w-full flex items-center justify-between px-4 py-2.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+            className="w-full flex items-center justify-between px-5 py-3.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
           >
-            <span className="text-sm font-medium text-gray-700 dark:text-white/70">
+            <span className="text-base font-medium text-gray-700 dark:text-white/70">
               {t("itinerarySummary")}
             </span>
             {summaryOpen ? (
@@ -222,9 +222,9 @@ export default function ItineraryEditor({
             )}
           </button>
           {summaryOpen && (
-            <div className="px-4 pb-4 grid gap-3">
+            <div className="px-5 pb-5 grid gap-4">
               <div>
-                <label className="text-xs text-gray-500 dark:text-white/40 mb-1 block">
+                <label className="text-sm text-gray-500 dark:text-white/50 mb-1 block font-medium">
                   {ti("estimatedPrice")}
                 </label>
                 <input
@@ -233,29 +233,29 @@ export default function ItineraryEditor({
                   onChange={(e) =>
                     updateSummary("precio_total_estimado", e.target.value)
                   }
-                  className="panel-input w-full text-sm"
+                  className="panel-input w-full"
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-500 dark:text-white/40 mb-1 block">
+                <label className="text-sm text-gray-500 dark:text-white/50 mb-1 block font-medium">
                   {ti("bestSeason")}
                 </label>
                 <input
                   type="text"
                   value={itinerario.mejor_epoca || ""}
                   onChange={(e) => updateSummary("mejor_epoca", e.target.value)}
-                  className="panel-input w-full text-sm"
+                  className="panel-input w-full"
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-500 dark:text-white/40 mb-1 block">
+                <label className="text-sm text-gray-500 dark:text-white/50 mb-1 block font-medium">
                   {ti("weather")}
                 </label>
                 <input
                   type="text"
                   value={itinerario.clima || ""}
                   onChange={(e) => updateSummary("clima", e.target.value)}
-                  className="panel-input w-full text-sm"
+                  className="panel-input w-full"
                 />
               </div>
             </div>
@@ -272,9 +272,9 @@ export default function ItineraryEditor({
                 <button
                   type="button"
                   onClick={() => toggleDay(i)}
-                  className="flex-1 flex items-center justify-between px-4 py-2.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+                  className="flex-1 flex items-center justify-between px-5 py-3.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
                 >
-                  <span className="text-sm font-medium text-gray-700 dark:text-white/70">
+                  <span className="text-base font-medium text-gray-700 dark:text-white/70">
                     {ti("dayLabel", { n: i + 1 })} —{" "}
                     <span className="font-normal text-gray-500 dark:text-white/50">
                       {dia.titulo || dia.title || ""}
@@ -296,10 +296,10 @@ export default function ItineraryEditor({
                 </button>
               </div>
               {isOpen && (
-                <div className="px-4 pb-4 space-y-4">
+                <div className="px-5 pb-5 space-y-5">
                   {/* Day title */}
                   <div>
-                    <label className="text-xs text-gray-500 dark:text-white/40 mb-1 block">
+                    <label className="text-sm text-gray-500 dark:text-white/50 mb-1 block font-medium">
                       {t("activityTitle")}
                     </label>
                     <input
@@ -308,13 +308,13 @@ export default function ItineraryEditor({
                       onChange={(e) =>
                         updateDay(i, dia.titulo !== undefined ? "titulo" : "title", e.target.value)
                       }
-                      className="panel-input w-full text-sm"
+                      className="panel-input w-full"
                     />
                   </div>
 
                   {/* Day image */}
                   <div>
-                    <label className="text-xs text-gray-500 dark:text-white/40 mb-1 block">
+                    <label className="text-sm text-gray-500 dark:text-white/50 mb-1 block font-medium">
                       {t("dayImage")}
                     </label>
                     <div className="flex items-center gap-2">
@@ -323,7 +323,7 @@ export default function ItineraryEditor({
                         value={dia.imagen || ""}
                         onChange={(e) => updateDay(i, "imagen", e.target.value)}
                         placeholder="https://..."
-                        className="panel-input flex-1 text-sm"
+                        className="panel-input flex-1"
                       />
                       <button
                         type="button"
@@ -349,17 +349,17 @@ export default function ItineraryEditor({
                     return (
                       <div
                         key={key}
-                        className="border border-gray-100 dark:border-white/[0.06] rounded-lg p-3 space-y-2"
+                        className="border border-gray-100 dark:border-white/[0.06] rounded-xl p-4 space-y-3"
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <Icon className={`w-4 h-4 ${color}`} />
-                          <span className="text-xs font-semibold text-gray-600 dark:text-white/60 uppercase tracking-wide">
+                          <span className="text-sm font-bold text-gray-600 dark:text-white/60 uppercase tracking-wide">
                             {periodLabel(key)}
                           </span>
                         </div>
-                        <div className="grid md:grid-cols-2 gap-2">
+                        <div className="grid md:grid-cols-2 gap-3">
                           <div>
-                            <label className="text-[11px] text-gray-400 dark:text-white/30 block mb-0.5">
+                            <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
                               {t("activityTitle")}
                             </label>
                             <input
@@ -368,11 +368,11 @@ export default function ItineraryEditor({
                               onChange={(e) =>
                                 updateActivity(i, key, "titulo", e.target.value)
                               }
-                              className="panel-input w-full text-sm"
+                              className="panel-input w-full"
                             />
                           </div>
                           <div>
-                            <label className="text-[11px] text-gray-400 dark:text-white/30 block mb-0.5">
+                            <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
                               {t("activityPrice")}
                             </label>
                             <input
@@ -386,12 +386,12 @@ export default function ItineraryEditor({
                                   e.target.value
                                 )
                               }
-                              className="panel-input w-full text-sm"
+                              className="panel-input w-full"
                             />
                           </div>
                         </div>
                         <div>
-                          <label className="text-[11px] text-gray-400 dark:text-white/30 block mb-0.5">
+                          <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
                             {t("activityDesc")}
                           </label>
                           <textarea
@@ -404,11 +404,11 @@ export default function ItineraryEditor({
                                 e.target.value
                               )
                             }
-                            className="panel-input w-full text-sm min-h-[48px] resize-y"
+                            className="panel-input w-full min-h-[64px] resize-y"
                           />
                         </div>
                         <div>
-                          <label className="text-[11px] text-gray-400 dark:text-white/30 block mb-0.5">
+                          <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
                             {t("activityDuration")}
                           </label>
                           <input
@@ -417,7 +417,7 @@ export default function ItineraryEditor({
                             onChange={(e) =>
                               updateActivity(i, key, "duracion", e.target.value)
                             }
-                            className="panel-input w-full text-sm"
+                            className="panel-input w-full"
                           />
                         </div>
                       </div>
@@ -426,7 +426,7 @@ export default function ItineraryEditor({
 
                   {/* Local tip */}
                   <div>
-                    <label className="text-xs text-gray-500 dark:text-white/40 mb-1 flex items-center gap-1.5">
+                    <label className="text-sm text-gray-500 dark:text-white/50 mb-1 flex items-center gap-2 font-medium">
                       <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
                       {t("localTip")}
                     </label>
@@ -434,7 +434,7 @@ export default function ItineraryEditor({
                       type="text"
                       value={dia.tip_local || ""}
                       onChange={(e) => updateDay(i, "tip_local", e.target.value)}
-                      className="panel-input w-full text-sm"
+                      className="panel-input w-full"
                     />
                   </div>
                 </div>
@@ -444,11 +444,11 @@ export default function ItineraryEditor({
         })}
 
         {/* ===== ADD DAY BUTTON ===== */}
-        <div className="px-4 py-3">
+        <div className="px-5 py-3.5">
           <button
             type="button"
             onClick={addDay}
-            className="flex items-center gap-1.5 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
+            className="flex items-center gap-2 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
           >
             <Plus className="w-3.5 h-3.5" />
             {t("addDay")}
@@ -461,9 +461,9 @@ export default function ItineraryEditor({
             <button
               type="button"
               onClick={() => setTipsOpen(!tipsOpen)}
-              className="w-full flex items-center justify-between px-4 py-2.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+              className="w-full flex items-center justify-between px-5 py-3.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
             >
-              <span className="text-sm font-medium text-gray-700 dark:text-white/70">
+              <span className="text-base font-medium text-gray-700 dark:text-white/70">
                 {ti("generalTips")}
               </span>
               {tipsOpen ? (
@@ -473,14 +473,14 @@ export default function ItineraryEditor({
               )}
             </button>
             {tipsOpen && (
-              <div className="px-4 pb-4 space-y-2">
+              <div className="px-5 pb-5 space-y-3">
                 {tips.map((tip: string, i: number) => (
                   <div key={i} className="flex items-start gap-2">
                     <input
                       type="text"
                       value={tip}
                       onChange={(e) => updateTip(i, e.target.value)}
-                      className="panel-input flex-1 text-sm"
+                      className="panel-input flex-1"
                     />
                     <button
                       type="button"
@@ -494,7 +494,7 @@ export default function ItineraryEditor({
                 <button
                   type="button"
                   onClick={addTip}
-                  className="flex items-center gap-1.5 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline mt-1"
+                  className="flex items-center gap-2 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline mt-1"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   {t("addTip")}
@@ -506,11 +506,11 @@ export default function ItineraryEditor({
 
         {/* Add tip button when no tips exist */}
         {tips.length === 0 && (
-          <div className="px-4 py-3">
+          <div className="px-5 py-3.5">
             <button
               type="button"
               onClick={addTip}
-              className="flex items-center gap-1.5 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
+              className="flex items-center gap-2 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
             >
               <Plus className="w-3.5 h-3.5" />
               {t("addTip")}
@@ -524,9 +524,9 @@ export default function ItineraryEditor({
             <button
               type="button"
               onClick={() => setQueLlevarOpen(!queLlevarOpen)}
-              className="w-full flex items-center justify-between px-4 py-2.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+              className="w-full flex items-center justify-between px-5 py-3.5 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
             >
-              <span className="text-sm font-medium text-gray-700 dark:text-white/70">
+              <span className="text-base font-medium text-gray-700 dark:text-white/70">
                 {t("queLlevar")}
               </span>
               {queLlevarOpen ? (
@@ -536,14 +536,14 @@ export default function ItineraryEditor({
               )}
             </button>
             {queLlevarOpen && (
-              <div className="px-4 pb-4 space-y-2">
+              <div className="px-5 pb-5 space-y-3">
                 {queLlevar.map((item: string, i: number) => (
                   <div key={i} className="flex items-start gap-2">
                     <input
                       type="text"
                       value={item}
                       onChange={(e) => updateQueLlevar(i, e.target.value)}
-                      className="panel-input flex-1 text-sm"
+                      className="panel-input flex-1"
                     />
                     <button
                       type="button"
@@ -557,7 +557,7 @@ export default function ItineraryEditor({
                 <button
                   type="button"
                   onClick={addQueLlevar}
-                  className="flex items-center gap-1.5 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline mt-1"
+                  className="flex items-center gap-2 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline mt-1"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   {t("addQueLlevarItem")}
@@ -569,11 +569,11 @@ export default function ItineraryEditor({
 
         {/* Add que_llevar button when no items exist */}
         {queLlevar.length === 0 && (
-          <div className="px-4 py-3">
+          <div className="px-5 py-3.5">
             <button
               type="button"
               onClick={addQueLlevar}
-              className="flex items-center gap-1.5 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
+              className="flex items-center gap-2 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
             >
               <Plus className="w-3.5 h-3.5" />
               {t("addQueLlevarItem")}
