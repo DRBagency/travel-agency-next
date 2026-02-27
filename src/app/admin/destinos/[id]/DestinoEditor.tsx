@@ -881,8 +881,8 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                               </button>
                             </div>
                             {url && (
-                              <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden">
-                                <img src={url} alt={`Gallery ${gIdx + 1}`} className="w-full h-40 object-cover" />
+                              <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden max-w-xs">
+                                <img src={url} alt={`Gallery ${gIdx + 1}`} className="w-full h-32 object-cover" />
                               </div>
                             )}
                           </div>
