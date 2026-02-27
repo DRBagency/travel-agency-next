@@ -127,7 +127,7 @@ export default function DashboardBackground() {
         className="absolute inset-0"
         style={{
           background: isLight
-            ? 'radial-gradient(ellipse 120% 80% at 50% 100%, #EDE6DE, #F5F0EB 70%)'
+            ? 'radial-gradient(ellipse 120% 80% at 50% 100%, #D8CFC4, #E5DDD3 70%)'
             : 'radial-gradient(ellipse 120% 80% at 50% 100%, #10303a, #0B1825 70%)',
         }}
       />
