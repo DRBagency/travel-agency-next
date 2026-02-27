@@ -373,7 +373,11 @@ textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):focus {
   }
 
   .table-row {
-    @apply border-b border-gray-100 dark:border-white/[0.06] hover:bg-drb-turquoise-50/50 dark:hover:bg-white/[0.03] transition-colors;
+    @apply border-b hover:bg-drb-turquoise-50/50 dark:hover:bg-white/[0.04] transition-colors;
+    border-color: rgba(0,0,0,0.06);
+  }
+  .dark .table-row {
+    border-color: rgba(180,220,225,0.10);
   }
 
   /* ─── Glass card (both modes) ─── */
