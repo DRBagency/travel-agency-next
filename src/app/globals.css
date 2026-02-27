@@ -569,8 +569,8 @@ textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-s
   }
   .light .glass-header,
   [data-theme="light"] .glass-header {
-    background: rgba(255,255,255,0.55);
-    border-bottom: 1px solid rgba(255,255,255,0.60);
+    background: rgba(255,255,255,0.68);
+    border-bottom: 1px solid rgba(28,171,176,0.08);
     box-shadow: 0 2px 16px rgba(0,0,0,0.04);
   }
 
