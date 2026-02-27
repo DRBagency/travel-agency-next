@@ -37,6 +37,7 @@ export default function ItineraryEditor({
 
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [openDays, setOpenDays] = useState<Record<number, boolean>>({});
+  const [openPeriods, setOpenPeriods] = useState<Record<string, boolean>>({});
   const [tipsOpen, setTipsOpen] = useState(false);
   const [queLlevarOpen, setQueLlevarOpen] = useState(false);
 
@@ -343,83 +344,100 @@ export default function ItineraryEditor({
                     </div>
                   </div>
 
-                  {/* Periods: morning / afternoon / night */}
+                  {/* Periods: morning / afternoon / night (collapsible) */}
                   {PERIODS.map(({ key, icon: Icon, color }) => {
                     const activity = actividades[key] || {};
+                    const periodKey = `${i}_${key}`;
+                    const isPeriodOpen = !!openPeriods[periodKey];
+                    const hasContent = !!(activity.titulo || activity.descripcion);
                     return (
                       <div
                         key={key}
-                        className="border border-gray-100 dark:border-white/[0.06] rounded-xl p-4 space-y-3"
+                        className="border border-gray-100 dark:border-white/[0.06] rounded-xl overflow-hidden"
                       >
-                        <div className="flex items-center gap-2 mb-1">
+                        <button
+                          type="button"
+                          onClick={() => setOpenPeriods((prev) => ({ ...prev, [periodKey]: !prev[periodKey] }))}
+                          className="w-full flex items-center gap-2 px-4 py-3 text-start hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+                        >
                           <Icon className={`w-4 h-4 ${color}`} />
-                          <span className="text-sm font-bold text-gray-600 dark:text-white/60 uppercase tracking-wide">
+                          <span className="text-sm font-bold text-gray-600 dark:text-white/60 uppercase tracking-wide flex-1">
                             {periodLabel(key)}
                           </span>
-                        </div>
-                        <div className="grid md:grid-cols-2 gap-3">
-                          <div>
-                            <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
-                              {t("activityTitle")}
-                            </label>
-                            <input
-                              type="text"
-                              value={activity.titulo || ""}
-                              onChange={(e) =>
-                                updateActivity(i, key, "titulo", e.target.value)
-                              }
-                              className="panel-input w-full"
-                            />
+                          {hasContent && !isPeriodOpen && (
+                            <span className="text-xs text-gray-400 dark:text-white/30 truncate max-w-[200px]">
+                              {activity.titulo || ""}
+                            </span>
+                          )}
+                          <ChevronUp className={`w-4 h-4 text-gray-400 transition-transform ${isPeriodOpen ? "" : "rotate-180"}`} />
+                        </button>
+                        {isPeriodOpen && (
+                          <div className="px-4 pb-4 pt-1 space-y-3 border-t border-gray-100 dark:border-white/[0.06]">
+                            <div className="grid md:grid-cols-2 gap-3">
+                              <div>
+                                <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
+                                  {t("activityTitle")}
+                                </label>
+                                <input
+                                  type="text"
+                                  value={activity.titulo || ""}
+                                  onChange={(e) =>
+                                    updateActivity(i, key, "titulo", e.target.value)
+                                  }
+                                  className="panel-input w-full"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
+                                  {t("activityPrice")}
+                                </label>
+                                <input
+                                  type="text"
+                                  value={activity.precio_estimado || ""}
+                                  onChange={(e) =>
+                                    updateActivity(
+                                      i,
+                                      key,
+                                      "precio_estimado",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="panel-input w-full"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
+                                {t("activityDesc")}
+                              </label>
+                              <textarea
+                                value={activity.descripcion || ""}
+                                onChange={(e) =>
+                                  updateActivity(
+                                    i,
+                                    key,
+                                    "descripcion",
+                                    e.target.value
+                                  )
+                                }
+                                className="panel-input w-full min-h-[64px] resize-y"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
+                                {t("activityDuration")}
+                              </label>
+                              <input
+                                type="text"
+                                value={activity.duracion || ""}
+                                onChange={(e) =>
+                                  updateActivity(i, key, "duracion", e.target.value)
+                                }
+                                className="panel-input w-full"
+                              />
+                            </div>
                           </div>
-                          <div>
-                            <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
-                              {t("activityPrice")}
-                            </label>
-                            <input
-                              type="text"
-                              value={activity.precio_estimado || ""}
-                              onChange={(e) =>
-                                updateActivity(
-                                  i,
-                                  key,
-                                  "precio_estimado",
-                                  e.target.value
-                                )
-                              }
-                              className="panel-input w-full"
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
-                            {t("activityDesc")}
-                          </label>
-                          <textarea
-                            value={activity.descripcion || ""}
-                            onChange={(e) =>
-                              updateActivity(
-                                i,
-                                key,
-                                "descripcion",
-                                e.target.value
-                              )
-                            }
-                            className="panel-input w-full min-h-[64px] resize-y"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm text-gray-500 dark:text-white/50 block mb-1 font-medium">
-                            {t("activityDuration")}
-                          </label>
-                          <input
-                            type="text"
-                            value={activity.duracion || ""}
-                            onChange={(e) =>
-                              updateActivity(i, key, "duracion", e.target.value)
-                            }
-                            className="panel-input w-full"
-                          />
-                        </div>
+                        )}
                       </div>
                     );
                   })}
