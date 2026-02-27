@@ -124,10 +124,10 @@ html {
   .panel-card {
     @apply relative overflow-hidden rounded-2xl;
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.03);
     backdrop-filter: blur(28px) saturate(190%);
     -webkit-backdrop-filter: blur(28px) saturate(190%);
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid rgba(160,210,220,0.15);
     box-shadow:
       0 8px 32px rgba(0,0,0,0.25),
       0 2px 8px rgba(0,0,0,0.15),
@@ -139,14 +139,14 @@ html {
     top: 0;
     left: 4%;
     right: 4%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.35) 50%, transparent 95%);
     pointer-events: none;
     z-index: 2;
   }
   .panel-card:hover {
-    background: rgba(255,255,255,0.10);
-    border-color: rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(160,210,220,0.25);
     transform: translateY(-2px);
     box-shadow:
       0 16px 48px rgba(0,0,0,0.30),
@@ -157,7 +157,7 @@ html {
   /* Light mode */
   .light .panel-card,
   [data-theme="light"] .panel-card {
-    background: rgba(255,255,255,0.68);
+    background: rgba(255,255,255,0.48);
     border: 1px solid rgba(0,0,0,0.10);
     box-shadow:
       0 4px 24px rgba(0,0,0,0.08),
@@ -170,7 +170,7 @@ html {
   }
   .light .panel-card:hover,
   [data-theme="light"] .panel-card:hover {
-    background: rgba(255,255,255,0.82);
+    background: rgba(255,255,255,0.60);
     border-color: rgba(0,0,0,0.14);
     transform: translateY(-2px);
     box-shadow:
@@ -183,10 +183,10 @@ html {
   .kpi-card {
     @apply relative overflow-hidden rounded-2xl;
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    background: rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255,255,255,0.13);
+    border: 1px solid rgba(160,210,220,0.17);
     box-shadow:
       0 6px 24px rgba(0,0,0,0.20),
       0 2px 6px rgba(0,0,0,0.12),
@@ -198,14 +198,14 @@ html {
     top: 0;
     left: 4%;
     right: 4%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.24), transparent);
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.38) 50%, transparent 95%);
     pointer-events: none;
     z-index: 2;
   }
   .kpi-card:hover {
-    background: rgba(255,255,255,0.12);
-    border-color: rgba(255,255,255,0.24);
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(160,210,220,0.28);
     transform: translateY(-3px);
     box-shadow:
       0 16px 48px rgba(0,0,0,0.28),
@@ -215,7 +215,7 @@ html {
   /* Light mode */
   .light .kpi-card,
   [data-theme="light"] .kpi-card {
-    background: rgba(255,255,255,0.72);
+    background: rgba(255,255,255,0.42);
     border: 1px solid rgba(0,0,0,0.10);
     box-shadow:
       0 4px 20px rgba(0,0,0,0.07),
@@ -224,7 +224,7 @@ html {
   }
   .light .kpi-card:hover,
   [data-theme="light"] .kpi-card:hover {
-    background: rgba(255,255,255,0.88);
+    background: rgba(255,255,255,0.55);
     border-color: rgba(0,0,0,0.14);
     transform: translateY(-3px);
     box-shadow:
@@ -454,15 +454,15 @@ html {
   /* ═══ DRB Glass Sidebar — V3 ═══ */
   .glass-sidebar {
     @apply transition-colors duration-300;
-    background: rgba(8,20,30,0.60);
+    background: rgba(8,20,30,0.40);
     backdrop-filter: blur(44px) saturate(200%);
     -webkit-backdrop-filter: blur(44px) saturate(200%);
-    border-right: 1px solid rgba(255,255,255,0.07);
+    border-right: 1px solid rgba(160,210,220,0.10);
     box-shadow: 4px 0 30px rgba(0,0,0,0.20);
   }
   .light .glass-sidebar,
   [data-theme="light"] .glass-sidebar {
-    background: rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.45);
     border-right: 1px solid rgba(0,0,0,0.08);
     box-shadow: 4px 0 24px rgba(0,0,0,0.05);
   }
@@ -470,15 +470,15 @@ html {
   /* ═══ DRB Glass Header — V3 ═══ */
   .glass-header {
     @apply transition-all duration-300;
-    background: rgba(8,20,30,0.50);
+    background: rgba(8,20,30,0.30);
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(160,210,220,0.10);
     box-shadow: 0 4px 24px rgba(0,0,0,0.15);
   }
   .light .glass-header,
   [data-theme="light"] .glass-header {
-    background: rgba(255,255,255,0.60);
+    background: rgba(255,255,255,0.50);
     border-bottom: 1px solid rgba(0,0,0,0.08);
     box-shadow: 0 2px 16px rgba(0,0,0,0.05);
   }
