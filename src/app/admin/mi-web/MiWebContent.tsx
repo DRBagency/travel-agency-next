@@ -5,7 +5,9 @@ import { useTranslations } from "next-intl";
 import { sileo } from "sileo";
 import {
   ChevronDown,
+  ChevronUp,
   ChevronRight,
+  Trash2,
   Loader2,
   Check,
   ImageIcon,
@@ -221,6 +223,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
   });
 
   const [whyusItems, setWhyusItems] = useState<WhyUsItem[]>(parseWhyUsItems(client.whyus_items));
+  const [expandedWhyUs, setExpandedWhyUs] = useState<number>(0);
   const [darkModeEnabled, setDarkModeEnabled] = useState(client.dark_mode_enabled ?? false);
   const [availableLangs, setAvailableLangs] = useState<string[]>(
     Array.isArray(client.available_languages) && client.available_languages.length > 0
@@ -543,6 +546,7 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
   function addWhyUsItem() {
     if (whyusItems.length >= 4) return;
     setWhyusItems((prev) => [...prev, { icon: "✨", title: "", description: "" }]);
+    setExpandedWhyUs(whyusItems.length);
   }
 
   async function handleBulkTranslateAll() {
@@ -1413,76 +1417,81 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
         />
         {openSections.has("whyus") && (
           <div className="space-y-4 pt-2">
-            {whyusItems.map((item, index) => (
-              <div
-                key={index}
-                className="rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/[0.04] p-4 space-y-3"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-500 dark:text-white/50">
-                    {t("whyUsSection")} #{index + 1}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <button
-                      type="button"
-                      onClick={() => moveWhyUsItem(index, "up")}
-                      disabled={index === 0}
-                      className="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-sm"
-                      title="Move up"
-                    >
-                      ↑
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveWhyUsItem(index, "down")}
-                      disabled={index === whyusItems.length - 1}
-                      className="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-white/10 disabled:opacity-30 transition-colors text-sm"
-                      title="Move down"
-                    >
-                      ↓
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => removeWhyUsItem(index)}
-                      className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-500/20 text-red-500 transition-colors text-sm"
-                      title="Remove"
-                    >
-                      ×
-                    </button>
-                  </div>
+            {whyusItems.map((item, index) => {
+              const isWhyExpanded = expandedWhyUs === index;
+              return (
+                <div key={index} className="panel-card overflow-hidden">
+                  {/* Header — clickable to toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setExpandedWhyUs(isWhyExpanded ? -1 : index)}
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors text-start"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-lg">{item.icon || "✨"}</span>
+                      <span className="text-base font-bold text-gray-900 dark:text-white">
+                        {item.title || `${t("whyUsSection")} #${index + 1}`}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {index > 0 && (
+                        <span role="button" onClick={(e) => { e.stopPropagation(); moveWhyUsItem(index, "up"); setExpandedWhyUs(index - 1); }}
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
+                          <ChevronUp className="w-4 h-4" />
+                        </span>
+                      )}
+                      {index < whyusItems.length - 1 && (
+                        <span role="button" onClick={(e) => { e.stopPropagation(); moveWhyUsItem(index, "down"); setExpandedWhyUs(index + 1); }}
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
+                          <ChevronDown className="w-4 h-4" />
+                        </span>
+                      )}
+                      <span role="button" onClick={(e) => { e.stopPropagation(); removeWhyUsItem(index); if (expandedWhyUs >= whyusItems.length - 1) setExpandedWhyUs(Math.max(0, whyusItems.length - 2)); }}
+                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                        <Trash2 className="w-4 h-4" />
+                      </span>
+                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isWhyExpanded ? "rotate-180" : ""}`} />
+                    </div>
+                  </button>
+
+                  {/* Collapsible body */}
+                  {isWhyExpanded && (
+                    <div className="px-5 pb-5 space-y-3 border-t border-gray-100 dark:border-white/[0.06] pt-4">
+                      <div className="grid md:grid-cols-[60px_1fr] gap-3">
+                        <div>
+                          <label className="panel-label block mb-1">Icon</label>
+                          <input
+                            value={item.icon}
+                            onChange={(e) => updateWhyUsItem(index, "icon", e.target.value)}
+                            className="panel-input w-full text-center text-lg"
+                            placeholder="✨"
+                            maxLength={4}
+                          />
+                        </div>
+                        <div>
+                          <label className="panel-label block mb-1">{tc("title")}</label>
+                          <input
+                            value={item.title}
+                            onChange={(e) => updateWhyUsItem(index, "title", e.target.value)}
+                            className="panel-input w-full"
+                            placeholder={t("whyUsCardTitlePlaceholder")}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="panel-label block mb-1">{tc("description")}</label>
+                        <textarea
+                          value={item.description}
+                          onChange={(e) => updateWhyUsItem(index, "description", e.target.value)}
+                          className="panel-input w-full min-h-[60px]"
+                          placeholder={t("whyUsCardDescPlaceholder")}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="grid md:grid-cols-[60px_1fr] gap-3">
-                  <div>
-                    <label className="panel-label block mb-1 text-xs">Icon</label>
-                    <input
-                      value={item.icon}
-                      onChange={(e) => updateWhyUsItem(index, "icon", e.target.value)}
-                      className="panel-input w-full text-center text-lg"
-                      placeholder="✨"
-                      maxLength={4}
-                    />
-                  </div>
-                  <div>
-                    <label className="panel-label block mb-1 text-xs">{tc("title")}</label>
-                    <input
-                      value={item.title}
-                      onChange={(e) => updateWhyUsItem(index, "title", e.target.value)}
-                      className="panel-input w-full"
-                      placeholder={t("whyUsCardTitlePlaceholder")}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="panel-label block mb-1 text-xs">{tc("description")}</label>
-                  <textarea
-                    value={item.description}
-                    onChange={(e) => updateWhyUsItem(index, "description", e.target.value)}
-                    className="panel-input w-full min-h-[60px]"
-                    placeholder={t("whyUsCardDescPlaceholder")}
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
 
             {whyusItems.length < 4 && (
               <button
