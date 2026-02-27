@@ -30,7 +30,7 @@ export function TabFaqs({ faqs }: TabFaqsProps) {
           <Accordion
             key={i}
             title={question}
-            defaultOpen={i === 0}
+            defaultOpen
           >
             <p
               style={{
