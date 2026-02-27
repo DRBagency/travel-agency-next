@@ -202,6 +202,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
   /* --- Unsplash picker --- */
   const [unsplashOpen, setUnsplashOpen] = useState(false);
   const [expandedHotel, setExpandedHotel] = useState<number>(0);
+  const [expandedFlight, setExpandedFlight] = useState<number>(0);
   const [unsplashField, setUnsplashField] = useState<string>("");
 
   /* ================================================================ */
@@ -1108,7 +1109,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('flights')}</h2>
               <button
                 type="button"
-                onClick={() => setVuelos((p) => ({ ...p, segmentos: [...p.segmentos, { ...EMPTY_SEGMENT }] }))}
+                onClick={() => { setVuelos((p) => ({ ...p, segmentos: [...p.segmentos, { ...EMPTY_SEGMENT }] })); setExpandedFlight(vuelos.segmentos.length); }}
                 className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
               >
                 <Plus className="w-4 h-4" />
@@ -1126,11 +1127,16 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               const updateSeg = (patch: Partial<FlightSegment>) =>
                 setVuelos((p) => ({ ...p, segmentos: p.segmentos.map((s, i) => (i === sIdx ? { ...s, ...patch } : s)) }));
               const label = sIdx === 0 ? t('outbound') : sIdx === 1 ? t('returnFlight') : t('flightSegment', { n: sIdx + 1 });
+              const isExpanded = expandedFlight === sIdx;
 
               return (
-                <div key={sIdx} className="panel-card p-5 space-y-4">
-                  {/* Segment header */}
-                  <div className="flex items-center justify-between">
+                <div key={sIdx} className="panel-card overflow-hidden">
+                  {/* Segment header — clickable to toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setExpandedFlight(isExpanded ? -1 : sIdx)}
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors text-start"
+                  >
                     <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
                       <Plane className={`w-4 h-4 text-drb-turquoise-500 ${sIdx > 0 ? "rotate-180" : ""}`} />
                       {label}
@@ -1139,29 +1145,37 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                           {seg.origen_codigo} → {seg.destino_codigo}
                         </span>
                       )}
+                      {seg.aerolinea && (
+                        <span className="text-xs font-medium text-gray-400 dark:text-white/30">{seg.aerolinea}</span>
+                      )}
                     </h3>
                     <div className="flex items-center gap-1">
                       {sIdx > 0 && (
-                        <button type="button" onClick={() => setVuelos((p) => { const c = [...p.segmentos]; [c[sIdx - 1], c[sIdx]] = [c[sIdx], c[sIdx - 1]]; return { ...p, segmentos: c }; })}
+                        <span role="button" onClick={(e) => { e.stopPropagation(); setVuelos((p) => { const c = [...p.segmentos]; [c[sIdx - 1], c[sIdx]] = [c[sIdx], c[sIdx - 1]]; return { ...p, segmentos: c }; }); setExpandedFlight(sIdx - 1); }}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
                           <ChevronUp className="w-4 h-4" />
-                        </button>
+                        </span>
                       )}
                       {sIdx < vuelos.segmentos.length - 1 && (
-                        <button type="button" onClick={() => setVuelos((p) => { const c = [...p.segmentos]; [c[sIdx], c[sIdx + 1]] = [c[sIdx + 1], c[sIdx]]; return { ...p, segmentos: c }; })}
+                        <span role="button" onClick={(e) => { e.stopPropagation(); setVuelos((p) => { const c = [...p.segmentos]; [c[sIdx], c[sIdx + 1]] = [c[sIdx + 1], c[sIdx]]; return { ...p, segmentos: c }; }); setExpandedFlight(sIdx + 1); }}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
                           <ChevronDown className="w-4 h-4" />
-                        </button>
+                        </span>
                       )}
-                      <button type="button" onClick={() => setVuelos((p) => ({ ...p, segmentos: p.segmentos.filter((_, i) => i !== sIdx) }))}
+                      <span role="button" onClick={(e) => { e.stopPropagation(); setVuelos((p) => ({ ...p, segmentos: p.segmentos.filter((_, i) => i !== sIdx) })); if (expandedFlight >= vuelos.segmentos.length - 1) setExpandedFlight(Math.max(0, vuelos.segmentos.length - 2)); }}
                         className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </span>
+                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                     </div>
-                  </div>
+                  </button>
+
+                  {/* Collapsible body */}
+                  {isExpanded && (
+                  <div className="px-5 pb-5 space-y-4 border-t border-gray-100 dark:border-white/[0.06]">
 
                   {/* Row 1: Date, departure, arrival, duration */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4">
                     <div>
                       <label className="panel-label">{t('flightDate')}</label>
                       <input type="date" value={seg.fecha} onChange={(e) => updateSeg({ fecha: e.target.value })} className="panel-input w-full" />
@@ -1243,6 +1257,9 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                       <input type="text" value={seg.estado} onChange={(e) => updateSeg({ estado: e.target.value })} className="panel-input w-full" placeholder="OK" />
                     </div>
                   </div>
+
+                  </div>
+                  )}
                 </div>
               );
             })}
