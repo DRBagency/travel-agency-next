@@ -134,8 +134,8 @@ export default function KPICard({
         className={`kpi-card !p-4 border-s-4 ${accent.border} ${accent.glow}`}>
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <p className="text-xs text-gray-500 dark:text-white/60 mb-0.5">{title}</p>
-            <p className={`text-2xl font-bold ${accent.valueColor}`}>
+            <p className="text-sm font-medium text-gray-500 dark:text-white/60 mb-0.5">{title}</p>
+            <p className={`text-3xl font-extrabold tracking-tight ${accent.valueColor}`}>
               {numericValue !== undefined ? (
                 <AnimatedCounter
                   value={numericValue}
@@ -182,8 +182,8 @@ export default function KPICard({
       className="kpi-card">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm text-gray-500 dark:text-white/60 mb-1">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
+          <p className="text-sm font-medium text-gray-500 dark:text-white/60 mb-1">{title}</p>
+          <p className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">{value}</p>
           {trend !== undefined && (
             <div className="flex items-center gap-1 mt-2">
               {trend >= 0 ? (
