@@ -480,7 +480,7 @@ const AdminShell = ({
   const allowWhenInactive = pathname.startsWith("/admin/stripe") || pathname.startsWith("/admin/onboarding");
 
   return (
-    <div className="min-h-screen bg-[#E5DDD3] dark:bg-[#0B1825]">
+    <div className="min-h-screen bg-[#E8EEF4] dark:bg-[#0B1825]">
       {/* ========== DESKTOP SIDEBAR ========== */}
       <DesktopSidebar
         items={navItems}

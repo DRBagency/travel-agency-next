@@ -157,11 +157,11 @@ html {
   /* Light mode */
   .light .panel-card,
   [data-theme="light"] .panel-card {
-    background: rgba(255,255,255,0.48);
-    border: 1px solid rgba(0,0,0,0.10);
+    background: rgba(255,255,255,0.52);
+    border: 1px solid rgba(255,255,255,0.70);
     box-shadow:
-      0 4px 24px rgba(0,0,0,0.08),
-      0 1px 4px rgba(0,0,0,0.05),
+      0 4px 24px rgba(0,0,0,0.06),
+      0 1px 4px rgba(0,0,0,0.04),
       inset 0 1px 0 rgba(255,255,255,0.95);
   }
   .light .panel-card::after,
@@ -170,12 +170,12 @@ html {
   }
   .light .panel-card:hover,
   [data-theme="light"] .panel-card:hover {
-    background: rgba(255,255,255,0.60);
-    border-color: rgba(0,0,0,0.14);
+    background: rgba(255,255,255,0.65);
+    border-color: rgba(255,255,255,0.85);
     transform: translateY(-2px);
     box-shadow:
-      0 12px 40px rgba(0,0,0,0.10),
-      0 2px 8px rgba(0,0,0,0.06),
+      0 12px 40px rgba(0,0,0,0.08),
+      0 2px 8px rgba(0,0,0,0.05),
       inset 0 1px 0 rgba(255,255,255,1);
   }
 
@@ -215,20 +215,19 @@ html {
   /* Light mode */
   .light .kpi-card,
   [data-theme="light"] .kpi-card {
-    background: rgba(255,255,255,0.42);
-    border: 1px solid rgba(0,0,0,0.10);
+    background: rgba(255,255,255,0.48);
+    border: 1px solid rgba(255,255,255,0.65);
     box-shadow:
-      0 4px 20px rgba(0,0,0,0.07),
-      0 1px 3px rgba(0,0,0,0.04),
+      0 4px 20px rgba(0,0,0,0.06),
       inset 0 1px 0 rgba(255,255,255,0.95);
   }
   .light .kpi-card:hover,
   [data-theme="light"] .kpi-card:hover {
-    background: rgba(255,255,255,0.55);
-    border-color: rgba(0,0,0,0.14);
+    background: rgba(255,255,255,0.62);
+    border-color: rgba(255,255,255,0.80);
     transform: translateY(-3px);
     box-shadow:
-      0 12px 40px rgba(0,0,0,0.10),
+      0 12px 40px rgba(0,0,0,0.08),
       inset 0 1px 0 rgba(255,255,255,1);
   }
 
@@ -345,7 +344,7 @@ html {
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-drb-turquoise-500 via-drb-turquoise-400 to-drb-lime-400 dark:from-drb-turquoise-400 dark:via-drb-turquoise-300 dark:to-drb-lime-300 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-drb-turquoise-600 via-drb-turquoise-500 to-drb-lime-600 dark:from-drb-turquoise-400 dark:via-drb-turquoise-300 dark:to-drb-lime-300 bg-clip-text text-transparent;
   }
 
   .gradient-text-ocean {
@@ -462,9 +461,9 @@ html {
   }
   .light .glass-sidebar,
   [data-theme="light"] .glass-sidebar {
-    background: rgba(255,255,255,0.45);
-    border-right: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 4px 0 24px rgba(0,0,0,0.05);
+    background: rgba(255,255,255,0.50);
+    border-right: 1px solid rgba(255,255,255,0.60);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.04);
   }
 
   /* ═══ DRB Glass Header — V3 ═══ */
@@ -478,9 +477,9 @@ html {
   }
   .light .glass-header,
   [data-theme="light"] .glass-header {
-    background: rgba(255,255,255,0.50);
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    background: rgba(255,255,255,0.55);
+    border-bottom: 1px solid rgba(255,255,255,0.60);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
   }
 
   /* Glass badge variants */
