@@ -392,7 +392,7 @@ export default function OwnerShell({
   const navItems = navGroups.flat();
 
   return (
-    <div className="min-h-screen bg-[#E8EEF4] dark:bg-[#0B1825]">
+    <div className="min-h-screen bg-[#EFF3F8] dark:bg-[#0B1825]">
       {/* ========== DESKTOP SIDEBAR ========== */}
       <DesktopSidebar
         navGroups={navGroups}
