@@ -722,7 +722,14 @@
       "nationality": "الجنسية",
       "adults": "بالغون",
       "children": "أطفال",
-      "noPassengers": "لا توجد بيانات مسافرين"
+      "noPassengers": "لا توجد بيانات مسافرين",
+      "phone": "الهاتف",
+      "roomType": "نوع الغرفة",
+      "supplement": "ملحق",
+      "pricePerPerson": "السعر/شخص",
+      "deposit": "عربون",
+      "departure": "المغادرة",
+      "return": "العودة"
     },
     "documentos": {
       "title": "المستندات",
@@ -1071,6 +1078,12 @@
       "noEmail": "بدون بريد إلكتروني",
       "bookingHistory": "سجل الحجوزات",
       "noBookings": "لا توجد حجوزات مسجلة",
+      "travelers": "المسافرون",
+      "travelerInsights": "ملخص المسافر",
+      "favoriteDestinations": "الوجهات المفضلة",
+      "totalTravelers": "إجمالي المسافرين المحجوزين",
+      "avgBookingValue": "متوسط قيمة الحجز",
+      "memberSince": "عميل منذ",
       "notes": "ملاحظات",
       "notesPlaceholder": "اكتب ملاحظات حول هذا المسافر...",
       "saveNotes": "حفظ الملاحظات",

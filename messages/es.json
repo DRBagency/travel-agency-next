@@ -688,7 +688,14 @@
       "nationality": "Nacionalidad",
       "adults": "Adultos",
       "children": "Niños",
-      "noPassengers": "Sin datos de pasajeros"
+      "noPassengers": "Sin datos de pasajeros",
+      "phone": "Teléfono",
+      "roomType": "Habitación",
+      "supplement": "Suplemento",
+      "pricePerPerson": "Precio/persona",
+      "deposit": "Depósito",
+      "departure": "Salida",
+      "return": "Regreso"
     },
     "reservas": {
       "title": "Reservas",
@@ -1071,6 +1078,12 @@
       "noEmail": "Sin email",
       "bookingHistory": "Historial de reservas",
       "noBookings": "Sin reservas registradas",
+      "travelers": "Viajeros",
+      "travelerInsights": "Resumen del viajero",
+      "favoriteDestinations": "Destinos favoritos",
+      "totalTravelers": "Total viajeros reservados",
+      "avgBookingValue": "Valor medio por reserva",
+      "memberSince": "Cliente desde",
       "notes": "Notas",
       "notesPlaceholder": "Escribe notas sobre este viajero...",
       "saveNotes": "Guardar notas",

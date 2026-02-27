@@ -70,6 +70,7 @@ export async function POST(req: Request) {
         passengers: body.passengers || [],
         adults: Number(body.adults) || 0,
         children: Number(body.children) || 0,
+        booking_details: body.booking_details || {},
       })
       .select("id")
       .single();

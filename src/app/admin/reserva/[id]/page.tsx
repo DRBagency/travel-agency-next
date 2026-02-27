@@ -3,20 +3,25 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { requireAdminClient } from "@/lib/requireAdminClient";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
+import {
+  ArrowLeft,
+  Hotel,
+  Users,
+  Plane,
+  CreditCard,
+  Calendar,
+  MapPin,
+  Star,
+} from "lucide-react";
 
 interface ReservaPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-  searchParams: Promise<{
-  }>;
+  params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, never>>;
 }
 
 async function updateEstado(formData: FormData) {
   "use server";
-
-  const t = await getTranslations('admin.reserva');
 
   const clienteId = (await cookies()).get("cliente_id")?.value;
   if (!clienteId) return;
@@ -34,15 +39,12 @@ async function updateEstado(formData: FormData) {
   revalidatePath(`/admin/reserva/${id}`);
 }
 
-export default async function ReservaPage({
-  params,
-  searchParams,
-}: ReservaPageProps) {
+export default async function ReservaPage({ params, searchParams }: ReservaPageProps) {
   const { id } = await params;
   await searchParams;
 
-  const t = await getTranslations('admin.reserva');
-  const tc = await getTranslations('common');
+  const t = await getTranslations("admin.reserva");
+  const locale = await getLocale();
 
   const { data: reserva, error } = await supabaseAdmin
     .from("reservas")
@@ -50,225 +52,343 @@ export default async function ReservaPage({
     .eq("id", id)
     .single();
 
-  if (error || !reserva) {
-    notFound();
-  }
+  if (error || !reserva) notFound();
 
   const client = await requireAdminClient();
-  const brandStyle = client?.primary_color
-    ? { backgroundColor: client.primary_color }
-    : undefined;
 
-  const badgeStyle = client?.primary_color
-    ? {
-        borderColor: client.primary_color,
-        backgroundColor: `color-mix(in srgb, ${client.primary_color} 15%, transparent)`,
-        color: client.primary_color,
-      }
-    : undefined;
+  const bd = (reserva.booking_details as Record<string, any>) || {};
+  const hotel = bd.hotel || null;
+  const habitacion = bd.habitacion || null;
+  const precioUnitario = bd.precio_unitario || null;
+  const suplementoTotal = bd.suplemento_total || 0;
+  const depositoPorPersona = bd.deposito_por_persona || null;
+  const passengers = Array.isArray(reserva.passengers) ? reserva.passengers : [];
+
+  const formatDate = (d: string | null) => {
+    if (!d) return "—";
+    return new Date(d).toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" });
+  };
+
+  const statusSteps = ["pendiente", "revisada", "pagado"];
+  const currentIdx = statusSteps.indexOf(reserva.estado_pago ?? "pendiente");
+  const isCancelled = reserva.estado_pago === "cancelada";
 
   return (
-      <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
+      {/* Header */}
+      <div>
+        <a
+          href="/admin/reservas"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-white/40 hover:text-gray-600 dark:hover:text-white/60 transition-colors mb-3"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          {t("backToBookings")}
+        </a>
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {t('bookingTitle')} · {reserva.destino ?? "—"}
-            </h1>
-            <p className="text-gray-400 dark:text-white/40">ID: {reserva.id}</p>
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
+              <MapPin className="w-5 h-5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                {reserva.destino ?? "—"}
+              </h1>
+              <p className="text-xs text-gray-400 dark:text-white/40">ID: {reserva.id}</p>
+            </div>
           </div>
           <span
-            className="px-3 py-1 text-sm font-semibold rounded-full border"
-            style={badgeStyle}
+            className={`px-3 py-1 text-sm font-semibold rounded-full ${
+              isCancelled
+                ? "badge-danger"
+                : reserva.estado_pago === "pagado"
+                  ? "badge-success"
+                  : reserva.estado_pago === "revisada"
+                    ? "badge-info"
+                    : "badge-warning"
+            }`}
           >
             {reserva.estado_pago ?? "pendiente"}
           </span>
         </div>
+      </div>
 
-        {/* Status Timeline */}
-        <div className="panel-card p-6">
-          <div className="flex items-center justify-between">
-            {["pendiente", "revisada", "pagado"].map((step, idx) => {
-              const steps = ["pendiente", "revisada", "pagado"];
-              const currentIdx = steps.indexOf(reserva.estado_pago ?? "pendiente");
-              const isCancelled = reserva.estado_pago === "cancelada";
-              const isActive = !isCancelled && idx <= currentIdx;
-              const isCurrent = !isCancelled && step === reserva.estado_pago;
+      {/* Status Timeline */}
+      <div className="panel-card p-6">
+        <div className="flex items-center justify-between">
+          {statusSteps.map((step, idx) => (
+            <div key={step} className="flex items-center flex-1">
+              <div className="flex flex-col items-center">
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
+                    isCancelled
+                      ? "bg-red-100 dark:bg-red-500/15 text-red-500"
+                      : idx <= currentIdx
+                        ? "bg-drb-turquoise-500 text-white"
+                        : "bg-gray-100 dark:bg-white/10 text-gray-400 dark:text-white/30"
+                  } ${!isCancelled && step === reserva.estado_pago ? "ring-4 ring-drb-turquoise-200 dark:ring-drb-turquoise-500/30" : ""}`}
+                >
+                  {idx + 1}
+                </div>
+                <span className={`text-xs mt-2 font-medium ${
+                  !isCancelled && idx <= currentIdx
+                    ? "text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                    : "text-gray-400 dark:text-white/30"
+                }`}>
+                  {step === "pendiente" ? t("pending") : step === "revisada" ? t("reviewed") : t("paid")}
+                </span>
+              </div>
+              {idx < 2 && (
+                <div className={`flex-1 h-0.5 mx-3 ${
+                  !isCancelled && idx < currentIdx
+                    ? "bg-drb-turquoise-500"
+                    : "bg-gray-200 dark:bg-white/10"
+                }`} />
+              )}
+            </div>
+          ))}
+        </div>
+        {isCancelled && (
+          <div className="mt-4 text-center">
+            <span className="badge-danger text-sm">{t("cancelled")}</span>
+          </div>
+        )}
+      </div>
 
-              return (
-                <div key={step} className="flex items-center flex-1">
-                  <div className="flex flex-col items-center">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
-                        isCancelled
-                          ? "bg-red-100 dark:bg-red-500/15 text-red-500"
-                          : isActive
-                            ? "bg-drb-turquoise-500 text-white"
-                            : "bg-gray-100 dark:bg-white/10 text-gray-400 dark:text-white/30"
-                      } ${isCurrent ? "ring-4 ring-drb-turquoise-200 dark:ring-drb-turquoise-500/30" : ""}`}
-                    >
-                      {idx + 1}
-                    </div>
-                    <span className={`text-xs mt-2 font-medium ${
-                      isActive && !isCancelled
-                        ? "text-drb-turquoise-600 dark:text-drb-turquoise-400"
-                        : "text-gray-400 dark:text-white/30"
-                    }`}>
-                      {step === "pendiente" ? t("pending") : step === "revisada" ? t("reviewed") : t("paid")}
+      {/* Main content grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Left: Client + Travel info */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Client info */}
+          <div className="panel-card p-5">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <Users className="w-4 h-4 text-drb-turquoise-500" />
+              {t("client")}
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">{t("client")}</span>
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">{reserva.nombre ?? "—"}</p>
+              </div>
+              <div>
+                <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">Email</span>
+                <p className="text-sm text-gray-700 dark:text-white/80">{reserva.email ?? "—"}</p>
+              </div>
+              {reserva.telefono && (
+                <div>
+                  <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">{t("phone") || "Teléfono"}</span>
+                  <p className="text-sm text-gray-700 dark:text-white/80">{reserva.telefono}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Travel details */}
+          <div className="panel-card p-5">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <Plane className="w-4 h-4 text-drb-turquoise-500" />
+              {t("dates")}
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">{t("dates")}</span>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  {formatDate(reserva.fecha_salida)} → {formatDate(reserva.fecha_regreso)}
+                </p>
+              </div>
+              <div>
+                <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">{t("persons")}</span>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  {reserva.personas ?? "—"} pax
+                  {(reserva.adults > 0 || reserva.children > 0) && (
+                    <span className="text-gray-400 dark:text-white/40 ms-1">
+                      ({reserva.adults} {t("adults")} · {reserva.children} {t("children")})
                     </span>
-                  </div>
-                  {idx < 2 && (
-                    <div className={`flex-1 h-0.5 mx-3 ${
-                      !isCancelled && idx < currentIdx
-                        ? "bg-drb-turquoise-500"
-                        : "bg-gray-200 dark:bg-white/10"
-                    }`} />
+                  )}
+                </p>
+              </div>
+              <div>
+                <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">{t("created")}</span>
+                <p className="text-sm text-gray-700 dark:text-white/80">
+                  {reserva.created_at ? new Date(reserva.created_at).toLocaleString(locale) : "—"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Hotel & Room (if booking_details available) */}
+          {hotel && (
+            <div className="panel-card p-5">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                <Hotel className="w-4 h-4 text-drb-turquoise-500" />
+                Hotel
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">Hotel</span>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{hotel.nombre}</p>
+                  {hotel.estrellas > 0 && (
+                    <div className="flex items-center gap-0.5 mt-0.5">
+                      {Array.from({ length: hotel.estrellas }).map((_, i) => (
+                        <Star key={i} className="w-3 h-3 text-amber-400 fill-amber-400" />
+                      ))}
+                    </div>
                   )}
                 </div>
-              );
-            })}
-          </div>
-          {reserva.estado_pago === "cancelada" && (
-            <div className="mt-4 text-center">
-              <span className="badge-danger text-sm">{t("cancelled")}</span>
+                {habitacion && (
+                  <div>
+                    <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">{t("roomType") || "Habitación"}</span>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{habitacion.tipo}</p>
+                  </div>
+                )}
+                {suplementoTotal > 0 && (
+                  <div>
+                    <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">{t("supplement") || "Suplemento"}</span>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">+{suplementoTotal} €/pax</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Passengers table */}
+          {passengers.length > 0 && (
+            <div className="panel-card p-5">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                <Users className="w-4 h-4 text-drb-turquoise-500" />
+                {t("passengers")} ({passengers.length})
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200 dark:border-white/10 text-start">
+                      <th className="text-start py-2 pe-4 text-xs text-gray-500 dark:text-white/50 font-medium">#</th>
+                      <th className="text-start py-2 pe-4 text-xs text-gray-500 dark:text-white/50 font-medium">{t("client")}</th>
+                      <th className="text-start py-2 pe-4 text-xs text-gray-500 dark:text-white/50 font-medium">{t("documentType")}</th>
+                      <th className="text-start py-2 pe-4 text-xs text-gray-500 dark:text-white/50 font-medium">{t("documentNumber")}</th>
+                      <th className="text-start py-2 pe-4 text-xs text-gray-500 dark:text-white/50 font-medium">{t("birthDate")}</th>
+                      <th className="text-start py-2 pe-4 text-xs text-gray-500 dark:text-white/50 font-medium">{t("nationality")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {passengers.map((p: any, i: number) => (
+                      <tr key={i} className="border-b border-gray-100 dark:border-white/5">
+                        <td className="py-2.5 pe-4 text-gray-400 dark:text-white/40">{i + 1}</td>
+                        <td className="py-2.5 pe-4 font-medium text-gray-900 dark:text-white">{p.fullName || p.name || "—"}</td>
+                        <td className="py-2.5 pe-4 uppercase text-gray-500 dark:text-white/50">{p.docType || p.document_type || "—"}</td>
+                        <td className="py-2.5 pe-4">{p.docNumber || p.document_number || "—"}</td>
+                        <td className="py-2.5 pe-4">{p.dob || p.birth_date || "—"}</td>
+                        <td className="py-2.5 pe-4">{p.nationality || "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-4 border border-gray-100 dark:border-white/10 rounded-2xl p-6 bg-gray-50/50 dark:bg-white/5">
-          <div>
-            <span className="text-gray-500 dark:text-white/60">{t('client')}</span>
-            <p className="font-semibold">{reserva.nombre ?? "—"}</p>
-            <p className="text-sm text-gray-400 dark:text-white/50">
-              {reserva.email ?? "—"}
-            </p>
-            {reserva.telefono && (
-              <p className="text-sm text-gray-400 dark:text-white/50">
-                Tel: {reserva.telefono}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <span className="text-gray-500 dark:text-white/60">{t('dates')}</span>
-            <p>
-              {reserva.fecha_salida ?? "—"} →{" "}
-              {reserva.fecha_regreso ?? "—"}
-            </p>
-          </div>
-
-          <div>
-            <span className="text-gray-500 dark:text-white/60">{t('persons')}</span>
-            <p>
-              {reserva.personas ?? "—"}
-              {(reserva.adults > 0 || reserva.children > 0) && (
-                <span className="text-sm text-gray-400 dark:text-white/40 ms-2">
-                  ({reserva.adults} {t('adults')} · {reserva.children} {t('children')})
-                </span>
+        {/* Right sidebar: Payment + Price breakdown */}
+        <div className="space-y-4">
+          {/* Price breakdown */}
+          <div className="panel-card p-5">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <CreditCard className="w-4 h-4 text-drb-turquoise-500" />
+              {t("price")}
+            </h3>
+            <div className="space-y-2.5">
+              {precioUnitario && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500 dark:text-white/50">{t("pricePerPerson") || "Precio/persona"}</span>
+                  <span className="text-gray-900 dark:text-white">{precioUnitario} €</span>
+                </div>
               )}
-            </p>
+              {suplementoTotal > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500 dark:text-white/50">{t("supplement") || "Suplemento"}</span>
+                  <span className="text-gray-900 dark:text-white">+{suplementoTotal} €</span>
+                </div>
+              )}
+              {reserva.personas > 1 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500 dark:text-white/50">{t("persons")}</span>
+                  <span className="text-gray-900 dark:text-white">×{reserva.personas}</span>
+                </div>
+              )}
+              {depositoPorPersona && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500 dark:text-white/50">{t("deposit") || "Depósito"}</span>
+                  <span className="text-gray-900 dark:text-white">{depositoPorPersona * (reserva.personas || 1)} €</span>
+                </div>
+              )}
+              <div className="border-t border-gray-200 dark:border-white/10 pt-2.5 flex justify-between">
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">Total</span>
+                <span className="text-lg font-bold text-drb-turquoise-600 dark:text-drb-turquoise-400">
+                  {Number(reserva.precio).toLocaleString(locale)} €
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <span className="text-gray-500 dark:text-white/60">{t('price')}</span>
-            <p className="font-bold">{reserva.precio ?? "—"} €</p>
-          </div>
-        </div>
-
-        <div className="space-y-4 border border-gray-100 dark:border-white/10 rounded-2xl p-6 bg-gray-50/50 dark:bg-white/5">
-          <div>
-            <span className="text-gray-500 dark:text-white/60">
-              {t('paymentStatus')}
-            </span>
-            <form action={updateEstado} className="mt-2 flex gap-2">
+          {/* Payment management */}
+          <div className="panel-card p-5">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+              {t("paymentStatus")}
+            </h3>
+            <form action={updateEstado} className="flex gap-2 mb-4">
               <input type="hidden" name="id" value={reserva.id} />
               <select
                 name="estado"
                 defaultValue={reserva.estado_pago ?? "pendiente"}
-                className="border rounded-xl px-2 py-1 bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white border-gray-200 dark:border-white/10"
+                className="panel-input flex-1 text-sm"
               >
-                <option value="pagado">{t('paid')}</option>
-                <option value="pendiente">{t('pending')}</option>
-                <option value="revisada">{t('reviewed')}</option>
-                <option value="cancelada">{t('cancelled')}</option>
+                <option value="pagado">{t("paid")}</option>
+                <option value="pendiente">{t("pending")}</option>
+                <option value="revisada">{t("reviewed")}</option>
+                <option value="cancelada">{t("cancelled")}</option>
               </select>
               <button
                 type="submit"
-                className={
-                  client?.primary_color
-                    ? "px-3 py-1 text-sm text-white rounded-lg"
-                    : "px-3 py-1 text-sm bg-gray-900 dark:bg-white text-white dark:text-slate-950 rounded-lg"
-                }
-                style={brandStyle}
+                className="btn-primary text-sm px-4"
               >
-                {t('save')}
+                {t("save")}
               </button>
             </form>
+
+            {reserva.stripe_session_id && (
+              <div>
+                <span className="text-xs text-gray-400 dark:text-white/40 block mb-0.5">{t("stripeId")}</span>
+                <p className="text-xs text-gray-500 dark:text-white/50 break-all font-mono">
+                  {reserva.stripe_session_id}
+                </p>
+              </div>
+            )}
           </div>
 
-          <div>
-            <span className="text-gray-500 dark:text-white/60">{t('stripeId')}</span>
-            <p className="text-sm break-all">
-              {reserva.stripe_session_id ?? "—"}
-            </p>
-          </div>
-
-          <div>
-            <span className="text-gray-500 dark:text-white/60">{t('created')}</span>
-            <p>
-              {reserva.created_at
-                ? new Date(reserva.created_at).toLocaleString()
-                : "—"}
-            </p>
-          </div>
-        </div>
-      </div>
-
-        {/* Passengers */}
-        {Array.isArray(reserva.passengers) && reserva.passengers.length > 0 && (
-          <div className="panel-card p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              {t('passengers')}
-            </h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 dark:border-white/10 text-start">
-                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">#</th>
-                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('client')}</th>
-                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('documentType')}</th>
-                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('documentNumber')}</th>
-                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('birthDate')}</th>
-                    <th className="text-start py-2 pe-4 text-gray-500 dark:text-white/60 font-medium">{t('nationality')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(reserva.passengers as Array<{ name: string; document_type: string; document_number: string; birth_date: string; nationality: string }>).map(
-                    (p, i) => (
-                      <tr key={i} className="border-b border-gray-100 dark:border-white/5">
-                        <td className="py-2 pe-4 text-gray-400 dark:text-white/40">{i + 1}</td>
-                        <td className="py-2 pe-4 font-medium">{p.name}</td>
-                        <td className="py-2 pe-4 uppercase text-gray-500 dark:text-white/50">{p.document_type}</td>
-                        <td className="py-2 pe-4">{p.document_number}</td>
-                        <td className="py-2 pe-4">{p.birth_date}</td>
-                        <td className="py-2 pe-4">{p.nationality}</td>
-                      </tr>
-                    )
-                  )}
-                </tbody>
-              </table>
+          {/* Calendar card */}
+          <div className="panel-card p-5">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-drb-turquoise-500" />
+              {t("dates")}
+            </h3>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500 dark:text-white/50">{t("departure") || "Salida"}</span>
+                <span className="font-medium text-gray-900 dark:text-white">{formatDate(reserva.fecha_salida)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500 dark:text-white/50">{t("return") || "Regreso"}</span>
+                <span className="font-medium text-gray-900 dark:text-white">{formatDate(reserva.fecha_regreso)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500 dark:text-white/50">{t("created")}</span>
+                <span className="text-gray-700 dark:text-white/70">
+                  {reserva.created_at ? new Date(reserva.created_at).toLocaleDateString(locale) : "—"}
+                </span>
+              </div>
             </div>
           </div>
-        )}
-
-        <div className="mt-2">
-        <a
-          href={`/admin/reservas`}
-          className="text-gray-600 dark:text-white/70 underline hover:text-gray-900 dark:hover:text-white"
-        >
-          {`← ${t('backToBookings')}`}
-        </a>
         </div>
       </div>
+    </div>
   );
 }

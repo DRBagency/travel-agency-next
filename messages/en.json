@@ -722,7 +722,14 @@
       "nationality": "Nationality",
       "adults": "Adults",
       "children": "Children",
-      "noPassengers": "No passenger data"
+      "noPassengers": "No passenger data",
+      "phone": "Phone",
+      "roomType": "Room type",
+      "supplement": "Supplement",
+      "pricePerPerson": "Price/person",
+      "deposit": "Deposit",
+      "departure": "Departure",
+      "return": "Return"
     },
     "documentos": {
       "title": "Documents",
@@ -1071,6 +1078,12 @@
       "noEmail": "No email",
       "bookingHistory": "Booking history",
       "noBookings": "No bookings recorded",
+      "travelers": "Travelers",
+      "travelerInsights": "Traveler summary",
+      "favoriteDestinations": "Favorite destinations",
+      "totalTravelers": "Total travelers booked",
+      "avgBookingValue": "Average booking value",
+      "memberSince": "Customer since",
       "notes": "Notes",
       "notesPlaceholder": "Write notes about this traveler...",
       "saveNotes": "Save notes",
