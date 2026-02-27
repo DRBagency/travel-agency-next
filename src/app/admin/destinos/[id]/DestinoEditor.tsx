@@ -203,6 +203,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
   const [unsplashOpen, setUnsplashOpen] = useState(false);
   const [expandedHotel, setExpandedHotel] = useState<number>(0);
   const [expandedFlight, setExpandedFlight] = useState<number>(0);
+  const [expandedFaq, setExpandedFaq] = useState<number>(0);
   const [unsplashField, setUnsplashField] = useState<string>("");
 
   /* ================================================================ */
@@ -1480,93 +1481,97 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
 
         {/* ------ FAQS TAB ------ */}
         {tab === "faqs" && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              Preguntas frecuentes
-            </h2>
-            {faqs.length === 0 && (
-              <p className="text-sm text-gray-400 dark:text-white/40">
-                No hay preguntas frecuentes. Añade la primera.
-              </p>
-            )}
-            <div className="space-y-4">
-              {faqs.map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="p-5 rounded-xl border border-gray-200 dark:border-white/10 space-y-4"
-                >
-                  <div className="flex items-start gap-2">
-                    <div className="flex-1">
-                      <label className="panel-label">Pregunta</label>
-                      <input
-                        type="text"
-                        value={faq.pregunta}
-                        onChange={(e) => {
-                          const next = [...faqs];
-                          next[idx] = { ...next[idx], pregunta: e.target.value };
-                          setFaqs(next);
-                        }}
-                        className="panel-input w-full"
-                      />
-                    </div>
-                    <div className="flex items-center gap-1 pt-5 shrink-0">
-                      <button
-                        type="button"
-                        disabled={idx === 0}
-                        onClick={() => {
-                          const next = [...faqs];
-                          [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
-                          setFaqs(next);
-                        }}
-                        className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors disabled:opacity-30"
-                      >
-                        <ChevronUp className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        disabled={idx === faqs.length - 1}
-                        onClick={() => {
-                          const next = [...faqs];
-                          [next[idx], next[idx + 1]] = [next[idx + 1], next[idx]];
-                          setFaqs(next);
-                        }}
-                        className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/60 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors disabled:opacity-30"
-                      >
-                        <ChevronDown className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setFaqs((prev) => prev.filter((_, i) => i !== idx))}
-                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="panel-label">Respuesta</label>
-                    <textarea
-                      rows={2}
-                      value={faq.respuesta}
-                      onChange={(e) => {
-                        const next = [...faqs];
-                        next[idx] = { ...next[idx], respuesta: e.target.value };
-                        setFaqs(next);
-                      }}
-                      className="panel-input w-full"
-                    />
-                  </div>
-                </div>
-              ))}
+          <div className="space-y-5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                Preguntas frecuentes
+              </h2>
+              <button
+                type="button"
+                onClick={() => { setFaqs((prev) => [...prev, { pregunta: "", respuesta: "" }]); setExpandedFaq(faqs.length); }}
+                className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
+              >
+                <Plus className="w-4 h-4" />
+                Añadir pregunta
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => setFaqs((prev) => [...prev, { pregunta: "", respuesta: "" }])}
-              className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
-            >
-              <Plus className="w-4 h-4" />
-              Añadir pregunta
-            </button>
+
+            {faqs.length === 0 && (
+              <div className="text-center py-10 text-gray-400 dark:text-white/30 text-sm">
+                No hay preguntas frecuentes. Añade la primera.
+              </div>
+            )}
+
+            {faqs.map((faq, idx) => {
+              const isFaqExpanded = expandedFaq === idx;
+              return (
+                <div key={idx} className="panel-card overflow-hidden">
+                  {/* FAQ header — clickable to toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setExpandedFaq(isFaqExpanded ? -1 : idx)}
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors text-start"
+                  >
+                    <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <HelpCircle className="w-4 h-4 text-drb-turquoise-500" />
+                      {faq.pregunta || `Pregunta ${idx + 1}`}
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      {idx > 0 && (
+                        <span role="button" onClick={(e) => { e.stopPropagation(); const next = [...faqs]; [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]]; setFaqs(next); setExpandedFaq(idx - 1); }}
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
+                          <ChevronUp className="w-4 h-4" />
+                        </span>
+                      )}
+                      {idx < faqs.length - 1 && (
+                        <span role="button" onClick={(e) => { e.stopPropagation(); const next = [...faqs]; [next[idx], next[idx + 1]] = [next[idx + 1], next[idx]]; setFaqs(next); setExpandedFaq(idx + 1); }}
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
+                          <ChevronDown className="w-4 h-4" />
+                        </span>
+                      )}
+                      <span role="button" onClick={(e) => { e.stopPropagation(); setFaqs((prev) => prev.filter((_, i) => i !== idx)); if (expandedFaq >= faqs.length - 1) setExpandedFaq(Math.max(0, faqs.length - 2)); }}
+                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                        <Trash2 className="w-4 h-4" />
+                      </span>
+                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isFaqExpanded ? "rotate-180" : ""}`} />
+                    </div>
+                  </button>
+
+                  {/* Collapsible body */}
+                  {isFaqExpanded && (
+                    <div className="px-5 pb-5 space-y-4 border-t border-gray-100 dark:border-white/[0.06]">
+                      <div className="pt-4">
+                        <label className="panel-label">Pregunta</label>
+                        <input
+                          type="text"
+                          value={faq.pregunta}
+                          onChange={(e) => {
+                            const next = [...faqs];
+                            next[idx] = { ...next[idx], pregunta: e.target.value };
+                            setFaqs(next);
+                          }}
+                          className="panel-input w-full"
+                        />
+                      </div>
+                      <div>
+                        <label className="panel-label">Respuesta</label>
+                        <textarea
+                          rows={3}
+                          value={faq.respuesta}
+                          onChange={(e) => {
+                            const next = [...faqs];
+                            next[idx] = { ...next[idx], respuesta: e.target.value };
+                            setFaqs(next);
+                          }}
+                          className="panel-input w-full"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
             <div className="flex justify-end pt-2">
               <SaveButton />
             </div>
