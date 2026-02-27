@@ -106,10 +106,10 @@ function DesktopSidebar({
             animate={{ opacity: 1 }}
             transition={{ delay: 0.05 }}
           >
-            <div className="font-display text-[15px] font-bold text-gray-900 dark:text-white truncate">
+            <div className="font-display text-[15px] font-bold text-white truncate">
               DRB Agency
             </div>
-            <div className="text-xs text-gray-400 dark:text-white/40">
+            <div className="text-xs text-white/40">
               {t("panelOwner")}
             </div>
           </motion.div>
@@ -123,7 +123,7 @@ function DesktopSidebar({
             {pinned ? (
               <Pin className="w-3.5 h-3.5 text-drb-turquoise-500" />
             ) : (
-              <PinOff className="w-3.5 h-3.5 text-gray-400 dark:text-white/40" />
+              <PinOff className="w-3.5 h-3.5 text-white/40" />
             )}
           </button>
         )}
@@ -144,8 +144,8 @@ function DesktopSidebar({
                     title={!showLabels ? item.label : undefined}
                     className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium transition-all ${
                       active
-                        ? "bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
-                        : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
+                        ? "bg-drb-turquoise-500/10 text-drb-turquoise-400"
+                        : "text-white/60 hover:bg-white/[0.08] hover:text-white"
                     }`}
                   >
                     <span className="text-[1.15rem] w-5 text-center leading-none shrink-0">{item.icon}</span>
@@ -194,7 +194,7 @@ function DesktopSidebar({
         <a
           href="/owner/logout"
           title={!showLabels ? tc("logout") : undefined}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all"
         >
           <LogOut className="w-[18px] h-[18px] shrink-0" />
           {showLabels && (
@@ -278,8 +278,8 @@ function MobileSidebarNav({
                     onClick={onNavigate}
                     className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium transition-all ${
                       active
-                        ? "bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
-                        : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
+                        ? "bg-drb-turquoise-500/10 text-drb-turquoise-400"
+                        : "text-white/60 hover:bg-white/[0.08] hover:text-white"
                     }`}
                   >
                     <span className="text-[1.15rem] w-5 text-center leading-none shrink-0">{item.icon}</span>
@@ -295,7 +295,7 @@ function MobileSidebarNav({
       <div className="px-3 pb-2">
         <a
           href="/owner/logout"
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all"
         >
           <LogOut className="w-[18px] h-[18px] shrink-0" />
           {tc("logout")}
@@ -424,7 +424,7 @@ export default function OwnerShell({
             {rightPinned ? (
               <Pin className="w-3.5 h-3.5 text-drb-turquoise-500" />
             ) : (
-              <PinOff className="w-3.5 h-3.5 text-gray-400 dark:text-white/40" />
+              <PinOff className="w-3.5 h-3.5 text-white/40" />
             )}
           </button>
         </div>

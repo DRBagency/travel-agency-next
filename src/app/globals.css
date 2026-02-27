@@ -553,9 +553,9 @@ textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-s
   }
   .light .glass-sidebar,
   [data-theme="light"] .glass-sidebar {
-    background: rgba(255,255,255,0.50);
-    border-right: 1px solid rgba(255,255,255,0.60);
-    box-shadow: 4px 0 24px rgba(0,0,0,0.04);
+    background: linear-gradient(180deg, rgba(10,45,55,0.95), rgba(8,35,48,0.98));
+    border-right: 1px solid rgba(28,171,176,0.15);
+    box-shadow: 4px 0 30px rgba(0,0,0,0.10);
   }
 
   /* ═══ DRB Glass Header — V3 ═══ */
