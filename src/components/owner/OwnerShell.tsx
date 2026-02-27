@@ -7,22 +7,12 @@ import { useTranslations, useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import {
   Menu,
-  LayoutDashboard,
-  Users,
-  Calendar,
-  Mail,
-  TrendingUp,
-  CreditCard,
-  Zap,
-  Headphones,
-  Handshake,
   LogOut,
   Sparkles,
   Pin,
   PinOff,
   MessageCircle,
   X,
-  type LucideIcon,
 } from "lucide-react";
 import {
   Sheet,
@@ -54,7 +44,7 @@ interface OwnerShellProps {
 interface NavItem {
   label: string;
   href: string;
-  icon: LucideIcon;
+  icon: string;
 }
 
 // ====================================================================
@@ -176,7 +166,6 @@ function DesktopSidebar({
             <div className="space-y-0.5">
               {group.map((item) => {
                 const active = isActive(item.href);
-                const Icon = item.icon;
                 return (
                   <Link
                     key={item.href}
@@ -188,7 +177,7 @@ function DesktopSidebar({
                         : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
                     }`}
                   >
-                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    <span className="text-[1.15rem] w-5 text-center leading-none shrink-0">{item.icon}</span>
                     {showLabels && (
                       <motion.span
                         className="flex-1 truncate"
@@ -311,7 +300,6 @@ function MobileSidebarNav({
             <div className="space-y-0.5">
               {group.map((item) => {
                 const active = isActive(item.href);
-                const Icon = item.icon;
                 return (
                   <Link
                     key={item.href}
@@ -323,7 +311,7 @@ function MobileSidebarNav({
                         : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
                     }`}
                   >
-                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    <span className="text-[1.15rem] w-5 text-center leading-none shrink-0">{item.icon}</span>
                     <span className="flex-1">{item.label}</span>
                   </Link>
                 );
@@ -411,23 +399,23 @@ export default function OwnerShell({
 
   const navGroups: NavItem[][] = [
     // Home
-    [{ label: t("nav.dashboard"), href: "/owner", icon: LayoutDashboard }],
+    [{ label: t("nav.dashboard"), href: "/owner", icon: "📊" }],
     // Core
     [
-      { label: t("nav.clientes"), href: "/owner/clientes", icon: Users },
-      { label: t("nav.crm"), href: "/owner/crm", icon: Handshake },
-      { label: t("nav.calendario"), href: "/owner/calendario", icon: Calendar },
-      { label: t("nav.soporte"), href: "/owner/soporte", icon: Headphones },
+      { label: t("nav.clientes"), href: "/owner/clientes", icon: "🏢" },
+      { label: t("nav.crm"), href: "/owner/crm", icon: "🤝" },
+      { label: t("nav.calendario"), href: "/owner/calendario", icon: "📅" },
+      { label: t("nav.soporte"), href: "/owner/soporte", icon: "🛟" },
     ],
     // Revenue
     [
-      { label: t("nav.monetizacion"), href: "/owner/monetizacion", icon: TrendingUp },
-      { label: t("nav.stripe"), href: "/owner/stripe", icon: CreditCard },
+      { label: t("nav.monetizacion"), href: "/owner/monetizacion", icon: "📈" },
+      { label: t("nav.stripe"), href: "/owner/stripe", icon: "💳" },
     ],
     // Config
     [
-      { label: t("nav.emails"), href: "/owner/emails", icon: Mail },
-      { label: t("nav.automatizaciones"), href: "/owner/automatizaciones", icon: Zap },
+      { label: t("nav.emails"), href: "/owner/emails", icon: "📧" },
+      { label: t("nav.automatizaciones"), href: "/owner/automatizaciones", icon: "⚡" },
     ],
   ];
   const navItems = navGroups.flat();

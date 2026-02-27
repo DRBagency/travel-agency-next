@@ -16,7 +16,7 @@ import {
 interface NavItem {
   label: string;
   href: string;
-  icon: LucideIcon;
+  icon: string;
 }
 
 interface SearchResult {
@@ -182,19 +182,16 @@ export default function SearchBar({ navItems }: SearchBarProps) {
               <div className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30 bg-gray-50 dark:bg-white/[0.02]">
                 {tc("panel")}
               </div>
-              {navResults.slice(0, 4).map((item) => {
-                const Icon = item.icon;
-                return (
+              {navResults.slice(0, 4).map((item) => (
                   <button
                     key={item.href}
                     onClick={() => handleSelect(item.href)}
                     className="flex items-center gap-3 w-full px-4 py-2.5 text-start text-sm text-gray-700 dark:text-white/80 hover:bg-drb-turquoise-50 dark:hover:bg-white/[0.06] transition-colors"
                   >
-                    <Icon className="w-4 h-4 text-drb-turquoise-500 shrink-0" />
+                    <span className="text-base w-5 text-center shrink-0">{item.icon}</span>
                     {item.label}
                   </button>
-                );
-              })}
+              ))}
             </div>
           )}
 

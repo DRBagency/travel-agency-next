@@ -7,26 +7,13 @@ import { useTranslations, useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import {
   Menu,
-  LayoutDashboard,
-  Globe,
-  MapPin,
-  CalendarCheck,
-  Calendar,
-  FileText,
-  Headphones,
-  CreditCard,
-  Mail,
   LogOut,
   Sparkles,
-  Bot,
   Lock,
   Pin,
   PinOff,
   MessageCircle,
-  Share2,
-  Users,
   X,
-  type LucideIcon,
 } from "lucide-react";
 import { isAILocked, AI_ROUTES } from "@/lib/plan-gating";
 import {
@@ -69,7 +56,7 @@ interface AdminShellProps {
 interface NavItem {
   label: string;
   href: string;
-  icon: LucideIcon;
+  icon: string;
 }
 
 // ====================================================================
@@ -220,7 +207,6 @@ function DesktopSidebar({
             <div className="space-y-0.5">
               {group.map((item) => {
                 const active = isActive(item.href);
-                const Icon = item.icon;
                 const locked = AI_ROUTES.includes(item.href) && isAILocked(plan);
                 return (
                   <Link
@@ -233,7 +219,7 @@ function DesktopSidebar({
                         : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
                     }`}
                   >
-                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    <span className="text-[1.15rem] w-5 text-center leading-none shrink-0">{item.icon}</span>
                     {showLabels && (
                       <motion.span
                         className="flex-1 truncate"
@@ -384,7 +370,6 @@ function MobileSidebarNav({
             <div className="space-y-0.5">
               {group.map((item) => {
                 const active = isActive(item.href);
-                const Icon = item.icon;
                 const locked = AI_ROUTES.includes(item.href) && isAILocked(plan);
                 return (
                   <Link
@@ -397,7 +382,7 @@ function MobileSidebarNav({
                         : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
                     }`}
                   >
-                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    <span className="text-[1.15rem] w-5 text-center leading-none shrink-0">{item.icon}</span>
                     <span className="flex-1">{item.label}</span>
                     {locked && <Lock className="w-3.5 h-3.5 text-gray-400 dark:text-white/30 shrink-0" />}
                   </Link>
@@ -496,32 +481,32 @@ const AdminShell = ({
   // Nav items grouped with separators between groups
   const navGroups: NavItem[][] = [
     // Home
-    [{ label: t("nav.dashboard"), href: "/admin", icon: LayoutDashboard }],
+    [{ label: t("nav.dashboard"), href: "/admin", icon: "📊" }],
     // Content
     [
-      { label: t("nav.miWeb"), href: "/admin/mi-web", icon: Globe },
-      { label: t("nav.destinos"), href: "/admin/destinos", icon: MapPin },
-      { label: t("nav.social"), href: "/admin/social", icon: Share2 },
+      { label: t("nav.miWeb"), href: "/admin/mi-web", icon: "🌐" },
+      { label: t("nav.destinos"), href: "/admin/destinos", icon: "🏝️" },
+      { label: t("nav.social"), href: "/admin/social", icon: "📱" },
     ],
     // Operations
     [
-      { label: t("nav.reservas"), href: "/admin/reservas", icon: CalendarCheck },
-      { label: t("nav.crm"), href: "/admin/crm", icon: Users },
-      { label: t("nav.calendario"), href: "/admin/calendario", icon: Calendar },
+      { label: t("nav.reservas"), href: "/admin/reservas", icon: "📋" },
+      { label: t("nav.crm"), href: "/admin/crm", icon: "👥" },
+      { label: t("nav.calendario"), href: "/admin/calendario", icon: "📅" },
     ],
     // Management
     [
-      { label: t("nav.mensajes"), href: "/admin/mensajes", icon: MessageCircle },
-      { label: t("nav.documentos"), href: "/admin/documentos", icon: FileText },
-      { label: t("nav.soporte"), href: "/admin/soporte", icon: Headphones },
+      { label: t("nav.mensajes"), href: "/admin/mensajes", icon: "💬" },
+      { label: t("nav.documentos"), href: "/admin/documentos", icon: "📄" },
+      { label: t("nav.soporte"), href: "/admin/soporte", icon: "🛟" },
     ],
     // Config
     [
-      { label: t("nav.stripe"), href: "/admin/stripe", icon: CreditCard },
-      { label: t("nav.emails"), href: "/admin/emails", icon: Mail },
+      { label: t("nav.stripe"), href: "/admin/stripe", icon: "💳" },
+      { label: t("nav.emails"), href: "/admin/emails", icon: "📧" },
     ],
     // AI
-    [{ label: t("nav.aiChatbot"), href: "/admin/ai/chatbot", icon: Bot }],
+    [{ label: t("nav.aiChatbot"), href: "/admin/ai/chatbot", icon: "🤖" }],
   ];
   const navItems = navGroups.flat();
 
