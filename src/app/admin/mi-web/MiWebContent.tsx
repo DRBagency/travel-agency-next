@@ -1242,12 +1242,16 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
                 <label className="panel-label block mb-1">
                   {t("ctaLink")}
                 </label>
-                <input
+                <select
                   value={fields.hero_cta_link}
                   onChange={(e) => updateField("hero_cta_link", e.target.value)}
                   className="panel-input w-full"
-                  placeholder={t("ctaLinkPlaceholder")}
-                />
+                >
+                  <option value="#destinos">{t("linkDestinations")}</option>
+                  <option value="#contact">{t("linkContact")}</option>
+                  <option value="#why">{t("linkWhyUs")}</option>
+                  <option value="#testimonials">{t("linkTestimonials")}</option>
+                </select>
               </div>
             </div>
 
@@ -1312,12 +1316,16 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
                 <label className="panel-label block mb-1">
                   {t("secondaryCtaLink")}
                 </label>
-                <input
+                <select
                   value={fields.hero_cta_link_secondary}
                   onChange={(e) => updateField("hero_cta_link_secondary", e.target.value)}
                   className="panel-input w-full"
-                  placeholder={t("secondaryCtaLinkPlaceholder")}
-                />
+                >
+                  <option value="#destinos">{t("linkDestinations")}</option>
+                  <option value="#contact">{t("linkContact")}</option>
+                  <option value="#why">{t("linkWhyUs")}</option>
+                  <option value="#testimonials">{t("linkTestimonials")}</option>
+                </select>
               </div>
             </div>
 
@@ -1584,12 +1592,16 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
                 <label className="panel-label block mb-1">
                   {t("ctaBannerCtaLink")}
                 </label>
-                <input
+                <select
                   value={fields.cta_banner_cta_link}
                   onChange={(e) => updateField("cta_banner_cta_link", e.target.value)}
                   className="panel-input w-full"
-                  placeholder={t("ctaBannerCtaLinkPlaceholder")}
-                />
+                >
+                  <option value="#destinos">{t("linkDestinations")}</option>
+                  <option value="#contact">{t("linkContact")}</option>
+                  <option value="#why">{t("linkWhyUs")}</option>
+                  <option value="#testimonials">{t("linkTestimonials")}</option>
+                </select>
               </div>
             </div>
 
