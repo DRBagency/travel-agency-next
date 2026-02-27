@@ -267,22 +267,22 @@ html {
   .light .panel-input,
   [data-theme="light"] .panel-input {
     background: rgba(255,255,255,0.60);
-    border: 1px solid rgba(0,0,0,0.12);
+    border: 1px solid rgba(28,171,176,0.12);
     color: rgba(0,0,0,0.88);
   }
   .light .panel-input::placeholder,
   [data-theme="light"] .panel-input::placeholder {
-    color: rgba(0,0,0,0.38);
+    color: rgba(0,0,0,0.35);
   }
   .light .panel-input:hover,
   [data-theme="light"] .panel-input:hover {
     background: rgba(255,255,255,0.75);
-    border-color: rgba(0,0,0,0.18);
+    border-color: rgba(28,171,176,0.20);
   }
   .light .panel-input:focus,
   [data-theme="light"] .panel-input:focus {
     background: rgba(255,255,255,0.80);
-    border-color: rgba(28,171,176,0.50);
+    border-color: rgba(28,171,176,0.45);
     box-shadow: 0 0 0 3px rgba(28,171,176,0.10);
   }
 
@@ -338,20 +338,20 @@ textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-s
 .light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):not([data-glass-skip]),
 .light select:not(.fc-select):not([data-sileo]):not(.panel-input):not([data-glass-skip]),
 .light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-skip]) {
-  background: rgba(255,255,255,0.55) !important;
-  border: 1px solid rgba(0,0,0,0.10) !important;
+  background: rgba(255,255,255,0.60) !important;
+  border: 1px solid rgba(28,171,176,0.12) !important;
   color: rgba(0,0,0,0.85) !important;
 }
 .light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):not([data-glass-skip]):hover,
 .light select:not(.fc-select):not([data-sileo]):not(.panel-input):not([data-glass-skip]):hover,
 .light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-skip]):hover {
-  background: rgba(255,255,255,0.70) !important;
-  border-color: rgba(0,0,0,0.16) !important;
+  background: rgba(255,255,255,0.75) !important;
+  border-color: rgba(28,171,176,0.20) !important;
 }
 .light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):not([data-glass-skip]):focus,
 .light select:not(.fc-select):not([data-sileo]):not(.panel-input):not([data-glass-skip]):focus,
 .light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-skip]):focus {
-  background: rgba(255,255,255,0.75) !important;
+  background: rgba(255,255,255,0.80) !important;
   border-color: rgba(28,171,176,0.45) !important;
   box-shadow: 0 0 0 3px rgba(28,171,176,0.10) !important;
 }
