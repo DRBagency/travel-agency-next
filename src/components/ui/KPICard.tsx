@@ -59,6 +59,18 @@ const accentMap: Record<string, { border: string; glow: string; iconGradient: st
     iconGradient: "from-red-500 to-red-600",
     valueColor: "text-red-600 dark:text-red-400",
   },
+  lime: {
+    border: "border-s-drb-lime-600",
+    glow: "card-glow-lime",
+    iconGradient: "from-drb-lime-500 to-drb-lime-700",
+    valueColor: "text-drb-lime-700 dark:text-drb-lime-400",
+  },
+  pink: {
+    border: "border-s-pink-500",
+    glow: "card-glow-pink",
+    iconGradient: "from-pink-500 to-pink-600",
+    valueColor: "text-pink-600 dark:text-pink-400",
+  },
 };
 
 export default function KPICard({

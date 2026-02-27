@@ -394,6 +394,30 @@ html {
   .dark .card-glow-amber:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(245,158,11,0.15);
   }
+  .card-glow-lime:hover {
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(212,242,77,0.12);
+  }
+  .dark .card-glow-lime:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(212,242,77,0.15);
+  }
+  .card-glow-pink:hover {
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(244,114,182,0.12);
+  }
+  .dark .card-glow-pink:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(244,114,182,0.15);
+  }
+  .card-glow-blue:hover {
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(59,130,246,0.12);
+  }
+  .dark .card-glow-blue:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(59,130,246,0.15);
+  }
+  .card-glow-red:hover {
+    box-shadow: 0 1px 3px rgba(7,35,49,0.06), 0 12px 32px rgba(239,68,68,0.12);
+  }
+  .dark .card-glow-red:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(239,68,68,0.15);
+  }
 
   /* ═══ DRB Liquid Glass System ═══ */
 

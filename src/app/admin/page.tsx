@@ -161,7 +161,7 @@ export default async function AdminPage() {
             locale={locale}
             valueSuffix="€"
             icon={<DollarSign className="w-5 h-5" />}
-            accentColor="emerald"
+            accentColor="turquoise"
             subtitle={t('paidBookingsSub')}
           />
         </StaggeredItem>
@@ -172,7 +172,7 @@ export default async function AdminPage() {
             numericValue={numeroReservas}
             locale={locale}
             icon={<ShoppingBag className="w-5 h-5" />}
-            accentColor="turquoise"
+            accentColor="lime"
             subtitle={t('thisPeriod')}
           />
         </StaggeredItem>
@@ -195,7 +195,7 @@ export default async function AdminPage() {
             numericValue={destinosActivos ?? 0}
             locale={locale}
             icon={<Map className="w-5 h-5" />}
-            accentColor="amber"
+            accentColor="pink"
             subtitle={t('publishedOnWeb')}
           />
         </StaggeredItem>
