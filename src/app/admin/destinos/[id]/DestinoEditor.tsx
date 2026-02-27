@@ -204,6 +204,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
   const [expandedHotel, setExpandedHotel] = useState<number>(0);
   const [expandedFlight, setExpandedFlight] = useState<number>(0);
   const [expandedFaq, setExpandedFaq] = useState<number>(0);
+  const [expandedGallery, setExpandedGallery] = useState<number>(-1);
   const [unsplashField, setUnsplashField] = useState<string>("");
 
   /* ================================================================ */
@@ -353,10 +354,19 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
       case "imagen_url":
         setImagenUrl(url);
         break;
+      case "galeria_new":
+        setGaleria((prev) => [...prev, url]);
+        setExpandedGallery(galeria.length);
+        break;
       case "coordinador_avatar":
         setCoordinador((prev) => ({ ...prev, avatar: url }));
         break;
       default:
+        // Gallery image — field key is "galeria_<index>"
+        if (unsplashField.startsWith("galeria_")) {
+          const gIdx = Number(unsplashField.split("_")[1]);
+          setGaleria((prev) => prev.map((g, i) => i === gIdx ? url : g));
+        }
         // Hotel image — field key is "hotel_imagen_<hotelIndex>"
         if (unsplashField.startsWith("hotel_imagen_")) {
           const hIdx = Number(unsplashField.split("_")[2]);
@@ -744,6 +754,142 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               {imagenUrl && (
                 <div className="mt-2 rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden max-w-xs">
                   <img src={imagenUrl} alt="Preview" className="w-full h-32 object-cover" />
+                </div>
+              )}
+            </div>
+
+            {/* Gallery */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="panel-label">Galería de imágenes</label>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGaleria((prev) => [...prev, ""]);
+                      setExpandedGallery(galeria.length);
+                    }}
+                    className="flex items-center gap-1 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-700 transition-colors"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> URL
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openUnsplash("galeria_new")}
+                    className="flex items-center gap-1 text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:text-drb-turquoise-700 transition-colors"
+                  >
+                    <ImageIcon className="w-3.5 h-3.5" /> Unsplash
+                  </button>
+                </div>
+              </div>
+              {galeria.length === 0 ? (
+                <p className="text-sm text-gray-400 dark:text-white/40 text-center py-3">
+                  Sin imágenes en la galería
+                </p>
+              ) : (
+                <div className="space-y-1.5">
+                  {galeria.map((url, gIdx) => {
+                    const isExpanded = expandedGallery === gIdx;
+                    return (
+                      <div
+                        key={gIdx}
+                        className="rounded-xl border border-gray-200 dark:border-white/[0.08] bg-gray-50 dark:bg-white/[0.02] overflow-hidden"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => setExpandedGallery(isExpanded ? -1 : gIdx)}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 text-start hover:bg-gray-100/50 dark:hover:bg-white/[0.04] transition-colors"
+                        >
+                          {url ? (
+                            <img src={url} alt="" className="w-8 h-8 rounded-lg object-cover shrink-0" />
+                          ) : (
+                            <div className="w-8 h-8 rounded-lg bg-gray-200 dark:bg-white/10 flex items-center justify-center shrink-0">
+                              <ImageIcon className="w-4 h-4 text-gray-400 dark:text-white/30" />
+                            </div>
+                          )}
+                          <span className="flex-1 text-sm text-gray-700 dark:text-white/70 truncate">
+                            {url ? `Imagen ${gIdx + 1}` : `Imagen ${gIdx + 1} (vacía)`}
+                          </span>
+                          <div className="flex items-center gap-1 shrink-0">
+                            {gIdx > 0 && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setGaleria((prev) => {
+                                    const copy = [...prev];
+                                    [copy[gIdx - 1], copy[gIdx]] = [copy[gIdx], copy[gIdx - 1]];
+                                    return copy;
+                                  });
+                                  setExpandedGallery(gIdx - 1);
+                                }}
+                                className="p-1 rounded hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+                              >
+                                <ChevronUp className="w-3.5 h-3.5 text-gray-400" />
+                              </button>
+                            )}
+                            {gIdx < galeria.length - 1 && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setGaleria((prev) => {
+                                    const copy = [...prev];
+                                    [copy[gIdx], copy[gIdx + 1]] = [copy[gIdx + 1], copy[gIdx]];
+                                    return copy;
+                                  });
+                                  setExpandedGallery(gIdx + 1);
+                                }}
+                                className="p-1 rounded hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+                              >
+                                <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setGaleria((prev) => prev.filter((_, i) => i !== gIdx));
+                                if (expandedGallery === gIdx) setExpandedGallery(-1);
+                              }}
+                              className="p-1 rounded hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-400 hover:text-red-500 transition-colors"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <ChevronUp className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? "" : "rotate-180"}`} />
+                        </button>
+                        {isExpanded && (
+                          <div className="px-3 pb-3 pt-1 border-t border-gray-200 dark:border-white/[0.06] space-y-2">
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                value={url}
+                                onChange={(e) =>
+                                  setGaleria((prev) => prev.map((g, i) => i === gIdx ? e.target.value : g))
+                                }
+                                className="panel-input w-full flex-1"
+                                placeholder="https://..."
+                              />
+                              <button
+                                type="button"
+                                onClick={() => openUnsplash(`galeria_${gIdx}`)}
+                                className="shrink-0 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors"
+                                title="Buscar en Unsplash"
+                              >
+                                <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/50" />
+                              </button>
+                            </div>
+                            {url && (
+                              <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden">
+                                <img src={url} alt={`Gallery ${gIdx + 1}`} className="w-full h-40 object-cover" />
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
