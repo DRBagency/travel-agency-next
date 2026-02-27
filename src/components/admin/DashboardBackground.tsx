@@ -212,7 +212,7 @@ export default function DashboardBackground() {
       {/* Aurora waves — SVG curved glowing lines */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Wave 1 */}
-        <div className={`absolute w-[120%] -left-[10%] top-[4%] animate-waveD1 ${isLight ? 'opacity-30' : 'opacity-60'}`} style={{ height: 200 }}>
+        <div className={`absolute w-[120%] -left-[10%] top-[4%] animate-waveD1 ${isLight ? 'opacity-40' : 'opacity-80'}`} style={{ height: 200 }}>
           <svg viewBox="0 0 1400 200" preserveAspectRatio="none" className="w-full h-full">
             <defs>
               <linearGradient id="dbaw1" x1="0" y1="0" x2="1" y2="0">
@@ -229,7 +229,7 @@ export default function DashboardBackground() {
           </svg>
         </div>
         {/* Wave 2 */}
-        <div className={`absolute w-[120%] -left-[10%] top-[12%] animate-waveD2 ${isLight ? 'opacity-25' : 'opacity-60'}`} style={{ height: 180 }}>
+        <div className={`absolute w-[120%] -left-[10%] top-[12%] animate-waveD2 ${isLight ? 'opacity-35' : 'opacity-80'}`} style={{ height: 180 }}>
           <svg viewBox="0 0 1400 180" preserveAspectRatio="none" className="w-full h-full">
             <defs>
               <linearGradient id="dbaw2" x1="0" y1="0" x2="1" y2="0">
@@ -246,7 +246,7 @@ export default function DashboardBackground() {
           </svg>
         </div>
         {/* Wave 3 */}
-        <div className={`absolute w-[120%] -left-[10%] top-[22%] animate-waveD3 ${isLight ? 'opacity-20' : 'opacity-60'}`} style={{ height: 160 }}>
+        <div className={`absolute w-[120%] -left-[10%] top-[22%] animate-waveD3 ${isLight ? 'opacity-35' : 'opacity-80'}`} style={{ height: 160 }}>
           <svg viewBox="0 0 1400 160" preserveAspectRatio="none" className="w-full h-full">
             <defs>
               <linearGradient id="dbaw3" x1="0" y1="0" x2="1" y2="0">
