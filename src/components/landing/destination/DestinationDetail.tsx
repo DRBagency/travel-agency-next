@@ -9,7 +9,7 @@ import { EffortDots } from "../ui/EffortDots";
 import { AnimateIn } from "../ui/AnimateIn";
 import { TabItinerary } from "./TabItinerary";
 import { TabHotel, normalizeHotels } from "./TabHotel";
-import { TabFlight } from "./TabFlight";
+import { TabFlight, normalizeFlights } from "./TabFlight";
 import { TabIncluded } from "./TabIncluded";
 import { TabDepartures } from "./TabDepartures";
 import { TabCoordinator } from "./TabCoordinator";
@@ -192,7 +192,16 @@ function DestinationDetailInner({
   const selectedHotel = hotels[selectedHotelIndex] || null;
   const selectedRoom = selectedHotel?.habitaciones?.[selectedRoomIndex] || null;
   const hotelSupplement = (selectedHotel?.suplemento ?? 0) + (selectedRoom?.suplemento ?? 0);
-  const flights: any = dTr("vuelos") || destino.vuelos || null;
+  const flights: any = (() => {
+    const translated = dTr("vuelos");
+    const original = destino.vuelos;
+    const raw = translated || original || null;
+    if (!raw) return null;
+    const normalized = normalizeFlights(raw);
+    // If empty segments and no nota, return raw for backward compat check in TabFlight
+    if (normalized.segmentos.length === 0 && !normalized.nota) return raw;
+    return raw;
+  })();
   const included: string[] = (() => {
     const v = dTr("incluido");
     return Array.isArray(v) ? v : Array.isArray(destino.incluido) ? destino.incluido : [];

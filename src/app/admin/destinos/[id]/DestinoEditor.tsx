@@ -105,10 +105,45 @@ const EMPTY_ROOM: HabitacionData = {
   tipo: "", descripcion: "", suplemento: 0, capacidad: 2, imagen: "",
 };
 
+interface FlightSegment {
+  fecha: string;
+  hora_salida: string;
+  hora_llegada: string;
+  llegada_dia_siguiente: boolean;
+  origen_codigo: string;
+  origen_ciudad: string;
+  destino_codigo: string;
+  destino_ciudad: string;
+  duracion: string;
+  escalas: string;
+  aerolinea: string;
+  numero_vuelo: string;
+  clase: string;
+  equipaje: string;
+  estado: string;
+}
+
 interface VuelosData {
-  aeropuerto_llegada: string;
-  aeropuerto_regreso: string;
+  segmentos: FlightSegment[];
   nota: string;
+}
+
+const EMPTY_SEGMENT: FlightSegment = {
+  fecha: "", hora_salida: "", hora_llegada: "", llegada_dia_siguiente: false,
+  origen_codigo: "", origen_ciudad: "", destino_codigo: "", destino_ciudad: "",
+  duracion: "", escalas: "Directo", aerolinea: "", numero_vuelo: "",
+  clase: "Turista", equipaje: "", estado: "OK",
+};
+
+function normalizeVuelos(raw: any): VuelosData {
+  if (!raw) return { segmentos: [], nota: "" };
+  // New format already
+  if (Array.isArray(raw.segmentos)) return raw;
+  // Old format: { aeropuerto_llegada, aeropuerto_regreso, nota }
+  if (raw.aeropuerto_llegada || raw.aeropuerto_regreso || raw.arrival || raw.returnAirport) {
+    return { segmentos: [], nota: raw.nota || raw.notes || "" };
+  }
+  return { segmentos: [], nota: raw.nota || "" };
 }
 
 interface CoordinadorData {
@@ -208,9 +243,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
   const [galeria, setGaleria] = useState<string[]>(destino.galeria ?? []);
   const [itinerario, setItinerario] = useState<any>(destino.itinerario ?? null);
   const [hoteles, setHoteles] = useState<HotelData[]>(() => normalizeHotels(destino.hotel));
-  const [vuelos, setVuelos] = useState<VuelosData>(
-    destino.vuelos ?? { aeropuerto_llegada: "", aeropuerto_regreso: "", nota: "" }
-  );
+  const [vuelos, setVuelos] = useState<VuelosData>(() => normalizeVuelos(destino.vuelos));
   const [incluido, setIncluido] = useState<string[]>(destino.incluido ?? []);
   const [noIncluido, setNoIncluido] = useState<string[]>(destino.no_incluido ?? []);
   const [salidas, setSalidas] = useState<SalidaItem[]>(destino.salidas ?? []);
@@ -1070,40 +1103,162 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
 
         {/* ------ FLIGHTS TAB ------ */}
         {tab === "flights" && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Vuelos</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="panel-label">Aeropuerto de llegada</label>
-                <input
-                  type="text"
-                  value={vuelos.aeropuerto_llegada}
-                  onChange={(e) => setVuelos((p) => ({ ...p, aeropuerto_llegada: e.target.value }))}
-                  className="panel-input w-full"
-                  placeholder="Ej: Aeropuerto de Marrakech (RAK)"
-                />
-              </div>
-              <div>
-                <label className="panel-label">Aeropuerto de regreso</label>
-                <input
-                  type="text"
-                  value={vuelos.aeropuerto_regreso}
-                  onChange={(e) => setVuelos((p) => ({ ...p, aeropuerto_regreso: e.target.value }))}
-                  className="panel-input w-full"
-                  placeholder="Ej: Aeropuerto de Marrakech (RAK)"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="panel-label">Notas sobre vuelos</label>
-                <textarea
-                  rows={3}
-                  value={vuelos.nota}
-                  onChange={(e) => setVuelos((p) => ({ ...p, nota: e.target.value }))}
-                  className="panel-input w-full"
-                  placeholder="Información adicional sobre los vuelos..."
-                />
-              </div>
+          <div className="space-y-5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('flights')}</h2>
+              <button
+                type="button"
+                onClick={() => setVuelos((p) => ({ ...p, segmentos: [...p.segmentos, { ...EMPTY_SEGMENT }] }))}
+                className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
+              >
+                <Plus className="w-4 h-4" />
+                {t('addFlight')}
+              </button>
             </div>
+
+            {vuelos.segmentos.length === 0 && (
+              <div className="text-center py-10 text-gray-400 dark:text-white/30 text-sm">
+                {t('noFlightsYet')}
+              </div>
+            )}
+
+            {vuelos.segmentos.map((seg, sIdx) => {
+              const updateSeg = (patch: Partial<FlightSegment>) =>
+                setVuelos((p) => ({ ...p, segmentos: p.segmentos.map((s, i) => (i === sIdx ? { ...s, ...patch } : s)) }));
+              const label = sIdx === 0 ? t('outbound') : sIdx === 1 ? t('returnFlight') : t('flightSegment', { n: sIdx + 1 });
+
+              return (
+                <div key={sIdx} className="panel-card p-5 space-y-4">
+                  {/* Segment header */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <Plane className={`w-4 h-4 text-drb-turquoise-500 ${sIdx > 0 ? "rotate-180" : ""}`} />
+                      {label}
+                      {seg.origen_codigo && seg.destino_codigo && (
+                        <span className="text-sm font-medium text-gray-400 dark:text-white/40">
+                          {seg.origen_codigo} → {seg.destino_codigo}
+                        </span>
+                      )}
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      {sIdx > 0 && (
+                        <button type="button" onClick={() => setVuelos((p) => { const c = [...p.segmentos]; [c[sIdx - 1], c[sIdx]] = [c[sIdx], c[sIdx - 1]]; return { ...p, segmentos: c }; })}
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
+                          <ChevronUp className="w-4 h-4" />
+                        </button>
+                      )}
+                      {sIdx < vuelos.segmentos.length - 1 && (
+                        <button type="button" onClick={() => setVuelos((p) => { const c = [...p.segmentos]; [c[sIdx], c[sIdx + 1]] = [c[sIdx + 1], c[sIdx]]; return { ...p, segmentos: c }; })}
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      )}
+                      <button type="button" onClick={() => setVuelos((p) => ({ ...p, segmentos: p.segmentos.filter((_, i) => i !== sIdx) }))}
+                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Row 1: Date, departure, arrival, duration */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div>
+                      <label className="panel-label">{t('flightDate')}</label>
+                      <input type="date" value={seg.fecha} onChange={(e) => updateSeg({ fecha: e.target.value })} className="panel-input w-full" />
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('departureTime')}</label>
+                      <input type="time" value={seg.hora_salida} onChange={(e) => updateSeg({ hora_salida: e.target.value })} className="panel-input w-full" />
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('arrivalTime')}</label>
+                      <div className="flex gap-2">
+                        <input type="time" value={seg.hora_llegada} onChange={(e) => updateSeg({ hora_llegada: e.target.value })} className="panel-input w-full" />
+                      </div>
+                      <label className="flex items-center gap-2 mt-1.5 cursor-pointer">
+                        <input type="checkbox" checked={seg.llegada_dia_siguiente} onChange={(e) => updateSeg({ llegada_dia_siguiente: e.target.checked })}
+                          className="w-3.5 h-3.5 rounded border-gray-300 dark:border-white/20 text-drb-turquoise-500 focus:ring-drb-turquoise-500" />
+                        <span className="text-xs text-gray-500 dark:text-white/40">{t('nextDay')}</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('flightDuration')}</label>
+                      <input type="text" value={seg.duracion} onChange={(e) => updateSeg({ duracion: e.target.value })} className="panel-input w-full" placeholder="9h 15min" />
+                    </div>
+                  </div>
+
+                  {/* Row 2: Origin & Destination */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div>
+                      <label className="panel-label">{t('originCode')}</label>
+                      <input type="text" value={seg.origen_codigo} onChange={(e) => updateSeg({ origen_codigo: e.target.value.toUpperCase() })} className="panel-input w-full" placeholder="MAD" maxLength={4} />
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('originCity')}</label>
+                      <input type="text" value={seg.origen_ciudad} onChange={(e) => updateSeg({ origen_ciudad: e.target.value })} className="panel-input w-full" placeholder="Madrid" />
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('destinationCode')}</label>
+                      <input type="text" value={seg.destino_codigo} onChange={(e) => updateSeg({ destino_codigo: e.target.value.toUpperCase() })} className="panel-input w-full" placeholder="SDQ" maxLength={4} />
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('destinationCity')}</label>
+                      <input type="text" value={seg.destino_ciudad} onChange={(e) => updateSeg({ destino_ciudad: e.target.value })} className="panel-input w-full" placeholder="Santo Domingo" />
+                    </div>
+                  </div>
+
+                  {/* Row 3: Airline, flight number, class, stops */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div>
+                      <label className="panel-label">{t('airline')}</label>
+                      <input type="text" value={seg.aerolinea} onChange={(e) => updateSeg({ aerolinea: e.target.value })} className="panel-input w-full" placeholder="World 2 Fly" />
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('flightNumber')}</label>
+                      <input type="text" value={seg.numero_vuelo} onChange={(e) => updateSeg({ numero_vuelo: e.target.value })} className="panel-input w-full" placeholder="2W-3409" />
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('flightClass')}</label>
+                      <select value={seg.clase} onChange={(e) => updateSeg({ clase: e.target.value })} className="panel-input w-full">
+                        <option value="Turista">{t('classTourist')}</option>
+                        <option value="Premium Economy">{t('classPremium')}</option>
+                        <option value="Business">{t('classBusiness')}</option>
+                        <option value="Primera">{t('classFirst')}</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('stops')}</label>
+                      <input type="text" value={seg.escalas} onChange={(e) => updateSeg({ escalas: e.target.value })} className="panel-input w-full" placeholder={t('direct')} />
+                    </div>
+                  </div>
+
+                  {/* Row 4: Baggage, status */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="md:col-span-2">
+                      <label className="panel-label">{t('baggage')}</label>
+                      <input type="text" value={seg.equipaje} onChange={(e) => updateSeg({ equipaje: e.target.value })} className="panel-input w-full" placeholder="Equipaje facturado 1PC" />
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('flightStatus')}</label>
+                      <input type="text" value={seg.estado} onChange={(e) => updateSeg({ estado: e.target.value })} className="panel-input w-full" placeholder="OK" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Notes */}
+            <div>
+              <label className="panel-label">{t('flightNotes')}</label>
+              <textarea
+                rows={2}
+                value={vuelos.nota}
+                onChange={(e) => setVuelos((p) => ({ ...p, nota: e.target.value }))}
+                className="panel-input w-full"
+                placeholder="Información adicional sobre los vuelos..."
+              />
+            </div>
+
             <div className="flex justify-end pt-2">
               <SaveButton />
             </div>
