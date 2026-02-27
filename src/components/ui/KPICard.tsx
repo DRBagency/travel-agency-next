@@ -22,42 +22,42 @@ interface KPICardProps {
   valueSuffix?: string;
 }
 
-const accentMap: Record<string, { border: string; tint: string; glow: string; iconGradient: string }> = {
+const accentMap: Record<string, { border: string; glow: string; iconGradient: string; valueColor: string }> = {
   emerald: {
     border: "border-s-emerald-500",
-    tint: "bg-emerald-50/50 dark:bg-emerald-500/[0.04]",
     glow: "card-glow-emerald",
     iconGradient: "from-emerald-500 to-emerald-600",
+    valueColor: "text-emerald-600 dark:text-emerald-400",
   },
   turquoise: {
     border: "border-s-drb-turquoise-500",
-    tint: "bg-drb-turquoise-50/40 dark:bg-drb-turquoise-500/[0.04]",
     glow: "card-glow-turquoise",
     iconGradient: "from-drb-turquoise-500 to-drb-turquoise-600",
+    valueColor: "text-drb-turquoise-600 dark:text-drb-turquoise-300",
   },
   purple: {
     border: "border-s-purple-500",
-    tint: "bg-purple-50/50 dark:bg-purple-500/[0.04]",
     glow: "card-glow-purple",
     iconGradient: "from-purple-500 to-purple-600",
+    valueColor: "text-purple-600 dark:text-purple-400",
   },
   amber: {
     border: "border-s-amber-500",
-    tint: "bg-amber-50/50 dark:bg-amber-500/[0.04]",
     glow: "card-glow-amber",
     iconGradient: "from-amber-500 to-amber-600",
+    valueColor: "text-amber-600 dark:text-amber-400",
   },
   blue: {
     border: "border-s-blue-500",
-    tint: "bg-blue-50/50 dark:bg-blue-500/[0.04]",
     glow: "card-glow-blue",
     iconGradient: "from-blue-500 to-blue-600",
+    valueColor: "text-blue-600 dark:text-blue-400",
   },
   red: {
     border: "border-s-red-500",
-    tint: "bg-red-50/50 dark:bg-red-500/[0.04]",
     glow: "card-glow-red",
     iconGradient: "from-red-500 to-red-600",
+    valueColor: "text-red-600 dark:text-red-400",
   },
 };
 
@@ -119,11 +119,11 @@ export default function KPICard({
     return (
       <motion.div
         whileHover={{ y: -1, transition: { duration: 0.2 } }}
-        className={`kpi-card !p-4 border-s-4 ${accent.border} ${accent.tint} ${accent.glow}`}>
+        className={`kpi-card !p-4 border-s-4 ${accent.border} ${accent.glow}`}>
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <p className="text-xs text-gray-500 dark:text-white/60 mb-0.5">{title}</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <p className={`text-2xl font-bold ${accent.valueColor}`}>
               {numericValue !== undefined ? (
                 <AnimatedCounter
                   value={numericValue}

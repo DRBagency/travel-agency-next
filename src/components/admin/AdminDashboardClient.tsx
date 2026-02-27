@@ -171,7 +171,7 @@ export function LatestBookings({
                   {r.id ? (
                     <Link
                       href={`/admin/reserva/${r.id}`}
-                      className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] px-3 py-3 hover:bg-drb-turquoise-50/50 dark:hover:bg-white/[0.05] transition-colors cursor-pointer"
+                      className="flex items-center justify-between rounded-xl bg-white/[0.06] border border-white/[0.06] px-3 py-3 hover:bg-white/[0.12] transition-colors cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
                         <div

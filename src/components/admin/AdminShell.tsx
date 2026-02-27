@@ -159,7 +159,7 @@ function DesktopSidebar({
       onMouseLeave={onHoverEnd}
     >
       {/* Logo + pin button */}
-      <div className="flex items-center h-16 border-b border-gray-200/80 dark:border-white/[0.06] px-3 gap-2">
+      <div className="flex items-center h-16 border-b border-white/[0.06] px-3 gap-2">
         <div className="shrink-0">
           {logoUrl ? (
             <img
@@ -200,7 +200,7 @@ function DesktopSidebar({
         {showLabels && (
           <button
             onClick={onTogglePin}
-            className="shrink-0 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+            className="shrink-0 p-1.5 rounded-lg hover:bg-white/[0.10] dark:hover:bg-white/[0.06] transition-colors"
             title={pinned ? tc("unpin") : tc("pin")}
           >
             {pinned ? (
@@ -229,8 +229,8 @@ function DesktopSidebar({
                     title={!showLabels ? item.label : undefined}
                     className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
                       active
-                        ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
-                        : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
+                        ? "bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                        : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
                     }`}
                   >
                     <Icon className="w-[18px] h-[18px] shrink-0" />
@@ -349,8 +349,8 @@ function MobileSidebarNav({
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-[#041820]">
-      <div className="flex items-center gap-3 px-6 h-16 border-b border-gray-200/80 dark:border-white/[0.06]">
+    <div className="flex flex-col h-full">
+      <div className="flex items-center gap-3 px-6 h-16 border-b border-white/[0.06]">
         {logoUrl ? (
           <img src={logoUrl} alt={clientName} className="h-9 w-9 rounded-xl object-contain" />
         ) : (
@@ -393,8 +393,8 @@ function MobileSidebarNav({
                     onClick={onNavigate}
                     className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
                       active
-                        ? "bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
-                        : "text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-white/[0.04] hover:text-gray-900 dark:hover:text-white"
+                        ? "bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
+                        : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
                     }`}
                   >
                     <Icon className="w-[18px] h-[18px] shrink-0" />
@@ -549,7 +549,7 @@ const AdminShell = ({
 
       {/* ========== DESKTOP RIGHT COLUMN (xl only) ========== */}
       <motion.aside
-        className="fixed end-0 top-0 bottom-0 hidden xl:flex flex-col z-40 overflow-hidden border-s border-gray-200/80 dark:border-white/[0.06]"
+        className="fixed end-0 top-0 bottom-0 hidden xl:flex flex-col z-40 overflow-hidden glass-sidebar border-s border-white/[0.06]"
         animate={{ width: rightColWidth }}
         transition={{ duration: 0.2, ease: "easeInOut" }}
         onMouseEnter={() => setRightHovered(true)}
@@ -561,7 +561,7 @@ const AdminShell = ({
             <div className="flex justify-start px-2 pt-2 shrink-0" style={{ minWidth: RIGHT_COL_W }}>
               <button
                 onClick={toggleRightPin}
-                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+                className="p-1.5 rounded-lg hover:bg-white/[0.10] dark:hover:bg-white/[0.06] transition-colors"
                 title={rightPinned ? tc("unpin") : tc("pin")}
               >
                 {rightPinned ? (
@@ -616,13 +616,13 @@ const AdminShell = ({
             {/* Mobile hamburger */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
-                <button className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors lg:hidden">
+                <button className="p-2 rounded-xl hover:bg-white/[0.10] dark:hover:bg-white/[0.06] transition-colors lg:hidden">
                   <Menu className="w-5 h-5 text-gray-600 dark:text-white" />
                 </button>
               </SheetTrigger>
               <SheetContent
                 side={locale === "ar" ? "right" : "left"}
-                className="w-[260px] p-0 bg-white dark:bg-[#041820] border-e border-gray-200/80 dark:border-white/[0.06]"
+                className="w-[260px] p-0 glass-sidebar border-e border-white/[0.06]"
               >
                 <MobileSidebarNav
                   items={navItems}
@@ -673,14 +673,14 @@ const AdminShell = ({
             {/* Eden FAB for tablet/mobile (opens right panel) */}
             <button
               onClick={() => setRightPanelOpen(true)}
-              className="xl:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors"
+              className="xl:hidden p-2 rounded-xl hover:bg-white/[0.10] dark:hover:bg-white/[0.06] transition-colors"
               title="Eden"
             >
               <MessageCircle className="w-5 h-5 text-drb-turquoise-500" />
             </button>
 
             {/* User avatar + info (desktop) */}
-            <div className="hidden sm:flex xl:hidden items-center gap-3 ps-3 border-s border-gray-200/80 dark:border-white/[0.06]">
+            <div className="hidden sm:flex xl:hidden items-center gap-3 ps-3 border-s border-white/[0.08]">
               <div className="text-end hidden md:block">
                 <div className="text-sm font-medium text-gray-900 dark:text-white">
                   {clientName}
@@ -762,7 +762,7 @@ const AdminShell = ({
         </div>
         <div className="relative z-[1]">
         {!onboardingCompleted && pathname === "/admin" && (
-          <div className="panel-card p-4 border-drb-turquoise-200 dark:border-drb-turquoise-500/20 bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 mb-6 flex items-center justify-between">
+          <div className="panel-card p-4 border-drb-turquoise-500/20 mb-6 flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white">
                 {t("shell.onboardingIncomplete")}
@@ -783,7 +783,7 @@ const AdminShell = ({
           <PageTransition key={pathname}>{children}</PageTransition>
         ) : (
           <div className="space-y-4">
-            <div className="panel-card p-6 border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-500/10">
+            <div className="panel-card p-6 border-amber-500/20">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 {t("shell.subscriptionInactive")}
               </h2>
@@ -815,7 +815,7 @@ const AdminShell = ({
             <div className="h-full relative">
               <button
                 onClick={() => setRightPanelOpen(false)}
-                className="absolute top-3 start-3 z-10 p-1.5 rounded-lg bg-white/80 dark:bg-white/10 hover:bg-gray-100 dark:hover:bg-white/20 transition-colors"
+                className="absolute top-3 start-3 z-10 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
               >
                 <X className="w-4 h-4 text-gray-600 dark:text-white/70" />
               </button>
