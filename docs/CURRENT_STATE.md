@@ -1,7 +1,7 @@
 # Estado Actual del Proyecto
 
-> **Ultima actualizacion:** 26 Febrero 2026
-> **Estado:** Produccion activa - Fase E completada (E1-E7) + Fase F + G + Auto-Traduccion completadas
+> **Ultima actualizacion:** 27 Febrero 2026
+> **Estado:** Produccion activa - Fase E completada (E1-E7) + Fase F + G + Auto-Traduccion + Light Mode Redesign completadas
 
 ## FUNCIONALIDADES COMPLETADAS
 
@@ -316,7 +316,23 @@
 - **F6 — Eliminar /admin/analytics**: Pagina eliminada, nav item eliminado de AdminShell. KPIs y charts integrados en dashboard principal
 - **F7 — Filtros Reservas Colapsados**: Form de filtros en `<details>/<summary>` con i18n
 - **F8 — Contador de Visitas en Vivo**: `page_visits` table + Realtime + RPC, `/api/track` publico, LiveVisitorBadge en header
-- **Widget Opacity Fix**: panel-card/kpi-card dark mode: `bg-[#0a2a35]/80 backdrop-blur-sm`. Light mode: `bg-white/95`
+- **Widget Opacity Fix**: panel-card/kpi-card dark mode: `bg-[#0a2a35]/80 backdrop-blur-sm`. Light mode: see Liquid Glass below
+
+### Light Mode Redesign "Opcion C" (27 Feb 2026):
+- **Default theme:** "dark" (layout.tsx `defaultTheme="dark"`)
+- **Background:** `#EFF3F8` (AdminShell + OwnerShell), DashboardBackground orb alphas reduced
+- **Sidebar:** Always dark in both modes — `linear-gradient(180deg, rgba(10,45,55,0.95), rgba(8,35,48,0.98))` + turquoise border `rgba(28,171,176,0.15)`. Nav items always white-based
+- **Glass header light:** `rgba(255,255,255,0.68)` + turquoise border `rgba(28,171,176,0.08)`
+- **panel-card light:** `bg-white/[0.52]` + turquoise border `rgba(28,171,176,0.08)` + turquoise hover glow
+- **kpi-card light:** Same base + turquoise hover box-shadow
+- **panel-input light:** Turquoise border `rgba(28,171,176,0.12)`, hover `0.20`, focus turquoise glow
+- **Gradient text:** Light `#0a7a7e→#5a7a08` (dark teal→lime), Dark `#3dd8dd→#c8ec60` (bright)
+- **Typography:** Greetings `text-3xl font-extrabold` in both panels
+- **SearchBar:** `data-glass-skip` attribute to exclude from global glass input styling
+- **KPI cards:** Added `p-5` padding to prevent content clipping with `overflow-hidden`
+- **Mi Web sections:** Enlarged icons, titles, padding (`p-6 space-y-4`), tab buttons (`px-4 py-3 text-[15px]`)
+- **Destino editor:** Enlarged fields — section titles `text-xl font-bold`, removed `text-sm`/`text-xs` from inputs/labels, bigger padding
+- **Itinerary editor:** Larger accordions, labels `text-sm font-medium`, periods `p-4 rounded-xl`, textarea `min-h-[64px]`
 
 ## PENDIENTE CONFIG EXTERNA (codigo listo)
 

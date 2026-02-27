@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 26 Febrero 2026
+> **Última actualización:** 27 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -51,7 +51,7 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **React:** 19.2.3
 - **Styling:** Tailwind CSS + CSS variables (landing theme) + inline styles (template port)
 - **UI Components:** shadcn/ui + custom design system (DataTable, KPICard, ConfirmDialog, EmptyState)
-- **Theme:** next-themes (dark/light mode toggle, SSR-safe, CSS variable injection)
+- **Theme:** next-themes (dark/light mode toggle, SSR-safe, CSS variable injection). Default: "dark"
 - **Fonts:** Syne (display headings) + DM Sans (body) via next/font/google
 - **i18n:** next-intl (cookie-based, sin prefijo URL)
 - **Charts:** Recharts
@@ -423,7 +423,21 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 - ✅ **F6 — Eliminar /admin/analytics**: Página eliminada, nav item eliminado de AdminShell, import BarChart3 limpiado
 - ✅ **F7 — Filtros Reservas Colapsados**: Form de filtros en `<details>/<summary>` (collapsed by default) con icono Filter + i18n key "Filtros"
 - ✅ **F8 — Contador de Visitas en Vivo**: `page_visits` table + Realtime + RPC `count_active_visitors`, `/api/track` público con rate limiting, `/api/admin/visits/active` auth'd, `LiveVisitorBadge` en header (emerald pill, pulsing dot, Realtime + 60s polling), tracking `useEffect` en `HomeClient.tsx`, i18n `onYourWeb` ES/EN/AR
-- ✅ **Widget Opacity Fix**: panel-card/kpi-card dark mode cambiado de `bg-white/[0.06]` a `bg-[#0a2a35]/80 backdrop-blur-sm`. Light mode `bg-white/95`. panel-input dark `bg-[#0a2a35]/70`. Mejora legibilidad sobre mountain background
+- ✅ **Widget Opacity Fix**: panel-card/kpi-card dark mode: `bg-[#0a2a35]/80 backdrop-blur-sm`. panel-input dark: `bg-[#0a2a35]/70`. Light mode: see Liquid Glass below
+
+### ✅ Light Mode Redesign "Opción C" (27 Feb 2026):
+- ✅ **Default theme:** Changed from "light" to "dark" in layout.tsx
+- ✅ **Background:** `#EFF3F8` (AdminShell + OwnerShell), DashboardBackground gradient `#D8E2EE→#EFF3F8`, orb alphas reduced
+- ✅ **Dark sidebar in light mode:** Always dark `linear-gradient(180deg, rgba(10,45,55,0.95), rgba(8,35,48,0.98))` + turquoise border `rgba(28,171,176,0.15)`. Nav items always white-based (no gray variants)
+- ✅ **Glass header:** Light `rgba(255,255,255,0.68)` + turquoise border `rgba(28,171,176,0.08)`
+- ✅ **Turquoise-tinted cards:** panel-card light `bg-white/[0.52]` + border `rgba(28,171,176,0.08)` + turquoise hover glow. kpi-card same + hover box-shadow
+- ✅ **Turquoise input borders:** panel-input light border `rgba(28,171,176,0.12)`, hover `0.20`, focus turquoise glow. Global input selectors same pattern. `data-glass-skip` attribute excludes SearchBar
+- ✅ **Bolder typography:** Greetings `text-3xl font-extrabold` in admin + owner dashboards
+- ✅ **Darker gradient text:** `.gradient-text` light uses `#0a7a7e→#5a7a08` (dark teal→lime), dark uses `#3dd8dd→#c8ec60` (bright)
+- ✅ **Enlarged Mi Web sections:** Icons `w-9 h-9`, titles `text-lg font-bold`, section padding `p-6 space-y-4`, tabs `px-4 py-3 text-[15px]`
+- ✅ **Enlarged destino editor fields:** Section titles `text-xl font-bold`, sub-sections `text-base font-semibold`, removed `text-sm`/`text-xs` from inputs/labels
+- ✅ **Enlarged itinerary editor:** Accordions `py-3.5`, labels `text-sm font-medium`, periods `p-4 rounded-xl`, textarea `min-h-[64px]`
+- ✅ **KPI card padding:** Added `p-5` to `.kpi-card` to prevent content clipping with `overflow-hidden`
 
 ### ✅ Fase G completada — Landing Page Rediseño Completo (23 Feb 2026):
 - ✅ **G1-G3 — 100% Landing Replacement**: Entire G2 landing replaced with new template port. 9 landing sections (LandingNavbar, LandingHero, LandingStats, LandingDestinations, LandingWhyUs, LandingTestimonials, LandingCTABanner, LandingContact, LandingFooter). 7 UI micro-components (AnimateIn, Img, Accordion, TagChip, StatusBadge, EffortDots, GlowOrb). Typography: Syne (display) + DM Sans (body) via next/font/google. Theme: next-themes + CSS variables + LandingThemeProvider + LandingGlobalStyles. Dark/light toggle in navbar
@@ -670,9 +684,10 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 - **Wrapper pages:** `<div className="space-y-{6,8} animate-fade-in">`
 - **Headers:** `<h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">`
 - **Subtitles:** `<p className="text-gray-400 dark:text-white/40">`
-- **Cards:** `panel-card` class (light: bg-white/95, dark: bg-[#0a2a35]/80 backdrop-blur-sm, border, rounded)
-- **KPI Cards:** `kpi-card` class (same as panel-card base + hover effects)
-- **Inputs:** `panel-input` class (dark: bg-[#0a2a35]/70)
+- **Cards:** `panel-card` class — Dark: `bg-[#0a2a35]/80 backdrop-blur-sm`, Light: `bg-white/[0.52] border rgba(28,171,176,0.08)` + turquoise hover glow
+- **KPI Cards:** `kpi-card` class (same base + `p-5` + turquoise hover box-shadow in light)
+- **Inputs:** `panel-input` class — Dark: `bg-[#0a2a35]/70`, Light: turquoise border `rgba(28,171,176,0.12)` + focus glow
+- **Gradient text:** `.gradient-text` — Light: `#0a7a7e→#5a7a08`, Dark: `#3dd8dd→#c8ec60`
 - **Badges:** `badge-success`, `badge-warning`, `badge-danger`, `badge-info`
 - **Buttons:** `btn-primary` class
 - **Table rows:** `table-row` class with hover
