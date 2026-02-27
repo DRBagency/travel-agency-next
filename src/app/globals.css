@@ -437,7 +437,11 @@ textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):not([data-glass-s
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-drb-turquoise-600 via-drb-turquoise-500 to-drb-lime-600 dark:from-drb-turquoise-400 dark:via-drb-turquoise-300 dark:to-drb-lime-300 bg-clip-text text-transparent;
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(to right, #0a7a7e, #0e8a8e, #5a7a08);
+  }
+  .dark .gradient-text {
+    background-image: linear-gradient(to right, #3dd8dd, #5ee8ea, #c8ec60);
   }
 
   .gradient-text-ocean {
