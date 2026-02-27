@@ -63,8 +63,6 @@ Ingresos totales: ${totalIngresos}€
       plan={client.plan}
       primaryColor={client.primary_color}
       logoUrl={client.logo_url}
-      profilePhoto={client.profile_photo}
-      contactPhone={client.contact_phone}
       subscriptionActive={Boolean(client.stripe_subscription_id)}
       onboardingCompleted={Boolean(client.onboarding_completed)}
       agencyContext={agencyContext}

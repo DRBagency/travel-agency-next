@@ -45,8 +45,6 @@ interface AdminShellProps {
   plan?: string;
   primaryColor?: string | null;
   logoUrl?: string | null;
-  profilePhoto?: string | null;
-  contactPhone?: string | null;
   subscriptionActive?: boolean;
   onboardingCompleted?: boolean;
   agencyContext?: string;
@@ -399,8 +397,6 @@ const AdminShell = ({
   plan,
   primaryColor,
   logoUrl,
-  profilePhoto,
-  contactPhone,
   subscriptionActive = true,
   onboardingCompleted,
   agencyContext = "",
@@ -529,13 +525,7 @@ const AdminShell = ({
             </div>
             <div className="flex-1 overflow-hidden" style={{ minWidth: RIGHT_COL_W }}>
               <AdminRightColumn
-                clientName={clientName}
-                clientEmail={clientEmail}
                 clienteId={clienteId}
-                logoUrl={logoUrl}
-                profilePhoto={profilePhoto}
-                primaryColor={primaryColor}
-                contactPhone={contactPhone}
                 agencyContext={agencyContext}
                 plan={plan}
               />
@@ -776,11 +766,7 @@ const AdminShell = ({
                 <X className="w-4 h-4 text-gray-600 dark:text-white/70" />
               </button>
               <AdminRightColumn
-                clientName={clientName}
-                clientEmail={clientEmail}
                 clienteId={clienteId}
-                logoUrl={logoUrl}
-                primaryColor={primaryColor}
                 agencyContext={agencyContext}
                 plan={plan}
               />

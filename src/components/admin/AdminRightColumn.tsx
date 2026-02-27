@@ -3,13 +3,7 @@
 import EdenChat from "./EdenChat";
 
 interface AdminRightColumnProps {
-  clientName: string;
-  clientEmail?: string;
   clienteId?: string;
-  logoUrl?: string | null;
-  profilePhoto?: string | null;
-  primaryColor?: string | null;
-  contactPhone?: string | null;
   agencyContext: string;
   plan?: string;
 }
