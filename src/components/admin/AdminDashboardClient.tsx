@@ -64,7 +64,7 @@ export function PremiumGreeting({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+      <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white">
         {greeting.split(clientName).length > 1 ? (
           <>
             {greeting.split(clientName)[0]}
@@ -136,7 +136,7 @@ export function LatestBookings({
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center">
             <CalendarCheck className="w-3.5 h-3.5 text-white" />
           </div>
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white">
             {labels.latestBookings}
           </h2>
           {labels.count > 0 && (

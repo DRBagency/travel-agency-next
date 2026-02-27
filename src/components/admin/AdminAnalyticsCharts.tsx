@@ -68,7 +68,7 @@ export function ReservasChart({ data, compact }: { data: { month: string; reserv
           <BarChart3 className={`${compact ? "w-3 h-3" : "w-4 h-4"} text-white`} />
         </div>
         <div>
-          <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('bookings')}</h3>
+          <h3 className={`${compact ? "text-base" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('bookings')}</h3>
           {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('last6Months')}</p>}
         </div>
       </div>
@@ -115,7 +115,7 @@ export function IngresosChart({ data, compact }: { data: { month: string; ingres
           <DollarSign className={`${compact ? "w-3 h-3" : "w-4 h-4"} text-white`} />
         </div>
         <div>
-          <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('revenue')}</h3>
+          <h3 className={`${compact ? "text-base" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('revenue')}</h3>
           {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('last6Months')}</p>}
         </div>
       </div>
@@ -180,7 +180,7 @@ export function DestinosChart({ data, compact }: { data: { destino: string; valu
           <MapPin className={`${compact ? "w-3 h-3" : "w-4 h-4"} text-white`} />
         </div>
         <div>
-          <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('topDestinations')}</h3>
+          <h3 className={`${compact ? "text-base" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('topDestinations')}</h3>
           {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('byBookings')}</p>}
         </div>
       </div>
@@ -264,7 +264,7 @@ export function RevenueProjectionChart({ data, compact }: { data: ProjectionPoin
           <TrendingUp className={`${compact ? "w-3 h-3" : "w-4 h-4"} text-white`} />
         </div>
         <div>
-          <h3 className={`${compact ? "text-sm" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('revenueProjection')}</h3>
+          <h3 className={`${compact ? "text-base" : "text-lg"} font-semibold text-gray-900 dark:text-white`}>{t('revenueProjection')}</h3>
           {!compact && <p className="text-xs text-gray-400 dark:text-white/40">{t('basedOnTrend')}</p>}
         </div>
       </div>

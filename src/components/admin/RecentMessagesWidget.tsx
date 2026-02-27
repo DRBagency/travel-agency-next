@@ -59,7 +59,7 @@ export default function RecentMessagesWidget({
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-drb-turquoise-500 to-drb-turquoise-600 flex items-center justify-center">
             <MessageSquare className="w-3.5 h-3.5 text-white" />
           </div>
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white">
             {labels.recentMessages}
           </h2>
           {unreadCount > 0 && (

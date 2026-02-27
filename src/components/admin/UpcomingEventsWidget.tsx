@@ -86,7 +86,7 @@ export default function UpcomingEventsWidget({
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
             <Calendar className="w-3.5 h-3.5 text-white" />
           </div>
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-white">
             {labels.upcomingEvents}
           </h2>
         </div>

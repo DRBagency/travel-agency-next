@@ -54,7 +54,7 @@ export default async function OwnerDashboardPage() {
       {/* Header */}
       <div className="flex items-end justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{greeting}</h1>
+          <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white">{greeting}</h1>
           <p className="text-gray-400 dark:text-white/40 text-sm">{dateStr}</p>
         </div>
       </div>

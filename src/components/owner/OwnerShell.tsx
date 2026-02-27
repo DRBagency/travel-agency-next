@@ -106,7 +106,7 @@ function DesktopSidebar({
             animate={{ opacity: 1 }}
             transition={{ delay: 0.05 }}
           >
-            <div className="font-display text-sm font-semibold text-gray-900 dark:text-white truncate">
+            <div className="font-display text-[15px] font-bold text-gray-900 dark:text-white truncate">
               DRB Agency
             </div>
             <div className="text-xs text-gray-400 dark:text-white/40">
@@ -142,7 +142,7 @@ function DesktopSidebar({
                     key={item.href}
                     href={item.href}
                     title={!showLabels ? item.label : undefined}
-                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
+                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium transition-all ${
                       active
                         ? "bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
                         : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
@@ -194,7 +194,7 @@ function DesktopSidebar({
         <a
           href="/owner/logout"
           title={!showLabels ? tc("logout") : undefined}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
         >
           <LogOut className="w-[18px] h-[18px] shrink-0" />
           {showLabels && (
@@ -255,7 +255,7 @@ function MobileSidebarNav({
           D
         </div>
         <div className="min-w-0">
-          <div className="font-display text-sm font-semibold text-gray-900 dark:text-white truncate">
+          <div className="font-display text-[15px] font-bold text-gray-900 dark:text-white truncate">
             DRB Agency
           </div>
           <div className="text-xs text-gray-400 dark:text-white/40">
@@ -276,7 +276,7 @@ function MobileSidebarNav({
                     key={item.href}
                     href={item.href}
                     onClick={onNavigate}
-                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all ${
+                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium transition-all ${
                       active
                         ? "bg-drb-turquoise-500/10 text-drb-turquoise-600 dark:text-drb-turquoise-400"
                         : "text-gray-600 dark:text-white/60 hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
@@ -295,7 +295,7 @@ function MobileSidebarNav({
       <div className="px-3 pb-2">
         <a
           href="/owner/logout"
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-gray-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
         >
           <LogOut className="w-[18px] h-[18px] shrink-0" />
           {tc("logout")}
