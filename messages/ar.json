@@ -2031,6 +2031,7 @@
   "toast": {
     "saved": "تم الحفظ",
     "savedSuccessfully": "تم الحفظ بنجاح",
+    "deletedSuccessfully": "تم الحذف بنجاح",
     "configSaved": "تم حفظ الإعدادات",
     "errorGeneric": "فشلت العملية",
     "errorSaving": "خطأ في الحفظ",

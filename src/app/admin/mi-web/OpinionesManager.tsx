@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { sileo } from "sileo";
 import { Plus, Loader2, Trash2, Pencil, X, Check, MapPin } from "lucide-react";
@@ -28,7 +27,6 @@ export default function OpinionesManager({
   clientId: string;
   locale: string;
 }) {
-  const router = useRouter();
   const t = useTranslations("admin.opiniones");
   const tc = useTranslations("common");
   const tt = useTranslations("toast");
@@ -83,9 +81,10 @@ export default function OpinionesManager({
           activo,
         }),
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Error");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Error");
+      if (data.record) {
+        setOpiniones((prev) => [data.record, ...prev]);
       }
       sileo.success({ title: tt("savedSuccessfully") });
       setNombre("");
@@ -94,7 +93,6 @@ export default function OpinionesManager({
       setRating(5);
       setActivo(true);
       setShowForm(false);
-      router.refresh();
     } catch {
       sileo.error({ title: tt("errorSaving") });
     } finally {

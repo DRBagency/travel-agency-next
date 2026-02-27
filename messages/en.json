@@ -2031,6 +2031,7 @@
   "toast": {
     "saved": "Saved",
     "savedSuccessfully": "Saved successfully",
+    "deletedSuccessfully": "Deleted successfully",
     "configSaved": "Configuration saved",
     "errorGeneric": "Operation failed",
     "errorSaving": "Error saving",

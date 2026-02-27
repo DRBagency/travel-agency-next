@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       rating: Number(body.rating) || 5,
       activo: Boolean(body.activo),
     })
-    .select("id")
+    .select("id, nombre, ciudad, texto, rating, activo, created_at")
     .single();
 
   if (error) {
@@ -60,5 +60,5 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, record: inserted });
 }

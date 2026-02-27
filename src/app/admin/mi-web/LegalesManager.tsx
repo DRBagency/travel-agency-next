@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { sileo } from "sileo";
 import { Plus, Loader2, Trash2, ChevronDown, ChevronRight } from "lucide-react";
@@ -22,7 +21,6 @@ export default function LegalesManager({
   legales: LegalPage[];
   clientId: string;
 }) {
-  const router = useRouter();
   const t = useTranslations("admin.legales");
   const tc = useTranslations("common");
   const tt = useTranslations("toast");
@@ -54,14 +52,17 @@ export default function LegalesManager({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ titulo, slug, contenido, activo }),
       });
+      const data = await res.json();
       if (!res.ok) throw new Error();
+      if (data.record) {
+        setLegales((prev) => [data.record, ...prev]);
+      }
       sileo.success({ title: tt("savedSuccessfully") });
       setTitulo("");
       setSlug("");
       setContenido("");
       setActivo(true);
       setShowForm(false);
-      router.refresh();
     } catch {
       sileo.error({ title: tt("errorSaving") });
     } finally {

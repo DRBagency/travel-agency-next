@@ -12,13 +12,13 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
 
-  const { error } = await supabaseAdmin.from("paginas_legales").insert({
+  const { data: inserted, error } = await supabaseAdmin.from("paginas_legales").insert({
     cliente_id: clientId,
     titulo: body.titulo || null,
     slug: body.slug || null,
     contenido: body.contenido || null,
     activo: Boolean(body.activo),
-  });
+  }).select("id, titulo, slug, contenido, activo, created_at").single();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -28,5 +28,5 @@ export async function POST(req: NextRequest) {
   revalidatePath("/admin/mi-web");
   revalidatePath("/admin/legales");
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, record: inserted });
 }
