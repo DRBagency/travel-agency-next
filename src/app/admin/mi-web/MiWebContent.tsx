@@ -695,16 +695,16 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
 
       {/* Bulk Translate All button — shown when translation is eligible */}
       {translationEligible && (
-        <div className="panel-card p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="panel-card p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center shrink-0">
               <Languages className="w-4.5 h-4.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-900 dark:text-white">
+              <p className="text-lg font-bold text-gray-900 dark:text-white">
                 {t("translateAllTitle")}
               </p>
-              <p className="text-xs text-gray-500 dark:text-white/50">
+              <p className="text-sm text-gray-500 dark:text-white/50">
                 {t("translateAllDescription")}
               </p>
             </div>
@@ -1740,28 +1740,23 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
       </>)}
 
       {/* Enlace a destinos */}
-      <section className="panel-card p-6 space-y-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center">
-            <MapPin className="w-3.5 h-3.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
-          </div>
-          <h2 className="text-base font-semibold text-gray-900 dark:text-white flex-1">{t("relatedSections")}</h2>
+      <a
+        href="/admin/destinos"
+        className="panel-card p-6 flex items-center gap-3 hover:bg-gray-100/50 dark:hover:bg-white/[0.04] transition-colors group"
+      >
+        <div className="w-9 h-9 rounded-lg bg-drb-turquoise-50 dark:bg-drb-turquoise-500/15 flex items-center justify-center shrink-0">
+          <MapPin className="w-4.5 h-4.5 text-drb-turquoise-600 dark:text-drb-turquoise-400" />
         </div>
-        <a
-          href="/admin/destinos"
-          className="flex items-center justify-between rounded-xl border border-gray-200 dark:border-white/20 bg-gray-50 dark:bg-white/5 p-4 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group"
-        >
-          <div>
-            <span className="font-semibold text-gray-900 dark:text-white/80 group-hover:text-drb-turquoise-600 dark:group-hover:text-white transition-colors">
-              {t("destinationsSection")}
-            </span>
-            <p className="text-sm text-gray-400 dark:text-white/50">
-              {counts.destinos} {t("published")}
-            </p>
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-400 dark:text-white/40" />
-        </a>
-      </section>
+        <div className="flex-1">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-drb-turquoise-600 dark:group-hover:text-drb-turquoise-400 transition-colors">
+            {t("destinationsSection")}
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-white/50">
+            {counts.destinos} {t("published")}
+          </p>
+        </div>
+        <ChevronRight className="w-5 h-5 text-gray-400 dark:text-white/50" />
+      </a>
 
       {/* Unsplash Picker Modal */}
       <UnsplashPicker
