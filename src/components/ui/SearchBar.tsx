@@ -151,7 +151,7 @@ export default function SearchBar({ navItems }: SearchBarProps) {
 
   return (
     <div ref={containerRef} className="relative hidden md:block">
-      <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-50 dark:bg-white/[0.04] border border-gray-200/80 dark:border-white/[0.06] w-64 focus-within:border-drb-turquoise-300 dark:focus-within:border-drb-turquoise-500/30 transition-colors">
+      <div className="flex items-center gap-2 h-9 px-3 rounded-xl bg-gray-50 dark:bg-white/[0.04] border border-gray-200/80 dark:border-white/[0.06] w-52 focus-within:border-drb-turquoise-300 dark:focus-within:border-drb-turquoise-500/30 transition-colors">
         <Search className="w-4 h-4 text-gray-400 dark:text-white/30" />
         <input
           ref={inputRef}

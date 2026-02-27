@@ -14,6 +14,7 @@ import {
   PinOff,
   MessageCircle,
   X,
+  ExternalLink,
 } from "lucide-react";
 import { isAILocked, AI_ROUTES } from "@/lib/plan-gating";
 import {
@@ -47,6 +48,7 @@ interface AdminShellProps {
   logoUrl?: string | null;
   subscriptionActive?: boolean;
   onboardingCompleted?: boolean;
+  clientSlug?: string;
   agencyContext?: string;
   children: ReactNode;
 }
@@ -399,6 +401,7 @@ const AdminShell = ({
   logoUrl,
   subscriptionActive = true,
   onboardingCompleted,
+  clientSlug,
   agencyContext = "",
   children,
 }: AdminShellProps) => {
@@ -610,6 +613,21 @@ const AdminShell = ({
           </div>
 
           <div className="flex items-center gap-3">
+            {clientSlug && (
+              <a
+                href={`/preview/${clientSlug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl
+                  bg-drb-turquoise-50 dark:bg-drb-turquoise-500/10 border border-drb-turquoise-200/60
+                  dark:border-drb-turquoise-500/20 text-xs font-semibold text-drb-turquoise-700
+                  dark:text-drb-turquoise-400 hover:bg-drb-turquoise-100 dark:hover:bg-drb-turquoise-500/20
+                  transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                {t("miWeb.viewMyWeb")}
+              </a>
+            )}
             {clienteId && <LiveVisitorBadge clienteId={clienteId} />}
             <SearchBar navItems={navItems} />
             <LanguageSelector />

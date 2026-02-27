@@ -262,16 +262,16 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 | `page_visits` | Admin (header badge) | Tracking público via `/api/track`, lectura via `/api/admin/visits/active` + Realtime |
 | `notifications` | Admin/Owner | `/api/notifications`, `/api/owner/notifications` |
 
-### Tablas pendientes de limpieza (🗑️):
-| Tabla | Estado | Acción |
-|-------|--------|--------|
-| `newsletter_subscribers` | **OBSOLETA** — era de la antigua landing page. Ahora el formulario de contacto va a `contact_messages` | Eliminar tabla + API route `/api/newsletter/subscribe` |
-| `blog_posts` | **HUÉRFANA** — no tiene migración SQL, no tiene CRUD admin, no tiene API routes. Solo hay un `BlogSection.tsx` que lee datos que nunca se pueden crear | Eliminar tabla + componente `BlogSection.tsx` + referencias en `HomeClient.tsx` y `page.tsx`. O implementar CRUD completo si se quiere blog |
+### ✅ Tablas limpiadas (código eliminado):
+| Tabla | Estado |
+|-------|--------|
+| `newsletter_subscribers` | Código eliminado (API route + referencias). Tabla puede eliminarse de Supabase si aún existe |
+| `blog_posts` | Código eliminado (BlogSection + referencias). Tabla puede eliminarse de Supabase si aún existe |
 
 ### Supabase Health (24 Feb 2026):
 - **27 tablas** con RLS habilitado en todas
-- **Security advisors:** Esperados — service_role "always true" policies en blog_posts/newsletter_subscribers (a eliminar), anon INSERT en contact_messages/page_visits (requerido para público), leaked password protection disabled (configurar)
-- **Performance advisors:** 15 unused indexes en tablas de pocas filas (aceptable), multiple permissive policies en blog_posts (a eliminar con la tabla)
+- **Security advisors:** anon INSERT en contact_messages/page_visits (requerido para público), leaked password protection disabled (configurar)
+- **Performance advisors:** 15 unused indexes en tablas de pocas filas (aceptable)
 - **Migrations:** 23 archivos SQL en `supabase/migrations/`
 
 ### CHECKLIST AL AÑADIR TABLA NUEVA:
@@ -385,9 +385,9 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 - ✅ **Gallery redesign**: Split layout (65% main + 35% side thumbnails), 4-second auto-rotation, dot indicators, click-to-pause, "+N more" overlay, responsive mobile stacking
 - ✅ **UI/UX fixes**: Effort dots centering, price badge contrast, BookingModal stepper sizing, removed "Sobre nosotros", `homeUrl` prop on Navbar
 
-### 🐛 Bugs persistentes (pendientes de fix):
-- **Bloque A #2 — "Volver" back URL**: En preview mode (`/preview/[slug]/destino/[destinoSlug]`), el botón "Volver" y el click en el nombre de la agencia redirigen al sitio corporativo (`travel-agency-next-ten.vercel.app`) en vez de a la landing del cliente. Necesita verificación del `homeUrl` prop
-- **Bloque C #10 — Gallery sizing**: Las imágenes de la galería del destino siguen apareciendo estiradas/grandes. Necesitan dimensiones iguales al hero
+### ✅ Bugs persistentes (resueltos):
+- ~~**Bloque A #2 — "Volver" back URL**~~: Resuelto — preview back URL apunta correctamente a la landing del cliente
+- ~~**Bloque C #10 — Gallery sizing**~~: Resuelto — imágenes con dimensiones correctas
 
 ### ⚠️ Fase D — Nuevas Secciones / Integraciones (parcial):
 - ⏳ **D1 — Social Media Integration**: Código OAuth listo (social_connections table, OAuth library, API routes, UI). **Pendiente:** env vars Meta/TikTok (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`), crear apps en Meta Developer + TikTok Developer, gráficas de rendimiento de posts
@@ -460,7 +460,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 2. ~~Fase E (Self-service)~~ — **COMPLETADA (E1-E7)** — 22 Feb 2026
 3. ~~Fase G (Landing rediseño)~~ — **COMPLETADA (G1-G9)** — 23 Feb 2026
 4. ~~Auto-Traducción + UI/UX Fixes~~ — **COMPLETADA** — 24 Feb 2026
-5. **SIGUIENTE → Bugs persistentes** (A#2, C#10, D#15) + Limpieza DB (newsletter, blog_posts)
+5. **SIGUIENTE → Bloque E** (depósitos, Stripe live, mejoras D2-D5, portal cliente)
 6. **SIGUIENTE → Bloque E** (#17 depósitos, #18 Stripe+Resend live, #19 features D2-D5, #20 portal cliente)
 7. Fase D restante (D1 social env vars, D5 depósitos)
 8. Fase G restante (G10 página reserva, G11 portal cliente final)

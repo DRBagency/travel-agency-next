@@ -17,7 +17,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
 
   const { data: client } = await supabaseAdmin
     .from("clientes")
-    .select("id, nombre, email, plan, primary_color, logo_url, profile_photo, contact_phone, stripe_subscription_id, onboarding_completed, onboarding_step")
+    .select("id, nombre, email, plan, primary_color, logo_url, profile_photo, contact_phone, stripe_subscription_id, onboarding_completed, onboarding_step, slug")
     .eq("id", clienteId)
     .single();
 
@@ -65,6 +65,7 @@ Ingresos totales: ${totalIngresos}€
       logoUrl={client.logo_url}
       subscriptionActive={Boolean(client.stripe_subscription_id)}
       onboardingCompleted={Boolean(client.onboarding_completed)}
+      clientSlug={client.slug}
       agencyContext={agencyContext}
     >
       {children}

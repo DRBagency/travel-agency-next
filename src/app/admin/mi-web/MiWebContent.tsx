@@ -6,7 +6,6 @@ import { sileo } from "sileo";
 import {
   ChevronDown,
   ChevronRight,
-  ExternalLink,
   Loader2,
   Check,
   ImageIcon,
@@ -647,22 +646,11 @@ export default function MiWebContent({ client, counts, plan, destinos = [], opin
   return (
     <div className="space-y-3">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{t("title")}</h1>
-          <p className="text-gray-500 dark:text-white/60">
-            {t("subtitle")}
-          </p>
-        </div>
-        <a
-          href={`/preview/${client.slug}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/20 hover:bg-gray-50 dark:hover:bg-white/10 text-sm font-medium text-gray-700 dark:text-white transition-colors shrink-0"
-        >
-          <ExternalLink className="w-4 h-4" />
-          {t("viewMyWeb")}
-        </a>
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{t("title")}</h1>
+        <p className="text-gray-500 dark:text-white/60">
+          {t("subtitle")}
+        </p>
       </div>
 
       {/* Translation status banners */}

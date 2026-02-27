@@ -55,7 +55,7 @@ export default function LiveVisitorBadge({ clienteId }: Props) {
 
   return (
     <div
-      className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg
+      className="hidden md:flex items-center gap-1.5 h-9 px-3 rounded-xl
         bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200/60
         dark:border-emerald-500/20"
     >
