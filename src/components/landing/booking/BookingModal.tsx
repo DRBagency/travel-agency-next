@@ -54,6 +54,9 @@ const translations = {
     pp: "por persona",
     sUnit: "Precio unitario",
     sDeposit: "Deposito",
+    sHt: "Hotel",
+    sRm: "Habitacion",
+    sHs: "Supl. alojamiento",
     adults: "adulto(s)",
     children: "nino(s)",
     passenger: "Pasajero",
@@ -103,6 +106,9 @@ const translations = {
     pp: "per person",
     sUnit: "Unit price",
     sDeposit: "Deposit",
+    sHt: "Hotel",
+    sRm: "Room",
+    sHs: "Accommodation supplement",
     adults: "adult(s)",
     children: "child(ren)",
     passenger: "Passenger",
@@ -152,6 +158,9 @@ const translations = {
     pp: "للشخص",
     sUnit: "سعر الوحدة",
     sDeposit: "العربون",
+    sHt: "الفندق",
+    sRm: "الغرفة",
+    sHs: "ملحق الإقامة",
     adults: "بالغ(ون)",
     children: "طفل/أطفال",
     passenger: "مسافر",
@@ -194,6 +203,8 @@ interface BookingModalProps {
   initialDeparture?: any;
   onClose: () => void;
   lang?: string;
+  selectedHotel?: any;
+  selectedRoom?: any;
 }
 
 /* ─── Keyframes injected once ─── */
@@ -218,6 +229,8 @@ export default function BookingModal({
   initialDeparture,
   onClose,
   lang = "es",
+  selectedHotel,
+  selectedRoom,
 }: BookingModalProps) {
   const T = useLandingTheme();
   const t = (translations as any)[lang] || translations.es;
@@ -282,7 +295,9 @@ export default function BookingModal({
     const st = depStatus(s);
     return st !== "soldOut" && st !== "agotado";
   });
-  const unitPrice = (selectedDep ? depPrice(selectedDep) : undefined) ?? destination?.precio ?? 0;
+  const hotelSupplement = (selectedHotel?.suplemento ?? 0) + (selectedRoom?.suplemento ?? 0);
+  const baseUnitPrice = (selectedDep ? depPrice(selectedDep) : undefined) ?? destination?.precio ?? 0;
+  const unitPrice = baseUnitPrice + hotelSupplement;
   const totalTravelers = adults + children;
   const totalPrice = unitPrice * totalTravelers;
   const deposit = 200 * totalTravelers;
@@ -1051,8 +1066,24 @@ export default function BookingModal({
                     label={t.sTv}
                     value={`${adults} ${t.adults}${children > 0 ? ` + ${children} ${t.children}` : ""}`}
                     T={T}
-                    isLast
+                    isLast={!selectedHotel}
                   />
+                  {selectedHotel && (
+                    <SummaryRow
+                      label={t.sHt}
+                      value={`${selectedHotel.nombre || ""} ${"★".repeat(selectedHotel.estrellas || 0)}`}
+                      T={T}
+                      isLast={!selectedRoom}
+                    />
+                  )}
+                  {selectedRoom && (
+                    <SummaryRow
+                      label={t.sRm}
+                      value={selectedRoom.tipo || ""}
+                      T={T}
+                      isLast
+                    />
+                  )}
                 </div>
 
                 {/* Price breakdown */}
@@ -1431,6 +1462,12 @@ export default function BookingModal({
                     value={`${adults} ${t.adults}${children > 0 ? ` + ${children} ${t.children}` : ""}`}
                     T={T}
                   />
+                  {selectedHotel && (
+                    <SummaryRow label={t.sHt} value={`${selectedHotel.nombre || ""} ${"★".repeat(selectedHotel.estrellas || 0)}`} T={T} />
+                  )}
+                  {selectedRoom && (
+                    <SummaryRow label={t.sRm} value={selectedRoom.tipo || ""} T={T} />
+                  )}
                   <SummaryRow
                     label={t.sDeposit}
                     value={`${deposit.toLocaleString("es-ES")}€`}

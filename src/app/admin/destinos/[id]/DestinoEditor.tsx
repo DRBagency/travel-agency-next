@@ -52,6 +52,14 @@ interface FaqItem {
   respuesta: string;
 }
 
+interface HabitacionData {
+  tipo: string;
+  descripcion: string;
+  suplemento: number;
+  capacidad: number;
+  imagen: string;
+}
+
 interface HotelData {
   nombre: string;
   estrellas: number;
@@ -59,7 +67,43 @@ interface HotelData {
   descripcion: string;
   amenidades: string[];
   direccion: string;
+  desayuno_incluido: boolean;
+  regimen: string;
+  suplemento: number;
+  habitaciones: HabitacionData[];
 }
+
+function normalizeHotels(raw: any): HotelData[] {
+  if (!raw) return [];
+  const arr = Array.isArray(raw) ? raw : [raw];
+  return arr.map((h: any) => ({
+    nombre: h.nombre || h.name || "",
+    estrellas: h.estrellas ?? h.stars ?? 0,
+    imagen: h.imagen || h.image || "",
+    descripcion: h.descripcion || h.description || "",
+    amenidades: h.amenidades || h.amenities || [],
+    direccion: h.direccion || h.address || "",
+    desayuno_incluido: h.desayuno_incluido ?? false,
+    regimen: h.regimen || "solo_alojamiento",
+    suplemento: h.suplemento ?? 0,
+    habitaciones: (h.habitaciones || []).map((r: any) => ({
+      tipo: r.tipo || "",
+      descripcion: r.descripcion || "",
+      suplemento: r.suplemento ?? 0,
+      capacidad: r.capacidad ?? 2,
+      imagen: r.imagen || "",
+    })),
+  }));
+}
+
+const EMPTY_HOTEL: HotelData = {
+  nombre: "", estrellas: 0, imagen: "", descripcion: "", amenidades: [], direccion: "",
+  desayuno_incluido: false, regimen: "solo_alojamiento", suplemento: 0, habitaciones: [],
+};
+
+const EMPTY_ROOM: HabitacionData = {
+  tipo: "", descripcion: "", suplemento: 0, capacidad: 2, imagen: "",
+};
 
 interface VuelosData {
   aeropuerto_llegada: string;
@@ -162,9 +206,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
   // JSONB
   const [galeria, setGaleria] = useState<string[]>(destino.galeria ?? []);
   const [itinerario, setItinerario] = useState<any>(destino.itinerario ?? null);
-  const [hotel, setHotel] = useState<HotelData>(
-    destino.hotel ?? { nombre: "", estrellas: 0, imagen: "", descripcion: "", amenidades: [], direccion: "" }
-  );
+  const [hoteles, setHoteles] = useState<HotelData[]>(() => normalizeHotels(destino.hotel));
   const [vuelos, setVuelos] = useState<VuelosData>(
     destino.vuelos ?? { aeropuerto_llegada: "", aeropuerto_regreso: "", nota: "" }
   );
@@ -219,7 +261,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
           activo,
           galeria,
           itinerario,
-          hotel,
+          hotel: hoteles,
           vuelos,
           incluido,
           no_incluido: noIncluido,
@@ -242,7 +284,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         const allFields: Record<string, unknown> = {
           nombre, subtitle, tagline, badge, descripcion,
           descripcion_larga: descripcionLarga, categoria, continente, pais,
-          dificultad, duracion, itinerario, hotel, vuelos, coordinador,
+          dificultad, duracion, itinerario, hotel: hoteles, vuelos, coordinador,
           incluido, no_incluido: noIncluido, faqs, clima, highlights, tags,
         };
         const translatablePayload: Record<string, unknown> = {};
@@ -275,13 +317,25 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
       case "imagen_url":
         setImagenUrl(url);
         break;
-      case "hotel_imagen":
-        setHotel((prev) => ({ ...prev, imagen: url }));
-        break;
       case "coordinador_avatar":
         setCoordinador((prev) => ({ ...prev, avatar: url }));
         break;
       default:
+        // Hotel image — field key is "hotel_imagen_<hotelIndex>"
+        if (unsplashField.startsWith("hotel_imagen_")) {
+          const hIdx = Number(unsplashField.split("_")[2]);
+          setHoteles((prev) => prev.map((h, i) => i === hIdx ? { ...h, imagen: url } : h));
+        }
+        // Room image — field key is "room_imagen_<hotelIndex>_<roomIndex>"
+        if (unsplashField.startsWith("room_imagen_")) {
+          const parts = unsplashField.split("_");
+          const hIdx = Number(parts[2]);
+          const rIdx = Number(parts[3]);
+          setHoteles((prev) => prev.map((h, i) => {
+            if (i !== hIdx) return h;
+            return { ...h, habitaciones: h.habitaciones.map((r, j) => j === rIdx ? { ...r, imagen: url } : r) };
+          }));
+        }
         // Itinerary day image — field key is "itinerary_day_<index>"
         if (unsplashField.startsWith("itinerary_day_")) {
           const idx = Number(unsplashField.split("_")[2]);
@@ -778,117 +832,216 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
 
         {/* ------ HOTEL TAB ------ */}
         {tab === "hotel" && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Alojamiento</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="panel-label">Nombre del hotel</label>
-                <input
-                  type="text"
-                  value={hotel.nombre}
-                  onChange={(e) => setHotel((p) => ({ ...p, nombre: e.target.value }))}
-                  className="panel-input w-full"
-                />
-              </div>
-              <div>
-                <label className="panel-label">Estrellas (1-5)</label>
-                <input
-                  type="number"
-                  min={1}
-                  max={5}
-                  value={hotel.estrellas || ""}
-                  onChange={(e) => setHotel((p) => ({ ...p, estrellas: Number(e.target.value) || 0 }))}
-                  className="panel-input w-full"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="panel-label">Imagen del hotel</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={hotel.imagen}
-                    onChange={(e) => setHotel((p) => ({ ...p, imagen: e.target.value }))}
-                    className="panel-input w-full flex-1"
-                    placeholder="https://..."
-                  />
-                  <button
-                    type="button"
-                    onClick={() => openUnsplash("hotel_imagen")}
-                    className="shrink-0 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors"
-                  >
-                    <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/50" />
-                  </button>
-                </div>
-                {hotel.imagen && (
-                  <div className="mt-2 rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden max-w-xs">
-                    <img src={hotel.imagen} alt="Hotel" className="w-full h-28 object-cover" />
-                  </div>
-                )}
-              </div>
-              <div className="md:col-span-2">
-                <label className="panel-label">Descripción</label>
-                <textarea
-                  rows={3}
-                  value={hotel.descripcion}
-                  onChange={(e) => setHotel((p) => ({ ...p, descripcion: e.target.value }))}
-                  className="panel-input w-full"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="panel-label">Dirección / Google Maps</label>
-                <input
-                  type="text"
-                  value={hotel.direccion || ""}
-                  onChange={(e) => setHotel((p) => ({ ...p, direccion: e.target.value }))}
-                  className="panel-input w-full"
-                  placeholder="Ej: Calle Gran Vía 1, Madrid, España o URL de Google Maps"
-                />
-                <p className="text-xs text-gray-400 dark:text-white/30 mt-1">
-                  Introduce la dirección o un enlace de Google Maps para mostrar en la landing
-                </p>
-              </div>
-            </div>
-
-            {/* Amenidades */}
-            <div>
-              <label className="panel-label mb-2 block">Amenidades</label>
-              <div className="space-y-2">
-                {hotel.amenidades.map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={item}
-                      onChange={(e) => {
-                        const next = [...hotel.amenidades];
-                        next[idx] = e.target.value;
-                        setHotel((p) => ({ ...p, amenidades: next }));
-                      }}
-                      className="panel-input flex-1"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setHotel((p) => ({
-                          ...p,
-                          amenidades: p.amenidades.filter((_, i) => i !== idx),
-                        }))
-                      }
-                      className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+          <div className="space-y-5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('hotel')}</h2>
               <button
                 type="button"
-                onClick={() => setHotel((p) => ({ ...p, amenidades: [...p.amenidades, ""] }))}
-                className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
+                onClick={() => setHoteles((prev) => [...prev, { ...EMPTY_HOTEL }])}
+                className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
               >
                 <Plus className="w-4 h-4" />
-                Añadir amenidad
+                {t('addHotel')}
               </button>
             </div>
+
+            {hoteles.length === 0 && (
+              <div className="text-center py-10 text-gray-400 dark:text-white/30 text-sm">
+                {t('noHotelsYet')}
+              </div>
+            )}
+
+            {hoteles.map((htl, hIdx) => {
+              const updateHotel = (patch: Partial<HotelData>) =>
+                setHoteles((prev) => prev.map((h, i) => (i === hIdx ? { ...h, ...patch } : h)));
+
+              return (
+                <div key={hIdx} className="panel-card p-5 space-y-4">
+                  {/* Hotel header */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <Hotel className="w-4 h-4 text-drb-turquoise-500" />
+                      {htl.nombre || t('hotelNumber', { n: hIdx + 1 })}
+                      {htl.estrellas > 0 && (
+                        <span className="text-amber-500 text-sm">{"★".repeat(htl.estrellas)}</span>
+                      )}
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      {hIdx > 0 && (
+                        <button type="button" onClick={() => setHoteles((prev) => { const c = [...prev]; [c[hIdx - 1], c[hIdx]] = [c[hIdx], c[hIdx - 1]]; return c; })}
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
+                          <ChevronUp className="w-4 h-4" />
+                        </button>
+                      )}
+                      {hIdx < hoteles.length - 1 && (
+                        <button type="button" onClick={() => setHoteles((prev) => { const c = [...prev]; [c[hIdx], c[hIdx + 1]] = [c[hIdx + 1], c[hIdx]]; return c; })}
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      )}
+                      <button type="button" onClick={() => setHoteles((prev) => prev.filter((_, i) => i !== hIdx))}
+                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Basic info */}
+                  <p className="text-sm font-semibold text-gray-500 dark:text-white/50">{t('hotelBasicInfo')}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="panel-label">{t('hotelName')}</label>
+                      <input type="text" value={htl.nombre} onChange={(e) => updateHotel({ nombre: e.target.value })} className="panel-input w-full" />
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('hotelStars')}</label>
+                      <input type="number" min={1} max={5} value={htl.estrellas || ""} onChange={(e) => updateHotel({ estrellas: Number(e.target.value) || 0 })} className="panel-input w-full" />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="panel-label">{t('hotelImage')}</label>
+                      <div className="flex gap-2">
+                        <input type="text" value={htl.imagen} onChange={(e) => updateHotel({ imagen: e.target.value })} className="panel-input w-full flex-1" placeholder="https://..." />
+                        <button type="button" onClick={() => openUnsplash(`hotel_imagen_${hIdx}`)}
+                          className="shrink-0 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors">
+                          <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/50" />
+                        </button>
+                      </div>
+                      {htl.imagen && (
+                        <div className="mt-2 rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden max-w-xs">
+                          <img src={htl.imagen} alt="Hotel" className="w-full h-28 object-cover" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="panel-label">{t('hotelDescription')}</label>
+                      <textarea rows={3} value={htl.descripcion} onChange={(e) => updateHotel({ descripcion: e.target.value })} className="panel-input w-full" />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="panel-label">{t('hotelAddress')}</label>
+                      <input type="text" value={htl.direccion} onChange={(e) => updateHotel({ direccion: e.target.value })} className="panel-input w-full" placeholder="Calle o URL de Google Maps" />
+                    </div>
+                  </div>
+
+                  {/* Regimen & supplement */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="panel-label">{t('regimen')}</label>
+                      <select value={htl.regimen} onChange={(e) => updateHotel({ regimen: e.target.value })} className="panel-input w-full">
+                        <option value="solo_alojamiento">{t('regimenRoomOnly')}</option>
+                        <option value="desayuno">{t('regimenBreakfast')}</option>
+                        <option value="media_pension">{t('regimenHalfBoard')}</option>
+                        <option value="pension_completa">{t('regimenFullBoard')}</option>
+                        <option value="todo_incluido">{t('regimenAllInclusive')}</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="panel-label">{t('hotelSupplement')}</label>
+                      <input type="number" min={0} value={htl.suplemento || ""} onChange={(e) => updateHotel({ suplemento: Number(e.target.value) || 0 })} className="panel-input w-full" placeholder="0" />
+                      <p className="text-xs text-gray-400 dark:text-white/30 mt-1">{t('hotelSupplementHint')}</p>
+                    </div>
+                    <div className="flex items-center gap-3 pt-6">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked={htl.desayuno_incluido} onChange={(e) => updateHotel({ desayuno_incluido: e.target.checked })} className="sr-only peer" />
+                        <div className="w-9 h-5 bg-gray-200 dark:bg-white/10 peer-checked:bg-drb-turquoise-500 rounded-full peer-focus:ring-2 peer-focus:ring-drb-turquoise-500/30 transition-colors after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full" />
+                      </label>
+                      <span className="text-sm text-gray-700 dark:text-white/70">{t('breakfastIncluded')}</span>
+                    </div>
+                  </div>
+
+                  {/* Amenidades */}
+                  <div>
+                    <label className="panel-label mb-2 block">{t('amenities')}</label>
+                    <div className="space-y-2">
+                      {htl.amenidades.map((item, aIdx) => (
+                        <div key={aIdx} className="flex items-center gap-2">
+                          <input type="text" value={item}
+                            onChange={(e) => { const next = [...htl.amenidades]; next[aIdx] = e.target.value; updateHotel({ amenidades: next }); }}
+                            className="panel-input flex-1" />
+                          <button type="button" onClick={() => updateHotel({ amenidades: htl.amenidades.filter((_, i) => i !== aIdx) })}
+                            className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <button type="button" onClick={() => updateHotel({ amenidades: [...htl.amenidades, ""] })}
+                      className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline">
+                      <Plus className="w-4 h-4" />
+                      {t('addAmenity')}
+                    </button>
+                  </div>
+
+                  {/* Habitaciones */}
+                  <div className="border-t border-gray-200 dark:border-white/10 pt-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-sm font-semibold text-gray-500 dark:text-white/50">{t('hotelRoomsAndPricing')}</p>
+                      <button type="button" onClick={() => updateHotel({ habitaciones: [...htl.habitaciones, { ...EMPTY_ROOM }] })}
+                        className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline">
+                        <Plus className="w-4 h-4" />
+                        {t('addRoom')}
+                      </button>
+                    </div>
+                    <div className="space-y-3">
+                      {htl.habitaciones.map((room, rIdx) => {
+                        const updateRoom = (patch: Partial<HabitacionData>) =>
+                          updateHotel({
+                            habitaciones: htl.habitaciones.map((r, i) => (i === rIdx ? { ...r, ...patch } : r)),
+                          });
+                        return (
+                          <div key={rIdx} className="rounded-xl border border-gray-200 dark:border-white/10 p-4 space-y-3 bg-gray-50/50 dark:bg-white/[0.02]">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium text-gray-700 dark:text-white/70">
+                                {room.tipo || `${t('roomType')} ${rIdx + 1}`}
+                              </span>
+                              <button type="button" onClick={() => updateHotel({ habitaciones: htl.habitaciones.filter((_, i) => i !== rIdx) })}
+                                className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              <div>
+                                <label className="panel-label">{t('roomType')}</label>
+                                <input type="text" value={room.tipo} onChange={(e) => updateRoom({ tipo: e.target.value })} className="panel-input w-full" placeholder={t('roomTypePlaceholder')} />
+                              </div>
+                              <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                  <label className="panel-label">{t('roomSupplement')}</label>
+                                  <input type="number" min={0} value={room.suplemento || ""} onChange={(e) => updateRoom({ suplemento: Number(e.target.value) || 0 })} className="panel-input w-full" placeholder="0" />
+                                </div>
+                                <div>
+                                  <label className="panel-label">{t('roomCapacity')}</label>
+                                  <input type="number" min={1} max={10} value={room.capacidad || ""} onChange={(e) => updateRoom({ capacidad: Number(e.target.value) || 1 })} className="panel-input w-full" />
+                                </div>
+                              </div>
+                              <div className="md:col-span-2">
+                                <label className="panel-label">{t('roomDescription')}</label>
+                                <input type="text" value={room.descripcion} onChange={(e) => updateRoom({ descripcion: e.target.value })} className="panel-input w-full" />
+                              </div>
+                              <div className="md:col-span-2">
+                                <label className="panel-label">{t('roomImage')}</label>
+                                <div className="flex gap-2">
+                                  <input type="text" value={room.imagen} onChange={(e) => updateRoom({ imagen: e.target.value })} className="panel-input w-full flex-1" placeholder="https://..." />
+                                  <button type="button" onClick={() => openUnsplash(`room_imagen_${hIdx}_${rIdx}`)}
+                                    className="shrink-0 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors">
+                                    <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/50" />
+                                  </button>
+                                </div>
+                                {room.imagen && (
+                                  <div className="mt-2 rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden max-w-[200px]">
+                                    <img src={room.imagen} alt={room.tipo} className="w-full h-20 object-cover" />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                </div>
+              );
+            })}
 
             <div className="flex justify-end pt-2">
               <SaveButton />

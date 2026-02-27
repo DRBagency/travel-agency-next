@@ -8,7 +8,7 @@ import { TagChip } from "../ui/TagChip";
 import { EffortDots } from "../ui/EffortDots";
 import { AnimateIn } from "../ui/AnimateIn";
 import { TabItinerary } from "./TabItinerary";
-import { TabHotel } from "./TabHotel";
+import { TabHotel, normalizeHotels } from "./TabHotel";
 import { TabFlight } from "./TabFlight";
 import { TabIncluded } from "./TabIncluded";
 import { TabDepartures } from "./TabDepartures";
@@ -108,6 +108,8 @@ function DestinationDetailInner({
   const [autoRotate, setAutoRotate] = useState(true);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [initialDeparture, setInitialDeparture] = useState<any>(null);
+  const [selectedHotelIndex, setSelectedHotelIndex] = useState(0);
+  const [selectedRoomIndex, setSelectedRoomIndex] = useState(0);
 
   // Translation helper
   const dTr = makeTr(destino, currentLang, preferredLanguage);
@@ -166,15 +168,30 @@ function DestinationDetailInner({
         }))
       : [];
 
-  const hotel: any = (() => {
+  const hotels: any[] = (() => {
     const translated = dTr("hotel");
     const original = destino.hotel;
-    if (!translated || translated === original) return original || null;
-    // Merge image URL from original hotel
-    if (original?.imagen && !translated.imagen) translated.imagen = original.imagen;
-    if (original?.image && !translated.image) translated.image = original.image;
-    return translated;
+    const normalizedTranslated = normalizeHotels(translated);
+    const normalizedOriginal = normalizeHotels(original);
+    if (normalizedTranslated.length === 0) return normalizedOriginal;
+    // Merge image URLs from original into translated
+    return normalizedTranslated.map((h: any, i: number) => {
+      const orig: any = normalizedOriginal[i];
+      if (!orig) return h;
+      if (orig.imagen && !h.imagen) h.imagen = orig.imagen;
+      // Merge room images
+      if (h.habitaciones && orig.habitaciones) {
+        (h.habitaciones as any[]).forEach((room: any, ri: number) => {
+          const origRoom = (orig.habitaciones as any[])?.[ri];
+          if (origRoom?.imagen && !room.imagen) room.imagen = origRoom.imagen;
+        });
+      }
+      return h;
+    });
   })();
+  const selectedHotel = hotels[selectedHotelIndex] || null;
+  const selectedRoom = selectedHotel?.habitaciones?.[selectedRoomIndex] || null;
+  const hotelSupplement = (selectedHotel?.suplemento ?? 0) + (selectedRoom?.suplemento ?? 0);
   const flights: any = dTr("vuelos") || destino.vuelos || null;
   const included: string[] = (() => {
     const v = dTr("incluido");
@@ -209,7 +226,7 @@ function DestinationDetailInner({
   /* ── Tabs config ── */
   const allTabs = [
     { id: "itinerary", label: t('tabItinerary'), icon: "\uD83D\uDDFA\uFE0F", show: itinerary.length > 0 },
-    { id: "hotel", label: t('tabHotel'), icon: "\uD83C\uDFE8", show: !!hotel },
+    { id: "hotel", label: t('tabHotel'), icon: "\uD83C\uDFE8", show: hotels.length > 0 },
     { id: "flight", label: t('tabFlight'), icon: "\u2708\uFE0F", show: !!flights },
     { id: "included", label: t('tabIncluded'), icon: "\u2705", show: included.length > 0 || notIncluded.length > 0 },
     { id: "departures", label: t('tabDepartures'), icon: "\uD83D\uDCC5", show: departures.length > 0 },
@@ -647,7 +664,7 @@ function DestinationDetailInner({
                           lineHeight: 1,
                         }}
                       >
-                        {ld(destino.precio)}{"€"}
+                        {ld((destino.precio ?? 0) + hotelSupplement)}{"€"}
                       </div>
                       <div
                         style={{
@@ -943,7 +960,16 @@ function DestinationDetailInner({
               <TabItinerary rawItinerario={rawItinerario} />
             )}
 
-            {tab === "hotel" && hotel && <TabHotel hotel={hotel} />}
+            {tab === "hotel" && hotels.length > 0 && (
+              <TabHotel
+                hotels={hotels}
+                basePrice={destino.precio ?? 0}
+                selectedHotelIndex={selectedHotelIndex}
+                selectedRoomIndex={selectedRoomIndex}
+                onSelectHotel={(i) => { setSelectedHotelIndex(i); setSelectedRoomIndex(0); }}
+                onSelectRoom={(hi, ri) => { setSelectedHotelIndex(hi); setSelectedRoomIndex(ri); }}
+              />
+            )}
 
             {tab === "flight" && flights && <TabFlight flights={flights} />}
 
@@ -1030,7 +1056,7 @@ function DestinationDetailInner({
                 >
                   {t('perPerson')} {"·"}{" "}
                   <strong style={{ color: T.lime }}>
-                    {ld(destino.precio)}
+                    {ld((destino.precio ?? 0) + hotelSupplement)}
                     {destino.moneda || "€"}
                   </strong>{" "}
                   {"·"} {dTr("duracion") || destino.duracion}
@@ -1093,6 +1119,8 @@ function DestinationDetailInner({
           initialDeparture={initialDeparture}
           onClose={closeBooking}
           lang={currentLang}
+          selectedHotel={selectedHotel}
+          selectedRoom={selectedRoom}
         />
       )}
 
