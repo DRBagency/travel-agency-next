@@ -166,6 +166,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
 
   /* --- Unsplash picker --- */
   const [unsplashOpen, setUnsplashOpen] = useState(false);
+  const [expandedHotel, setExpandedHotel] = useState<number>(0);
   const [unsplashField, setUnsplashField] = useState<string>("");
 
   /* ================================================================ */
@@ -837,7 +838,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('hotel')}</h2>
               <button
                 type="button"
-                onClick={() => setHoteles((prev) => [...prev, { ...EMPTY_HOTEL }])}
+                onClick={() => { setHoteles((prev) => [...prev, { ...EMPTY_HOTEL }]); setExpandedHotel(hoteles.length); }}
                 className="flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
               >
                 <Plus className="w-4 h-4" />
@@ -855,39 +856,55 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
               const updateHotel = (patch: Partial<HotelData>) =>
                 setHoteles((prev) => prev.map((h, i) => (i === hIdx ? { ...h, ...patch } : h)));
 
+              const isExpanded = expandedHotel === hIdx;
+
               return (
-                <div key={hIdx} className="panel-card p-5 space-y-4">
-                  {/* Hotel header */}
-                  <div className="flex items-center justify-between">
+                <div key={hIdx} className="panel-card overflow-hidden">
+                  {/* Hotel header — clickable to toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setExpandedHotel(isExpanded ? -1 : hIdx)}
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors text-start"
+                  >
                     <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
                       <Hotel className="w-4 h-4 text-drb-turquoise-500" />
                       {htl.nombre || t('hotelNumber', { n: hIdx + 1 })}
                       {htl.estrellas > 0 && (
                         <span className="text-amber-500 text-sm">{"★".repeat(htl.estrellas)}</span>
                       )}
+                      {htl.suplemento > 0 && (
+                        <span className="text-xs font-medium text-gray-400 dark:text-white/40">+{htl.suplemento}€</span>
+                      )}
+                      {htl.habitaciones.length > 0 && (
+                        <span className="text-xs font-medium text-gray-400 dark:text-white/30">{htl.habitaciones.length} hab.</span>
+                      )}
                     </h3>
                     <div className="flex items-center gap-1">
                       {hIdx > 0 && (
-                        <button type="button" onClick={() => setHoteles((prev) => { const c = [...prev]; [c[hIdx - 1], c[hIdx]] = [c[hIdx], c[hIdx - 1]]; return c; })}
+                        <span role="button" onClick={(e) => { e.stopPropagation(); setHoteles((prev) => { const c = [...prev]; [c[hIdx - 1], c[hIdx]] = [c[hIdx], c[hIdx - 1]]; return c; }); setExpandedHotel(hIdx - 1); }}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
                           <ChevronUp className="w-4 h-4" />
-                        </button>
+                        </span>
                       )}
                       {hIdx < hoteles.length - 1 && (
-                        <button type="button" onClick={() => setHoteles((prev) => { const c = [...prev]; [c[hIdx], c[hIdx + 1]] = [c[hIdx + 1], c[hIdx]]; return c; })}
+                        <span role="button" onClick={(e) => { e.stopPropagation(); setHoteles((prev) => { const c = [...prev]; [c[hIdx], c[hIdx + 1]] = [c[hIdx + 1], c[hIdx]]; return c; }); setExpandedHotel(hIdx + 1); }}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-white/70 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors">
                           <ChevronDown className="w-4 h-4" />
-                        </button>
+                        </span>
                       )}
-                      <button type="button" onClick={() => setHoteles((prev) => prev.filter((_, i) => i !== hIdx))}
+                      <span role="button" onClick={(e) => { e.stopPropagation(); setHoteles((prev) => prev.filter((_, i) => i !== hIdx)); if (expandedHotel >= hoteles.length - 1) setExpandedHotel(Math.max(0, hoteles.length - 2)); }}
                         className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </span>
+                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                     </div>
-                  </div>
+                  </button>
 
+                  {/* Collapsible body */}
+                  {isExpanded && (
+                  <div className="px-5 pb-5 space-y-4 border-t border-gray-100 dark:border-white/[0.06]">
                   {/* Basic info */}
-                  <p className="text-sm font-semibold text-gray-500 dark:text-white/50">{t('hotelBasicInfo')}</p>
+                  <p className="text-sm font-semibold text-gray-500 dark:text-white/50 pt-4">{t('hotelBasicInfo')}</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="panel-label">{t('hotelName')}</label>
@@ -1039,6 +1056,8 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                     </div>
                   </div>
 
+                  </div>
+                  )}
                 </div>
               );
             })}
