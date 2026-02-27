@@ -242,27 +242,47 @@ html {
   }
 
   .panel-input {
-    @apply w-full rounded-xl px-4 py-2.5 transition-all duration-300;
-    @apply bg-white/[0.04] border border-white/[0.08] text-white;
-    @apply placeholder:text-white/25;
-    @apply focus:outline-none focus:border-drb-turquoise-500;
-    @apply focus:bg-[rgba(28,171,176,0.04)];
-    @apply focus:shadow-[0_0_0_3px_rgba(28,171,176,0.08)];
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    @apply relative w-full rounded-xl px-4 py-2.5 transition-all duration-200;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(180,220,225,0.18);
+    color: rgba(255,255,255,0.95);
+    font-size: 0.95rem;
+  }
+  .panel-input::placeholder {
+    color: rgba(255,255,255,0.40);
   }
   .panel-input:hover {
-    @apply bg-white/[0.06] border-white/[0.12];
+    background: rgba(255,255,255,0.10);
+    border-color: rgba(180,220,225,0.28);
   }
-  .light .panel-input {
-    @apply bg-white/50 border-black/[0.06] text-gray-900;
-    @apply placeholder:text-gray-400;
+  .panel-input:focus {
+    background: rgba(255,255,255,0.10);
+    border-color: rgba(28,171,176,0.55);
+    box-shadow: 0 0 0 3px rgba(28,171,176,0.12), 0 0 16px rgba(28,171,176,0.08);
+    outline: none;
   }
-  .light .panel-input:hover {
-    @apply bg-white/60 border-black/[0.10];
+  .light .panel-input,
+  [data-theme="light"] .panel-input {
+    background: rgba(255,255,255,0.60);
+    border: 1px solid rgba(0,0,0,0.12);
+    color: rgba(0,0,0,0.88);
   }
-  .light .panel-input:focus {
-    @apply bg-white/70 border-drb-turquoise-500;
+  .light .panel-input::placeholder,
+  [data-theme="light"] .panel-input::placeholder {
+    color: rgba(0,0,0,0.38);
+  }
+  .light .panel-input:hover,
+  [data-theme="light"] .panel-input:hover {
+    background: rgba(255,255,255,0.75);
+    border-color: rgba(0,0,0,0.18);
+  }
+  .light .panel-input:focus,
+  [data-theme="light"] .panel-input:focus {
+    background: rgba(255,255,255,0.80);
+    border-color: rgba(28,171,176,0.50);
+    box-shadow: 0 0 0 3px rgba(28,171,176,0.10);
   }
 
   /* Fix select/option contrast in dark mode */
@@ -279,9 +299,63 @@ html {
   }
 
   .panel-label {
-    @apply text-sm font-medium text-gray-700 dark:text-white/80 block mb-1;
+    @apply text-sm font-semibold block mb-1;
+    color: rgba(0,0,0,0.75);
   }
+  .dark .panel-label {
+    color: rgba(255,255,255,0.88);
+  }
+}
 
+/* ═══ Global input glass — fallback for inputs without .panel-input ═══ */
+/* Placed outside @layer so it has higher specificity than Tailwind utilities */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input),
+select:not(.fc-select):not([data-sileo]):not(.panel-input),
+textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input) {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(180,220,225,0.16) !important;
+  color: rgba(255,255,255,0.92) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.2s;
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):hover,
+select:not(.fc-select):not([data-sileo]):not(.panel-input):hover,
+textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):hover {
+  background: rgba(255,255,255,0.09) !important;
+  border-color: rgba(180,220,225,0.25) !important;
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):focus,
+select:not(.fc-select):not([data-sileo]):not(.panel-input):focus,
+textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):focus {
+  background: rgba(255,255,255,0.09) !important;
+  border-color: rgba(28,171,176,0.50) !important;
+  box-shadow: 0 0 0 3px rgba(28,171,176,0.12) !important;
+  outline: none !important;
+}
+/* Light mode global inputs */
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input),
+.light select:not(.fc-select):not([data-sileo]):not(.panel-input),
+.light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input) {
+  background: rgba(255,255,255,0.55) !important;
+  border: 1px solid rgba(0,0,0,0.10) !important;
+  color: rgba(0,0,0,0.85) !important;
+}
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):hover,
+.light select:not(.fc-select):not([data-sileo]):not(.panel-input):hover,
+.light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):hover {
+  background: rgba(255,255,255,0.70) !important;
+  border-color: rgba(0,0,0,0.16) !important;
+}
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.fc-input):not([data-sileo]):not(.panel-input):focus,
+.light select:not(.fc-select):not([data-sileo]):not(.panel-input):focus,
+.light textarea:not(.fc-textarea):not([data-sileo]):not(.panel-input):focus {
+  background: rgba(255,255,255,0.75) !important;
+  border-color: rgba(28,171,176,0.45) !important;
+  box-shadow: 0 0 0 3px rgba(28,171,176,0.10) !important;
+}
+
+@layer components {
   .badge-success {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/20;
   }
