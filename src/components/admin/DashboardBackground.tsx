@@ -132,45 +132,45 @@ export default function DashboardBackground() {
         }}
       />
 
-      {/* Animated orbs */}
+      {/* Animated orbs — bright so backdrop-filter blur captures color */}
       <div
-        className={`absolute rounded-full will-change-transform animate-orbFloat1`}
+        className="absolute rounded-full will-change-transform animate-orbFloat1"
         style={{
           width: 750, height: 750, top: '-12%', left: '5%',
-          background: `radial-gradient(circle, rgba(28,171,176,${isLight ? 0.15 : 0.40}), transparent 70%)`,
-          filter: 'blur(120px)', opacity: isLight ? 0.15 : 0.40,
+          background: `radial-gradient(circle, rgba(28,171,176,${isLight ? 0.25 : 0.65}), transparent 70%)`,
+          filter: 'blur(120px)',
         }}
       />
       <div
         className="absolute rounded-full will-change-transform animate-orbFloat2"
         style={{
           width: 550, height: 550, bottom: '-5%', right: '-5%',
-          background: `radial-gradient(circle, rgba(212,242,77,${isLight ? 0.12 : 0.25}), transparent 70%)`,
-          filter: 'blur(110px)', opacity: isLight ? 0.12 : 0.25,
+          background: `radial-gradient(circle, rgba(212,242,77,${isLight ? 0.18 : 0.45}), transparent 70%)`,
+          filter: 'blur(110px)',
         }}
       />
       <div
         className="absolute rounded-full will-change-transform animate-orbFloat3"
         style={{
           width: 600, height: 600, bottom: '10%', left: '30%',
-          background: `radial-gradient(circle, rgba(28,171,176,${isLight ? 0.12 : 0.30}), transparent 70%)`,
-          filter: 'blur(120px)', opacity: isLight ? 0.12 : 0.30,
+          background: `radial-gradient(circle, rgba(28,171,176,${isLight ? 0.20 : 0.50}), transparent 70%)`,
+          filter: 'blur(120px)',
         }}
       />
       <div
         className="absolute rounded-full will-change-transform animate-orbFloat4"
         style={{
           width: 400, height: 400, top: '20%', right: '20%',
-          background: `radial-gradient(circle, rgba(167,139,250,${isLight ? 0.08 : 0.15}), transparent 70%)`,
-          filter: 'blur(100px)', opacity: isLight ? 0.08 : 0.15,
+          background: `radial-gradient(circle, rgba(167,139,250,${isLight ? 0.12 : 0.30}), transparent 70%)`,
+          filter: 'blur(100px)',
         }}
       />
       <div
         className="absolute rounded-full will-change-transform animate-orbFloat5"
         style={{
           width: 350, height: 350, top: '40%', left: '50%',
-          background: `radial-gradient(circle, rgba(244,114,182,${isLight ? 0.06 : 0.12}), transparent 70%)`,
-          filter: 'blur(100px)', opacity: isLight ? 0.06 : 0.12,
+          background: `radial-gradient(circle, rgba(244,114,182,${isLight ? 0.10 : 0.25}), transparent 70%)`,
+          filter: 'blur(100px)',
         }}
       />
 
