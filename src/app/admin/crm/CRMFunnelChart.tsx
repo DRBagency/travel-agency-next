@@ -33,8 +33,8 @@ export default function CRMFunnelChart({ data }: CRMFunnelChartProps) {
   const t = useTranslations("admin.crm");
   const maxCount = Math.max(...data.map((d) => d.count), 1);
 
-  // Conversion stages (skip inactivo for conversion calc)
-  const conversionStages = data.filter((d) => d.stage !== "inactivo");
+  // Total customers for percentage calculation
+  const totalCustomers = data.reduce((sum, d) => sum + d.count, 0);
 
   return (
     <div className="panel-card p-4">
@@ -50,15 +50,8 @@ export default function CRMFunnelChart({ data }: CRMFunnelChartProps) {
         {data.map((item, i) => {
           const widthPct = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
 
-          // Calculate conversion rate from previous stage (skip inactivo)
-          let conversionPct: number | null = null;
-          if (item.stage !== "inactivo") {
-            const convIdx = conversionStages.findIndex((c) => c.stage === item.stage);
-            if (convIdx > 0) {
-              const prev = conversionStages[convIdx - 1];
-              conversionPct = prev.count > 0 ? Math.round((item.count / prev.count) * 100) : null;
-            }
-          }
+          // Calculate percentage of total
+          const pct = totalCustomers > 0 ? Math.round((item.count / totalCustomers) * 100) : 0;
 
           return (
             <div key={item.stage} className="flex items-center gap-3">
@@ -78,9 +71,9 @@ export default function CRMFunnelChart({ data }: CRMFunnelChartProps) {
                 <span className="text-xs font-semibold text-gray-900 dark:text-white">
                   {item.count}
                 </span>
-                {conversionPct !== null && (
+                {item.count > 0 && (
                   <span className="text-[10px] text-gray-400 dark:text-white/30 ms-1">
-                    ({conversionPct}%)
+                    ({pct}%)
                   </span>
                 )}
               </div>
