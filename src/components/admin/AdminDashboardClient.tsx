@@ -64,7 +64,7 @@ export function PremiumGreeting({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white">
+      <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">
         {greeting.split(clientName).length > 1 ? (
           <>
             {greeting.split(clientName)[0]}
