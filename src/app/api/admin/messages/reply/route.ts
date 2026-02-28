@@ -43,7 +43,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Client not found" }, { status: 404 });
   }
 
-  const fromEmail = client.contact_email || "noreply@drb.agency";
+  const fromAddress = process.env.EMAIL_FROM || "contact@drb.agency";
+  const replyToEmail = client.contact_email || fromAddress;
   const fromName = client.nombre || "Agencia";
 
   // Build email HTML
@@ -73,9 +74,9 @@ export async function POST(req: Request) {
   // Send email via Resend
   try {
     await resend.emails.send({
-      from: `${fromName} <${fromEmail}>`,
+      from: `${fromName} <${fromAddress}>`,
       to: msg.sender_email,
-      replyTo: fromEmail,
+      replyTo: replyToEmail,
       subject: `Re: Mensaje de ${msg.sender_name}`,
       html,
     });
