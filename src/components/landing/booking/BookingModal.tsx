@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, CSSProperties } from "react";
+import { useState, useEffect, useRef, CSSProperties } from "react";
 import { useLandingTheme } from "../LandingThemeProvider";
 import { Img } from "../ui/Img";
 import { StatusBadge } from "../ui/StatusBadge";
@@ -316,13 +316,18 @@ export default function BookingModal({
   }, [adults, children]);
 
   /* Auto-fill first passenger name from main contact */
+  const lastAutoFilledName = useRef("");
   useEffect(() => {
-    if (contactName && passengers.length > 0 && !passengers[0].fullName) {
-      setPassengers((prev) => {
-        const copy = [...prev];
-        copy[0] = { ...copy[0], fullName: contactName };
-        return copy;
-      });
+    if (contactName && passengers.length > 0) {
+      const current = passengers[0].fullName;
+      if (current === "" || current === lastAutoFilledName.current) {
+        lastAutoFilledName.current = contactName;
+        setPassengers((prev) => {
+          const copy = [...prev];
+          copy[0] = { ...copy[0], fullName: contactName };
+          return copy;
+        });
+      }
     }
   }, [contactName]);
 
@@ -1501,6 +1506,28 @@ export default function BookingModal({
                         value={`${remainingAmount.toLocaleString("es-ES")}€`}
                         T={T}
                       />
+                      {(() => {
+                        const deadlineDays = bookingConfig?.paymentDeadlineDays ?? 30;
+                        const deadlineType = bookingConfig?.paymentDeadlineType ?? "before_departure";
+                        let deadlineDate: Date | null = null;
+                        if (deadlineType === "before_departure" && selectedDep) {
+                          const dep = new Date(depDate(selectedDep));
+                          dep.setDate(dep.getDate() - deadlineDays);
+                          deadlineDate = dep;
+                        } else if (deadlineType === "after_booking") {
+                          const d = new Date();
+                          d.setDate(d.getDate() + deadlineDays);
+                          deadlineDate = d;
+                        }
+                        if (!deadlineDate) return null;
+                        return (
+                          <SummaryRow
+                            label={t.sRemainingDate}
+                            value={formatDate(deadlineDate.toISOString().split("T")[0])}
+                            T={T}
+                          />
+                        );
+                      })()}
                     </>
                   )}
                   <SummaryRow

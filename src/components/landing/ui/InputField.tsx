@@ -52,7 +52,7 @@ export function InputField({
         {label}
       </label>
       {type === "select" ? (
-        <select value={value} onChange={onChange} style={fieldStyle}>
+        <select value={value} onChange={onChange} style={fieldStyle} data-glass-skip>
           {children}
         </select>
       ) : (
@@ -62,6 +62,7 @@ export function InputField({
           value={value}
           onChange={onChange}
           style={fieldStyle}
+          data-glass-skip
         />
       )}
     </div>
