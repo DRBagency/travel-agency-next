@@ -112,7 +112,25 @@ stripe_charges_enabled: boolean
 
 Ver `docs/BOOKING-FLOW.md` para detalles completos del flujo.
 
+## Auto-Decrement Plazas (E19, 1 Mar 2026)
+
+Cuando se completa una reserva, las plazas disponibles de la salida correspondiente se decrementan automáticamente.
+
+### Helper
+`src/lib/decrement-departure-spots.ts` — `decrementDepartureSpots({ clienteId, destinoId, fechaSalida, personas })`
+
+### Lógica
+1. Busca la salida en `destinos.salidas` JSONB por fecha normalizada (YYYY-MM-DD)
+2. Resta `personas` de `plazas_disponibles`
+3. Auto-actualiza estado: `soldOut` si 0 plazas, `lastSpots` si ≤3 plazas
+4. Guarda el JSONB actualizado en la DB
+
+### Puntos de integración
+- **Webhook (pago_completo + deposito_resto):** Se llama en `checkout.session.completed` después de actualizar estado de reserva. Metadata Stripe: `destino_id`, `fecha_salida`, `personas`
+- **Book route (solo_reserva):** Se llama en `POST /api/stripe/connect/book` después de crear la reserva
+- **Resiliencia:** Envuelto en `.catch()` para que un fallo no afecte la reserva
+
 ## Pendiente
 - **E18:** Cambiar de modo test a modo live (keys de producción, verificar webhooks, dominio Resend)
 
-> Última actualización: 2026-02-28
+> Última actualización: 2026-03-01

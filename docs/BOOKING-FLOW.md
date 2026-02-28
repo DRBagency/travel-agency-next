@@ -113,8 +113,22 @@ Soporta ES/EN/AR (prop `lang: string`). Traducciones inline (no i18n system).
 | `created_at` | TIMESTAMP | Fecha de creación |
 | `updated_at` | TIMESTAMP | Última actualización |
 
+## Auto-Decrement Plazas (E19)
+
+Al completar una reserva, las plazas de la salida se decrementan automáticamente:
+
+1. **Helper:** `src/lib/decrement-departure-spots.ts`
+2. **Parámetros:** `clienteId`, `destinoId`, `fechaSalida`, `personas`
+3. **Lógica:** Busca salida por fecha en JSONB `salidas`, resta personas, auto-cambia estado:
+   - `plazas === 0` → `soldOut`
+   - `plazas <= 3` → `lastSpots`
+4. **Integración:**
+   - Webhook (`checkout.session.completed`): metadata `destino_id`, `fecha_salida`, `personas`
+   - Book route (`solo_reserva`): directamente del body
+5. **Resiliencia:** `.catch()` para no afectar la reserva si falla
+
 ## Pendiente
 
 - **Portal del cliente final (E20/G11):** El viajero accede con email y ve sus reservas, estado de pago, itinerarios
 
-> Última actualización: 2026-02-28
+> Última actualización: 2026-03-01

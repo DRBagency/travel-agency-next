@@ -1,7 +1,7 @@
 # Database Schema - Supabase PostgreSQL
 
-> **Última actualización:** 26 Febrero 2026
-> **Estado:** Schema estable - 27 tablas con RLS, 24 migraciones
+> **Última actualización:** 1 Marzo 2026
+> **Estado:** Schema estable - 28 tablas con RLS, 28 migraciones
 
 ## ⚠️ PRINCIPIO FUNDAMENTAL
 
@@ -92,6 +92,27 @@ Cuando se crea una tabla nueva, SIEMPRE seguir estos pasos:
 
 ### `social_connections`
 **Editable desde:** `/admin/social` | **Estado:** ✅ OAuth connect/disconnect
+
+## 🧑‍✈️ TABLAS COORDINADORES
+
+### `coordinadores`
+**Panel:** Admin | **Ruta:** `/admin/coordinadores` | **Estado:** ✅ CRUD completo
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| `id` | UUID PK | |
+| `cliente_id` | UUID FK → clientes | Agencia propietaria |
+| `nombre` | text NOT NULL | Nombre del coordinador |
+| `avatar` | text | URL foto |
+| `rol` | text | Cargo/rol |
+| `descripcion` | text | Breve biografía |
+| `idiomas` | jsonb DEFAULT '[]' | Array de idiomas |
+| `created_at` | timestamptz | |
+| `updated_at` | timestamptz | Trigger auto-update |
+
+**RLS:** Habilitado, políticas para service_role
+**FK en destinos:** `coordinador_id UUID REFERENCES coordinadores(id) ON DELETE SET NULL`
+**Índice:** `idx_coordinadores_cliente_id` en `cliente_id`
+**Migración:** `20260301000000_create_coordinadores_table.sql`
 
 ## 📈 TABLAS TRACKING
 

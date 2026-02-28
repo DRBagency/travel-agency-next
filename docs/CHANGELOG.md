@@ -1,6 +1,18 @@
 # Changelog — DRB Agency
 
-> **Última actualización:** 2026-02-28
+> **Última actualización:** 2026-03-01
+
+## 1 Marzo 2026
+- **E19 — Mejoras Features Existentes completado:**
+  - **Auto-decrementar plazas en reservas:** Helper `decrement-departure-spots.ts` reutilizable. Se llama automáticamente desde webhook (pago_completo/deposito_resto) y book route (solo_reserva). Auto-cambia estado a `soldOut` (0 plazas) o `lastSpots` (≤3)
+  - **Biblioteca de coordinadores:** Nueva tabla `coordinadores` con FK en `destinos.coordinador_id`. CRUD completo en `/admin/coordinadores`. Dropdown selector en DestinoEditor reemplaza formulario inline. Landing muestra coordinador por FK
+  - **Galería de hotel:** Campo `galeria: string[]` en JSONB hotel. Thumbnails clicables en landing (TabHotel). Admin UI con lista URLs + Unsplash picker
+  - **Badge "Recomendado":** Campo `es_recomendado: boolean` en JSONB hotel. Toggle en admin. Badge verde en landing
+  - **Tipo de vuelo:** Campo `tipo: "ida"|"retorno"|"conexion"` en segmentos. Dropdown en admin. Label dinámico en landing (TabFlight) basado en tipo en vez de índice
+  - **Botón "Notifícame" funcional:** En TabDepartures, email inline → POST `/api/contact` con mensaje pre-rellenado
+  - Migración: `20260301000000_create_coordinadores_table.sql`
+  - i18n: ~20 keys nuevas en ES/EN/AR (coordinadores, hotel gallery, flight type, notifícame)
+- Sentry error monitoring integrado
 
 ## 28 Febrero 2026
 - **E17 — Sistema de anticipos/depósitos completado:**

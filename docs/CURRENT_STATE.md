@@ -1,7 +1,7 @@
 # Estado Actual del Proyecto
 
-> **Ultima actualizacion:** 28 Febrero 2026
-> **Estado:** Produccion activa - Fase E completada (E1-E7 + E17) + Fase F + G + Auto-Traduccion + Light Mode Redesign + Booking Models completadas
+> **Ultima actualizacion:** 1 Marzo 2026
+> **Estado:** Produccion activa - Fase E completada (E1-E7 + E17 + E19) + Fase F + G + Auto-Traduccion + Light Mode Redesign + Booking Models + Features E19 completadas
 
 ## FUNCIONALIDADES COMPLETADAS
 
@@ -335,6 +335,16 @@
 - **Mi Web sections:** Enlarged icons, titles, padding (`p-6 space-y-4`), tab buttons (`px-4 py-3 text-[15px]`)
 - **Destino editor:** Enlarged fields — section titles `text-xl font-bold`, removed `text-sm`/`text-xs` from inputs/labels, bigger padding
 - **Itinerary editor:** Larger accordions, labels `text-sm font-medium`, periods `p-4 rounded-xl`, textarea `min-h-[64px]`
+
+### E19 completada — Mejoras Features Existentes (1 Mar 2026):
+- **Auto-decrementar plazas en reservas:** Helper `src/lib/decrement-departure-spots.ts`. Se llama desde webhook (Stripe) y book route (solo_reserva). Auto-cambia estado salida a `soldOut` (0) o `lastSpots` (≤3). `destino_id` + `fecha_salida` + `personas` en metadata Stripe
+- **Biblioteca de coordinadores:** Tabla `coordinadores` separada (id, cliente_id, nombre, avatar, rol, descripcion, idiomas[]). FK `coordinador_id` en destinos. CRUD en `/admin/coordinadores` (CoordinadoresContent). DestinoEditor: dropdown selector reemplaza form inline. Landing: fetch coordinador por FK en page.tsx
+- **Galería de hotel:** `galeria: string[]` en JSONB hotel. Admin: lista URLs + Unsplash picker. Landing: thumbnails clicables con estado `galleryIdx`
+- **Badge "Recomendado":** `es_recomendado: boolean` en JSONB hotel. Admin: toggle checkbox. Landing: badge verde "Recomendado" en esquina superior
+- **Tipo de vuelo:** `tipo: "ida"|"retorno"|"conexion"` en segmentos JSONB vuelos. Admin: dropdown. Landing: label basado en `tipo` (no en indice)
+- **Boton "Notificame" funcional:** TabDepartures con email inline → POST `/api/contact` con mensaje pre-rellenado de destino y fecha
+- **Migracion:** `20260301000000_create_coordinadores_table.sql` — tabla + FK + RLS + trigger updated_at
+- **Sentry:** Error monitoring integrado (sentry.client.config.ts, sentry.server.config.ts, sentry.edge.config.ts)
 
 ## PENDIENTE CONFIG EXTERNA (codigo listo)
 

@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 28 Febrero 2026
+> **Última actualización:** 1 Marzo 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -70,7 +70,7 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 - **Database:** PostgreSQL (Supabase)
 - **ORM:** Supabase Client (@supabase/supabase-js 2.93.2)
 - **Migrations:** Supabase CLI (SQL manual)
-- **RLS:** Habilitado en TODAS las 27 tablas (verificado 24 Feb 2026)
+- **RLS:** Habilitado en TODAS las 28 tablas (verificado 24 Feb 2026)
 - **Service Role:** `supabaseAdmin` para operaciones del servidor (service_role bypasses RLS)
 - **Anon Key:** Solo usado client-side para Supabase Auth login + lectura pública destinos activos
 
@@ -120,7 +120,8 @@ travel-agency-next/
 │   │   ├── owner/            # Funciones del owner (get-chart-data: 8 semanas, get-dashboard-metrics)
 │   │   ├── supabase/         # Clients de Supabase
 │   │   ├── vercel/          # Vercel API helpers (domain management)
-│   │   ├── auto-translate.ts # Server-side AI translation (Claude Sonnet 4)
+│   │   ├── auto-translate.ts # Server-side AI translation (Claude Haiku 4.5)
+│   │   ├── decrement-departure-spots.ts # Auto-decrement salida spots after booking
 │   │   ├── translations.ts   # Translation runtime helpers (tr, makeTr, field maps)
 │   │   ├── landing-theme.ts  # Theme palettes (light/dark) with CSS variable mapping
 │   │   └── set-locale.ts     # Server action cambio idioma
@@ -206,7 +207,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 
 ---
 
-## BASE DE DATOS - TABLAS Y ESTADO (27 tablas, 24 Feb 2026)
+## BASE DE DATOS - TABLAS Y ESTADO (28 tablas, 24 Feb 2026)
 
 ### Tablas con CRUD completo (✅):
 | Tabla | Panel | Ruta |
@@ -215,13 +216,14 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 | `platform_settings` | Owner | `/owner/emails` |
 | `billing_email_templates` | Owner | `/owner/emails` |
 | `email_templates` | Admin | `/admin/emails` |
-| `destinos` | Admin | `/admin/destinos` (card grid) + `/admin/destinos/[id]` (tabbed editor: 11 tabs). Expanded columns: `slug`, `subtitle`, `tagline`, `badge`, `descripcion_larga`, `galeria` (JSONB), `coordinador` (JSONB), `hotel` (JSONB), `vuelos` (JSONB), `incluido` (JSONB), `no_incluido` (JSONB), `salidas` (JSONB), `faqs` (JSONB), `clima` (JSONB), `tags` (JSONB), `highlights` (JSONB), `esfuerzo`, `grupo_max`, `edad_min`, `edad_max`, `precio_original`, `moneda`, `duracion`, `continente`, `dificultad`, `categoria`, `translations` (JSONB) |
+| `destinos` | Admin | `/admin/destinos` (card grid) + `/admin/destinos/[id]` (tabbed editor: 11 tabs). Expanded columns: `slug`, `subtitle`, `tagline`, `badge`, `descripcion_larga`, `galeria` (JSONB), `coordinador` (JSONB), `coordinador_id` (UUID FK → coordinadores), `hotel` (JSONB, con `galeria[]` y `es_recomendado`), `vuelos` (JSONB, segmentos con `tipo`), `incluido` (JSONB), `no_incluido` (JSONB), `salidas` (JSONB), `faqs` (JSONB), `clima` (JSONB), `tags` (JSONB), `highlights` (JSONB), `esfuerzo`, `grupo_max`, `edad_min`, `edad_max`, `precio_original`, `moneda`, `duracion`, `continente`, `dificultad`, `categoria`, `translations` (JSONB) |
 | `opiniones` | Admin | `/admin/mi-web` (OpinionesManager, integrado en Mi Web). Expanded: `avatar_url`, `fecha_display`, `translations` (JSONB) |
 | `paginas_legales` | Admin | `/admin/legales` |
 | `calendar_events` | Admin | `/admin/calendario` |
 | `documents` | Admin | `/admin/documentos` (crear, editar, eliminar, PDF) |
 | `support_tickets` | Admin + Owner | `/admin/soporte` (crear, detalle, cerrar/reabrir), `/owner/soporte` (ver, responder, cerrar/reabrir) |
 | `ticket_messages` | Admin + Owner | `/admin/soporte/[id]` + `/owner/soporte/[id]` (chat bidireccional) |
+| `coordinadores` | Admin | `/admin/coordinadores` (CRUD: nombre, avatar, rol, descripcion, idiomas[]). FK `coordinador_id` en destinos. Dropdown selector en DestinoEditor |
 
 ### Tablas con UI parcial (⚠️):
 | Tabla | Estado |
@@ -269,10 +271,10 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 | `blog_posts` | Código eliminado (BlogSection + referencias). Tabla puede eliminarse de Supabase si aún existe |
 
 ### Supabase Health (28 Feb 2026):
-- **27 tablas** con RLS habilitado en todas
+- **28 tablas** con RLS habilitado en todas
 - **Security advisors:** anon INSERT en contact_messages/page_visits (requerido para público), leaked password protection disabled (configurar)
 - **Performance advisors:** 15 unused indexes en tablas de pocas filas (aceptable)
-- **Migrations:** 27 archivos SQL en `supabase/migrations/`
+- **Migrations:** 28 archivos SQL en `supabase/migrations/`
 
 ### CHECKLIST AL AÑADIR TABLA NUEVA:
 1. Crear migración SQL en `supabase/migrations/`
@@ -482,14 +484,14 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 |---|---------|-------------|--------|
 | E17 | Sistema de anticipos/depósitos | 3 modelos (pago_completo, deposito_resto, solo_reserva). `/admin/cobros-pagos` config. BookingModal dinámico. `/api/stripe/connect/book` para solo_reserva | ✅ Completado (28 Feb 2026) |
 | E18 | Stripe + Resend en producción | Cambiar de modo test a modo live. Configurar keys de producción, verificar webhooks, dominio Resend | Pendiente |
-| E19 | Features D2-D5 mejoras | Revisar y mejorar coordinadores, vuelos, hoteles, FAQs que ya están implementados | Pendiente |
+| E19 | Mejoras Features Existentes | Auto-decrement plazas, biblioteca coordinadores (tabla + FK + CRUD), galería hotel, badge recomendado, tipo vuelo, notifícame funcional, Sentry | ✅ Completado (1 Mar 2026) |
 | E20 | Portal del cliente final | En la landing, el viajero accede con email y ve: reservas, itinerarios, estado de pago, chat con agencia | Pendiente |
 
 ### Fase D — Nuevas Secciones / Integraciones
 | # | Feature | Descripción | Estado |
 |---|---------|-------------|--------|
 | D1 | Social Media completa | Conectar Instagram, Facebook, TikTok. Estadísticas de cuentas, gráficas de rendimiento de posts, métricas de engagement | Código OAuth listo, faltan env vars Meta/TikTok + gráficas de rendimiento |
-| D2 | Sección de Coordinadores | Panel admin para gestionar coordinadores de viaje de la agencia (nombre, foto, bio, idiomas). Se muestran en landing en los destinos asignados | ✅ Integrado en destinos tabbed editor (tab Coordinador) |
+| D2 | Sección de Coordinadores | Tabla `coordinadores` con CRUD en `/admin/coordinadores`. FK `coordinador_id` en destinos. Dropdown selector en DestinoEditor. Landing muestra coordinador por FK. Migración E19 | ✅ Completado (E19, 1 Mar 2026) |
 | D3 | Vuelos y hoteles en destinos | Opción para que la agencia añade info de vuelos (aeropuertos recomendados, buscar vuelo) y hoteles a cada destino | ✅ Integrado en destinos tabbed editor (tabs Vuelos + Hotel) |
 | D4 | FAQs por destino | Preguntas frecuentes editables por destino, visibles en la landing | ✅ Integrado en destinos tabbed editor (tab FAQs) |
 | D5 | Sistema de depósitos/anticipos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo (ej: 100€) y el resto antes de fecha X | ✅ Completado (→ E17) |

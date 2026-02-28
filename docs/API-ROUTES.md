@@ -1,6 +1,6 @@
 # API Routes — DRB Agency
 
-> **Última actualización:** 2026-02-26
+> **Última actualización:** 2026-03-01
 
 ## Resumen
 
@@ -26,7 +26,15 @@
 ### Destinos
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| POST/PATCH | `/api/admin/destinos/[id]/update` | Actualizar destino (typed fields) |
+| POST/PATCH | `/api/admin/destinos/[id]/update` | Actualizar destino (typed fields: STRING, NUMBER, BOOLEAN, UUID, JSONB) |
+
+### Coordinadores
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/admin/coordinadores` | Listar coordinadores del cliente |
+| POST | `/api/admin/coordinadores` | Crear coordinador (nombre, avatar, rol, descripcion, idiomas[]) |
+| PATCH | `/api/admin/coordinadores/[id]` | Actualizar coordinador |
+| DELETE | `/api/admin/coordinadores/[id]` | Eliminar coordinador |
 
 ### Domain
 | Método | Ruta | Descripción |
@@ -179,4 +187,4 @@ const { data, error } = await supabaseAdmin.from("tabla").select("*").eq("client
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 ```
 
-> Última actualización: 2026-02-26
+> Última actualización: 2026-03-01

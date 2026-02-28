@@ -71,10 +71,34 @@ Cada sección es editable con campos de texto + `AIDescriptionButton` para gener
 - `translations` (JSONB con traducciones por idioma)
 
 ### Tabla `destinos` (campos detalle)
-25+ columnas: `slug`, `subtitle`, `tagline`, `badge`, `descripcion_larga`, `galeria`, `coordinador`, `hotel`, `vuelos`, `incluido`, `no_incluido`, `salidas`, `faqs`, `clima`, `tags`, `highlights`, `esfuerzo`, etc.
+25+ columnas: `slug`, `subtitle`, `tagline`, `badge`, `descripcion_larga`, `galeria`, `coordinador` (JSONB legacy), `coordinador_id` (UUID FK → coordinadores), `hotel` (JSONB, con `galeria[]` y `es_recomendado`), `vuelos` (JSONB, segmentos con `tipo`), `incluido`, `no_incluido`, `salidas`, `faqs`, `clima`, `tags`, `highlights`, `esfuerzo`, etc.
 
-## Bugs Conocidos
-- **Bloque A #2:** Botón "Volver" en preview redirige al sitio corporativo en vez de a la landing del cliente
-- **Bloque C #10:** Imágenes de galería aparecen estiradas
+### Tabla `coordinadores` (E19)
+Tabla independiente con CRUD en `/admin/coordinadores`. FK `coordinador_id` en destinos. Landing fetch coordinador por FK en `page.tsx`, muestra card con avatar, nombre, rol, bio, idiomas en tab Coordinador.
 
-> Última actualización: 2026-02-26
+## Mejoras E19 en Landing (1 Mar 2026)
+
+### Hotel — Galería + Badge Recomendado
+- `galeria: string[]` en JSONB hotel → Thumbnails clicables debajo de imagen principal (estado `galleryIdx`)
+- `es_recomendado: boolean` → Badge verde "Recomendado" en esquina superior izquierda del hotel card
+- RTL-safe con `insetInlineStart` / `insetInlineEnd`
+
+### Vuelos — Tipo de Segmento
+- `tipo: "ida"|"retorno"|"conexion"` en cada segmento JSONB
+- Label dinámico: "Vuelo de ida" / "Vuelo de vuelta" / "Vuelo de conexión" (basado en `tipo`, no en índice)
+- i18n key: `landing.destino.flightConnection`
+
+### Salidas — Botón "Notifícame" Funcional
+- Cuando una salida está agotada, el botón "Notifícame" abre un formulario inline con campo de email
+- POST a `/api/contact` con mensaje pre-rellenado: destino + fecha de la salida
+- Mensaje de éxito: "Te avisaremos cuando haya nuevas plazas"
+
+### Coordinador — Desde Tabla FK
+- Landing ahora fetch coordinador desde tabla `coordinadores` por FK `coordinador_id` (antes leía JSONB inline)
+- Mismo layout: avatar circular, nombre, rol, descripción, idiomas como chips
+
+## Bugs Conocidos (resueltos)
+- ~~**Bloque A #2:** Botón "Volver" en preview~~ — Resuelto
+- ~~**Bloque C #10:** Imágenes de galería estiradas~~ — Resuelto
+
+> Última actualización: 2026-03-01
