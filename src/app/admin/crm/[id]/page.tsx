@@ -162,7 +162,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
       </div>
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {/* Left: CRM Panel (status, notes, tags) */}
         <CustomerCRMPanel
           customerId={customer.id}
