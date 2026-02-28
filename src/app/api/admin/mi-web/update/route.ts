@@ -43,11 +43,19 @@ const ALLOWED_FIELDS = new Set([
   "meta_description",
   "available_languages",
   "translations",
+  // Booking model config
+  "booking_model",
+  "deposit_type",
+  "deposit_value",
+  "payment_deadline_type",
+  "payment_deadline_days",
 ]);
 
 /** Fields that should NOT be trimmed/stringified — they're JSONB or boolean */
 const JSONB_FIELDS = new Set(["whyus_items", "available_languages", "translations"]);
 const BOOLEAN_FIELDS = new Set(["dark_mode_enabled"]);
+const NUMERIC_FIELDS = new Set(["deposit_value"]);
+const INTEGER_FIELDS = new Set(["payment_deadline_days"]);
 
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
@@ -68,6 +76,12 @@ export async function POST(req: NextRequest) {
       payload[key] = value ?? [];
     } else if (BOOLEAN_FIELDS.has(key)) {
       payload[key] = Boolean(value);
+    } else if (NUMERIC_FIELDS.has(key)) {
+      const n = Number(value);
+      payload[key] = isFinite(n) ? n : null;
+    } else if (INTEGER_FIELDS.has(key)) {
+      const n = parseInt(String(value), 10);
+      payload[key] = isFinite(n) ? n : null;
     } else {
       // Strings: trim + empty → null
       payload[key] = typeof value === "string" && value.trim() !== "" ? value.trim() : null;

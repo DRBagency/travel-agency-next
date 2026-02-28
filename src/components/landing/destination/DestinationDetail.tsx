@@ -46,6 +46,15 @@ interface DestinationDetailProps {
   tiktokUrl?: string;
   allMessages?: Record<string, any>;
   clientTranslations?: Record<string, any>;
+  bookingConfig?: {
+    clienteId: string;
+    bookingModel: "pago_completo" | "deposito_resto" | "solo_reserva";
+    depositType: "percentage" | "fixed";
+    depositValue: number;
+    paymentDeadlineType: "before_departure" | "after_booking";
+    paymentDeadlineDays: number;
+    stripeChargesEnabled: boolean;
+  };
 }
 
 export function DestinationDetail(props: DestinationDetailProps) {
@@ -97,6 +106,7 @@ function DestinationDetailInner({
   facebookUrl,
   tiktokUrl,
   clientTranslations,
+  bookingConfig,
   currentLang,
   onLangChange,
 }: DestinationDetailProps & { currentLang: string; onLangChange: (l: string) => void }) {
@@ -1130,6 +1140,7 @@ function DestinationDetailInner({
           lang={currentLang}
           selectedHotel={selectedHotel}
           selectedRoom={selectedRoom}
+          bookingConfig={bookingConfig}
         />
       )}
 

@@ -1,6 +1,6 @@
 # DRB Agency - Contexto del Proyecto
 
-> **Última actualización:** 27 Febrero 2026
+> **Última actualización:** 28 Febrero 2026
 > **Estado:** En producción - Mejora continua activa
 > **Documentación extendida:** /docs/
 
@@ -220,8 +220,8 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 | `paginas_legales` | Admin | `/admin/legales` |
 | `calendar_events` | Admin | `/admin/calendario` |
 | `documents` | Admin | `/admin/documentos` (crear, editar, eliminar, PDF) |
-| `support_tickets` | Admin | `/admin/soporte` (crear, detalle, cerrar/reabrir) |
-| `ticket_messages` | Admin | `/admin/soporte/[id]` (chat en tiempo real) |
+| `support_tickets` | Admin + Owner | `/admin/soporte` (crear, detalle, cerrar/reabrir), `/owner/soporte` (ver, responder, cerrar/reabrir) |
+| `ticket_messages` | Admin + Owner | `/admin/soporte/[id]` + `/owner/soporte/[id]` (chat bidireccional) |
 
 ### Tablas con UI parcial (⚠️):
 | Tabla | Estado |
@@ -254,7 +254,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 ### Tablas Mensajería (✅):
 | Tabla | Panel | Ruta |
 |-------|-------|------|
-| `contact_messages` | Admin | `/admin/mensajes` (MensajesContent — leer, marcar como leído). Landing form → API POST `/api/contact` |
+| `contact_messages` | Admin | `/admin/mensajes` (MensajesContent — leer, marcar como leído, responder via email). Landing form → API POST `/api/contact`. Reply → API POST `/api/admin/messages/reply` (Resend). Columnas: `replied`, `reply_message`, `replied_at` |
 
 ### Tablas Tracking (✅):
 | Tabla | Panel | Ruta |
@@ -268,11 +268,11 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 | `newsletter_subscribers` | Código eliminado (API route + referencias). Tabla puede eliminarse de Supabase si aún existe |
 | `blog_posts` | Código eliminado (BlogSection + referencias). Tabla puede eliminarse de Supabase si aún existe |
 
-### Supabase Health (24 Feb 2026):
+### Supabase Health (28 Feb 2026):
 - **27 tablas** con RLS habilitado en todas
 - **Security advisors:** anon INSERT en contact_messages/page_visits (requerido para público), leaked password protection disabled (configurar)
 - **Performance advisors:** 15 unused indexes en tablas de pocas filas (aceptable)
-- **Migrations:** 23 archivos SQL en `supabase/migrations/`
+- **Migrations:** 27 archivos SQL en `supabase/migrations/`
 
 ### CHECKLIST AL AÑADIR TABLA NUEVA:
 1. Crear migración SQL en `supabase/migrations/`
@@ -295,7 +295,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 - Monetización (MRR, desglose por planes, top comisiones con CommissionsTable DataTable, KPICards, ComparisonChart, ProjectionChart)
 - Configuración Stripe (modo, keys, price IDs, webhooks)
 - Automatizaciones (CRUD + ExecutionLogsTable con DataTable + DeleteWithConfirm)
-- Soporte (tickets de clientes con SoporteTable DataTable)
+- Soporte (tickets de clientes con SoporteTable DataTable + detalle con chat bidireccional `/owner/soporte/[id]` + responder + cerrar/reabrir + auto `in_progress` al responder + notificación al cliente)
 
 ### ✅ Panel CLIENTE completado:
 - Contenido web (hero, CTA banner, why us, contacto, footer + AIDescriptionButton en campos de texto + auto-traducción AI)
@@ -314,6 +314,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 ### ✅ Sistema de Emails:
 - Emails de reservas (cliente + agencia, templates editables, tokens, branding)
 - Emails de billing (bienvenida, cambio plan, cancelación, dominio verificado)
+- Respuesta a mensajes de contacto (reply via Resend con branding del cliente, `replyTo` al email de la agencia)
 
 ### ✅ Sistema de Pagos:
 - Stripe Connect (onboarding, cobro reservas, comisión automática, webhook)
@@ -447,6 +448,15 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 - ✅ **Mi Web Admin Expansion**: New sections in MiWebContent.tsx — WhyUs editor (6 cards × icon/title/desc, add/remove/reorder), CTA Banner (title/desc/cta), expanded Hero (badge + secondary CTA), expanded Footer (description), Global Config (dark_mode_enabled toggle, meta_title, meta_description). ALLOWED_FIELDS + JSONB/boolean handling in update route
 - ✅ **i18n Expansion**: ~170 new keys across ES/EN/AR — `landing.*` namespace (stats, destinations, whyus, testimonials, ctaBanner, contact, destino detail), `admin.destinos` (76 keys for tabbed editor), `admin.miWeb` (new sections)
 - ✅ **Cleanup**: Deleted 24 old G2 landing components (Hero, About, Contact, Footer, Navbar, Testimonials, DestinationsGrid, DestinationsBento, DestinationsFiltered, EditorialText, FullWidthBreak, NewsletterForm, StatsBar, ImageSlider, HomeClient + 9 landing sub-components: CursorGlow, GradientMesh, FloatingShapes, FloatingParticles, ScrollReveal, SectionDivider, TypewriterText, WordReveal, MagneticButton)
+
+### ✅ Mejoras 28 Feb 2026 — CRM, Mensajería, Soporte Owner:
+- ✅ **CRM Funnel Fix**: Porcentajes del embudo ahora muestran % del total (no del stage anterior)
+- ✅ **CRM Traveler Profile**: Enriquecido con datos de reserva (destino, fechas, monto, estado), layout balanceado con flex-1 en columna derecha
+- ✅ **CRM Activity Section**: Extraído a componente independiente `CustomerActivitySection.tsx`, full-width debajo del grid 2-col
+- ✅ **Landing Contact Form**: Texto visible en light mode (`data-glass-skip` en inputs), submissión funciona con fallback `clienteId` si dominio no resuelve
+- ✅ **Mensajes Reply System**: Botón "Responder" en `/admin/mensajes`, textarea inline, envío via Resend con branding del cliente, `replyTo` al email de la agencia. Columnas DB: `replied`, `reply_message`, `replied_at`. Migración: `20260228100000_add_reply_to_contact_messages.sql`
+- ✅ **Resend Error Handling**: SDK devuelve `{ data, error }` (no throw). Reply route usa patrón correcto. `EMAIL_FROM` debe ser dominio verificado en Resend (no `onboarding@resend.dev`)
+- ✅ **Owner Soporte Detail**: `/owner/soporte/[id]` con chat bidireccional, responder como `sender_type: "admin"`, cerrar/reabrir, auto `in_progress` al primer reply, notificación al cliente. `SoporteTable` rows clickables
 
 ### ⏳ Pendiente config externa (código listo):
 - **Social Media OAuth**: Crear app en Meta Developer (Instagram) + TikTok Developer, añadir env vars (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`) en Vercel. Redirect URIs: `https://drb.agency/api/admin/social/oauth/{instagram,tiktok}/callback`

@@ -226,7 +226,7 @@ function DesktopSidebar({
               <Sparkles className="w-4 h-4 mb-1.5 text-drb-turquoise-200" />
               <p className="text-xs font-semibold">{tc("upgradeExperience")}</p>
               <Link
-                href="/admin/stripe"
+                href="/admin/cobros-pagos"
                 className="mt-2 inline-flex items-center text-[11px] font-semibold bg-white/20 hover:bg-white/30 rounded-lg px-2.5 py-1 transition-colors backdrop-blur-sm"
               >
                 {tc("upgradeNow")}
@@ -472,7 +472,7 @@ const AdminShell = ({
     ],
     // Config
     [
-      { label: t("nav.stripe"), href: "/admin/stripe", icon: "💳" },
+      { label: t("nav.cobros"), href: "/admin/cobros-pagos", icon: "💳" },
       { label: t("nav.emails"), href: "/admin/emails", icon: "📧" },
     ],
     // AI
@@ -480,7 +480,7 @@ const AdminShell = ({
   ];
   const navItems = navGroups.flat();
 
-  const allowWhenInactive = pathname.startsWith("/admin/stripe") || pathname.startsWith("/admin/onboarding");
+  const allowWhenInactive = pathname.startsWith("/admin/stripe") || pathname.startsWith("/admin/cobros-pagos") || pathname.startsWith("/admin/onboarding");
 
   return (
     <div className="min-h-screen bg-[#EFF3F8] dark:bg-[#0B1825]">
@@ -757,7 +757,7 @@ const AdminShell = ({
             </div>
             <div className="flex justify-end">
               <a
-                href="/admin/stripe"
+                href="/admin/cobros-pagos"
                 className="btn-primary px-6 py-3 rounded-xl"
               >
                 {t("shell.activateSubscription")}

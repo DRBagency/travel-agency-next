@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       }
 
       /* La reserva ya existe (creada en checkout con estado pendiente_pago).
-         Ahora solo actualizamos el estado a "pagado". */
+         Ahora actualizamos el estado según el booking_model. */
       const reservaId = m.reserva_id;
 
       if (!reservaId) {
@@ -72,10 +72,20 @@ export async function POST(req: Request) {
         return new Response("ok", { status: 200 });
       }
 
+      // Read the reserva to check its booking_model
+      const { data: existingReserva } = await supabaseAdmin
+        .from("reservas")
+        .select("booking_model")
+        .eq("id", reservaId)
+        .single();
+
+      const bookingModel = existingReserva?.booking_model || "pago_completo";
+      const newEstado = bookingModel === "deposito_resto" ? "deposito_pagado" : "pagado";
+
       const { data: reserva, error } = await supabaseAdmin
         .from("reservas")
         .update({
-          estado_pago: "pagado",
+          estado_pago: newEstado,
           stripe_session_id: session.id,
         })
         .eq("id", reservaId)
@@ -87,14 +97,18 @@ export async function POST(req: Request) {
         return new Response("ok", { status: 200 });
       }
 
-      console.log("✅ Reserva actualizada a pagado:", session.id);
+      console.log(`✅ Reserva actualizada a ${newEstado}:`, session.id);
 
       // Crear notificación para la agencia
+      const notifTitle = bookingModel === "deposito_resto"
+        ? `Anticipo recibido: ${m.destino_nombre}`
+        : `Nueva reserva: ${m.destino_nombre}`;
+
       await createNotification({
         clienteId: m.cliente_id,
         type: "reserva",
-        title: `Nueva reserva: ${m.destino_nombre}`,
-        description: `${m.nombre} - ${Number(m.personas)} personas - ${Number(m.total).toFixed(2)}€`,
+        title: notifTitle,
+        description: `${m.nombre} - ${Number(m.personas)} personas`,
         href: `/admin/reservas`,
       });
 

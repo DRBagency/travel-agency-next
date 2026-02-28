@@ -150,6 +150,10 @@ export default async function AdminReservasPage({ searchParams }: AdminPageProps
               <option value="pendiente">{t('pending')}</option>
               <option value="revisada">{t('reviewed')}</option>
               <option value="cancelada">{t('cancelled')}</option>
+              <option value="deposito_pagado">{t('depositPaid')}</option>
+              <option value="pendiente_confirmacion">{t('pendingConfirmation')}</option>
+              <option value="confirmado">{t('confirmed')}</option>
+              <option value="vencido">{t('expired')}</option>
             </select>
             <input
               type="date"

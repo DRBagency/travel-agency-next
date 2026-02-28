@@ -53,6 +53,30 @@ export async function POST(req: Request) {
       );
     }
 
+    /* ── Booking model fields ── */
+    const bookingModel = body.booking_model || "pago_completo";
+    const depositAmount = Number(body.deposit_amount) || total;
+    const remainingAmount = Number(body.remaining_amount) || 0;
+
+    // Calculate remaining_due_date server-side
+    let remainingDueDate: string | null = null;
+    if (bookingModel === "deposito_resto" && remainingAmount > 0) {
+      const deadlineType = cliente.payment_deadline_type || "before_departure";
+      const deadlineDays = Number(cliente.payment_deadline_days) || 30;
+      if (deadlineType === "before_departure" && body.fecha_salida) {
+        const dep = new Date(body.fecha_salida);
+        dep.setDate(dep.getDate() - deadlineDays);
+        remainingDueDate = dep.toISOString();
+      } else {
+        const now = new Date();
+        now.setDate(now.getDate() + deadlineDays);
+        remainingDueDate = now.toISOString();
+      }
+    }
+
+    // The amount to charge NOW via Stripe
+    const chargeAmount = bookingModel === "deposito_resto" ? depositAmount : total;
+
     /* 📦 Crear reserva en Supabase ANTES del checkout (estado pendiente_pago) */
     const { data: reserva, error: reservaError } = await supabaseAdmin
       .from("reservas")
@@ -71,6 +95,10 @@ export async function POST(req: Request) {
         adults: Number(body.adults) || 0,
         children: Number(body.children) || 0,
         booking_details: body.booking_details || {},
+        booking_model: bookingModel,
+        deposit_amount: depositAmount,
+        remaining_amount: remainingAmount,
+        remaining_due_date: remainingDueDate,
       })
       .select("id")
       .single();
@@ -88,7 +116,11 @@ export async function POST(req: Request) {
     const protocol = host.includes("localhost") ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
 
-    const unitAmount = Math.round(total * 100); // céntimos
+    const unitAmount = Math.round(chargeAmount * 100); // céntimos
+
+    const lineItemName = bookingModel === "deposito_resto"
+      ? `${body.destino_nombre} — Anticipo`
+      : body.destino_nombre;
 
     const sessionParams = {
       mode: "payment",
@@ -98,7 +130,7 @@ export async function POST(req: Request) {
           price_data: {
             currency: "eur",
             product_data: {
-              name: body.destino_nombre,
+              name: lineItemName,
             },
             unit_amount: unitAmount,
           },
@@ -118,7 +150,7 @@ export async function POST(req: Request) {
 
     if (hasConnectAccount && cliente.stripe_charges_enabled === true) {
       const applicationFeeAmount = Math.round(
-        total * Number(cliente.commission_rate || 0)
+        chargeAmount * Number(cliente.commission_rate || 0)
       );
       sessionParams.payment_intent_data = {
         application_fee_amount: applicationFeeAmount,

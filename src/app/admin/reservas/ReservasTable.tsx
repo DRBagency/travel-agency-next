@@ -32,16 +32,18 @@ function StatusCell({
   const t = useTranslations("admin.reservas");
   const [isPending, startTransition] = useTransition();
 
-  const badgeClass =
-    reserva.estado_pago === "pagado"
-      ? "badge-success"
-      : reserva.estado_pago === "pendiente"
-        ? "badge-warning"
-        : reserva.estado_pago === "revisada"
-          ? "badge-info"
-          : reserva.estado_pago === "cancelada"
-            ? "badge-danger"
-            : "badge-info";
+  const badgeMap: Record<string, string> = {
+    pagado: "badge-success",
+    pendiente: "badge-warning",
+    pendiente_pago: "badge-warning",
+    revisada: "badge-info",
+    cancelada: "badge-danger",
+    deposito_pagado: "badge-info",
+    pendiente_confirmacion: "badge-warning",
+    confirmado: "badge-info",
+    vencido: "badge-danger",
+  };
+  const badgeClass = badgeMap[reserva.estado_pago] || "badge-info";
 
   const handleChange = (newEstado: string) => {
     if (newEstado === reserva.estado_pago) return;
@@ -53,9 +55,21 @@ function StatusCell({
     });
   };
 
+  const labelMap: Record<string, string> = {
+    pagado: t("paid"),
+    pendiente: t("pending"),
+    pendiente_pago: t("pending"),
+    revisada: t("reviewed"),
+    cancelada: t("cancelled"),
+    deposito_pagado: t("depositPaid"),
+    pendiente_confirmacion: t("pendingConfirmation"),
+    confirmado: t("confirmed"),
+    vencido: t("expired"),
+  };
+
   return (
     <div className="flex items-center gap-2">
-      <span className={badgeClass}>{reserva.estado_pago}</span>
+      <span className={badgeClass}>{labelMap[reserva.estado_pago] || reserva.estado_pago}</span>
       <select
         defaultValue={reserva.estado_pago}
         onChange={(e) => handleChange(e.target.value)}
@@ -66,6 +80,10 @@ function StatusCell({
         <option value="pendiente">{t("pending")}</option>
         <option value="revisada">{t("reviewed")}</option>
         <option value="cancelada">{t("cancelled")}</option>
+        <option value="deposito_pagado">{t("depositPaid")}</option>
+        <option value="pendiente_confirmacion">{t("pendingConfirmation")}</option>
+        <option value="confirmado">{t("confirmed")}</option>
+        <option value="vencido">{t("expired")}</option>
       </select>
       {isPending && <Loader2 className="w-3 h-3 animate-spin text-gray-400" />}
     </div>

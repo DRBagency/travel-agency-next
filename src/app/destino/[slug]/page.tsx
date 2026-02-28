@@ -120,6 +120,15 @@ export default async function DestinoPage({
           facebookUrl={client.facebook_url}
           tiktokUrl={client.tiktok_url}
           allMessages={allMessages}
+          bookingConfig={{
+            clienteId: client.id,
+            bookingModel: client.booking_model || "pago_completo",
+            depositType: client.deposit_type || "percentage",
+            depositValue: client.deposit_value ?? 30,
+            paymentDeadlineType: client.payment_deadline_type || "before_departure",
+            paymentDeadlineDays: client.payment_deadline_days ?? 30,
+            stripeChargesEnabled: client.stripe_charges_enabled === true,
+          }}
         />
       </LandingThemeProvider>
     </NextIntlClientProvider>

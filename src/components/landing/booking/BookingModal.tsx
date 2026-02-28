@@ -63,6 +63,15 @@ const translations = {
     dni: "DNI",
     passport: "Pasaporte",
     nie: "NIE",
+    payFull: "Pagar total",
+    payDeposit: "Pagar anticipo",
+    sendRequest: "Enviar solicitud",
+    sRemaining: "Resto pendiente",
+    sRemainingDate: "Fecha limite resto",
+    requestSent: "Solicitud enviada",
+    requestSentDesc: "Tu solicitud de reserva ha sido enviada. La agencia te confirmara pronto.",
+    depositPaidDesc: "Has pagado el anticipo. El resto deberas abonarlo antes de la fecha indicada.",
+    redirecting: "Redirigiendo al pago...",
   },
   en: {
     s1: "Departure & travelers",
@@ -115,6 +124,15 @@ const translations = {
     dni: "DNI",
     passport: "Passport",
     nie: "NIE",
+    payFull: "Pay full amount",
+    payDeposit: "Pay deposit",
+    sendRequest: "Send request",
+    sRemaining: "Remaining balance",
+    sRemainingDate: "Remaining due date",
+    requestSent: "Request sent",
+    requestSentDesc: "Your booking request has been sent. The agency will confirm shortly.",
+    depositPaidDesc: "You have paid the deposit. The remaining balance is due before the date shown.",
+    redirecting: "Redirecting to payment...",
   },
   ar: {
     s1: "المغادرة والمسافرون",
@@ -167,6 +185,15 @@ const translations = {
     dni: "DNI",
     passport: "جواز سفر",
     nie: "NIE",
+    payFull: "ادفع المبلغ الكامل",
+    payDeposit: "ادفع العربون",
+    sendRequest: "إرسال الطلب",
+    sRemaining: "المبلغ المتبقي",
+    sRemainingDate: "تاريخ استحقاق الباقي",
+    requestSent: "تم إرسال الطلب",
+    requestSentDesc: "تم إرسال طلب حجزك. ستؤكد الوكالة قريباً.",
+    depositPaidDesc: "لقد دفعت العربون. يجب دفع الباقي قبل التاريخ المحدد.",
+    redirecting: "جاري التحويل للدفع...",
   },
 };
 
@@ -198,6 +225,16 @@ interface Passenger {
   nationality: string;
 }
 
+interface BookingConfig {
+  clienteId: string;
+  bookingModel: "pago_completo" | "deposito_resto" | "solo_reserva";
+  depositType: "percentage" | "fixed";
+  depositValue: number;
+  paymentDeadlineType: "before_departure" | "after_booking";
+  paymentDeadlineDays: number;
+  stripeChargesEnabled: boolean;
+}
+
 interface BookingModalProps {
   destination: any;
   initialDeparture?: any;
@@ -205,6 +242,7 @@ interface BookingModalProps {
   lang?: string;
   selectedHotel?: any;
   selectedRoom?: any;
+  bookingConfig?: BookingConfig;
 }
 
 /* ─── Keyframes injected once ─── */
@@ -231,6 +269,7 @@ export default function BookingModal({
   lang = "es",
   selectedHotel,
   selectedRoom,
+  bookingConfig,
 }: BookingModalProps) {
   const T = useLandingTheme();
   const t = (translations as any)[lang] || translations.es;
@@ -253,11 +292,9 @@ export default function BookingModal({
     { fullName: "", docType: "DNI", docNumber: "", dob: "", nationality: "" },
   ]);
 
-  // Payment fields (visual only)
-  const [cardHolder, setCardHolder] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCvv, setCardCvv] = useState("");
+  // Payment flow state
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [bookingSubmitted, setBookingSubmitted] = useState(false);
 
   /* Sync passenger count with adults + children */
   useEffect(() => {
@@ -300,7 +337,17 @@ export default function BookingModal({
   const unitPrice = baseUnitPrice + hotelSupplement;
   const totalTravelers = adults + children;
   const totalPrice = unitPrice * totalTravelers;
-  const deposit = 200 * totalTravelers;
+
+  const bModel = bookingConfig?.bookingModel || "pago_completo";
+  const deposit =
+    bModel === "pago_completo"
+      ? totalPrice
+      : bModel === "solo_reserva"
+        ? 0
+        : bookingConfig?.depositType === "fixed"
+          ? (bookingConfig?.depositValue ?? 200) * totalTravelers
+          : Math.round(totalPrice * ((bookingConfig?.depositValue ?? 30) / 100));
+  const remainingAmount = totalPrice - deposit;
 
   /* ── Helpers ── */
   const statusLabel = (status: string) => {
@@ -390,8 +437,72 @@ export default function BookingModal({
     animation: "bkFadeIn .3s ease-out both",
   };
 
-  /* ── Step Labels for stepper ── */
-  const stepLabels = [t.s1, t.s2, t.s3, t.s4];
+  /* ── Step Labels for stepper (3 steps — no separate payment page) ── */
+  const stepLabels = [t.s1, t.s2, t.s3];
+
+  /* ── Booking action helpers ── */
+  const buildBookingPayload = () => ({
+    total: totalPrice,
+    cliente_id: bookingConfig?.clienteId || "",
+    destino_nombre: destination?.nombre || "",
+    nombre: contactName,
+    email: contactEmail,
+    telefono: contactPhone,
+    fecha_salida: selectedDep ? depDate(selectedDep) : "",
+    fecha_regreso: "",
+    personas: totalTravelers,
+    adults,
+    children,
+    passengers,
+    booking_details: {
+      hotel: selectedHotel || null,
+      habitacion: selectedRoom || null,
+      precio_unitario: unitPrice,
+      suplemento_total: hotelSupplement,
+      deposito_por_persona: bModel === "pago_completo" ? unitPrice : bModel === "solo_reserva" ? 0 : (bookingConfig?.depositType === "fixed" ? (bookingConfig?.depositValue ?? 200) : Math.round(unitPrice * ((bookingConfig?.depositValue ?? 30) / 100))),
+    },
+    booking_model: bModel,
+    deposit_amount: deposit,
+    remaining_amount: remainingAmount,
+  });
+
+  const handleCheckout = async () => {
+    if (checkoutLoading) return;
+    setCheckoutLoading(true);
+    try {
+      const res = await fetch("/api/stripe/connect/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(buildBookingPayload()),
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.url) throw new Error(data?.error || "Checkout error");
+      window.location.href = data.url;
+    } catch (err: any) {
+      alert(err.message || t.sPy);
+      setCheckoutLoading(false);
+    }
+  };
+
+  const handleBookWithoutPayment = async () => {
+    if (checkoutLoading) return;
+    setCheckoutLoading(true);
+    try {
+      const res = await fetch("/api/stripe/connect/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(buildBookingPayload()),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Booking error");
+      setBookingSubmitted(true);
+      setStep(4);
+    } catch (err: any) {
+      alert(err.message || "Error");
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
 
   /* ─────────────────── RENDER ─────────────────── */
   return (
@@ -535,8 +646,8 @@ export default function BookingModal({
             </div>
           </div>
 
-          {/* ── Stepper (steps 1-4, not shown on confirmation) ── */}
-          {step <= 4 && (
+          {/* ── Stepper (steps 1-3, not shown on confirmation) ── */}
+          {step <= 3 && (
             <div
               style={{
                 display: "flex",
@@ -1163,213 +1274,118 @@ export default function BookingModal({
                     </span>
                   </div>
 
+                  {/* Deposit / payment row — dynamic based on model */}
+                  {bModel === "deposito_resto" && (
+                    <>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: 8,
+                        }}
+                      >
+                        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: T.accent }}>
+                          {t.sDeposit}
+                        </span>
+                        <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 20, color: T.accent }}>
+                          {deposit.toLocaleString("es-ES")}{"€"}
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span style={{ fontFamily: FONT2, fontSize: 13, color: T.sub }}>
+                          {t.sRemaining}
+                        </span>
+                        <span style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, color: T.sub }}>
+                          {remainingAmount.toLocaleString("es-ES")}{"€"}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                  {bModel === "pago_completo" && (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: T.accent }}>
+                        {t.payFull}
+                      </span>
+                      <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 20, color: T.accent }}>
+                        {totalPrice.toLocaleString("es-ES")}{"€"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Secure payment badge (hide for solo_reserva) */}
+                {bModel !== "solo_reserva" && (
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "space-between",
                       alignItems: "center",
+                      gap: 8,
+                      padding: "10px 16px",
+                      borderRadius: 12,
+                      background: T.greenBg,
+                      border: `1px solid ${T.greenBorder}`,
+                      marginBottom: 22,
                     }}
                   >
+                    <span style={{ fontSize: 16 }}>🔒</span>
                     <span
                       style={{
-                        fontFamily: FONT,
-                        fontWeight: 700,
-                        fontSize: 15,
-                        color: T.accent,
+                        fontFamily: FONT2,
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: T.greenText,
                       }}
                     >
-                      {t.sDp}
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: FONT,
-                        fontWeight: 800,
-                        fontSize: 20,
-                        color: T.accent,
-                      }}
-                    >
-                      {deposit.toLocaleString("es-ES")}{"€"}
+                      {t.sSc}
                     </span>
                   </div>
-                </div>
+                )}
 
-                {/* Secure payment badge */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "10px 16px",
-                    borderRadius: 12,
-                    background: T.greenBg,
-                    border: `1px solid ${T.greenBorder}`,
-                    marginBottom: 22,
-                  }}
-                >
-                  <span style={{ fontSize: 16 }}>🔒</span>
-                  <span
-                    style={{
-                      fontFamily: FONT2,
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: T.greenText,
-                    }}
-                  >
-                    {t.sSc}
-                  </span>
-                </div>
-
-                {/* Navigation */}
+                {/* Navigation + action button */}
                 <div style={{ display: "flex", gap: 12 }}>
                   <button onClick={() => setStep(2)} style={secondaryBtn}>
                     {t.sBk}
                   </button>
-                  <button
-                    onClick={() => setStep(4)}
-                    style={{ ...primaryBtn, flex: 1 }}
-                  >
-                    {t.sPy} {deposit.toLocaleString("es-ES")}{"€ →"}
-                  </button>
+                  {bModel === "solo_reserva" ? (
+                    <button
+                      onClick={handleBookWithoutPayment}
+                      disabled={checkoutLoading}
+                      style={checkoutLoading ? { ...primaryBtnDisabled, flex: 1 } : { ...primaryBtn, flex: 1 }}
+                    >
+                      {checkoutLoading ? t.redirecting : `${t.sendRequest} →`}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleCheckout}
+                      disabled={checkoutLoading}
+                      style={checkoutLoading ? { ...primaryBtnDisabled, flex: 1 } : { ...primaryBtn, flex: 1 }}
+                    >
+                      {checkoutLoading
+                        ? t.redirecting
+                        : bModel === "deposito_resto"
+                          ? `${t.payDeposit} ${deposit.toLocaleString("es-ES")}€ →`
+                          : `${t.payFull} ${totalPrice.toLocaleString("es-ES")}€ →`}
+                    </button>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* ═══════ STEP 4: Payment (visual preview) ═══════ */}
+            {/* ═══════ STEP 4: Confirmation ═══════ */}
             {step === 4 && (
-              <div style={animateIn}>
-                {/* Deposit amount display */}
-                <div
-                  style={{
-                    textAlign: "center",
-                    marginBottom: 24,
-                    padding: "18px 0",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: FONT2,
-                      fontSize: 13,
-                      color: T.sub,
-                      display: "block",
-                      marginBottom: 6,
-                    }}
-                  >
-                    {t.sDeposit}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: FONT,
-                      fontWeight: 800,
-                      fontSize: 38,
-                      background: accentGrad,
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      letterSpacing: "-1px",
-                    }}
-                  >
-                    {deposit.toLocaleString("es-ES")}{"€"}
-                  </span>
-                </div>
-
-                {/* Card holder */}
-                <InputField
-                  label={t.sHl}
-                  value={cardHolder}
-                  onChange={(e) => setCardHolder(e.target.value)}
-                  placeholder={lang === "es" ? "JUAN GARCIA LOPEZ" : "JOHN SMITH"}
-                />
-
-                {/* Card number */}
-                <InputField
-                  label={t.sCd}
-                  value={cardNumber}
-                  onChange={(e) => {
-                    const v = e.target.value
-                      .replace(/\D/g, "")
-                      .slice(0, 16)
-                      .replace(/(.{4})/g, "$1 ")
-                      .trim();
-                    setCardNumber(v);
-                  }}
-                  placeholder="4242 4242 4242 4242"
-                />
-
-                {/* Expiry + CVV */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                  <InputField
-                    label={t.sEx}
-                    value={cardExpiry}
-                    onChange={(e) => {
-                      let v = e.target.value.replace(/\D/g, "").slice(0, 4);
-                      if (v.length > 2) v = v.slice(0, 2) + "/" + v.slice(2);
-                      setCardExpiry(v);
-                    }}
-                    placeholder="MM/YY"
-                  />
-                  <InputField
-                    label={t.sCv}
-                    value={cardCvv}
-                    onChange={(e) => {
-                      setCardCvv(e.target.value.replace(/\D/g, "").slice(0, 4));
-                    }}
-                    placeholder="123"
-                  />
-                </div>
-
-                {/* Secure payment badge */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "10px 16px",
-                    borderRadius: 12,
-                    background: T.greenBg,
-                    border: `1px solid ${T.greenBorder}`,
-                    marginBottom: 22,
-                    marginTop: 6,
-                  }}
-                >
-                  <span style={{ fontSize: 16 }}>🔒</span>
-                  <span
-                    style={{
-                      fontFamily: FONT2,
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: T.greenText,
-                    }}
-                  >
-                    {t.sSc}
-                  </span>
-                </div>
-
-                {/* Navigation */}
-                {(() => {
-                  const payValid = cardHolder.trim() && cardNumber.replace(/\s/g, "").length >= 15 && cardExpiry.length >= 5 && cardCvv.length >= 3;
-                  return (
-                    <div style={{ display: "flex", gap: 12 }}>
-                      <button onClick={() => setStep(3)} style={secondaryBtn}>
-                        {t.sBk}
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (!payValid) return;
-                          // In production: call /api/stripe/connect/checkout
-                          setStep(5);
-                        }}
-                        disabled={!payValid}
-                        style={payValid ? { ...primaryBtn, flex: 1 } : { ...primaryBtnDisabled, flex: 1 }}
-                      >
-                        {t.sPy} {deposit.toLocaleString("es-ES")}{"€"}
-                      </button>
-                    </div>
-                  );
-                })()}
-              </div>
-            )}
-
-            {/* ═══════ STEP 5: Confirmation ═══════ */}
-            {step === 5 && (
               <div
                 style={{
                   ...animateIn,
@@ -1426,7 +1442,7 @@ export default function BookingModal({
                     letterSpacing: "-.3px",
                   }}
                 >
-                  {t.sCt}
+                  {bookingSubmitted ? t.requestSent : t.sCt}
                 </h2>
 
                 {/* Message */}
@@ -1440,7 +1456,11 @@ export default function BookingModal({
                     maxWidth: 380,
                   }}
                 >
-                  {t.sCm}
+                  {bookingSubmitted
+                    ? t.requestSentDesc
+                    : bModel === "deposito_resto"
+                      ? t.depositPaidDesc
+                      : t.sCm}
                 </p>
 
                 {/* Summary card */}
@@ -1468,12 +1488,21 @@ export default function BookingModal({
                   {selectedRoom && (
                     <SummaryRow label={t.sRm} value={selectedRoom.tipo || ""} T={T} />
                   )}
-                  <SummaryRow
-                    label={t.sDeposit}
-                    value={`${deposit.toLocaleString("es-ES")}€`}
-                    T={T}
-                    accent
-                  />
+                  {bModel === "deposito_resto" && (
+                    <>
+                      <SummaryRow
+                        label={t.sDeposit}
+                        value={`${deposit.toLocaleString("es-ES")}€`}
+                        T={T}
+                        accent
+                      />
+                      <SummaryRow
+                        label={t.sRemaining}
+                        value={`${remainingAmount.toLocaleString("es-ES")}€`}
+                        T={T}
+                      />
+                    </>
+                  )}
                   <SummaryRow
                     label={t.sTt}
                     value={`${totalPrice.toLocaleString("es-ES")}€`}

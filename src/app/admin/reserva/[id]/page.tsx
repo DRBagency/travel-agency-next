@@ -39,6 +39,24 @@ async function updateEstado(formData: FormData) {
   revalidatePath(`/admin/reserva/${id}`);
 }
 
+async function confirmBooking(formData: FormData) {
+  "use server";
+
+  const clienteId = (await cookies()).get("cliente_id")?.value;
+  if (!clienteId) return;
+
+  const id = formData.get("id") as string;
+
+  await supabaseAdmin
+    .from("reservas")
+    .update({ agency_confirmed: true, estado_pago: "confirmado" })
+    .eq("id", id);
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/reservas");
+  revalidatePath(`/admin/reserva/${id}`);
+}
+
 export default async function ReservaPage({ params, searchParams }: ReservaPageProps) {
   const { id } = await params;
   await searchParams;
@@ -69,9 +87,30 @@ export default async function ReservaPage({ params, searchParams }: ReservaPageP
     return new Date(d).toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" });
   };
 
-  const statusSteps = ["pendiente", "revisada", "pagado"];
-  const currentIdx = statusSteps.indexOf(reserva.estado_pago ?? "pendiente");
-  const isCancelled = reserva.estado_pago === "cancelada";
+  const bm = reserva.booking_model || "pago_completo";
+  const statusSteps =
+    bm === "deposito_resto"
+      ? ["pendiente_pago", "deposito_pagado", "pagado"]
+      : bm === "solo_reserva"
+        ? ["pendiente_confirmacion", "confirmado", "pagado"]
+        : ["pendiente", "revisada", "pagado"];
+  const currentIdx = statusSteps.indexOf(reserva.estado_pago ?? statusSteps[0]);
+  const isCancelled = reserva.estado_pago === "cancelada" || reserva.estado_pago === "vencido";
+
+  const statusLabel = (s: string) => {
+    const map: Record<string, string> = {
+      pendiente: t("pending"),
+      pendiente_pago: t("pending"),
+      revisada: t("reviewed"),
+      pagado: t("paid"),
+      deposito_pagado: t("depositPaid"),
+      pendiente_confirmacion: t("pendingConfirmation"),
+      confirmado: t("confirmed"),
+      vencido: t("expired"),
+      cancelada: t("cancelled"),
+    };
+    return map[s] || s;
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -102,12 +141,12 @@ export default async function ReservaPage({ params, searchParams }: ReservaPageP
                 ? "badge-danger"
                 : reserva.estado_pago === "pagado"
                   ? "badge-success"
-                  : reserva.estado_pago === "revisada"
+                  : reserva.estado_pago === "deposito_pagado" || reserva.estado_pago === "confirmado" || reserva.estado_pago === "revisada"
                     ? "badge-info"
                     : "badge-warning"
             }`}
           >
-            {reserva.estado_pago ?? "pendiente"}
+            {statusLabel(reserva.estado_pago ?? "pendiente")}
           </span>
         </div>
       </div>
@@ -134,7 +173,7 @@ export default async function ReservaPage({ params, searchParams }: ReservaPageP
                     ? "text-drb-turquoise-600 dark:text-drb-turquoise-400"
                     : "text-gray-400 dark:text-white/30"
                 }`}>
-                  {step === "pendiente" ? t("pending") : step === "revisada" ? t("reviewed") : t("paid")}
+                  {statusLabel(step)}
                 </span>
               </div>
               {idx < 2 && (
@@ -326,8 +365,65 @@ export default async function ReservaPage({ params, searchParams }: ReservaPageP
                   {Number(reserva.precio).toLocaleString(locale)} €
                 </span>
               </div>
+
+              {/* Deposit / Remaining info for deposito_resto model */}
+              {bm === "deposito_resto" && reserva.deposit_amount != null && (
+                <div className="border-t border-gray-200 dark:border-white/10 pt-2.5 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-white/50">{t("depositAmount")}</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">
+                      {Number(reserva.deposit_amount).toLocaleString(locale)} €
+                    </span>
+                  </div>
+                  {reserva.remaining_amount != null && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500 dark:text-white/50">{t("remaining")}</span>
+                      <span className={`font-medium ${reserva.remaining_paid ? "text-green-600 dark:text-green-400" : "text-amber-600 dark:text-amber-400"}`}>
+                        {Number(reserva.remaining_amount).toLocaleString(locale)} €
+                        {reserva.remaining_paid && " ✓"}
+                      </span>
+                    </div>
+                  )}
+                  {reserva.remaining_due_date && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500 dark:text-white/50">{t("remainingDueDate")}</span>
+                      <span className="text-gray-700 dark:text-white/70">
+                        {formatDate(reserva.remaining_due_date)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Booking model label */}
+              {bm !== "pago_completo" && (
+                <div className="border-t border-gray-200 dark:border-white/10 pt-2.5 flex justify-between text-sm">
+                  <span className="text-gray-500 dark:text-white/50">{t("bookingModel")}</span>
+                  <span className="text-gray-700 dark:text-white/70 capitalize">
+                    {bm.replace(/_/g, " ")}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Confirm booking button for solo_reserva */}
+          {bm === "solo_reserva" && reserva.estado_pago === "pendiente_confirmacion" && !reserva.agency_confirmed && (
+            <div className="panel-card p-5">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                {t("confirmBooking")}
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-white/50 mb-3">
+                {t("confirmBookingDesc")}
+              </p>
+              <form action={confirmBooking}>
+                <input type="hidden" name="id" value={reserva.id} />
+                <button type="submit" className="btn-primary text-sm w-full">
+                  {t("confirmBooking")}
+                </button>
+              </form>
+            </div>
+          )}
 
           {/* Payment management */}
           <div className="panel-card p-5">
@@ -345,6 +441,10 @@ export default async function ReservaPage({ params, searchParams }: ReservaPageP
                 <option value="pendiente">{t("pending")}</option>
                 <option value="revisada">{t("reviewed")}</option>
                 <option value="cancelada">{t("cancelled")}</option>
+                <option value="deposito_pagado">{t("depositPaid")}</option>
+                <option value="pendiente_confirmacion">{t("pendingConfirmation")}</option>
+                <option value="confirmado">{t("confirmed")}</option>
+                <option value="vencido">{t("expired")}</option>
               </select>
               <button
                 type="submit"
