@@ -19,46 +19,46 @@ const translations = {
     s4: "Pago",
     sDep: "Selecciona tu fecha de salida",
     sAd: "Adultos",
-    sCh: "Ninos",
+    sCh: "Niños",
     sNx: "Continuar",
-    sBk: "Atras",
+    sBk: "Atrás",
     sFn: "Nombre completo",
     sEm: "Email",
-    sPh: "Telefono",
+    sPh: "Teléfono",
     sDt: "Tipo documento",
-    sDn: "Numero de documento",
+    sDn: "Número de documento",
     sDb: "Fecha de nacimiento",
     sNt: "Nacionalidad",
     sMc: "Contacto principal",
-    sCo: "Acompanante",
+    sCo: "Acompañante",
     sSm: "Resumen de tu reserva",
     sDs: "Destino",
     sFd: "Fecha de salida",
-    sDu: "Duracion",
+    sDu: "Duración",
     sTv: "Viajeros",
     sDp: "Anticipo para reservar (200\u20ac/persona)",
     sTt: "Total del viaje",
     sSc: "Pago cifrado y seguro con Stripe",
     sPy: "Pagar",
-    sCd: "Numero de tarjeta",
+    sCd: "Número de tarjeta",
     sEx: "Caducidad",
     sCv: "CVV",
     sHl: "Titular de la tarjeta",
     sCt: "\u00a1Reserva confirmada!",
-    sCm: "Recibiras un email con todos los detalles de tu viaje. Tu coordinador/a se pondra en contacto contigo pronto.",
+    sCm: "Recibirás un email con todos los detalles de tu viaje. Tu coordinador/a se pondrá en contacto contigo pronto.",
     sCl: "Volver al destino",
     sSp: "plazas disponibles",
     conf: "Confirmado",
-    last: "Ultimas plazas",
+    last: "Últimas plazas",
     sold: "Agotado",
     pp: "por persona",
     sUnit: "Precio unitario",
-    sDeposit: "Deposito",
+    sDeposit: "Depósito",
     sHt: "Hotel",
-    sRm: "Habitacion",
+    sRm: "Habitación",
     sHs: "Supl. alojamiento",
     adults: "adulto(s)",
-    children: "nino(s)",
+    children: "niño(s)",
     passenger: "Pasajero",
     dni: "DNI",
     passport: "Pasaporte",
@@ -67,10 +67,10 @@ const translations = {
     payDeposit: "Pagar anticipo",
     sendRequest: "Enviar solicitud",
     sRemaining: "Resto pendiente",
-    sRemainingDate: "Fecha limite resto",
+    sRemainingDate: "Fecha límite resto",
     requestSent: "Solicitud enviada",
-    requestSentDesc: "Tu solicitud de reserva ha sido enviada. La agencia te confirmara pronto.",
-    depositPaidDesc: "Has pagado el anticipo. El resto deberas abonarlo antes de la fecha indicada.",
+    requestSentDesc: "Tu solicitud de reserva ha sido enviada. La agencia te confirmará pronto.",
+    depositPaidDesc: "Has pagado el anticipo. El resto deberás abonarlo antes de la fecha indicada.",
     redirecting: "Redirigiendo al pago...",
   },
   en: {
@@ -1302,6 +1302,7 @@ export default function BookingModal({
                           display: "flex",
                           justifyContent: "space-between",
                           alignItems: "center",
+                          marginBottom: 8,
                         }}
                       >
                         <span style={{ fontFamily: FONT2, fontSize: 13, color: T.sub }}>
@@ -1311,6 +1312,37 @@ export default function BookingModal({
                           {remainingAmount.toLocaleString("es-ES")}{"€"}
                         </span>
                       </div>
+                      {(() => {
+                        const deadlineDays = bookingConfig?.paymentDeadlineDays ?? 30;
+                        const deadlineType = bookingConfig?.paymentDeadlineType ?? "before_departure";
+                        let deadlineDate: Date | null = null;
+                        if (deadlineType === "before_departure" && selectedDep) {
+                          const dep = new Date(depDate(selectedDep));
+                          dep.setDate(dep.getDate() - deadlineDays);
+                          deadlineDate = dep;
+                        } else if (deadlineType === "after_booking") {
+                          const d = new Date();
+                          d.setDate(d.getDate() + deadlineDays);
+                          deadlineDate = d;
+                        }
+                        if (!deadlineDate) return null;
+                        return (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <span style={{ fontFamily: FONT2, fontSize: 13, color: T.sub }}>
+                              {t.sRemainingDate}
+                            </span>
+                            <span style={{ fontFamily: FONT, fontWeight: 600, fontSize: 14, color: T.sub }}>
+                              {formatDate(deadlineDate.toISOString().split("T")[0])}
+                            </span>
+                          </div>
+                        );
+                      })()}
                     </>
                   )}
                   {bModel === "pago_completo" && (
