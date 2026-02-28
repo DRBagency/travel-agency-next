@@ -504,7 +504,14 @@
       "unread": "Unread",
       "markAsRead": "Mark as read",
       "noMessages": "No messages yet",
-      "noMessagesDesc": "When someone sends a message from your website, it will appear here."
+      "noMessagesDesc": "When someone sends a message from your website, it will appear here.",
+      "reply": "Reply",
+      "replied": "Replied",
+      "yourReply": "Your reply",
+      "replyPlaceholder": "Write your reply...",
+      "sendReply": "Send reply",
+      "replySent": "Reply sent by email",
+      "replyError": "Failed to send reply"
     },
     "soporte": {
       "title": "Support",

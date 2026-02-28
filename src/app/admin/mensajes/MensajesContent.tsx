@@ -11,6 +11,9 @@ import {
   CheckCircle2,
   Circle,
   Eye,
+  Reply,
+  Send,
+  Loader2,
 } from "lucide-react";
 import { sileo } from "sileo";
 import EmptyState from "@/components/ui/EmptyState";
@@ -21,6 +24,9 @@ interface Message {
   sender_email: string;
   message: string;
   read: boolean;
+  replied: boolean | null;
+  reply_message: string | null;
+  replied_at: string | null;
   created_at: string;
 }
 
@@ -38,6 +44,9 @@ export default function MensajesContent({
   const router = useRouter();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [markingRead, setMarkingRead] = useState<string | null>(null);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [sendingReply, setSendingReply] = useState(false);
 
   const handleMarkRead = async (id: string) => {
     setMarkingRead(id);
@@ -55,6 +64,30 @@ export default function MensajesContent({
       sileo.error({ title: tc("error") });
     } finally {
       setMarkingRead(null);
+    }
+  };
+
+  const handleSendReply = async (messageId: string) => {
+    if (!replyText.trim()) return;
+    setSendingReply(true);
+    try {
+      const res = await fetch("/api/admin/messages/reply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messageId, replyText: replyText.trim() }),
+      });
+      if (res.ok) {
+        sileo.success({ title: t("replySent") });
+        setReplyingTo(null);
+        setReplyText("");
+        router.refresh();
+      } else {
+        sileo.error({ title: t("replyError") });
+      }
+    } catch {
+      sileo.error({ title: tc("error") });
+    } finally {
+      setSendingReply(false);
     }
   };
 
@@ -86,6 +119,7 @@ export default function MensajesContent({
       <div className="space-y-2">
         {messages.map((msg, i) => {
           const isExpanded = expandedId === msg.id;
+          const isReplying = replyingTo === msg.id;
           return (
             <motion.div
               key={msg.id}
@@ -124,6 +158,9 @@ export default function MensajesContent({
                       {!msg.read && (
                         <Circle className="w-2 h-2 fill-drb-turquoise-500 text-drb-turquoise-500 shrink-0" />
                       )}
+                      {msg.replied && (
+                        <span className="text-[10px] badge-success">{t("replied")}</span>
+                      )}
                     </div>
                     <p className="text-xs text-gray-400 dark:text-white/40 truncate">
                       {msg.sender_email}
@@ -153,7 +190,9 @@ export default function MensajesContent({
                   </div>
 
                   {/* Status icon */}
-                  {msg.read ? (
+                  {msg.replied ? (
+                    <Reply className="w-4 h-4 text-emerald-500 shrink-0" />
+                  ) : msg.read ? (
                     <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                   ) : (
                     <MessageCircle className="w-4 h-4 text-drb-turquoise-500 shrink-0" />
@@ -176,6 +215,67 @@ export default function MensajesContent({
                         </p>
                       </div>
 
+                      {/* Previous reply if exists */}
+                      {msg.replied && msg.reply_message && (
+                        <div className="bg-drb-turquoise-50 dark:bg-drb-turquoise-500/5 border border-drb-turquoise-200 dark:border-drb-turquoise-500/15 rounded-xl p-4">
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <Reply className="w-3.5 h-3.5 text-drb-turquoise-500" />
+                            <span className="text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400">
+                              {t("yourReply")}
+                              {msg.replied_at && (
+                                <span className="text-gray-400 dark:text-white/30 ms-2 font-normal">
+                                  {new Date(msg.replied_at).toLocaleDateString(locale, {
+                                    day: "numeric",
+                                    month: "short",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
+                              )}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-700 dark:text-white/70 whitespace-pre-wrap">
+                            {msg.reply_message}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Reply form */}
+                      {isReplying && (
+                        <div className="space-y-2">
+                          <textarea
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            placeholder={t("replyPlaceholder")}
+                            rows={4}
+                            className="w-full panel-input resize-y"
+                            autoFocus
+                          />
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleSendReply(msg.id)}
+                              disabled={sendingReply || !replyText.trim()}
+                              className="btn-primary text-xs px-4 py-1.5 flex items-center gap-1.5"
+                            >
+                              {sendingReply ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <Send className="w-3.5 h-3.5" />
+                              )}
+                              {t("sendReply")}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => { setReplyingTo(null); setReplyText(""); }}
+                              className="text-xs text-gray-400 dark:text-white/40 hover:text-gray-600 dark:hover:text-white/60 transition-colors px-3 py-1.5"
+                            >
+                              {tc("cancel")}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Actions */}
                       <div className="flex items-center gap-3">
                         {!msg.read && (
@@ -189,9 +289,22 @@ export default function MensajesContent({
                             {t("markAsRead")}
                           </button>
                         )}
+                        {!isReplying && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setReplyingTo(msg.id);
+                              setReplyText("");
+                            }}
+                            className="text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline flex items-center gap-1"
+                          >
+                            <Reply className="w-3.5 h-3.5" />
+                            {t("reply")}
+                          </button>
+                        )}
                         <a
                           href={`mailto:${msg.sender_email}`}
-                          className="text-xs font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline flex items-center gap-1"
+                          className="text-xs font-medium text-gray-400 dark:text-white/40 hover:text-gray-600 dark:hover:text-white/60 hover:underline flex items-center gap-1 transition-colors"
                         >
                           <Mail className="w-3.5 h-3.5" />
                           {msg.sender_email}

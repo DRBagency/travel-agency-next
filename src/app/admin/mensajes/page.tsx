@@ -12,7 +12,7 @@ export default async function MensajesPage() {
 
   const { data: messages } = await supabaseAdmin
     .from("contact_messages")
-    .select("id, sender_name, sender_email, message, read, created_at")
+    .select("id, sender_name, sender_email, message, read, replied, reply_message, replied_at, created_at")
     .eq("cliente_id", client.id)
     .order("created_at", { ascending: false });
 

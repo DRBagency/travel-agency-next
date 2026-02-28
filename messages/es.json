@@ -470,7 +470,14 @@
       "unread": "No leído",
       "markAsRead": "Marcar como leído",
       "noMessages": "No hay mensajes todavía",
-      "noMessagesDesc": "Cuando alguien envíe un mensaje desde tu web, aparecerá aquí."
+      "noMessagesDesc": "Cuando alguien envíe un mensaje desde tu web, aparecerá aquí.",
+      "reply": "Responder",
+      "replied": "Respondido",
+      "yourReply": "Tu respuesta",
+      "replyPlaceholder": "Escribe tu respuesta...",
+      "sendReply": "Enviar respuesta",
+      "replySent": "Respuesta enviada por email",
+      "replyError": "Error al enviar la respuesta"
     },
     "soporte": {
       "title": "Soporte",

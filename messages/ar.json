@@ -504,7 +504,14 @@
       "unread": "غير مقروءة",
       "markAsRead": "تحديد كمقروءة",
       "noMessages": "لا توجد رسائل بعد",
-      "noMessagesDesc": "عندما يرسل شخص رسالة من موقعك، ستظهر هنا."
+      "noMessagesDesc": "عندما يرسل شخص رسالة من موقعك، ستظهر هنا.",
+      "reply": "رد",
+      "replied": "تم الرد",
+      "yourReply": "ردك",
+      "replyPlaceholder": "اكتب ردك...",
+      "sendReply": "إرسال الرد",
+      "replySent": "تم إرسال الرد بالبريد الإلكتروني",
+      "replyError": "فشل في إرسال الرد"
     },
     "soporte": {
       "title": "الدعم",
