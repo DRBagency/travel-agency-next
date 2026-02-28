@@ -1118,7 +1118,8 @@
       "funnelTitle": "Conversion funnel",
       "funnelSubtitle": "Customers by pipeline stage",
       "conversionRate": "Conversion rate",
-      "customers": "customers"
+      "customers": "customers",
+      "dates": "Dates"
     }
   },
   "owner": {

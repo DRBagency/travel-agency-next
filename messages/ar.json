@@ -1118,7 +1118,8 @@
       "funnelTitle": "قمع التحويل",
       "funnelSubtitle": "العملاء حسب مرحلة المبيعات",
       "conversionRate": "معدل التحويل",
-      "customers": "عملاء"
+      "customers": "عملاء",
+      "dates": "التواريخ"
     }
   },
   "owner": {

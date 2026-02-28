@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import CustomerCRMPanel from "./CustomerCRMPanel";
+import CustomerActivitySection from "./CustomerActivitySection";
 
 export const dynamic = "force-dynamic";
 
@@ -162,13 +163,12 @@ export default async function CustomerDetailPage({ params }: PageProps) {
 
       {/* Two-column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left: CRM Panel */}
+        {/* Left: CRM Panel (status, notes, tags) */}
         <CustomerCRMPanel
           customerId={customer.id}
           notes={customer.notes || ""}
           leadStatus={customer.lead_status || "nuevo"}
           tags={(customer.tags as string[] | null) || []}
-          activities={activities || []}
         />
 
         {/* Right: Booking history + Traveler insights */}
@@ -220,7 +220,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
                       {/* Details grid */}
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div>
-                          <span className="text-gray-400 dark:text-white/40 block">{t("dates") || "Fechas"}</span>
+                          <span className="text-gray-400 dark:text-white/40 block">{t("dates")}</span>
                           <span className="text-gray-700 dark:text-white/70">
                             {formatDate(r.fecha_salida as string)}
                           </span>
@@ -329,6 +329,12 @@ export default async function CustomerDetailPage({ params }: PageProps) {
           )}
         </div>
       </div>
+
+      {/* Full-width: Activity registration + Timeline */}
+      <CustomerActivitySection
+        customerId={customer.id}
+        activities={activities || []}
+      />
     </div>
   );
 }

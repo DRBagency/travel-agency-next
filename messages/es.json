@@ -1118,7 +1118,8 @@
       "funnelTitle": "Embudo de conversión",
       "funnelSubtitle": "Clientes por etapa del pipeline",
       "conversionRate": "Tasa de conversión",
-      "customers": "clientes"
+      "customers": "clientes",
+      "dates": "Fechas"
     }
   },
   "owner": {
