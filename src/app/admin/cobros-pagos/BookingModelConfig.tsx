@@ -123,8 +123,8 @@ export default function BookingModelConfig({
         })}
       </div>
 
-      {/* Deposit config — only if model is not pago_completo */}
-      {model !== "pago_completo" && (
+      {/* Deposit config — only for deposito_resto */}
+      {model === "deposito_resto" && (
         <div className="space-y-4 rounded-xl border border-gray-200 dark:border-white/10 p-5 bg-gray-50/50 dark:bg-white/[0.04]">
           <h3 className="font-semibold text-gray-900 dark:text-white">
             {t("depositConfig")}
