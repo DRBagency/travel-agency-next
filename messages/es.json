@@ -1357,7 +1357,21 @@
       "priority": "Prioridad",
       "status": "Estado",
       "date": "Fecha",
-      "noTickets": "No hay tickets"
+      "noTickets": "No hay tickets",
+      "detail": {
+        "reopenedByOwner": "Ticket reabierto por soporte",
+        "statusChangedByOwner": "Ticket {status} por soporte",
+        "reopenTicket": "Reabrir ticket",
+        "closeTicket": "Cerrar ticket",
+        "closedStatus": "cerrado",
+        "reopenedStatus": "reabierto",
+        "description": "Descripción"
+      },
+      "thread": {
+        "ticketClosed": "Este ticket está cerrado. Envía un mensaje para reabrirlo.",
+        "reopenPlaceholder": "Escribe para reabrir el ticket...",
+        "messagePlaceholder": "Escribe una respuesta..."
+      }
     },
     "eden": {
       "welcome": "¡Hola! Soy Eden, tu copiloto de plataforma. Puedo analizar métricas, detectar riesgos y ayudarte a optimizar tu SaaS.",

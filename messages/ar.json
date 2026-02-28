@@ -1357,7 +1357,21 @@
       "priority": "الأولوية",
       "status": "الحالة",
       "date": "التاريخ",
-      "noTickets": "لا توجد تذاكر"
+      "noTickets": "لا توجد تذاكر",
+      "detail": {
+        "reopenedByOwner": "تم إعادة فتح التذكرة بواسطة الدعم",
+        "statusChangedByOwner": "التذكرة {status} بواسطة الدعم",
+        "reopenTicket": "إعادة فتح التذكرة",
+        "closeTicket": "إغلاق التذكرة",
+        "closedStatus": "مغلقة",
+        "reopenedStatus": "مفتوحة",
+        "description": "الوصف"
+      },
+      "thread": {
+        "ticketClosed": "هذه التذكرة مغلقة. أرسل رسالة لإعادة فتحها.",
+        "reopenPlaceholder": "اكتب لإعادة فتح التذكرة...",
+        "messagePlaceholder": "اكتب رداً..."
+      }
     },
     "eden": {
       "welcome": "مرحباً! أنا إيدن، مساعدك في إدارة المنصة. يمكنني تحليل المقاييس واكتشاف المخاطر ومساعدتك في تحسين منصتك.",

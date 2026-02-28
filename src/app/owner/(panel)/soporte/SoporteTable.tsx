@@ -2,6 +2,7 @@
 
 import DataTable, { Column } from "@/components/ui/DataTable";
 import { useTranslations, useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 import { Headphones } from "lucide-react";
 
 interface Ticket {
@@ -21,6 +22,7 @@ export default function SoporteTable({ tickets }: SoporteTableProps) {
   const t = useTranslations("owner.soporte");
   const tc = useTranslations("common");
   const locale = useLocale();
+  const router = useRouter();
 
   const columns: Column<Ticket>[] = [
     {
@@ -111,6 +113,7 @@ export default function SoporteTable({ tickets }: SoporteTableProps) {
       pageSize={10}
       emptyIcon={<Headphones className="w-10 h-10" />}
       emptyMessage={t("noTickets")}
+      onRowClick={(row) => router.push(`/owner/soporte/${row.id}`)}
     />
   );
 }
