@@ -72,18 +72,18 @@ export async function POST(req: Request) {
   });
 
   // Send email via Resend
-  try {
-    await resend.emails.send({
-      from: `${fromName} <${fromAddress}>`,
-      to: msg.sender_email,
-      replyTo: replyToEmail,
-      subject: `Re: Mensaje de ${msg.sender_name}`,
-      html,
-    });
-  } catch (emailError: any) {
+  const { data: emailData, error: emailError } = await resend.emails.send({
+    from: `${fromName} <${fromAddress}>`,
+    to: msg.sender_email,
+    replyTo: replyToEmail,
+    subject: `Re: Mensaje de ${msg.sender_name}`,
+    html,
+  });
+
+  if (emailError) {
     console.error("Resend error:", emailError);
     return NextResponse.json(
-      { error: "Failed to send email" },
+      { error: emailError.message || "Failed to send email" },
       { status: 500 }
     );
   }
