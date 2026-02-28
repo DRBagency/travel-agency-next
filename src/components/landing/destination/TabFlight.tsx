@@ -7,6 +7,7 @@ const FONT = `var(--font-syne), Syne, sans-serif`;
 const FONT2 = `var(--font-dm), DM Sans, sans-serif`;
 
 interface FlightSegment {
+  tipo?: string;
   fecha?: string;
   hora_salida?: string;
   hora_llegada?: string;
@@ -109,7 +110,8 @@ export function TabFlight({ flights }: TabFlightProps) {
       </h3>
 
       {segmentos.map((seg, idx) => {
-        const label = idx === 0 ? t("flightOutbound") : idx === 1 ? t("flightReturn") : `${t("tabFlight")} ${idx + 1}`;
+        const tipo = seg.tipo || (idx === 0 ? "ida" : idx === 1 ? "retorno" : "conexion");
+        const label = tipo === "ida" ? t("flightOutbound") : tipo === "retorno" ? t("flightReturn") : t("flightConnection");
         const isDirect = !seg.escalas || seg.escalas === "Directo" || seg.escalas === "Direct";
 
         return (

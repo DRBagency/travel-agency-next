@@ -1005,6 +1005,8 @@ function DestinationDetailInner({
               <TabDepartures
                 departures={departures}
                 onBook={(dep) => openBooking(dep)}
+                destinationName={destino?.nombre || ""}
+                clienteId={bookingConfig?.clienteId || ""}
               />
             )}
 

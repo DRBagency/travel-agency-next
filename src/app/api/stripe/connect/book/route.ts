@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-server";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 import { getClientByDomain } from "@/lib/getClientByDomain";
+import { decrementDepartureSpots } from "@/lib/decrement-departure-spots";
 
 export async function POST(req: Request) {
   try {
@@ -72,6 +73,19 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "Error creando reserva" },
         { status: 500 }
+      );
+    }
+
+    // Decrement departure spots
+    const resolvedClienteId = body.cliente_id || cliente.id;
+    if (body.destino_id && body.fecha_salida) {
+      await decrementDepartureSpots({
+        clienteId: resolvedClienteId,
+        destinoId: body.destino_id,
+        fechaSalida: body.fecha_salida,
+        personas: Number(body.personas) || 1,
+      }).catch((err) =>
+        console.error("❌ Error decrementing departure spots:", err)
       );
     }
 

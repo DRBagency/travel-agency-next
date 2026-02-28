@@ -142,9 +142,12 @@ export async function POST(req: Request) {
       metadata: {
         reserva_id: reserva.id,
         cliente_id: body.cliente_id,
+        destino_id: body.destino_id || "",
         destino_nombre: body.destino_nombre,
         nombre: body.nombre,
         email: body.email,
+        fecha_salida: body.fecha_salida || "",
+        personas: String(Number(body.personas) || 0),
       },
     } as Stripe.Checkout.SessionCreateParams;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { sileo } from "sileo";
 import {
@@ -64,6 +64,8 @@ interface HotelData {
   nombre: string;
   estrellas: number;
   imagen: string;
+  galeria: string[];
+  es_recomendado: boolean;
   descripcion: string;
   amenidades: string[];
   direccion: string;
@@ -80,6 +82,8 @@ function normalizeHotels(raw: any): HotelData[] {
     nombre: h.nombre || h.name || "",
     estrellas: h.estrellas ?? h.stars ?? 0,
     imagen: h.imagen || h.image || "",
+    galeria: h.galeria || [],
+    es_recomendado: h.es_recomendado ?? false,
     descripcion: h.descripcion || h.description || "",
     amenidades: h.amenidades || h.amenities || [],
     direccion: h.direccion || h.address || "",
@@ -97,7 +101,8 @@ function normalizeHotels(raw: any): HotelData[] {
 }
 
 const EMPTY_HOTEL: HotelData = {
-  nombre: "", estrellas: 0, imagen: "", descripcion: "", amenidades: [], direccion: "",
+  nombre: "", estrellas: 0, imagen: "", galeria: [], es_recomendado: false,
+  descripcion: "", amenidades: [], direccion: "",
   desayuno_incluido: false, regimen: "solo_alojamiento", suplemento: 0, habitaciones: [],
 };
 
@@ -106,6 +111,7 @@ const EMPTY_ROOM: HabitacionData = {
 };
 
 interface FlightSegment {
+  tipo: string;
   fecha: string;
   hora_salida: string;
   hora_llegada: string;
@@ -129,7 +135,7 @@ interface VuelosData {
 }
 
 const EMPTY_SEGMENT: FlightSegment = {
-  fecha: "", hora_salida: "", hora_llegada: "", llegada_dia_siguiente: false,
+  tipo: "ida", fecha: "", hora_salida: "", hora_llegada: "", llegada_dia_siguiente: false,
   origen_codigo: "", origen_ciudad: "", destino_codigo: "", destino_ciudad: "",
   duracion: "", escalas: "Directo", aerolinea: "", numero_vuelo: "",
   clase: "Turista", equipaje: "", estado: "OK",
@@ -254,6 +260,18 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
   const [coordinador, setCoordinador] = useState<CoordinadorData>(
     destino.coordinador ?? { nombre: "", avatar: "", rol: "", descripcion: "", idiomas: [] }
   );
+  const [coordinadorId, setCoordinadorId] = useState<string>(destino.coordinador_id ?? "");
+  const [coordinadoresLibrary, setCoordinadoresLibrary] = useState<Array<CoordinadorData & { id: string }>>([]);
+
+  const fetchCoordinadores = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/coordinadores");
+      if (res.ok) setCoordinadoresLibrary(await res.json());
+    } catch { /* ignore */ }
+  }, []);
+
+  useEffect(() => { fetchCoordinadores(); }, [fetchCoordinadores]);
+
   const [tags, setTags] = useState<string[]>(destino.tags ?? []);
   const [highlights, setHighlights] = useState<string[]>(destino.highlights ?? []);
   const [clima, setClima] = useState<ClimaData>(
@@ -305,6 +323,7 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
           salidas,
           faqs,
           coordinador,
+          coordinador_id: coordinadorId || null,
           tags,
           highlights,
           clima,
@@ -371,6 +390,11 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         if (unsplashField.startsWith("hotel_imagen_")) {
           const hIdx = Number(unsplashField.split("_")[2]);
           setHoteles((prev) => prev.map((h, i) => i === hIdx ? { ...h, imagen: url } : h));
+        }
+        // Hotel gallery — field key is "hotel_galeria_<hotelIndex>"
+        if (unsplashField.startsWith("hotel_galeria_")) {
+          const hIdx = Number(unsplashField.split("_")[2]);
+          setHoteles((prev) => prev.map((h, i) => i === hIdx ? { ...h, galeria: [...h.galeria, url] } : h));
         }
         // Room image — field key is "room_imagen_<hotelIndex>_<roomIndex>"
         if (unsplashField.startsWith("room_imagen_")) {
@@ -1110,6 +1134,35 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                         </div>
                       )}
                     </div>
+                    {/* Recommended toggle */}
+                    <div className="md:col-span-2 flex items-center gap-3">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked={htl.es_recomendado} onChange={(e) => updateHotel({ es_recomendado: e.target.checked })} className="sr-only peer" />
+                        <div className="w-9 h-5 bg-gray-200 dark:bg-white/10 peer-checked:bg-emerald-500 rounded-full peer-focus:ring-2 peer-focus:ring-emerald-500/30 transition-colors after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full" />
+                      </label>
+                      <span className="text-sm text-gray-700 dark:text-white/70">{t('hotelRecommended')}</span>
+                    </div>
+                    {/* Gallery */}
+                    <div className="md:col-span-2">
+                      <label className="panel-label mb-2 block">{t('hotelGallery')}</label>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {htl.galeria.map((url, gIdx) => (
+                          <div key={gIdx} className="relative group">
+                            <img src={url} alt="" className="w-20 h-14 rounded-lg object-cover border border-gray-200 dark:border-white/10" />
+                            <button type="button" onClick={() => updateHotel({ galeria: htl.galeria.filter((_, i) => i !== gIdx) })}
+                              className="absolute -top-1.5 -end-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex gap-2">
+                        <input type="text" placeholder="https://..." className="panel-input flex-1"
+                          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); const v = (e.target as HTMLInputElement).value.trim(); if (v) { updateHotel({ galeria: [...htl.galeria, v] }); (e.target as HTMLInputElement).value = ""; } } }} />
+                        <button type="button" onClick={() => openUnsplash(`hotel_galeria_${hIdx}`)}
+                          className="shrink-0 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors">
+                          <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/50" />
+                        </button>
+                      </div>
+                    </div>
                     <div className="md:col-span-2">
                       <label className="panel-label">{t('hotelDescription')}</label>
                       <textarea rows={3} value={htl.descripcion} onChange={(e) => updateHotel({ descripcion: e.target.value })} className="panel-input w-full" />
@@ -1273,7 +1326,8 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
             {vuelos.segmentos.map((seg, sIdx) => {
               const updateSeg = (patch: Partial<FlightSegment>) =>
                 setVuelos((p) => ({ ...p, segmentos: p.segmentos.map((s, i) => (i === sIdx ? { ...s, ...patch } : s)) }));
-              const label = sIdx === 0 ? t('outbound') : sIdx === 1 ? t('returnFlight') : t('flightSegment', { n: sIdx + 1 });
+              const tipoVal = seg.tipo || (sIdx === 0 ? "ida" : sIdx === 1 ? "retorno" : "conexion");
+              const label = tipoVal === "ida" ? t('outbound') : tipoVal === "retorno" ? t('returnFlight') : t('flightConnection');
               const isExpanded = expandedFlight === sIdx;
 
               return (
@@ -1321,8 +1375,18 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
                   {isExpanded && (
                   <div className="px-5 pb-5 space-y-4 border-t border-gray-100 dark:border-white/[0.06]">
 
+                  {/* Flight type */}
+                  <div className="pt-4">
+                    <label className="panel-label">{t('flightType')}</label>
+                    <select value={tipoVal} onChange={(e) => updateSeg({ tipo: e.target.value })} className="panel-input w-full md:w-48">
+                      <option value="ida">{t('outbound')}</option>
+                      <option value="retorno">{t('returnFlight')}</option>
+                      <option value="conexion">{t('flightConnection')}</option>
+                    </select>
+                  </div>
+
                   {/* Row 1: Date, departure, arrival, duration */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
                       <label className="panel-label">{t('flightDate')}</label>
                       <input type="date" value={seg.fecha} onChange={(e) => updateSeg({ fecha: e.target.value })} className="panel-input w-full" />
@@ -1727,107 +1791,85 @@ export default function DestinoEditor({ destino, plan, preferredLanguage = "es",
         {/* ------ COORDINATOR TAB ------ */}
         {tab === "coordinator" && (
           <div className="space-y-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Coordinador</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="panel-label">Nombre</label>
-                <input
-                  type="text"
-                  value={coordinador.nombre}
-                  onChange={(e) => setCoordinador((p) => ({ ...p, nombre: e.target.value }))}
-                  className="panel-input w-full"
-                />
-              </div>
-              <div>
-                <label className="panel-label">Rol</label>
-                <input
-                  type="text"
-                  value={coordinador.rol}
-                  onChange={(e) => setCoordinador((p) => ({ ...p, rol: e.target.value }))}
-                  className="panel-input w-full"
-                  placeholder="Ej: Coordinador de grupo"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="panel-label">Avatar</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={coordinador.avatar}
-                    onChange={(e) => setCoordinador((p) => ({ ...p, avatar: e.target.value }))}
-                    className="panel-input w-full flex-1"
-                    placeholder="https://..."
-                  />
-                  <button
-                    type="button"
-                    onClick={() => openUnsplash("coordinador_avatar")}
-                    className="shrink-0 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-colors"
-                  >
-                    <ImageIcon className="w-4 h-4 text-gray-500 dark:text-white/50" />
-                  </button>
-                </div>
-                {coordinador.avatar && (
-                  <div className="mt-2 rounded-full border border-gray-200 dark:border-white/10 overflow-hidden w-20 h-20">
-                    <img
-                      src={coordinador.avatar}
-                      alt="Avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-              </div>
-              <div className="md:col-span-2">
-                <label className="panel-label">Descripción</label>
-                <textarea
-                  rows={3}
-                  value={coordinador.descripcion}
-                  onChange={(e) => setCoordinador((p) => ({ ...p, descripcion: e.target.value }))}
-                  className="panel-input w-full"
-                />
-              </div>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t("tabCoordinator")}</h2>
+              <a
+                href="/admin/coordinadores"
+                className="text-sm text-drb-turquoise-400 hover:underline"
+              >
+                {t("manageCoordinators")}
+              </a>
             </div>
 
-            {/* Idiomas */}
+            {/* Dropdown selector */}
             <div>
-              <label className="panel-label mb-2 block">Idiomas</label>
-              <div className="space-y-2">
-                {coordinador.idiomas.map((lang, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={lang}
-                      onChange={(e) => {
-                        const next = [...coordinador.idiomas];
-                        next[idx] = e.target.value;
-                        setCoordinador((p) => ({ ...p, idiomas: next }));
-                      }}
-                      className="panel-input flex-1"
-                      placeholder="Ej: Español"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setCoordinador((p) => ({
-                          ...p,
-                          idiomas: p.idiomas.filter((_, i) => i !== idx),
-                        }))
-                      }
-                      className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <button
-                type="button"
-                onClick={() => setCoordinador((p) => ({ ...p, idiomas: [...p.idiomas, ""] }))}
-                className="mt-2 flex items-center gap-1.5 text-sm font-medium text-drb-turquoise-600 dark:text-drb-turquoise-400 hover:underline"
+              <label className="panel-label mb-1 block">{t("selectCoordinator")}</label>
+              <select
+                className="panel-input w-full px-3 py-2 rounded-lg"
+                value={coordinadorId}
+                onChange={(e) => {
+                  const id = e.target.value;
+                  setCoordinadorId(id);
+                  if (id) {
+                    const found = coordinadoresLibrary.find((c) => c.id === id);
+                    if (found) {
+                      setCoordinador({
+                        nombre: found.nombre,
+                        avatar: found.avatar,
+                        rol: found.rol,
+                        descripcion: found.descripcion,
+                        idiomas: found.idiomas || [],
+                      });
+                    }
+                  } else {
+                    setCoordinador({ nombre: "", avatar: "", rol: "", descripcion: "", idiomas: [] });
+                  }
+                }}
               >
-                <Plus className="w-4 h-4" />
-                Añadir idioma
-              </button>
+                <option value="">{t("noCoordinator")}</option>
+                {coordinadoresLibrary.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.nombre}{c.rol ? ` — ${c.rol}` : ""}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            {/* Preview selected coordinator */}
+            {coordinador.nombre && (
+              <div className="panel-card p-5 flex gap-4">
+                {coordinador.avatar ? (
+                  <img
+                    src={coordinador.avatar}
+                    alt={coordinador.nombre}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-drb-turquoise-400/20 flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-drb-turquoise-500/10 flex items-center justify-center text-2xl flex-shrink-0">
+                    👤
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <h4 className="font-semibold text-gray-900 dark:text-white">{coordinador.nombre}</h4>
+                  {coordinador.rol && <p className="text-sm text-drb-turquoise-400">{coordinador.rol}</p>}
+                  {coordinador.descripcion && (
+                    <p className="text-sm text-gray-500 dark:text-white/50 mt-1">{coordinador.descripcion}</p>
+                  )}
+                  {coordinador.idiomas?.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {coordinador.idiomas.map((lang, i) => (
+                        <span
+                          key={i}
+                          className="px-1.5 py-0.5 text-[11px] rounded bg-drb-turquoise-500/10 text-drb-turquoise-400"
+                        >
+                          {lang}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="flex justify-end pt-2">
               <SaveButton />

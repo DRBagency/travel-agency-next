@@ -37,6 +37,9 @@ const NUMBER_FIELDS = new Set([
   "longitude",
 ]);
 
+/** UUID FK fields — stored as-is or null */
+const UUID_FIELDS = new Set(["coordinador_id"]);
+
 const BOOLEAN_FIELDS = new Set(["activo"]);
 
 const JSONB_FIELDS = new Set([
@@ -82,6 +85,8 @@ export async function POST(
       payload[key] = isNaN(n) ? null : n;
     } else if (BOOLEAN_FIELDS.has(key)) {
       payload[key] = Boolean(value);
+    } else if (UUID_FIELDS.has(key)) {
+      payload[key] = typeof value === "string" && value.trim() !== "" ? value.trim() : null;
     } else if (JSONB_FIELDS.has(key)) {
       payload[key] = value ?? null;
     }

@@ -456,6 +456,7 @@ const AdminShell = ({
     [
       { label: t("nav.miWeb"), href: "/admin/mi-web", icon: "🌐" },
       { label: t("nav.destinos"), href: "/admin/destinos", icon: "🏝️" },
+      { label: t("nav.coordinadores"), href: "/admin/coordinadores", icon: "🧑‍✈️" },
       { label: t("nav.social"), href: "/admin/social", icon: "📱" },
     ],
     // Operations

@@ -6,6 +6,7 @@ import { sendReservationEmails } from "@/lib/emails/send-reservation-emails";
 import { sendTemplateEmail } from "@/lib/emails/send-template-email";
 import { requireValidApiDomain } from "@/lib/requireValidApiDomain";
 import { createNotification } from "@/lib/notifications/create-notification";
+import { decrementDepartureSpots } from "@/lib/decrement-departure-spots";
 
 export const runtime = "nodejs";
 
@@ -98,6 +99,18 @@ export async function POST(req: Request) {
       }
 
       console.log(`✅ Reserva actualizada a ${newEstado}:`, session.id);
+
+      // Decrementar plazas de la salida
+      if (m.destino_id && m.fecha_salida) {
+        await decrementDepartureSpots({
+          clienteId: m.cliente_id,
+          destinoId: m.destino_id,
+          fechaSalida: m.fecha_salida,
+          personas: Number(m.personas) || 1,
+        }).catch((err) =>
+          console.error("❌ Error decrementing departure spots:", err)
+        );
+      }
 
       // Crear notificación para la agencia
       const notifTitle = bookingModel === "deposito_resto"

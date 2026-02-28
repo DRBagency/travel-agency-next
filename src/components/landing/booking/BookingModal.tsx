@@ -449,6 +449,7 @@ export default function BookingModal({
   const buildBookingPayload = () => ({
     total: totalPrice,
     cliente_id: bookingConfig?.clienteId || "",
+    destino_id: destination?.id || "",
     destino_nombre: destination?.nombre || "",
     nombre: contactName,
     email: contactEmail,

@@ -20,6 +20,8 @@ interface Hotel {
   nombre: string;
   estrellas?: number;
   imagen?: string;
+  galeria?: string[];
+  es_recomendado?: boolean;
   descripcion?: string;
   amenidades?: string[];
   direccion?: string;
@@ -66,10 +68,14 @@ export function TabHotel({
 
   if (hotels.length === 0) return null;
 
+  const [galleryIdx, setGalleryIdx] = useState<Record<number, number>>({});
+
   const compat = (h: any) => ({
     nombre: h.nombre || h.name || "",
     estrellas: h.estrellas ?? h.stars ?? 0,
     imagen: h.imagen || h.image || "",
+    galeria: h.galeria || [],
+    es_recomendado: h.es_recomendado ?? false,
     descripcion: h.descripcion || h.description || "",
     amenidades: h.amenidades || h.amenities || [],
     direccion: h.direccion || h.address || "",
@@ -118,36 +124,99 @@ export function TabHotel({
             }}
           >
             {/* Hotel image */}
-            {h.imagen && (
-              <div style={{ position: "relative" }}>
-                <Img
-                  src={h.imagen}
-                  alt={h.nombre}
-                  isDark={T.mode === "dark"}
-                  style={{ width: "100%", height: 240 }}
-                />
-                {/* Price badge */}
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 14,
-                    right: 14,
-                    background: T.accent,
-                    color: "#fff",
-                    fontFamily: FONT,
-                    fontWeight: 800,
-                    fontSize: 15,
-                    padding: "8px 16px",
-                    borderRadius: 50,
-                    boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
-                  }}
-                >
-                  {h.suplemento === 0
-                    ? t("includedInPrice")
-                    : `+${h.suplemento}€ ${t("perPerson")}`}
+            {(() => {
+              const allImages = [h.imagen, ...h.galeria].filter(Boolean) as string[];
+              const activeIdx = galleryIdx[hIdx] ?? 0;
+              const activeImg = allImages[activeIdx] || h.imagen;
+              return allImages.length > 0 ? (
+                <div style={{ position: "relative" }}>
+                  <Img
+                    src={activeImg}
+                    alt={h.nombre}
+                    isDark={T.mode === "dark"}
+                    style={{ width: "100%", height: 240 }}
+                  />
+                  {/* Price badge */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: 14,
+                      insetInlineEnd: 14,
+                      background: T.accent,
+                      color: "#fff",
+                      fontFamily: FONT,
+                      fontWeight: 800,
+                      fontSize: 15,
+                      padding: "8px 16px",
+                      borderRadius: 50,
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                    }}
+                  >
+                    {h.suplemento === 0
+                      ? t("includedInPrice")
+                      : `+${h.suplemento}€ ${t("perPerson")}`}
+                  </div>
+                  {/* Recommended badge */}
+                  {h.es_recomendado && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 14,
+                        insetInlineStart: 14,
+                        background: "#10b981",
+                        color: "#fff",
+                        fontFamily: FONT2,
+                        fontWeight: 700,
+                        fontSize: 12,
+                        padding: "6px 14px",
+                        borderRadius: 50,
+                        boxShadow: "0 4px 12px rgba(16,185,129,0.3)",
+                      }}
+                    >
+                      ⭐ {t("recommended")}
+                    </div>
+                  )}
+                  {/* Gallery thumbnails */}
+                  {allImages.length > 1 && (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                        padding: "8px 14px",
+                        overflowX: "auto",
+                      }}
+                    >
+                      {allImages.map((img, gIdx) => (
+                        <div
+                          key={gIdx}
+                          onClick={() => setGalleryIdx((prev) => ({ ...prev, [hIdx]: gIdx }))}
+                          style={{
+                            width: 56,
+                            height: 40,
+                            borderRadius: 8,
+                            overflow: "hidden",
+                            flexShrink: 0,
+                            cursor: "pointer",
+                            border: gIdx === activeIdx
+                              ? `2px solid ${T.accent}`
+                              : `1.5px solid ${T.border}`,
+                            opacity: gIdx === activeIdx ? 1 : 0.7,
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          <Img
+                            src={img}
+                            alt={`${h.nombre} ${gIdx + 1}`}
+                            isDark={T.mode === "dark"}
+                            style={{ width: 56, height: 40 }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
+              ) : null;
+            })()}
 
             <div style={{ padding: 24 }}>
               {/* Name + stars + select button */}

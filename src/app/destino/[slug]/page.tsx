@@ -49,6 +49,16 @@ export default async function DestinoPage({
 
   if (!destino) return notFound();
 
+  // If destination has a coordinator FK, fetch from the library
+  if (destino.coordinador_id) {
+    const { data: coord } = await supabaseAdmin
+      .from("coordinadores")
+      .select("nombre, avatar, rol, descripcion, idiomas")
+      .eq("id", destino.coordinador_id)
+      .single();
+    if (coord) destino.coordinador = coord;
+  }
+
   const clientLocale = VALID_LOCALES.includes(client.preferred_language as any)
     ? (client.preferred_language as string)
     : "es";
