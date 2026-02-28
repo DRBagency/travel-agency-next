@@ -162,7 +162,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
       </div>
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: CRM Panel (status, notes, tags) */}
         <CustomerCRMPanel
           customerId={customer.id}
@@ -172,9 +172,9 @@ export default async function CustomerDetailPage({ params }: PageProps) {
         />
 
         {/* Right: Booking history + Traveler insights */}
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {/* Booking history — expanded cards */}
-          <div className="panel-card p-4">
+          <div className="panel-card p-4 flex-1">
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
               {t("bookingHistory")} ({reservas.length})
             </h3>
@@ -264,7 +264,7 @@ export default async function CustomerDetailPage({ params }: PageProps) {
 
           {/* Traveler insights */}
           {reservas.length > 0 && (
-            <div className="panel-card p-4">
+            <div className="panel-card p-4 flex-1">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
                 {t("travelerInsights") || "Resumen del viajero"}
               </h3>
