@@ -88,8 +88,31 @@ stripe trigger checkout.session.completed
 4242 4242 4242 4242 (cualquier fecha futura, cualquier CVC)
 ```
 
+## Sistema de Depósitos/Anticipos (E17 — Completado)
+
+La agencia configura su modelo de cobro desde `/admin/cobros-pagos`:
+
+### 3 Modelos
+- **pago_completo:** Cobro del 100% al reservar
+- **deposito_resto:** Cobro parcial (% o fijo), resto antes de fecha límite
+- **solo_reserva:** Sin pago online, solo solicitud
+
+### Config en tabla `clientes`
+```
+booking_model: "pago_completo" | "deposito_resto" | "solo_reserva"
+deposit_type: "percentage" | "fixed"
+deposit_value: number (ej: 30 para 30%, o 200 para 200€)
+payment_deadline_type: "before_departure" | "after_booking"
+payment_deadline_days: number (ej: 30)
+stripe_charges_enabled: boolean
+```
+
+### API Route
+- `POST /api/stripe/connect/book` — Crear reserva sin pago (solo_reserva)
+
+Ver `docs/BOOKING-FLOW.md` para detalles completos del flujo.
+
 ## Pendiente
 - **E18:** Cambiar de modo test a modo live (keys de producción, verificar webhooks, dominio Resend)
-- **D5/E17:** Sistema de depósitos/anticipos
 
-> Última actualización: 2026-02-26
+> Última actualización: 2026-02-28

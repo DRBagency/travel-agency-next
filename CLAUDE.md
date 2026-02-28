@@ -397,7 +397,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 - ✅ **D2 — Coordinadores**: Integrado en destinos tabbed editor (tab Coordinador) — coordinador JSONB (nombre, avatar, rol, descripcion, idiomas[])
 - ✅ **D3 — Vuelos y hoteles**: Integrado en destinos tabbed editor (tabs Vuelos + Hotel) — vuelos JSONB (arrival/return airports, note) + hotel JSONB (nombre, estrellas, imagen, descripcion, amenidades[])
 - ✅ **D4 — FAQs por destino**: Integrado en destinos tabbed editor (tab FAQs) — faqs JSONB (question/answer pairs CRUD)
-- 🚧 D5 pendiente (Depósitos/anticipos)
+- ✅ D5 completado (Depósitos/anticipos → E17, 28 Feb 2026)
 
 ### ✅ Fase E — Plataforma Self-Service COMPLETADA (E1-E7) (22 Feb 2026):
 - ✅ **E1 — Registro público**: drb.agency/admin como URL pública con opción de registrarse (email + contraseña), sin depender del owner
@@ -480,7 +480,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 ### Bloque E — Prioridades Inmediatas (25 Feb 2026)
 | # | Feature | Descripción | Estado |
 |---|---------|-------------|--------|
-| E17 | Sistema de anticipos/depósitos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo y el resto antes de fecha X | Pendiente |
+| E17 | Sistema de anticipos/depósitos | 3 modelos (pago_completo, deposito_resto, solo_reserva). `/admin/cobros-pagos` config. BookingModal dinámico. `/api/stripe/connect/book` para solo_reserva | ✅ Completado (28 Feb 2026) |
 | E18 | Stripe + Resend en producción | Cambiar de modo test a modo live. Configurar keys de producción, verificar webhooks, dominio Resend | Pendiente |
 | E19 | Features D2-D5 mejoras | Revisar y mejorar coordinadores, vuelos, hoteles, FAQs que ya están implementados | Pendiente |
 | E20 | Portal del cliente final | En la landing, el viajero accede con email y ve: reservas, itinerarios, estado de pago, chat con agencia | Pendiente |
@@ -492,7 +492,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 | D2 | Sección de Coordinadores | Panel admin para gestionar coordinadores de viaje de la agencia (nombre, foto, bio, idiomas). Se muestran en landing en los destinos asignados | ✅ Integrado en destinos tabbed editor (tab Coordinador) |
 | D3 | Vuelos y hoteles en destinos | Opción para que la agencia añade info de vuelos (aeropuertos recomendados, buscar vuelo) y hoteles a cada destino | ✅ Integrado en destinos tabbed editor (tabs Vuelos + Hotel) |
 | D4 | FAQs por destino | Preguntas frecuentes editables por destino, visibles en la landing | ✅ Integrado en destinos tabbed editor (tab FAQs) |
-| D5 | Sistema de depósitos/anticipos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo (ej: 100€) y el resto antes de fecha X | Pendiente (→ E17) |
+| D5 | Sistema de depósitos/anticipos | La agencia configura % de depósito y fecha límite para pago restante. El cliente final paga anticipo (ej: 100€) y el resto antes de fecha X | ✅ Completado (→ E17) |
 
 ### ~~Fase E — Plataforma Self-Service (Autonomía Total)~~ — COMPLETADA (E1-E7) — 22 Feb 2026
 | # | Feature | Descripción | Estado |

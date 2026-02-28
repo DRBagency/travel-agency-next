@@ -1,6 +1,29 @@
 # Changelog — DRB Agency
 
-> **Última actualización:** 2026-02-26
+> **Última actualización:** 2026-02-28
+
+## 28 Febrero 2026
+- **E17 — Sistema de anticipos/depósitos completado:**
+  - 3 modelos de cobro: pago_completo, deposito_resto, solo_reserva
+  - Nueva página `/admin/cobros-pagos` con BookingModelConfig + Stripe tabs
+  - BookingModal adaptado: flujo dinámico de 3 pasos según modelo
+  - `POST /api/stripe/connect/book` para reservas sin pago (solo_reserva)
+  - Checkout route con cálculo de depósito y fecha límite
+  - Webhook configura estado correcto por modelo
+  - Detalle reserva: info depósito, botón confirmar, timeline dinámica
+  - ReservasTable + filtros con nuevos estados
+  - i18n completo ES/EN/AR para todas las keys nuevas
+  - Migración DB: config clientes + columnas tracking reservas
+- Fix: auto-fill nombre pasajero copiaba solo primer carácter (useRef tracking)
+- Fix: "Fecha límite resto" no aparecía en Step 3 (solo estaba en Step 4)
+- Fix: texto blanco sobre blanco en BookingModal light mode (`data-glass-skip`)
+- Fix: 15 tildes faltantes en traducciones españolas del BookingModal
+- **CRM, Mensajería, Soporte Owner:**
+  - CRM funnel percentages corregidos (% del total, no del stage anterior)
+  - CRM traveler profile enriquecido con datos de reserva
+  - Landing contact form visible en light mode + fallback clienteId
+  - Mensajes reply system via Resend con branding
+  - Owner soporte detail con chat bidireccional
 
 ## 26 Febrero 2026
 - Reorganizar Mi Web en 3 tabs: Configuración, Contenido, Conversión

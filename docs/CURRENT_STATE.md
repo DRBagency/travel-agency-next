@@ -1,7 +1,7 @@
 # Estado Actual del Proyecto
 
-> **Ultima actualizacion:** 27 Febrero 2026
-> **Estado:** Produccion activa - Fase E completada (E1-E7) + Fase F + G + Auto-Traduccion + Light Mode Redesign completadas
+> **Ultima actualizacion:** 28 Febrero 2026
+> **Estado:** Produccion activa - Fase E completada (E1-E7 + E17) + Fase F + G + Auto-Traduccion + Light Mode Redesign + Booking Models completadas
 
 ## FUNCIONALIDADES COMPLETADAS
 
@@ -105,7 +105,9 @@
 - Google Calendar integration
 - Crear/editar/eliminar eventos
 
-#### Stripe/Pagos (`/admin/stripe`)
+#### Cobros y Pagos (`/admin/cobros-pagos`)
+- BookingModelConfig: 3 modelos de cobro (pago_completo, deposito_resto, solo_reserva)
+- Configuracion deposito: tipo (%, fijo), valor, fecha limite (before_departure, after_booking)
 - StripeTabs: Connect | Suscripcion | Tarifas
 - Connect onboarding, estado, verificacion
 - Suscripcion: activar, cambiar plan, cancelar, reactivar
@@ -340,7 +342,6 @@
 
 ## NO IMPLEMENTADO (Roadmap futuro)
 
-- CRM de clientes finales
 - Marketing automation
 - Gestion de equipo/empleados
 - App movil nativa
@@ -348,7 +349,7 @@
 - White-label personalizado
 - Multi-moneda
 - Pagos offline
-- Sistema de depositos/anticipos (Fase D5)
+- Portal del cliente final (E20/G11)
 - Notificaciones en tiempo real (Fase H1)
 - Busqueda global mejorada (Fase H2)
 - Dashboard drag & drop (Fase H3)
