@@ -195,6 +195,7 @@ export default function ContactForm({
                   <input
                     type="text"
                     name="name"
+                    data-glass-skip
                     value={formData.name}
                     onChange={handleChange}
                     onFocus={handleFocus}
@@ -211,6 +212,7 @@ export default function ContactForm({
                   <input
                     type="email"
                     name="email"
+                    data-glass-skip
                     value={formData.email}
                     onChange={handleChange}
                     onFocus={handleFocus}
@@ -227,6 +229,7 @@ export default function ContactForm({
                   <input
                     type="tel"
                     name="phone"
+                    data-glass-skip
                     value={formData.phone}
                     onChange={handleChange}
                     onFocus={handleFocus}
@@ -241,6 +244,7 @@ export default function ContactForm({
                   <label style={labelStyle}>{t('selectDest')}</label>
                   <select
                     name="destination"
+                    data-glass-skip
                     value={formData.destination}
                     onChange={handleChange}
                     onFocus={handleFocus as any}
@@ -269,6 +273,7 @@ export default function ContactForm({
                 <label style={labelStyle}>{t('messageLabel')}</label>
                 <textarea
                   name="message"
+                  data-glass-skip
                   value={formData.message}
                   onChange={handleChange}
                   onFocus={handleFocus as any}

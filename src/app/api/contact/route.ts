@@ -4,10 +4,8 @@ import { getClientByDomain } from "@/lib/getClientByDomain";
 
 export async function POST(req: Request) {
   try {
-    const client = await getClientByDomain();
-
     const body = await req.json();
-    const { name, email, message } = body;
+    const { name, email, message, clienteId } = body;
 
     if (!name || !email || !message) {
       return NextResponse.json(
@@ -24,12 +22,37 @@ export async function POST(req: Request) {
       );
     }
 
+    // Resolve client: try domain first, then clienteId from body
+    let resolvedClienteId: string | null = null;
+
+    try {
+      const client = await getClientByDomain();
+      resolvedClienteId = client.id;
+    } catch {
+      // Domain lookup failed — use clienteId from body if provided
+      if (clienteId) {
+        const { data: fallbackClient } = await supabaseAdmin
+          .from("clientes")
+          .select("id")
+          .eq("id", clienteId)
+          .eq("activo", true)
+          .single();
+        if (fallbackClient) {
+          resolvedClienteId = fallbackClient.id;
+        }
+      }
+    }
+
+    if (!resolvedClienteId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     // Rate limit: max 5 messages per email per hour
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const { count } = await supabaseAdmin
       .from("contact_messages")
       .select("id", { count: "exact", head: true })
-      .eq("cliente_id", client.id)
+      .eq("cliente_id", resolvedClienteId)
       .eq("sender_email", email)
       .gte("created_at", oneHourAgo);
 
@@ -41,7 +64,7 @@ export async function POST(req: Request) {
     }
 
     const { error } = await supabaseAdmin.from("contact_messages").insert({
-      cliente_id: client.id,
+      cliente_id: resolvedClienteId,
       sender_name: name.slice(0, 200),
       sender_email: email.slice(0, 200),
       message: message.slice(0, 5000),
@@ -57,9 +80,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
-    if (err?.message === "Dominio no autorizado") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
     console.error("Contact API error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
