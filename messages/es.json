@@ -2208,6 +2208,7 @@
       "payRemaining": "Pagar resto pendiente",
       "payRemainingDesc": "Completa el pago del resto de tu reserva.",
       "payNow": "Pagar ahora",
+      "payError": "Error al procesar el pago. Inténtalo de nuevo más tarde.",
       "dates": "Fechas",
       "booked": "Reservado",
       "chatTitle": "Mensajes",

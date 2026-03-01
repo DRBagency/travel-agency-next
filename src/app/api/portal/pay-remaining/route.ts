@@ -121,6 +121,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: checkoutSession.url });
   } catch (error: any) {
     console.error("Error in pay-remaining:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error al procesar el pago. Contacta con la agencia." },
+      { status: 500 }
+    );
   }
 }

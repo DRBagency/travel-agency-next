@@ -38,6 +38,7 @@ export default function PortalReservaDetail({
   const t = useTranslations("landing.portal");
   const locale = useLocale();
   const [payLoading, setPayLoading] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
   const bd = (reserva.booking_details as Record<string, any>) || {};
@@ -91,6 +92,7 @@ export default function PortalReservaDetail({
   // Pay remaining handler
   const handlePayRemaining = async () => {
     setPayLoading(true);
+    setPayError(null);
     try {
       const res = await fetch("/api/portal/pay-remaining", {
         method: "POST",
@@ -100,9 +102,11 @@ export default function PortalReservaDetail({
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        setPayError(data.error || t("payError"));
       }
     } catch {
-      // ignore
+      setPayError(t("payError"));
     } finally {
       setPayLoading(false);
     }
@@ -546,6 +550,11 @@ export default function PortalReservaDetail({
                   </>
                 )}
               </button>
+              {payError && (
+                <p style={{ fontSize: 13, color: "#dc2626", marginTop: 10, textAlign: "center" }}>
+                  {payError}
+                </p>
+              )}
             </div>
           )}
 

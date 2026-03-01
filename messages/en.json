@@ -2208,6 +2208,7 @@
       "payRemaining": "Pay remaining balance",
       "payRemainingDesc": "Complete the payment of the remaining balance for your booking.",
       "payNow": "Pay now",
+      "payError": "Error processing payment. Please try again later.",
       "dates": "Dates",
       "booked": "Booked",
       "chatTitle": "Messages",
