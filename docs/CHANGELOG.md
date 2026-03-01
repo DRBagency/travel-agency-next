@@ -3,6 +3,12 @@
 > **Última actualización:** 2026-03-01
 
 ## 1 Marzo 2026
+- **Post-E20 fixes:**
+  - **Email notification on agency reply:** New `send-portal-message-email.ts` — branded email notifies traveler when agency sends a chat message. Fire-and-forget from admin portal-messages POST. Inline translations ES/EN/AR, message truncated to 500 chars, CTA → portal/chat
+  - **Fix: hide pay-remaining button on cancelled/expired reservations** — Added `!isCancelled` guard (covers both `cancelada` and `vencido` states)
+  - **Fix: portal chat showing "No hay conversaciones"** — Changed `select("id, destino, destino_id, created_at")` → `select("*")` (destino_id doesn't exist, PostgREST fails silently)
+  - **Fix: ICU plural format for count strings** — 6 i18n keys converted to `{count, plural, one {...} other {...}}` format across all 3 locales. Fixes "1 reservas encontradas" → "1 reserva encontrada"
+  - **Fix: hardcoded "pagadas" in owner clientes page** — Replaced with i18n key `paidCount` with plural support
 - **E20 — Portal del Viajero completado:**
   - **Magic link auth:** Login sin contraseña vía email (token UUID, 15 min expiry, single-use, rate limit 5/hr)
   - **Portal `/portal`:** Ruta protegida con middleware + cookies (`traveler_session` + `traveler_email`, 7 días)

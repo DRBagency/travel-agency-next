@@ -119,7 +119,7 @@ travel-agency-next/
 │   │   └── useAutoTranslate.ts  # Hook auto-traducción AI (plan-gated)
 │   ├── lib/
 │   │   ├── requireTraveler.ts # Auth helper portal viajero (cookies → DB → redirect login)
-│   │   ├── emails/           # Sistema de emails (+ send-magic-link-email.ts)
+│   │   ├── emails/           # Sistema de emails (send-magic-link-email.ts, send-portal-message-email.ts, render-email.ts)
 │   │   ├── billing/          # Funciones de billing
 │   │   ├── social/           # OAuth helpers + API calls (Instagram, TikTok)
 │   │   ├── owner/            # Funciones del owner (get-chart-data: 8 semanas, get-dashboard-metrics)
@@ -486,10 +486,10 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 2. ~~Fase E (Self-service)~~ — **COMPLETADA (E1-E7)** — 22 Feb 2026
 3. ~~Fase G (Landing rediseño)~~ — **COMPLETADA (G1-G9)** — 23 Feb 2026
 4. ~~Auto-Traducción + UI/UX Fixes~~ — **COMPLETADA** — 24 Feb 2026
-5. **SIGUIENTE → Bloque E** (depósitos, Stripe live, mejoras D2-D5, portal cliente)
-6. **SIGUIENTE → Bloque E** (#17 depósitos, #18 Stripe+Resend live, #19 features D2-D5, #20 portal cliente)
-7. Fase D restante (D1 social env vars, D5 depósitos)
-8. Fase G restante (G10 página reserva, G11 portal cliente final)
+5. ~~Bloque E~~ — **COMPLETADO** (E17 depósitos, E19 mejoras, E20 portal) — 1 Mar 2026
+6. **SIGUIENTE → E18** (Stripe + Resend en producción)
+7. Fase D restante (D1 social env vars)
+8. Fase G restante (G10 página reserva) — G11 completado via E20
 9. Fase H (Técnico) — Notificaciones, búsqueda, RGPD
 10. Fase I (Futuro) — Cuando las anteriores estén sólidas
 
@@ -499,7 +499,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 | E17 | Sistema de anticipos/depósitos | 3 modelos (pago_completo, deposito_resto, solo_reserva). `/admin/cobros-pagos` config. BookingModal dinámico. `/api/stripe/connect/book` para solo_reserva | ✅ Completado (28 Feb 2026) |
 | E18 | Stripe + Resend en producción | Cambiar de modo test a modo live. Configurar keys de producción, verificar webhooks, dominio Resend | Pendiente |
 | E19 | Mejoras Features Existentes | Auto-decrement plazas, biblioteca coordinadores (tabla + FK + CRUD), galería hotel, badge recomendado, tipo vuelo, notifícame funcional, Sentry | ✅ Completado (1 Mar 2026) |
-| E20 | Portal del cliente final | En la landing, el viajero accede con email y ve: reservas, itinerarios, estado de pago, chat con agencia | Pendiente |
+| E20 | Portal del cliente final | En la landing, el viajero accede con email y ve: reservas, itinerarios, estado de pago, chat con agencia | ✅ Completado (1 Mar 2026) |
 
 ### Fase D — Nuevas Secciones / Integraciones
 | # | Feature | Descripción | Estado |
@@ -534,7 +534,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 | G8 | Calendario de salidas | `salidas` JSONB column. Admin tabbed editor (tab Salidas with CRUD rows: date, status, price, spots). StatusBadge (confirmed/lastSpots/soldOut) in detail page Departures tab | ✅ |
 | G9 | Vuelos + Hotel info | `vuelos` + `hotel` JSONB columns. Admin tabbed editor (tabs Vuelos + Hotel). Detail page tabs with airport info, hotel amenities | ✅ |
 | G10 | Página de reserva completa | Flujo: ver destino → reservar → pagar. Cada paso con su propia página/redirección con toda la info | Pendiente (using existing BookingModal with Stripe) |
-| G11 | Espacio personal cliente final | En la landing, el viajero accede con sus datos (email) y ve: sus reservas, itinerarios, documentos, estado de pago, chat con agencia | Pendiente |
+| G11 | Espacio personal cliente final | En la landing, el viajero accede con sus datos (email) y ve: sus reservas, itinerarios, documentos, estado de pago, chat con agencia | ✅ Completado (→ E20, 1 Mar 2026) |
 
 ### Fase H — Mejoras Técnicas / Infraestructura
 | # | Feature | Descripción |

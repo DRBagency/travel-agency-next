@@ -47,6 +47,12 @@ const locale = useLocale();
 
 // Interpolación
 t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
+
+// ICU Plural (para conteos singular/plural)
+t('bookingsSubtitle', { count: 1 })  // "1 reserva encontrada"
+t('bookingsSubtitle', { count: 5 })  // "5 reservas encontradas"
+// En messages/*.json:
+// "bookingsSubtitle": "{count, plural, one {1 reserva encontrada} other {{count} reservas encontradas}}"
 ```
 
 ## RTL Support (Árabe)
@@ -145,4 +151,4 @@ Las traducciones JSONB pierden URLs de imágenes (no son texto traducible). `Des
 ### Tag Colors
 `TagChip.tsx` mapea labels ES/EN/AR al mismo color para mantener consistencia visual.
 
-> Última actualización: 2026-03-01
+> Última actualización: 2026-03-01 (ICU plural format added)

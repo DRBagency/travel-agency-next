@@ -202,6 +202,8 @@
 - Emails de reservas (cliente + agencia, templates editables, tokens, branding)
 - Emails de billing (bienvenida, cambio plan, cancelacion, dominio verificado)
 - Emails de agencia: bienvenida, recordatorio_viaje, seguimiento, promocion (con SendPromocionButton)
+- Email magic link portal viajero (`send-magic-link-email.ts`)
+- Email notificacion chat portal (`send-portal-message-email.ts`) — fire-and-forget on agency reply
 - Preview en modal para ambos paneles
 
 ### Sistema de Pagos
@@ -226,6 +228,13 @@
 | `ticket_messages` | Admin | `/admin/soporte/[id]` |
 | `automations` | Owner | `/owner/automatizaciones` (CRUD) |
 | `automation_executions` | Owner | `/owner/automatizaciones` (logs) |
+| `coordinadores` | Admin | `/admin/coordinadores` (CRUD) |
+
+#### Tablas Portal Viajero:
+| Tabla | Uso | Ruta |
+|-------|-----|------|
+| `traveler_sessions` | Magic link auth | `/api/portal/auth/*` |
+| `portal_messages` | Chat viajero ↔ agencia | `/api/portal/chat/messages` + `/api/admin/portal-messages` |
 
 #### Tablas con UI parcial:
 | Tabla | Estado |
@@ -363,6 +372,12 @@
 - **i18n:** ~67 keys × 3 idiomas en `landing.portal.*` + `admin.reserva.portalChat/noPortalMessages/replyPlaceholder`
 - **Loading states:** Skeleton pulse para lista y detalle
 - **Navbar landing:** Link "Mi portal" añadido
+- **Email notificación chat:** `send-portal-message-email.ts` — email branded al viajero cuando la agencia responde en chat. Fire-and-forget, inline translations ES/EN/AR, mensaje truncado a 500 chars, CTA → portal/chat
+- **Bug fixes post-E20:**
+  - Pay-remaining button hidden on cancelled/expired reservations (`!isCancelled` guard)
+  - Chat page fixed: `select("*")` instead of specific columns (destino_id doesn't exist)
+  - ICU plural format for 6 count strings across all 3 locales (fixes "1 reservas encontradas")
+  - Hardcoded "pagadas" in owner clientes replaced with i18n key `paidCount`
 
 ## PENDIENTE CONFIG EXTERNA (codigo listo)
 
@@ -377,7 +392,7 @@
 - White-label personalizado
 - Multi-moneda
 - Pagos offline
-- ~~Portal del cliente final (E20/G11)~~ — **COMPLETADO** (1 Mar 2026)
+- ~~Portal del cliente final (E20/G11)~~ — **COMPLETADO** (1 Mar 2026) — incl. email notificación chat + bug fixes
 - Notificaciones en tiempo real (Fase H1)
 - Busqueda global mejorada (Fase H2)
 - Dashboard drag & drop (Fase H3)

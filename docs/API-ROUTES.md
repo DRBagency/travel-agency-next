@@ -167,7 +167,7 @@
 ### Admin Portal
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET/POST | `/api/admin/portal-messages` | GET: mensajes de reserva (admin). POST: responder como agencia |
+| GET/POST | `/api/admin/portal-messages` | GET: mensajes de reserva (admin). POST: responder como agencia + fire-and-forget email notification to traveler |
 
 ## Public Routes — 5 routes
 

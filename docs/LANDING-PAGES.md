@@ -147,6 +147,10 @@ El detalle de reserva reutiliza directamente los tabs del destino:
 - Dark/light mode con toggle en navbar
 - RTL support (CSS logical properties)
 
+### Email Notificaciones
+- **Magic link:** `send-magic-link-email.ts` — email branded con CTA para verificar token
+- **Chat reply:** `send-portal-message-email.ts` — email al viajero cuando la agencia responde. Fire-and-forget desde POST `/api/admin/portal-messages`. Inline translations ES/EN/AR, mensaje truncado 500 chars, CTA → `/portal/chat`
+
 ## Bugs Conocidos (resueltos)
 - ~~**Bloque A #2:** Botón "Volver" en preview~~ — Resuelto
 - ~~**Bloque C #10:** Imágenes de galería estiradas~~ — Resuelto
