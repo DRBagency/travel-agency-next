@@ -514,7 +514,7 @@ export default function PortalReservaDetail({
           </div>
 
           {/* Pay remaining CTA */}
-          {bm === "deposito_resto" && !reserva.remaining_paid && stripeEnabled && (
+          {bm === "deposito_resto" && !reserva.remaining_paid && !isCancelled && stripeEnabled && (
             <div style={cardStyle}>
               <h3 style={{ fontSize: 14, fontWeight: 700, color: T.text, marginBottom: 8 }}>
                 {t("payRemaining")}
