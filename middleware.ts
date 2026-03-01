@@ -27,9 +27,22 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Portal del Viajero: protect authenticated routes
+  if (pathname.startsWith("/portal") && pathname !== "/portal/login" && !pathname.startsWith("/api/portal/")) {
+    const hasTravelerSession =
+      Boolean(req.cookies.get("traveler_session")?.value) &&
+      Boolean(req.cookies.get("traveler_email")?.value);
+
+    if (!hasTravelerSession) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/portal/login";
+      return NextResponse.redirect(url);
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/owner/:path*", "/admin/clientes/:path*"],
+  matcher: ["/owner/:path*", "/admin/clientes/:path*", "/portal/:path*"],
 };

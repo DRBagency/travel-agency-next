@@ -42,6 +42,7 @@ export default function Navbar({
     { label: t('whyUs'), href: "#why" },
     { label: t('testimonials'), href: "#testimonials" },
     { label: t('contact'), href: "#contact" },
+    { label: t('myPortal'), href: "/portal" },
   ];
 
   const resolvedCtaText = ctaText || t('book');
@@ -69,10 +70,14 @@ export default function Navbar({
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (e: React.MouseEvent, href: string) => {
     setMobileOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const el = document.querySelector(href);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+    // For non-hash links (like /portal), let default navigation happen
   };
 
   return (
@@ -143,8 +148,7 @@ export default function Navbar({
                 key={link.href}
                 href={link.href}
                 onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(link.href);
+                  handleNavClick(e, link.href);
                 }}
                 className="nav-link"
                 style={{
@@ -310,8 +314,7 @@ export default function Navbar({
               href={ctaLink}
               onClick={(e) => {
                 if (ctaLink.startsWith("#")) {
-                  e.preventDefault();
-                  handleNavClick(ctaLink);
+                  handleNavClick(e, ctaLink);
                 }
               }}
               className="navbar-desktop-only"
@@ -418,8 +421,7 @@ export default function Navbar({
               key={link.href}
               href={link.href}
               onClick={(e) => {
-                e.preventDefault();
-                handleNavClick(link.href);
+                handleNavClick(e, link.href);
               }}
               style={{
                 color: T.text,
@@ -505,8 +507,7 @@ export default function Navbar({
             href={ctaLink}
             onClick={(e) => {
               if (ctaLink.startsWith("#")) {
-                e.preventDefault();
-                handleNavClick(ctaLink);
+                handleNavClick(e, ctaLink);
               }
             }}
             style={{

@@ -64,6 +64,37 @@ export async function POST(req: Request) {
         return new Response("ok", { status: 200 });
       }
 
+      /* ── Handle remaining payment (Portal del Viajero) ── */
+      if (m.is_remaining_payment === "true") {
+        const reservaId = m.reserva_id;
+        if (reservaId) {
+          await supabaseAdmin
+            .from("reservas")
+            .update({
+              remaining_paid: true,
+              remaining_stripe_session_id: session.id,
+              estado_pago: "pagado",
+            })
+            .eq("id", reservaId);
+
+          console.log(`✅ Remaining payment completed for reserva ${reservaId}`);
+
+          // Notification for agency
+          if (m.cliente_id) {
+            await createNotification({
+              clienteId: m.cliente_id,
+              type: "reserva",
+              title: "Pago restante recibido",
+              description: `Reserva ${reservaId.substring(0, 8)}...`,
+              href: `/admin/reservas`,
+            }).catch((err) =>
+              console.error("❌ Error creating remaining payment notification:", err)
+            );
+          }
+        }
+        return new Response("ok", { status: 200 });
+      }
+
       /* La reserva ya existe (creada en checkout con estado pendiente_pago).
          Ahora actualizamos el estado según el booking_model. */
       const reservaId = m.reserva_id;

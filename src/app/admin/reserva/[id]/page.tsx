@@ -14,6 +14,7 @@ import {
   MapPin,
   Star,
 } from "lucide-react";
+import PortalChatAdmin from "@/components/portal/PortalChatAdmin";
 
 interface ReservaPageProps {
   params: Promise<{ id: string }>;
@@ -489,6 +490,9 @@ export default async function ReservaPage({ params, searchParams }: ReservaPageP
           </div>
         </div>
       </div>
+
+      {/* Portal Chat — Traveler messages */}
+      <PortalChatAdmin reservaId={reserva.id} />
     </div>
   );
 }
