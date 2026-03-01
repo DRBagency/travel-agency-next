@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabase-server";
+import { sendPortalMessageEmail } from "@/lib/emails/send-portal-message-email";
 
 async function getAdminClientId() {
   const cookieStore = await cookies();
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
   // Verify reserva belongs to this agency
   const { data: reserva } = await supabaseAdmin
     .from("reservas")
-    .select("id")
+    .select("id, email, destino")
     .eq("id", reserva_id)
     .eq("cliente_id", clienteId)
     .single();
@@ -77,10 +78,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Reserva no encontrada" }, { status: 404 });
   }
 
-  // Get agency email
+  // Get agency info
   const { data: client } = await supabaseAdmin
     .from("clientes")
-    .select("contact_email, email")
+    .select("contact_email, email, nombre, logo_url, primary_color, contact_phone, preferred_language, domain")
     .eq("id", clienteId)
     .single();
 
@@ -101,6 +102,24 @@ export async function POST(req: Request) {
 
   if (error) {
     return NextResponse.json({ error: "Error al enviar" }, { status: 500 });
+  }
+
+  // Fire-and-forget email notification to traveler
+  if (reserva.email) {
+    const host = client?.domain || req.headers.get("host") || "drb.agency";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    sendPortalMessageEmail({
+      toEmail: reserva.email,
+      messageText: message.trim(),
+      destinoName: reserva.destino || "Reserva",
+      portalUrl: `${protocol}://${host}/portal/chat`,
+      clientName: client?.nombre || "Agencia",
+      logoUrl: client?.logo_url,
+      primaryColor: client?.primary_color,
+      contactEmail: client?.contact_email,
+      contactPhone: client?.contact_phone,
+      lang: client?.preferred_language || "es",
+    }).catch((err) => console.error("Portal message email error:", err));
   }
 
   return NextResponse.json({ message: newMessage });

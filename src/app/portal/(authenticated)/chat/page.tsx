@@ -10,7 +10,7 @@ export default async function PortalChatPage() {
   // Fetch all reservas for this traveler
   const { data: reservas } = await supabaseAdmin
     .from("reservas")
-    .select("id, destino, destino_id, created_at")
+    .select("*")
     .eq("email", email)
     .eq("cliente_id", clienteId)
     .order("created_at", { ascending: false });
