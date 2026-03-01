@@ -269,7 +269,7 @@ export default async function ClientePage({ params }: ClientePageProps) {
           <div className="panel-card px-4 py-2">
             <span className="text-gray-400 dark:text-white/40">{tc('status')}: </span>
             <span className="font-semibold text-gray-900 dark:text-white">
-              {paidReservas.length} pagadas
+              {t('paidCount', { count: paidReservas.length })}
             </span>
           </div>
           <div className="panel-card px-4 py-2">
