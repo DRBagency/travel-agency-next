@@ -2159,6 +2159,7 @@
       "checkEmail": "Check your email!",
       "checkEmailDesc": "We've sent an access link to {email}. Click the link to access the portal.",
       "resendLink": "Resend link",
+      "magicLinkHint": "We'll send a secure link to your email. No passwords needed.",
       "linkExpired": "The link has expired. Request a new one.",
       "noReservations": "No bookings found with this email",
       "tooManyAttempts": "Too many attempts. Please wait a few minutes.",

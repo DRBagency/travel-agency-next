@@ -11,7 +11,7 @@
 - **Detalles:** Ver `docs/PAYMENTS.md`
 
 ### 2. Supabase (Base de Datos + Auth)
-- **PostgreSQL:** 27 tablas con RLS
+- **PostgreSQL:** 30 tablas con RLS
 - **Auth:** Login admin/owner via Supabase Auth + cookies custom
 - **Storage:** Bucket `profile-photos` para avatares
 - **Realtime:** Suscripciones para `page_visits` (visitantes en vivo)
@@ -34,8 +34,9 @@
 - **SDK:** resend 6.9.1
 - **Dominio:** contact@drb.agency
 - **Templates:** HTML dinámico con tokens, guardados en Supabase
-- **Tipos:** reserva_cliente, reserva_agencia, bienvenida, recordatorio_viaje, seguimiento, promocion
+- **Tipos:** reserva_cliente, reserva_agencia, bienvenida, recordatorio_viaje, seguimiento, promocion, magic_link (portal)
 - **Billing emails:** bienvenida, cambio plan, cancelación
+- **Portal email:** Magic link con branding de agencia (logo, color primario, traducciones ES/EN/AR inline)
 
 ### 6. Vercel API (Dominios)
 - **Helper:** `src/lib/vercel/domains.ts`
@@ -68,4 +69,4 @@
 3. Añadir env vars en Vercel
 4. Redirect URIs: `https://drb.agency/api/admin/social/oauth/{instagram,tiktok}/callback`
 
-> Última actualización: 2026-02-26
+> Última actualización: 2026-03-01

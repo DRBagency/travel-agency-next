@@ -39,7 +39,7 @@ DRB usa dos integraciones Stripe completamente separadas:
 ### Connect Webhook
 | Evento | Acción |
 |--------|--------|
-| `checkout.session.completed` | Crear reserva, enviar emails (viajero + agencia), crear notificación |
+| `checkout.session.completed` | Crear reserva, enviar emails (viajero + agencia), crear notificación. Si metadata `is_remaining_payment`: actualiza remaining_paid + estado_pago (E20) |
 
 ### Billing Webhook
 | Evento | Acción |
@@ -129,6 +129,23 @@ Cuando se completa una reserva, las plazas disponibles de la salida correspondie
 - **Webhook (pago_completo + deposito_resto):** Se llama en `checkout.session.completed` después de actualizar estado de reserva. Metadata Stripe: `destino_id`, `fecha_salida`, `personas`
 - **Book route (solo_reserva):** Se llama en `POST /api/stripe/connect/book` después de crear la reserva
 - **Resiliencia:** Envuelto en `.catch()` para que un fallo no afecte la reserva
+
+## Pago Resto Pendiente — Portal del Viajero (E20)
+
+Cuando una reserva tiene modelo `deposito_resto` y el resto no está pagado, el viajero puede pagar desde el portal.
+
+### Flujo
+1. Viajero accede a `/portal/reserva/[id]` y ve CTA "Pagar resto"
+2. Click → POST `/api/portal/pay-remaining` con `reserva_id`
+3. API valida: session cookies, email match, booking_model = deposito_resto, remaining_paid = false
+4. Crea Stripe Checkout Session por `remaining_amount` con metadata `is_remaining_payment: "true"`
+5. Viajero paga en Stripe
+6. Webhook `checkout.session.completed` detecta metadata `is_remaining_payment`
+7. Actualiza reserva: `remaining_paid = true`, `remaining_stripe_session_id`, `estado_pago = "pagado"`
+8. NO decrementa plazas (ya se hizo en el primer pago)
+
+### API Route
+- `POST /api/portal/pay-remaining` — requiere cookies `traveler_session` + `traveler_email`
 
 ## Pendiente
 - **E18:** Cambiar de modo test a modo live (keys de producción, verificar webhooks, dominio Resend)

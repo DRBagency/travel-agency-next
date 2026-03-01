@@ -97,8 +97,58 @@ Tabla independiente con CRUD en `/admin/coordinadores`. FK `coordinador_id` en d
 - Landing ahora fetch coordinador desde tabla `coordinadores` por FK `coordinador_id` (antes leía JSONB inline)
 - Mismo layout: avatar circular, nombre, rol, descripción, idiomas como chips
 
+## Portal del Viajero (E20, 1 Mar 2026)
+
+Portal protegido en `/portal` donde el viajero accede con magic link (sin contraseña), ve sus reservas, detalle del viaje, estado de pago, y puede chatear con la agencia.
+
+### Auth: Magic Link
+- Viajero introduce email en `/portal/login` → recibe magic link por email
+- Token UUID, 15 min expiry, single-use, rate limit 5/hr
+- Click link → `/api/portal/auth/verify` → set cookies → redirect `/portal`
+- Cookies: `traveler_session` (session ID) + `traveler_email` (email), 7 días
+- Helper: `requireTraveler()` en `src/lib/requireTraveler.ts`
+
+### Estructura de Rutas
+```
+src/app/portal/
+  login/page.tsx                      ← público (PortalLoginForm)
+  (authenticated)/
+    layout.tsx                        ← requireTraveler() + ThemeProvider + PortalShell
+    page.tsx                          ← /portal (PortalReservasList)
+    loading.tsx                       ← Skeleton pulse
+    reserva/[id]/page.tsx             ← /portal/reserva/[id] (PortalReservaDetail)
+    reserva/[id]/loading.tsx          ← Skeleton pulse
+    chat/page.tsx                     ← /portal/chat (PortalChatList + PortalChatThread)
+```
+
+### Componentes (`src/components/portal/`)
+| Componente | Tipo | Descripción |
+|------------|------|-------------|
+| `PortalLoginForm` | Client | Formulario email con glass card + logo. Estados: input/sent/error |
+| `PortalNavbar` | Client | Glass-morphism sticky. Logo + nav + email + logout + lang/theme |
+| `PortalShell` | Client | Wrapper: PortalNavbar + main (max-w-1024) + footer |
+| `PortalReservasList` | Client | Grid cards: imagen, fechas, viajeros, precio, badge, progreso depósito |
+| `PortalReservaDetail` | Client | Timeline + fechas + pasajeros + hotel + tabs destino + precio + CTA pagar |
+| `PortalChatList` | Client | Lista conversaciones por reserva con badges no leídos |
+| `PortalChatThread` | Client | Burbujas chat + input. Polling 5s. Viajero = derecha, agencia = izquierda |
+| `PortalChatAdmin` | Client | Widget chat en admin/reserva/[id]. Panel-card style |
+
+### Reutilización de Componentes Landing
+El detalle de reserva reutiliza directamente los tabs del destino:
+- `TabItinerary` — Itinerario día a día
+- `TabHotel` — Info hotel con galería
+- `TabFlight` — Segmentos de vuelo
+- `TabIncluded` — Incluido / no incluido
+
+### Estilo
+- Misma base visual que landing: LandingThemeProvider + LandingGlobalStyles
+- Tipografía: Syne + DM Sans
+- Glass-morphism cards, turquoise accents
+- Dark/light mode con toggle en navbar
+- RTL support (CSS logical properties)
+
 ## Bugs Conocidos (resueltos)
 - ~~**Bloque A #2:** Botón "Volver" en preview~~ — Resuelto
 - ~~**Bloque C #10:** Imágenes de galería estiradas~~ — Resuelto
 
-> Última actualización: 2026-03-01
+> Última actualización: 2026-03-01 (E20 Portal del Viajero)

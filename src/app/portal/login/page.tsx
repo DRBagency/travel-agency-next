@@ -1,11 +1,13 @@
+import { cookies } from "next/headers";
 import { getClientByDomain } from "@/lib/getClientByDomain";
-import { getMessages, getLocale } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { LandingThemeProvider } from "@/components/landing/LandingThemeProvider";
 import { LandingGlobalStyles } from "@/components/landing/LandingGlobalStyles";
 import PortalLoginForm from "@/components/portal/PortalLoginForm";
 
 export const dynamic = "force-dynamic";
+
+const VALID_LOCALES = ["es", "en", "ar"] as const;
 
 export default async function PortalLoginPage() {
   let client: any = null;
@@ -15,8 +17,17 @@ export default async function PortalLoginPage() {
     // Will show generic portal login
   }
 
-  const locale = await getLocale();
-  const messages = await getMessages();
+  // Read LANDING_LOCALE first (set by the landing page), fallback to NEXT_LOCALE, then "es"
+  const cookieStore = await cookies();
+  const landingLocale = cookieStore.get("LANDING_LOCALE")?.value;
+  const nextLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  const raw = landingLocale || nextLocale || "es";
+  const locale = VALID_LOCALES.includes(raw as any) ? raw : "es";
+  const messages = (await import(`../../../../messages/${locale}.json`)).default;
+
+  const availableLanguages = Array.isArray(client?.available_languages)
+    ? client.available_languages
+    : ["es"];
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
@@ -30,6 +41,9 @@ export default async function PortalLoginPage() {
             clientName={client?.nombre || "Portal del Viajero"}
             logoUrl={client?.logo_url}
             clienteId={client?.id}
+            primaryColor={client?.primary_color}
+            availableLanguages={availableLanguages}
+            currentLang={locale}
           />
         </div>
       </LandingThemeProvider>

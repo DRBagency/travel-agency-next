@@ -64,13 +64,13 @@ DRB Agency es una plataforma SaaS multi-tenant B2B que proporciona software all-
 ### Backend
 - **Runtime:** Node.js (Edge Runtime selectivo)
 - **API Routes:** Next.js App Router API
-- **Authentication:** Supabase Auth + Custom cookies (NO NextAuth)
+- **Authentication:** Supabase Auth + Custom cookies (NO NextAuth) + Magic link (portal viajero)
 
 ### Base de Datos
 - **Database:** PostgreSQL (Supabase)
 - **ORM:** Supabase Client (@supabase/supabase-js 2.93.2)
 - **Migrations:** Supabase CLI (SQL manual)
-- **RLS:** Habilitado en TODAS las 28 tablas (verificado 24 Feb 2026)
+- **RLS:** Habilitado en TODAS las 30 tablas (verificado 1 Mar 2026)
 - **Service Role:** `supabaseAdmin` para operaciones del servidor (service_role bypasses RLS)
 - **Anon Key:** Solo usado client-side para Supabase Auth login + lectura pública destinos activos
 
@@ -98,11 +98,15 @@ travel-agency-next/
 │   ├── app/
 │   │   ├── admin/             # Panel CLIENTE (agencia)
 │   │   ├── owner/             # Panel OWNER (DRB Agency)
+│   │   ├── portal/            # Portal del VIAJERO (magic link auth)
+│   │   │   ├── login/         # Login page (público)
+│   │   │   └── (authenticated)/ # Rutas protegidas (requireTraveler)
 │   │   ├── api/               # API routes
 │   │   ├── destino/[slug]/    # Destination detail page (public)
 │   │   ├── legal/             # Páginas legales dinámicas
 │   │   └── [otros]
 │   ├── components/
+│   │   ├── portal/           # Portal del viajero: 8 components (PortalLoginForm, PortalNavbar, PortalShell, PortalReservasList, PortalReservaDetail, PortalChatList, PortalChatThread, PortalChatAdmin)
 │   │   ├── landing/          # Landing components: 9 sections (Navbar, Hero, Stats, Destinations, WhyUs, Testimonials, CTABanner, Contact, Footer) + 7 micro-components (AnimateIn, Img, Accordion, TagChip, StatusBadge, EffortDots, GlowOrb) + theme (LandingThemeProvider, LandingGlobalStyles)
 │   │   ├── ui/               # shadcn/ui + DataTable, KPICard, ConfirmDialog, EmptyState, DeleteWithConfirm, AnimatedSection, RiveAnimation
 │   │   ├── ai/               # AI components (ItineraryGenerator, ChatbotConfig, AIDescriptionButton, AIEmailGenerator, AIPricingSuggestion, FreeChat, AIRecommendations, AIInsightsCard[compact])
@@ -114,7 +118,8 @@ travel-agency-next/
 │   ├── hooks/
 │   │   └── useAutoTranslate.ts  # Hook auto-traducción AI (plan-gated)
 │   ├── lib/
-│   │   ├── emails/           # Sistema de emails
+│   │   ├── requireTraveler.ts # Auth helper portal viajero (cookies → DB → redirect login)
+│   │   ├── emails/           # Sistema de emails (+ send-magic-link-email.ts)
 │   │   ├── billing/          # Funciones de billing
 │   │   ├── social/           # OAuth helpers + API calls (Instagram, TikTok)
 │   │   ├── owner/            # Funciones del owner (get-chart-data: 8 semanas, get-dashboard-metrics)
@@ -158,10 +163,11 @@ travel-agency-next/
 ### Multi-tenant por Dominio
 Middleware detecta dominio → busca cliente → carga datos. Cada cliente tiene su propio dominio/subdominio.
 
-### Separación Estricta Owner vs Cliente
+### Separación Estricta Owner vs Cliente vs Portal
 - Owner: `/owner/*` — gestiona la plataforma
 - Cliente: `/admin/*` — gestiona su agencia
-- NO comparten sesiones, ni componentes de UI (salvo base)
+- Portal: `/portal/*` — viajero consulta sus reservas (magic link auth)
+- NO comparten sesiones, ni componentes de UI (salvo base + landing theme para portal)
 
 ### Stripe Connect + Billing Separados
 - Connect = reservas de viajes (comisión automática a DRB)
@@ -171,7 +177,9 @@ Middleware detecta dominio → busca cliente → carga datos. Cada cliente tiene
 HTML + tokens en Supabase, renderizado en servidor. Editables sin redeploy.
 
 ### Cookies Personalizadas
-Sistema custom de cookies para auth de admin y owner (no NextAuth).
+Sistema custom de cookies para auth de admin, owner y portal viajero (no NextAuth).
+- Admin/Owner: cookies de sesión Supabase Auth
+- Portal viajero: `traveler_session` (session ID, 7 días) + `traveler_email` (email, 7 días) — magic link auth
 
 ### Multi-idioma (next-intl)
 - **Routing:** Cookie-based (`NEXT_LOCALE`), sin prefijo URL. URLs limpias: `/admin/*`, no `/es/admin/*`
@@ -182,7 +190,7 @@ Sistema custom de cookies para auth de admin y owner (no NextAuth).
 - **Fechas:** `toLocaleDateString(locale)` con locale dinámico, date-fns con locale map
 - **Landing i18n:** Per-client locale override via `preferred_language` column in `clientes` table. `page.tsx` loads ALL available language messages and wraps `HomeClient` with nested `NextIntlClientProvider`. Configurable in `/admin/mi-web` (marca section)
 - **Landing multi-lang switching:** Dynamic `NextIntlClientProvider` inside `HomeClient` — when visitor changes language via Navbar, a `LangWrapper` component re-wraps content with the new locale's messages. All locale messages loaded server-side and passed as `allMessages` prop
-- **Landing namespace:** `landing.*` keys (navbar, hero, destinations, testimonials, contact, footer, chatbot) — 80+ keys per locale
+- **Landing namespace:** `landing.*` keys (navbar, hero, destinations, testimonials, contact, footer, chatbot, portal) — 150+ keys per locale
 
 ### Auto-Translation System (25 Feb 2026)
 AI-powered content translation for landing pages. When admin saves content OR clicks "Traducir todo", Claude Haiku translates all text fields to selected languages and stores in `translations` JSONB column.
@@ -207,7 +215,7 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 
 ---
 
-## BASE DE DATOS - TABLAS Y ESTADO (28 tablas, 24 Feb 2026)
+## BASE DE DATOS - TABLAS Y ESTADO (30 tablas, 1 Mar 2026)
 
 ### Tablas con CRUD completo (✅):
 | Tabla | Panel | Ruta |
@@ -257,6 +265,12 @@ AI-powered content translation for landing pages. When admin saves content OR cl
 | Tabla | Panel | Ruta |
 |-------|-------|------|
 | `contact_messages` | Admin | `/admin/mensajes` (MensajesContent — leer, marcar como leído, responder via email). Landing form → API POST `/api/contact`. Reply → API POST `/api/admin/messages/reply` (Resend). Columnas: `replied`, `reply_message`, `replied_at` |
+
+### Tablas Portal Viajero (✅ E20):
+| Tabla | Uso | Ruta |
+|-------|-----|------|
+| `traveler_sessions` | Magic link auth | `/api/portal/auth/*` — token UUID, expires_at, used_at, email, cliente_id |
+| `portal_messages` | Chat viajero ↔ agencia | `/api/portal/chat/messages` (viajero), `/api/admin/portal-messages` (admin) — sender_type, read_at |
 
 ### Tablas Tracking (✅):
 | Tabla | Panel | Ruta |

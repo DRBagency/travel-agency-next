@@ -42,7 +42,6 @@ export default function Navbar({
     { label: t('whyUs'), href: "#why" },
     { label: t('testimonials'), href: "#testimonials" },
     { label: t('contact'), href: "#contact" },
-    { label: t('myPortal'), href: "/portal" },
   ];
 
   const resolvedCtaText = ctaText || t('book');
@@ -139,7 +138,7 @@ export default function Navbar({
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 28,
+              gap: 24,
             }}
             className="navbar-desktop-links"
           >
@@ -177,6 +176,33 @@ export default function Navbar({
               gap: 12,
             }}
           >
+            {/* Mi Portal icon link */}
+            <Link
+              href="/portal"
+              className="navbar-desktop-only"
+              title={t('myPortal')}
+              style={{
+                background: T.bg3,
+                border: `1px solid ${T.border}`,
+                borderRadius: 8,
+                width: 38,
+                height: 38,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                transition: "all .3s",
+                textDecoration: "none",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.borderColor = accent)}
+              onMouseLeave={(e) => (e.currentTarget.style.borderColor = T.border)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.sub} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </Link>
+
             {/* Language selector */}
             {showLangDropdown && (
               <div style={{ position: "relative" }} className="navbar-desktop-only">
@@ -441,6 +467,28 @@ export default function Navbar({
               {link.label}
             </a>
           ))}
+
+          {/* Mi Portal link (mobile) */}
+          <Link
+            href="/portal"
+            onClick={() => setMobileOpen(false)}
+            style={{
+              color: accent,
+              textDecoration: "none",
+              fontSize: 18,
+              fontWeight: 700,
+              fontFamily: FONT,
+              padding: "12px 24px",
+              width: "80%",
+              textAlign: "center",
+              borderRadius: 12,
+              border: `1px solid ${accent}30`,
+              background: `${accent}10`,
+              marginTop: 8,
+            }}
+          >
+            {t('myPortal')}
+          </Link>
 
           <div style={{ display: "flex", gap: 12, marginTop: 16, alignItems: "center" }}>
             {showLangDropdown && availableLanguages.map((l) => (

@@ -88,7 +88,18 @@ t('greeting', { name: 'DRB' })  // "Hola, {name}" → "Hola, DRB"
 4. `LangWrapper` re-wraps cuando visitante cambia idioma via Navbar
 
 ### Namespace Landing
-`landing.*` — ~80+ keys por locale (navbar, hero, stats, destinations, whyus, testimonials, ctaBanner, contact, footer, chatbot, destino detail)
+`landing.*` — ~150+ keys por locale (navbar, hero, stats, destinations, whyus, testimonials, ctaBanner, contact, footer, chatbot, destino detail, portal)
+
+### Namespace Portal (E20)
+`landing.portal.*` — ~67 keys por locale. Incluye:
+- `login.*` — Formulario magic link, estados, errores
+- `nav.*` — Navbar del portal (mis reservas, chat, logout)
+- `bookings.*` — Lista de reservas (saludo, fecha, viajeros, precio, estado)
+- `detail.*` — Detalle de reserva (timeline, pasajeros, hotel, precio, pagar resto)
+- `chat.*` — Chat bidireccional (lista, thread, placeholder)
+- `status.*` — Estados de reserva (pendiente, confirmada, deposito pagado, etc.)
+
+También: `admin.reserva.portalChat`, `admin.reserva.noPortalMessages`, `admin.reserva.replyPlaceholder`
 
 ## Auto-Traducción de Contenido Dinámico
 
@@ -134,4 +145,4 @@ Las traducciones JSONB pierden URLs de imágenes (no son texto traducible). `Des
 ### Tag Colors
 `TagChip.tsx` mapea labels ES/EN/AR al mismo color para mantener consistencia visual.
 
-> Última actualización: 2026-02-26
+> Última actualización: 2026-03-01

@@ -1,7 +1,7 @@
 # Database Schema - Supabase PostgreSQL
 
 > **Última actualización:** 1 Marzo 2026
-> **Estado:** Schema estable - 28 tablas con RLS, 28 migraciones
+> **Estado:** Schema estable - 30 tablas con RLS, 30 migraciones
 
 ## ⚠️ PRINCIPIO FUNDAMENTAL
 
@@ -113,6 +113,41 @@ Cuando se crea una tabla nueva, SIEMPRE seguir estos pasos:
 **FK en destinos:** `coordinador_id UUID REFERENCES coordinadores(id) ON DELETE SET NULL`
 **Índice:** `idx_coordinadores_cliente_id` en `cliente_id`
 **Migración:** `20260301000000_create_coordinadores_table.sql`
+
+## 🚀 TABLAS PORTAL DEL VIAJERO (E20)
+
+### `traveler_sessions`
+**Uso:** Magic link auth para portal del viajero | **Estado:** ✅ API completa
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| `id` | UUID PK | |
+| `email` | text NOT NULL | Email del viajero |
+| `token` | text UNIQUE NOT NULL | Token UUID del magic link |
+| `cliente_id` | UUID FK → clientes | Agencia asociada |
+| `expires_at` | timestamptz NOT NULL | Expiración (15 min desde creación) |
+| `used_at` | timestamptz | Timestamp de uso (null = no usado) |
+| `created_at` | timestamptz | |
+
+**RLS:** Habilitado, políticas para service_role
+**Índices:** `idx_traveler_sessions_token` (lookup), `idx_traveler_sessions_email_client` (email + cliente_id + created_at, rate limit)
+**Migración:** `20260301100000_create_traveler_sessions.sql`
+
+### `portal_messages`
+**Uso:** Chat viajero ↔ agencia en portal | **Estado:** ✅ API completa
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| `id` | UUID PK | |
+| `reserva_id` | UUID FK → reservas | Reserva asociada |
+| `cliente_id` | UUID FK → clientes | Agencia asociada |
+| `sender_type` | text CHECK ('traveler','agency') | Tipo de emisor |
+| `sender_email` | text NOT NULL | Email del emisor |
+| `message` | text NOT NULL | Contenido del mensaje |
+| `read_at` | timestamptz | Timestamp de lectura |
+| `created_at` | timestamptz | |
+
+**RLS:** Habilitado, políticas para service_role
+**Índices:** `idx_portal_messages_reserva` (reserva_id + created_at), `idx_portal_messages_cliente` (cliente_id + created_at)
+**Migración:** `20260301200000_create_portal_messages.sql`
 
 ## 📈 TABLAS TRACKING
 

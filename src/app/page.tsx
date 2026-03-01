@@ -46,7 +46,7 @@ export default async function HomePage() {
 
   // Determine landing locale: cookie > client preference > "es"
   const cookieStore = await cookies();
-  const cookieLang = cookieStore.get("NEXT_LOCALE_LANDING")?.value;
+  const cookieLang = cookieStore.get("LANDING_LOCALE")?.value;
   const clientLocale = VALID_LOCALES.includes(client.preferred_language as any)
     ? (client.preferred_language as string)
     : "es";

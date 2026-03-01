@@ -3,6 +3,21 @@
 > **Última actualización:** 2026-03-01
 
 ## 1 Marzo 2026
+- **E20 — Portal del Viajero completado:**
+  - **Magic link auth:** Login sin contraseña vía email (token UUID, 15 min expiry, single-use, rate limit 5/hr)
+  - **Portal `/portal`:** Ruta protegida con middleware + cookies (`traveler_session` + `traveler_email`, 7 días)
+  - **Lista de reservas:** Grid de cards glass-morphism con imagen destino, fechas, viajeros, precio, badge estado, barra progreso depósito
+  - **Detalle de reserva:** Timeline visual (3 pasos según booking_model), datos pasajeros, hotel, tabs destino reutilizados (TabItinerary, TabHotel, TabFlight, TabIncluded), desglose precio
+  - **Pago de resto pendiente:** CTA "Pagar resto" → Stripe Checkout → webhook actualiza `remaining_paid = true` + `estado_pago = "pagado"`
+  - **Chat viajero ↔ agencia:** Bidireccional con polling 5s. Viajero en `/portal/chat`, agencia en detalle reserva admin
+  - **Admin chat widget:** `PortalChatAdmin` añadido a `/admin/reserva/[id]`
+  - **Navbar link:** "Mi portal" añadido a landing Navbar
+  - **2 tablas nuevas:** `traveler_sessions` (magic links), `portal_messages` (chat)
+  - **6 API routes:** send-link, verify, logout, pay-remaining, chat/messages (portal), portal-messages (admin)
+  - **8 componentes:** PortalLoginForm, PortalNavbar, PortalShell, PortalReservasList, PortalReservaDetail, PortalChatList, PortalChatThread, PortalChatAdmin
+  - **i18n:** ~67 keys × 3 idiomas (ES/EN/AR) en `landing.portal.*`
+  - **Loading states:** Skeleton pulse para lista y detalle
+  - Migraciones: `20260301100000_create_traveler_sessions.sql`, `20260301200000_create_portal_messages.sql`
 - **E19 — Mejoras Features Existentes completado:**
   - **Auto-decrementar plazas en reservas:** Helper `decrement-departure-spots.ts` reutilizable. Se llama automáticamente desde webhook (pago_completo/deposito_resto) y book route (solo_reserva). Auto-cambia estado a `soldOut` (0 plazas) o `lastSpots` (≤3)
   - **Biblioteca de coordinadores:** Nueva tabla `coordinadores` con FK en `destinos.coordinador_id`. CRUD completo en `/admin/coordinadores`. Dropdown selector en DestinoEditor reemplaza formulario inline. Landing muestra coordinador por FK
@@ -112,4 +127,4 @@
 - Fase 2: Analytics, automatizaciones
 - Setup inicial: Next.js, Supabase, Stripe, multi-tenant
 
-> Última actualización: 2026-02-26
+> Última actualización: 2026-03-01

@@ -1,7 +1,7 @@
 # Estado Actual del Proyecto
 
 > **Ultima actualizacion:** 1 Marzo 2026
-> **Estado:** Produccion activa - Fase E completada (E1-E7 + E17 + E19) + Fase F + G + Auto-Traduccion + Light Mode Redesign + Booking Models + Features E19 completadas
+> **Estado:** Produccion activa - Fase E completada (E1-E7 + E17 + E19 + E20) + Fase F + G + Auto-Traduccion + Light Mode Redesign + Booking Models + Portal del Viajero completado
 
 ## FUNCIONALIDADES COMPLETADAS
 
@@ -346,6 +346,24 @@
 - **Migracion:** `20260301000000_create_coordinadores_table.sql` — tabla + FK + RLS + trigger updated_at
 - **Sentry:** Error monitoring integrado (sentry.client.config.ts, sentry.server.config.ts, sentry.edge.config.ts)
 
+### E20 completada — Portal del Viajero (1 Mar 2026):
+- **Magic link auth:** Login sin contraseña vía email. Token UUID (15 min expiry, single-use). Rate limit 5 tokens/email/hora. Cookies `traveler_session` + `traveler_email` (7 días)
+- **Helper `requireTraveler()`:** Lee cookies, valida session en DB, verifica cliente activo. Redirect `/portal/login` si falla. Patrón idéntico a `requireAdminClient.ts`
+- **Middleware:** `/portal/:path*` añadido. Protege todas las rutas excepto `/portal/login` y `/api/portal/`
+- **Login page:** `/portal/login` con PortalLoginForm (glass-morphism card, estados input/sent/error, query param para enlace expirado)
+- **Portal layout:** Route group `(authenticated)` con requireTraveler() + LandingThemeProvider + PortalShell
+- **PortalNavbar:** Glass-morphism sticky, logo + "Mis reservas" | "Chat" + email + logout + lang/theme toggles + mobile hamburger
+- **Lista reservas:** `/portal` — Grid cards glass-morphism: imagen destino, fechas, viajeros, precio, badge estado, barra progreso depósito
+- **Detalle reserva:** `/portal/reserva/[id]` — Timeline 3 pasos (varía por booking_model), card fechas, tabla pasajeros, hotel info, tabs destino reutilizados (TabItinerary, TabHotel, TabFlight, TabIncluded), desglose precio, CTA "Pagar resto" (si deposito_resto)
+- **Pago resto:** POST `/api/portal/pay-remaining` → Stripe Checkout → webhook actualiza remaining_paid + estado_pago
+- **Chat bidireccional:** Viajero en `/portal/chat` (PortalChatList + PortalChatThread), agencia en `/admin/reserva/[id]` (PortalChatAdmin). Polling 5s. Mensajes marcados como leídos
+- **2 tablas nuevas:** `traveler_sessions` (magic links), `portal_messages` (chat)
+- **6 API routes:** send-link, verify, logout, pay-remaining, chat/messages, admin/portal-messages
+- **8 componentes:** PortalLoginForm, PortalNavbar, PortalShell, PortalReservasList, PortalReservaDetail, PortalChatList, PortalChatThread, PortalChatAdmin
+- **i18n:** ~67 keys × 3 idiomas en `landing.portal.*` + `admin.reserva.portalChat/noPortalMessages/replyPlaceholder`
+- **Loading states:** Skeleton pulse para lista y detalle
+- **Navbar landing:** Link "Mi portal" añadido
+
 ## PENDIENTE CONFIG EXTERNA (codigo listo)
 
 - **Social Media OAuth**: Crear app en Meta Developer (Instagram) + TikTok Developer, anadir env vars (`INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`) en Vercel. Redirect URIs: `https://drb.agency/api/admin/social/oauth/{instagram,tiktok}/callback`
@@ -359,7 +377,7 @@
 - White-label personalizado
 - Multi-moneda
 - Pagos offline
-- Portal del cliente final (E20/G11)
+- ~~Portal del cliente final (E20/G11)~~ — **COMPLETADO** (1 Mar 2026)
 - Notificaciones en tiempo real (Fase H1)
 - Busqueda global mejorada (Fase H2)
 - Dashboard drag & drop (Fase H3)

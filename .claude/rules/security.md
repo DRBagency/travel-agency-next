@@ -7,15 +7,16 @@
 - Webhooks devuelven 200 incluso si el procesamiento falla (evitar retries infinitos)
 
 ## Supabase
-- RLS habilitado en TODAS las tablas (27 tablas verificadas)
+- RLS habilitado en TODAS las tablas (30 tablas verificadas)
 - `supabaseAdmin` (service_role) SOLO en server-side
 - NUNCA exponer `SUPABASE_SERVICE_ROLE_KEY` al cliente
 - Anon key solo para Auth + lecturas públicas
 
 ## Auth
-- Cookies custom para admin y owner (NO NextAuth)
-- Middleware protege `/owner/*` y `/admin/clientes/*`
-- API routes usan `requireAdminClient()` o `requireValidApiDomain()`
+- Cookies custom para admin, owner y portal viajero (NO NextAuth)
+- Middleware protege `/owner/*`, `/admin/clientes/*` y `/portal/*` (excepto `/portal/login`)
+- API routes usan `requireAdminClient()`, `requireTraveler()` o `requireValidApiDomain()`
+- Portal auth: magic link tokens son single-use, 15 min expiry, rate limited (5/hr)
 - NUNCA confiar en datos del cliente sin validar server-side
 
 ## Variables de Entorno

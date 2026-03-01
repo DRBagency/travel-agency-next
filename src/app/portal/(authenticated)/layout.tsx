@@ -1,11 +1,13 @@
+import { cookies } from "next/headers";
 import { requireTraveler } from "@/lib/requireTraveler";
-import { getMessages, getLocale } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { LandingThemeProvider } from "@/components/landing/LandingThemeProvider";
 import { LandingGlobalStyles } from "@/components/landing/LandingGlobalStyles";
 import PortalShell from "@/components/portal/PortalShell";
 
 export const dynamic = "force-dynamic";
+
+const VALID_LOCALES = ["es", "en", "ar"] as const;
 
 export default async function PortalAuthLayout({
   children,
@@ -14,8 +16,13 @@ export default async function PortalAuthLayout({
 }) {
   const { email, client } = await requireTraveler();
 
-  const locale = await getLocale();
-  const messages = await getMessages();
+  // Read LANDING_LOCALE first (set by the landing page), fallback to NEXT_LOCALE, then "es"
+  const cookieStore = await cookies();
+  const landingLocale = cookieStore.get("LANDING_LOCALE")?.value;
+  const nextLocale = cookieStore.get("NEXT_LOCALE")?.value;
+  const raw = landingLocale || nextLocale || "es";
+  const locale = VALID_LOCALES.includes(raw as any) ? raw : "es";
+  const messages = (await import(`../../../../messages/${locale}.json`)).default;
 
   const availableLanguages = Array.isArray(client.available_languages)
     ? client.available_languages

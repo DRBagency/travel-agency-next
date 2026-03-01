@@ -19,3 +19,9 @@ const { data, error } = await supabaseAdmin.from("tabla").select("*");
 import { requireAdminClient } from "@/lib/requireAdminClient";
 const { clienteId } = await requireAdminClient(request);
 ```
+
+## Patrón Auth Portal (Viajero)
+```ts
+import { requireTraveler } from "@/lib/requireTraveler";
+const { email, clienteId, client } = await requireTraveler();
+```

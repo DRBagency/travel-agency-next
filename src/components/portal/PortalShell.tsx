@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import { useLandingTheme } from "@/components/landing/LandingThemeProvider";
 import PortalNavbar from "./PortalNavbar";
 
@@ -11,7 +11,6 @@ interface PortalShellProps {
   email: string;
   availableLanguages?: string[];
   currentLang?: string;
-  onLangChange?: (lang: string) => void;
 }
 
 export default function PortalShell({
@@ -21,9 +20,13 @@ export default function PortalShell({
   email,
   availableLanguages,
   currentLang,
-  onLangChange,
 }: PortalShellProps) {
   const T = useLandingTheme();
+
+  const handleLangChange = useCallback((lang: string) => {
+    document.cookie = `LANDING_LOCALE=${lang};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+    window.location.reload();
+  }, []);
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -33,7 +36,7 @@ export default function PortalShell({
         email={email}
         availableLanguages={availableLanguages}
         currentLang={currentLang}
-        onLangChange={onLangChange}
+        onLangChange={handleLangChange}
       />
 
       {/* Main content */}

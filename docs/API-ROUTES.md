@@ -4,7 +4,7 @@
 
 ## Resumen
 
-63 route files organizados en 5 grupos. Todos en `src/app/api/`.
+69 route files organizados en 6 grupos. Todos en `src/app/api/`.
 
 ## Admin Routes (`/api/admin/...`) — 36 routes
 
@@ -149,6 +149,26 @@
 | POST/GET | `/api/stripe/connect/start` | Iniciar flujo Connect |
 | POST | `/api/stripe/connect/webhook` | Webhook Connect |
 
+## Portal Routes (`/api/portal/...`) — 4 routes
+
+### Auth
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/api/portal/auth/send-link` | Enviar magic link por email (rate limit 5/hr) |
+| GET | `/api/portal/auth/verify` | Verificar token → set cookies → redirect `/portal` |
+| POST | `/api/portal/auth/logout` | Clear cookies → redirect `/portal/login` |
+
+### Acciones
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/api/portal/pay-remaining` | Pagar resto pendiente (deposito_resto) → Stripe Checkout |
+| GET/POST | `/api/portal/chat/messages` | GET: mensajes de reserva. POST: enviar mensaje como viajero |
+
+### Admin Portal
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET/POST | `/api/admin/portal-messages` | GET: mensajes de reserva (admin). POST: responder como agencia |
+
 ## Public Routes — 5 routes
 
 | Método | Ruta | Descripción |
@@ -174,6 +194,12 @@ Configurados en `vercel.json`.
 ```ts
 import { requireAdminClient } from "@/lib/requireAdminClient";
 const { clienteId } = await requireAdminClient(request);
+```
+
+### Autenticación Portal (Viajero)
+```ts
+import { requireTraveler } from "@/lib/requireTraveler";
+const { email, clienteId, client } = await requireTraveler();
 ```
 
 ### Queries con supabaseAdmin

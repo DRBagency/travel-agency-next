@@ -127,8 +127,17 @@ Al completar una reserva, las plazas de la salida se decrementan automáticament
    - Book route (`solo_reserva`): directamente del body
 5. **Resiliencia:** `.catch()` para no afectar la reserva si falla
 
-## Pendiente
+## Portal del Viajero (E20 — Completado)
 
-- **Portal del cliente final (E20/G11):** El viajero accede con email y ve sus reservas, estado de pago, itinerarios
+El viajero accede a `/portal` con magic link (sin contraseña) y puede:
+- Ver lista de todas sus reservas con la agencia
+- Ver detalle completo: pasajeros, hotel, vuelos, itinerario, timeline de estado
+- Pagar el resto pendiente (si modelo `deposito_resto`)
+- Chatear con la agencia
+
+**Auth:** Magic link por email → token UUID (15 min, single-use) → cookies 7 días
+**Componentes:** 8 componentes en `src/components/portal/`
+**API Routes:** 6 rutas en `/api/portal/` + `/api/admin/portal-messages`
+**Detalle:** Ver `docs/LANDING-PAGES.md` sección Portal
 
 > Última actualización: 2026-03-01
